@@ -34,6 +34,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   hubs:
     data_lake:
-      +schema: dbt_data_lake
+      +schema: data_lake
       int_service_supply:
           materialized: view
