@@ -37,3 +37,6 @@ models:
       +schema: data_lake
       int_service_supply:
           materialized: view
+
+snapshots:
+  +target_schema: dbt_prod_snapshots # TODO: figure out proper way to run in user schema for testing
