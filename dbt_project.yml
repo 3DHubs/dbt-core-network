@@ -36,13 +36,11 @@ models:
     data_lake:
       +schema: data_lake
       int_service_supply:
-          materialized: view
+        materialized: view
     reporting:
       +schema: reporting
       materialized: table
-          name: users
-          meta:
-            contains_pii: true # TODO: determine downstream effects
+
 
 # Snapshot configuration
 snapshots:
