@@ -37,6 +37,10 @@ models:
       +schema: data_lake
       int_service_supply:
           materialized: view
+          name: users
+          meta:
+            contains_pii: true # TODO: determine downstream effects
 
+# Snapshot configuration
 snapshots:
   +target_schema: dbt_prod_snapshots # TODO: figure out proper way to run in user schema for testing

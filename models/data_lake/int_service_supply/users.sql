@@ -1,0 +1,31 @@
+select created,
+       updated,
+       deleted,
+       user_id,
+       uuid,
+       initials,
+       country_code,
+       first_name,
+       last_name,
+       trim(trim(initcap(first_name)) || ' ' || trim(initcap(last_name))) as full_name,
+       locality,
+       md5(mail)                                                          as mail_hashed,
+       name                                                               as username,
+       persona,
+       md5(phone)                                                         as phone_hashed,
+       picture_id,
+       decode(settings, 'null', null, settings)                           as settings,
+       timezone,
+       url,
+       email_verification_token,
+       decode(is_email_verified, 'true', True, 'false', False)            as is_email_verified,
+       signup_source,
+       decode(hubspot_contact_id, 0, null, hubspot_contact_id)            as hubspot_contact_id,
+       session_invalidated_at,
+       last_sign_in_at,
+       datediff('day', last_sign_in_at, current_date)                     as last_sign_in_at_days_ago,
+       case
+           when last_sign_in_at_days_ago >= 365 or not last_sign_in_at_days_ago then False
+           else decode(is_active, 'true', True, 'false', False)
+           end                                                               is_active
+from int_service_supply.users
