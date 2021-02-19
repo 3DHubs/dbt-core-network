@@ -39,7 +39,7 @@ with stg_bids as
                 ),
 
   sa as ( select md5(supplier_id || auction_uuid) as supplier_auction_uuid, *
-                from data_lake.supply_supplier_auctions ),
+                from {{ ref('supplier_auctions') }} ),
 
   b as ( select * from stg_bids where rn = 1 ),
 
