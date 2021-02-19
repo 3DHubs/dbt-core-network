@@ -1,0 +1,15 @@
+select technology_id,
+       slug,
+       name,
+       slug_scope,
+       decode(admin_only, 'true', True, 'false', False)         as is_admin_only,
+       country_codes,
+       decode(has_threads, 'true', True, 'false', False)        as has_threads,
+       decode(has_tolerances, 'true', True, 'false', False)     as has_tolerances,
+       decode(has_gate_positions, 'true', True, 'false', False) as has_gate_positions,
+       decode(has_parting_lines, 'true', True, 'false', False)  as has_parting_lines,
+       decode(has_rapid_tooling, 'true', True, 'false', False)  as has_rapid_tooling,
+       standard_tolerance,
+       unsupported_country_codes,
+       name                                                     as technology_name
+from int_service_supply.technologies
