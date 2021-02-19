@@ -9,6 +9,6 @@
         )
     }}
 
-    select * from {{ ref('hubs', 'cnc_order_quotes') }}
+    select * from {{ source('int_service_supply', 'cnc_order_quotes') }}
 
 {% endsnapshot %}

@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: int_service_supply
+    database: analytics
+    schema: int_service_supply
+    tables:
+    - name: line_items
+    - name: cnc_order_quotes
