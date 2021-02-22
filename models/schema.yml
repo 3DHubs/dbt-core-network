@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: fact_supplier_auction_interactions
+    columns:
+      - name: supplier_auction_uuid
+        tests:
+          - unique
+          - not_null
