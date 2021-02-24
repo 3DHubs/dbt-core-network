@@ -1,0 +1,15 @@
+select created,
+       updated,
+       deleted,
+       id,
+       decode(is_enabled, 'true', True, 'false', False) as is_enabled,
+       tax_name,
+       tax_registration_name,
+       tax_number,
+       tax_rate,
+       bank_details,
+       corporate_country_id,
+       tax_country_id,
+       tax_number_2,
+       tax_registration_name_2
+from int_service_supply.company_entities

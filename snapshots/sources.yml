@@ -8,3 +8,6 @@ sources:
     - name: line_items
     - name: cnc_order_quotes
     - name: bids
+    - name: countries
+    - name: supplier_users
+    - name: supplier_technologies

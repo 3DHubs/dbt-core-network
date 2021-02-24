@@ -1,0 +1,16 @@
+select id,
+       name,
+       min_price_amount,
+       currency_code,
+       percentage_from_total,
+       decode(is_expedited, 'true', True, 'false', False)                 as is_expedited,
+       decode(is_active, 'true', True, 'false', False)                    as is_active,
+       decode(is_allowed_to_override_price, 'true', True, 'false', False) as is_allowed_to_override_price,
+       decode(is_default, 'true', True, 'false', False)                   as is_default,
+       created,
+       updated,
+       min_days,
+       max_days,
+       shipping_leg,
+       region
+from int_service_supply.shipping_options
