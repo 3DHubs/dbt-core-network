@@ -7,3 +7,8 @@ models:
         tests:
           - unique
           - not_null
+  - name: dim_supplier_technologies
+    columns:
+      - name: supplier_id
+        tests:
+          - unique
