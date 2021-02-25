@@ -12,3 +12,8 @@ models:
       - name: supplier_id
         tests:
           - unique
+  - name: fact_disputes
+    columns:
+      - name: id
+        tests:
+          - unique
