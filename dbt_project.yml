@@ -35,6 +35,15 @@ models:
       +schema: reporting
       materialized: table
 
+# Seeds
+seeds:
+  +schema: seed_data
+  states:
+    +column_types:
+      state: varchar(128)
+      abbreviation: varchar(128)
+      code: varchar(28)
+
 # Snapshot configuration
 snapshots:
   +target_schema: dbt_prod_snapshots # TODO: figure out proper way to run in user schema for testing

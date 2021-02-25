@@ -9,10 +9,10 @@ select created,
        last_name,
        trim(trim(initcap(first_name)) || ' ' || trim(initcap(last_name))) as full_name,
        locality,
-       md5(mail)                                                          as mail_hashed,
+       md5(mail)                                                          as mail,
        name                                                               as username,
        persona,
-       md5(phone)                                                         as phone_hashed,
+       md5(phone)                                                         as phone,
        picture_id,
        decode(settings, 'null', null, settings)                           as settings,
        timezone,
@@ -27,5 +27,6 @@ select created,
        case
            when last_sign_in_at_days_ago >= 365 or not last_sign_in_at_days_ago then False
            else decode(is_active, 'true', True, 'false', False)
-           end                                                               is_active
+           end                                                               is_active,
+       mail ~ '@3dhubs.com'                                               as is_internal
 from int_service_supply.users
