@@ -54,5 +54,6 @@ select created,
        commodity_code,
        shipping_option_id,
        target_margin,
-       commodity_code_source
+       commodity_code_source,
+       discount_id
 from int_service_supply.line_items

@@ -6,7 +6,8 @@ select supplier_id,
        first_seen_at,
        decode(is_automated_shipping_available, 'true', True, 'false', False) as is_automated_shipping_available,
        currency_code,
-       margin,
+       margin, -- Do not use for reporting, may include discount, which is not used in auction
+       margin_without_discount, -- Margin unaffected by discount
        tax_rate,
        subtotal_price_amount,
        subtotal_price_amount_usd,

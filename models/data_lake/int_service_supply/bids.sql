@@ -15,7 +15,8 @@ select oqs.created,
        bids.rejection_reasons,
        bids.accepted_ship_by_date,
        bids.author_id,
-       bids.margin
+       bids.margin, -- For debugging purposes only, do not use for reporting
+       bids.margin_without_discount -- This field will be used in auctions
 from int_service_supply.bids as bids
          inner join {{ ref('cnc_order_quotes') }} as oqs
                     on bids.uuid = oqs.uuid

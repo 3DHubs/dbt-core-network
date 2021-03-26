@@ -11,7 +11,8 @@ select oqs.created,
        auctions.internal_support_ticket_id,
        decode(auctions.is_internal_support_ticket_opened, 'true', True, 'false', False) as is_internal_support_ticket_opened,
        decode(auctions.china_throttled, 'true', True, 'false', False) as is_china_throttled,
-       auctions.base_margin,
+       auctions.base_margin, -- For debugging purposes only, do not use for reporting
+       auctions.base_margin_without_discount, -- This field will be used in auctions
        auctions.next_allocate_at,
        decode(auctions.is_rfq, 'true', True, 'false', False) as is_rfq
 from int_service_supply.auctions as auctions
