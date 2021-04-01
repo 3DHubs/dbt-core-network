@@ -43,6 +43,11 @@ seeds:
       state: varchar(128)
       abbreviation: varchar(128)
       code: varchar(28)
+  industries:
+    +column_types:
+      industry: varchar(128)
+      industry_mapped: varchar(128)
+  
 
 # Snapshot configuration
 snapshots:

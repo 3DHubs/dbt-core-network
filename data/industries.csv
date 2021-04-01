@@ -1,0 +1,146 @@
+industry,industry_mapped
+ACCOUNTING,Nonclassifiable Organization
+AIRLINES_AVIATION,Aerospace
+ALTERNATIVE_MEDICINE,Medical
+ANIMATION,Nonclassifiable Organization
+APPAREL_FASHION,Consumer Products
+ARCHITECTURE_PLANNING,Design Firm
+ARTS_AND_CRAFTS,Consumer Products
+AUTOMOTIVE,Automotive
+AVIATION_AEROSPACE,Aerospace
+BANKING,Nonclassifiable Organization
+BIOTECHNOLOGY,Medical
+BROADCAST_MEDIA,Communications/Telecommunication
+BUILDING_MATERIALS,Manufacturing
+BUSINESS_SUPPLIES_AND_EQUIPMENT,Computer/Electronics
+CAPITAL_MARKETS,Nonclassifiable Organization
+CHEMICALS,Manufacturing
+CIVIC_SOCIAL_ORGANIZATION,Nonclassifiable Organization
+CIVIL_ENGINEERING,Industrial & Commercial Machinery
+COMMERCIAL_REAL_ESTATE,Nonclassifiable Organization
+COMPUTER_GAMES,Nonclassifiable Organization
+COMPUTER_HARDWARE,Computer/Electronics
+COMPUTER_NETWORK_SECURITY,Computer/Electronics
+COMPUTER_NETWORKING,Computer/Electronics
+COMPUTER_SOFTWARE,Computer/Electronics
+CONSTRUCTION,Industrial & Commercial Machinery
+CONSUMER_ELECTRONICS,Computer/Electronics
+CONSUMER_GOODS,Consumer Products
+CONSUMER_SERVICES,Consumer Products
+COSMETICS,Consumer Products
+DAIRY,Food
+DEFENSE_SPACE,Aerospace
+DESIGN,Design Firm
+E_LEARNING,Education
+EDUCATION_MANAGEMENT,Education
+ELECTRICAL_ELECTRONIC_MANUFACTURING,Computer/Electronics
+ENTERTAINMENT,Nonclassifiable Organization
+ENVIRONMENTAL_SERVICES,Nonclassifiable Organization
+EVENTS_SERVICES,Nonclassifiable Organization
+EXECUTIVE_OFFICE,Nonclassifiable Organization
+FACILITIES_SERVICES,Nonclassifiable Organization
+FARMING,Food
+FINANCIAL_SERVICES,Nonclassifiable Organization
+FINE_ART,Design Firm
+FISHERY,Food
+FOOD_BEVERAGES,Food
+FOOD_PRODUCTION,Industrial & Commercial Machinery
+FUND_RAISING,Nonclassifiable Organization
+FURNITURE,Furniture
+GAMBLING_CASINOS,Nonclassifiable Organization
+GLASS_CERAMICS_CONCRETE,Manufacturing
+GOVERNMENT_ADMINISTRATION,Nonclassifiable Organization
+GOVERNMENT_RELATIONS,Nonclassifiable Organization
+GRAPHIC_DESIGN,Design Firm
+HEALTH_WELLNESS_AND_FITNESS,Consumer Products
+HIGHER_EDUCATION,Education
+HOSPITAL_HEALTH_CARE,Medical
+HOSPITALITY,Nonclassifiable Organization
+HUMAN_RESOURCES,Nonclassifiable Organization
+IMPORT_AND_EXPORT,Nonclassifiable Organization
+INDIVIDUAL_FAMILY_SERVICES,Nonclassifiable Organization
+INDUSTRIAL_AUTOMATION,Industrial & Commercial Machinery
+INFORMATION_SERVICES,Computer/Electronics
+INFORMATION_TECHNOLOGY_AND_SERVICES,Computer/Electronics
+INSURANCE,Nonclassifiable Organization
+INTERNATIONAL_AFFAIRS,Nonclassifiable Organization
+INTERNATIONAL_TRADE_AND_DEVELOPMENT,Nonclassifiable Organization
+INTERNET,Communications/Telecommunication
+INVESTMENT_BANKING,Nonclassifiable Organization
+INVESTMENT_MANAGEMENT,Nonclassifiable Organization
+JUDICIARY,Nonclassifiable Organization
+LAW_ENFORCEMENT,Nonclassifiable Organization
+LAW_PRACTICE,Nonclassifiable Organization
+LEGAL_SERVICES,Nonclassifiable Organization
+LEISURE_TRAVEL_TOURISM,Nonclassifiable Organization
+LIBRARIES,Nonclassifiable Organization
+LOGISTICS_AND_SUPPLY_CHAIN,Nonclassifiable Organization
+LUXURY_GOODS_JEWELRY,Consumer Products
+MACHINERY,Industrial & Commercial Machinery
+MANAGEMENT_CONSULTING,Nonclassifiable Organization
+MARITIME,Aerospace
+MARKET_RESEARCH,Nonclassifiable Organization
+MARKETING_AND_ADVERTISING,Nonclassifiable Organization
+MECHANICAL_OR_INDUSTRIAL_ENGINEERING,Industrial & Commercial Machinery
+MEDIA_PRODUCTION,Computer/Electronics
+MEDICAL_DEVICES,Medical
+MEDICAL_PRACTICE,Medical
+MENTAL_HEALTH_CARE,Medical
+MILITARY,Military
+MINING_METALS,Industrial & Commercial Machinery
+MOTION_PICTURES_AND_FILM,Computer/Electronics
+MUSEUMS_AND_INSTITUTIONS,Nonclassifiable Organization
+MUSIC,Nonclassifiable Organization
+NANOTECHNOLOGY,Medical
+NEWSPAPERS,Industrial & Commercial Machinery
+NON_PROFIT_ORGANIZATION_MANAGEMENT,Nonclassifiable Organization
+OIL_ENERGY,Industrial & Commercial Machinery
+ONLINE_MEDIA,Nonclassifiable Organization
+OUTSOURCING_OFFSHORING,Nonclassifiable Organization
+PACKAGE_FREIGHT_DELIVERY,Industrial & Commercial Machinery
+PACKAGING_AND_CONTAINERS,Packaging
+PAPER_FOREST_PRODUCTS,Industrial & Commercial Machinery
+PERFORMING_ARTS,Nonclassifiable Organization
+PHARMACEUTICALS,Medical
+PHILANTHROPY,Nonclassifiable Organization
+PHOTOGRAPHY,Nonclassifiable Organization
+PLASTICS,"Plastic, Rubber, Die-casting Molders"
+POLITICAL_ORGANIZATION,Nonclassifiable Organization
+PRIMARY_SECONDARY_EDUCATION,Education
+PRINTING,Industrial & Commercial Machinery
+PROFESSIONAL_TRAINING_COACHING,Education
+PROGRAM_DEVELOPMENT,Nonclassifiable Organization
+PUBLIC_POLICY,Nonclassifiable Organization
+PUBLIC_RELATIONS_AND_COMMUNICATIONS,Nonclassifiable Organization
+PUBLIC_SAFETY,Nonclassifiable Organization
+PUBLISHING,Industrial & Commercial Machinery
+RAILROAD_MANUFACTURE,Industrial & Commercial Machinery
+RANCHING,Nonclassifiable Organization
+REAL_ESTATE,Nonclassifiable Organization
+RECREATIONAL_FACILITIES_AND_SERVICES,Nonclassifiable Organization
+RELIGIOUS_INSTITUTIONS,Nonclassifiable Organization
+RENEWABLES_ENVIRONMENT,Utilities
+RESEARCH,Research/Leboratory
+RESTAURANTS,Consumer Products
+RETAIL,Consumer Products
+SECURITY_AND_INVESTIGATIONS,Nonclassifiable Organization
+SEMICONDUCTORS,Computer/Electronics
+SHIPBUILDING,Industrial & Commercial Machinery
+SPORTING_GOODS,Consumer Products
+SPORTS,Consumer Products
+STAFFING_AND_RECRUITING,Nonclassifiable Organization
+SUPERMARKETS,Consumer Products
+TELECOMMUNICATIONS,Communications/Telecommunication
+TEXTILES,Manufacturing
+THINK_TANKS,Nonclassifiable Organization
+TOBACCO,Consumer Products
+TRANSLATION_AND_LOCALIZATION,Nonclassifiable Organization
+TRANSPORTATION_TRUCKING_RAILROAD,Industrial & Commercial Machinery
+UTILITIES,Utilities
+VENTURE_CAPITAL_PRIVATE_EQUITY,Nonclassifiable Organization
+VETERINARY,Medical
+WAREHOUSING,Industrial & Commercial Machinery
+WHOLESALE,Consumer Products
+WINE_AND_SPIRITS,Food
+WIRELESS,Communications/Telecommunication
+WRITING_AND_EDITING,Nonclassifiable Organization
