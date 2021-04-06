@@ -1,15 +1,7 @@
-/* The auctions table that is populated from Supply's `auction` table only holds true auctions. Currently the
-   auctions mechanic is also used to track RFQs and the associated bids are used to get the price indication from the
-   MP side.
+/* This is a solution intended to be temporary. There's a data model `supplier_rfqs` that holds similar data. We 
+   need to figure out what the differences/similarities are. To be continued... */
 
-   In Q1 a new feature was added to give discounts to customers. This resulted in a change of how margins are
-   reflected on auctions. Auction-related tables (auctions, bids, supplier_auctions) should use the margin without
-   discount -- the price offered to the MP is not affected by customer discounts.
-
-   Another update in Q1 2021: a new feature was added to the RDA where parts can be resourced for whatever reason. We
-   leverage the quotes table to get a sequence of auctions for a given order. If an order goes onto the RDA multiple
-   times, it will yield a `recency_idx` >= 2. */
-with auctions as (select oqs.created,
+select oqs.created,
                          oqs.updated,
                          oqs.deleted,
                          oqs.order_uuid                                                 as order_uuid,
@@ -33,7 +25,4 @@ with auctions as (select oqs.created,
                   from int_service_supply.auctions as auctions
                            inner join {{ ref('cnc_order_quotes') }} as oqs
                                       on auctions.uuid = oqs.uuid
-                  where not decode(auctions.is_rfq, 'true', True, 'false', False))
-select *,
-       decode(recency_idx, 1, True, False) as is_latest_order_auction
-from auctions
+                  where decode(auctions.is_rfq, 'true', True, 'false', False)
