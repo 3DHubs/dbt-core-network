@@ -31,6 +31,8 @@ models:
       +schema: data_lake
       int_service_supply:
         materialized: view
+    mapping:
+      +schema: data_lake
     reporting:
       +schema: reporting
       materialized: table
@@ -47,7 +49,6 @@ seeds:
     +column_types:
       industry: varchar(128)
       industry_mapped: varchar(128)
-  
 
 # Snapshot configuration
 snapshots:
