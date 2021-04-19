@@ -15,10 +15,12 @@ select supplier_id,
        tax_price_amount_usd,
        max_country_margin,
        company_entity_id,
-       decode(is_reorder, 'true', True, 'false', False) as is_reorder,
+       -- decode(is_reorder, 'true', True, 'false', False) as is_reorder, -- PS52: column `is_reorder` renamed to `is_detected_similar`. `is_reorder` will be brought back later.
        estimated_customs_price_amount,
        estimated_customs_price_amount_usd,
        estimated_customs_rate,
        ship_by_date,
-       shipping_added_lead_time
+       shipping_added_lead_time,
+       decode(is_detected_similar, 'true', True, 'false', False) as is_detected_similar,
+       decode(is_customer_requested_reorder, 'true', True, 'false', False) as is_customer_requested_reorder
 from int_service_supply.supplier_auctions
