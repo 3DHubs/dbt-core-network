@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 select created,
        updated,
        deleted,
@@ -50,10 +56,17 @@ select created,
        requires_specific_gate_position,
        requires_specific_parting_line,
        requires_rapid_tooling,
-       is_visible_to_supplier,
+       decode(is_visible_to_supplier, 'true', True, 'false', False) as is_visible_to_supplier,
        commodity_code,
        shipping_option_id,
        target_margin,
        commodity_code_source,
-       discount_id
+       discount_id,
+       custom_tolerance_unit,
+       tolerance_id,
+       custom_tolerance,
+       decode(is_cosmetic, 'true', True, 'false', False) as is_cosmetic,
+       estimated_price_amount,
+       estimated_price_original_amount,
+       thickness
 from int_service_supply.line_items
