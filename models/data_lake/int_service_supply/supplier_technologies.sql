@@ -8,5 +8,6 @@ select supplier_id,
        max_order_amount,
        strategic_orders_priority,
        min_order_amount,
-       min_lead_time
+       min_lead_time,
+       {{ dbt_utils.surrogate_key(['technology_id', 'allow_orders_with_finishes', 'allow_strategic_orders', 'strategic_orders_priority', 'min_order_amount', 'max_order_amount']) }} as _supplier_attr_sk
 from int_service_supply.supplier_technologies

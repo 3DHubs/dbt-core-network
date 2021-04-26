@@ -6,6 +6,7 @@
       unique_key='id',
       updated_at='updated',
       invalidate_hard_deletes=True,
+      enabled=False
     )
 }}
 
