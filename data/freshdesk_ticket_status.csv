@@ -1,0 +1,13 @@
+status_id,description,created_by 
+2,open,system
+3,pending,system
+4,resolved,system
+5,closed,system
+6,waiting on customer,system
+7,waiting on third party,system
+8,waiting on customer = 8,custom
+9,waiting on third party = 9,custom
+13,pending 72 hours,custom
+14,pending 24 hours,custom
+15,pending 48 Hours,custom
+16,pending 5 days,custom
