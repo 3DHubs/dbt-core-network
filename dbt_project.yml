@@ -36,6 +36,14 @@ models:
         +tags: freshdesk
     mapping:
       +schema: data_lake
+    netsuite:
+      +schema: data_lake
+      +tags:
+       - "netsuite"
+       - "finance"
+    netsuite_sandbox:
+      +schema: data_lake
+      +enabled: false
     reporting:
       +schema: reporting
       materialized: table
