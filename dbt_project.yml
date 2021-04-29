@@ -32,6 +32,7 @@ models:
       int_service_supply:
         materialized: view
         +tags: supply
+        +bind: false
       freshdesk:
         +tags: freshdesk
     mapping:
