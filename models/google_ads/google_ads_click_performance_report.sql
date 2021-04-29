@@ -1,4 +1,4 @@
-{{ config(bind=False, materialized='table') }}
+{{ config(bind=False) }}
 
 with click_performance_report_ranked as (
     select *,

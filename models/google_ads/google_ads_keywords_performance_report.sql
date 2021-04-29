@@ -1,4 +1,4 @@
-{{ config(bind=False, materialized='table') }}
+{{ config(bind=False) }}
 
 with keywords_performance_report_ranked as (select *,
                                                    row_number() over (partition by day,
