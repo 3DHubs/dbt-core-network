@@ -1,6 +1,5 @@
 select technology_id,
        slug,
-       name,
        slug_scope,
        decode(admin_only, 'true', True, 'false', False)         as is_admin_only,
        country_codes,
@@ -11,5 +10,12 @@ select technology_id,
        decode(has_rapid_tooling, 'true', True, 'false', False)  as has_rapid_tooling,
        standard_tolerance,
        unsupported_country_codes,
-       name                                                     as technology_name
+       name                                                     as "original_name",
+       decode(technology_id,
+              1, 'CNC',
+              2, '3DP',
+              3, 'IM',
+              5, 'Urethane Casting',
+              6, 'SM',
+              7, 'Casting')                                     as name
 from int_service_supply.technologies
