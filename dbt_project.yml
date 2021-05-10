@@ -27,6 +27,9 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Model config
 models:
   hubs:
+    bing_ads:
+      +schema: data_lake
+      +tags: ["advertising", "bing"]
     data_lake:
       +schema: data_lake
       int_service_supply:
@@ -37,20 +40,18 @@ models:
         +tags: freshdesk
     google_ads:
       +schema: data_lake
-      +tags: advertising
+      +tags: ["advertising", "google"]
     mapping:
       +schema: data_lake
     netsuite:
       +schema: data_lake
-      +tags:
-       - "netsuite"
-       - "finance"
+      +tags: ["netsuite", "finance"]
     netsuite_sandbox:
       +schema: data_lake
       +enabled: false
     reporting:
       +schema: reporting
-      materialized: table
+      +materialized: table
 
 # Seeds
 seeds:
