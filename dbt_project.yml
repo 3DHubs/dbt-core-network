@@ -41,6 +41,9 @@ models:
     google_ads:
       +schema: data_lake
       +tags: ["advertising", "google"]
+    hubspot:
+      +schema: data_lake
+      +tags: ["hubspot", "crm"]
     mapping:
       +schema: data_lake
     netsuite:
