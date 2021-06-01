@@ -1,4 +1,5 @@
 with reorders as (select reorder_original_order_uuid,
+                         order_uuid,
                          order_created_date,
                          order_quote_lead_time,
                          part_quantity,
@@ -6,13 +7,13 @@ with reorders as (select reorder_original_order_uuid,
                          quote_subtotal_amount_usd
                   from reporting.cube_deals
                   where reorder_original_order_uuid is not null)
-select reorders.reorder_original_order_uuid,
+select reorders.order_uuid                                                                                  as reorder_order_uuid,
+       reorders.reorder_original_order_uuid,
        reorders.order_created_date                                                                          as reorder_created_date,
        reorders.order_quote_lead_time                                                                       as reorder_lead_time,
        reorders.part_quantity                                                                               as reorder_total_quantity,
        reorders.is_expedited_shipping                                                                       as reorder_is_expedited,
        reorders.quote_subtotal_amount_usd                                                                   as reorder_order_amount_usd,
-       cd.order_uuid                                                                                        as original_order_uuid,
        cd.order_created_date                                                                                as original_order_created_date,
        cd.order_quote_lead_time                                                                             as original_order_lead_time,
        cd.part_quantity                                                                                     as original_order_total_quantity,
