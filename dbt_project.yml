@@ -94,6 +94,12 @@ seeds:
       description: varchar(56)
       created_by: varchar(56)
     +tags: freshdesk
+  order_status:
+    +column_types:
+      order_status_id: int
+      hubspot_status_value: varchar(256)
+      supply_status_value: varchar(128)
+      mapped_value: varchar(128)
 
 # Snapshot configuration
 snapshots:
