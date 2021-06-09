@@ -22,3 +22,8 @@ models:
       - name: order_uuid
         tests:
           - unique
+  - name: agg_quote_transactions
+    columns:
+      - name: quote_uuid
+        tests:
+          - unique
