@@ -18,6 +18,11 @@ Generally we distinguish three "layers" of data:
 ### `snapshot`
 - `dbt snapshot` -- refreshes all snapshots (be careful that no user environments have been set-up yet, so this will run snapshots in PROD)
 
+# Sources
+Are used to refer to data populated in the data warehouse. Using sources helps us track lineage and allows us to determine source freshness.
+- [Introduction to sources](https://docs.getdbt.com/docs/building-a-dbt-project/using-sources).
+- More info here on [source properties](https://docs.getdbt.com/reference/resource-properties/freshness).
+
 ### Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers

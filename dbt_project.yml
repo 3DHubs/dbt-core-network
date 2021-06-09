@@ -100,6 +100,13 @@ seeds:
       hubspot_status_value: varchar(256)
       supply_status_value: varchar(128)
       mapped_value: varchar(128)
+  hubspot_engagement_dispositions:
+    +column_types:
+      uuid: varchar(128)
+      label: varchar(56)
+      is_deleted: boolean
+      _load_timestamp: timestamp
+    +tags: ["crm", "hubspot"]
 
 # Snapshot configuration
 snapshots:

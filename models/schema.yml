@@ -1,5 +1,15 @@
 version: 2
 
+sources:
+  - name: data_lake
+    tables:
+      - name: hubspot_engagements
+      - name: hubspot_deals
+      - name: hubspot_contacts
+      - name: hubspot_companies
+      - name: hubspot_owners
+      - name: hubspot_owners_teams
+
 models:
   - name: fact_supplier_auction_interactions
     columns:
