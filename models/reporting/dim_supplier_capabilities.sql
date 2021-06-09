@@ -6,7 +6,7 @@ with supplier_tech as (
            ((st.min_order_amount::float) / 100)::decimal(15, 2) as min_order_amount_usd,
            ((st.max_order_amount::float) / 100)::decimal(15, 2) as max_order_amount_usd,
            st.max_active_orders,
-           st.allow_orders_with_finishes,
+           st.allow_orders_with_custom_finishes,
            st.allow_strategic_orders,
            st.allow_non_strategic_orders
     from {{ ref('suppliers') }} s

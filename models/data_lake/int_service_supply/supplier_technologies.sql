@@ -1,13 +1,18 @@
 select supplier_id,
        technology_id,
-       decode(allow_orders_with_finishes, 'true', True, 'false', False) as allow_orders_with_finishes,
-       decode(allow_strategic_orders, 'true', True, 'false', False) as allow_strategic_orders,
-       decode(allow_non_strategic_orders, 'true', True, 'false', False) as allow_non_strategic_orders,
-       decode(allow_super_strategic_orders, 'true', True, 'false', False) as allow_super_strategic_orders,
+       decode(allow_orders_with_custom_finishes, 'true', True, 'false', False) as allow_orders_with_custom_finishes,
+       decode(allow_strategic_orders, 'true', True, 'false', False)            as allow_strategic_orders,
+       decode(allow_non_strategic_orders, 'true', True, 'false', False)        as allow_non_strategic_orders,
+       decode(allow_super_strategic_orders, 'true', True, 'false', False)      as allow_super_strategic_orders,
        max_active_orders,
        max_order_amount,
        strategic_orders_priority,
        min_order_amount,
        min_lead_time,
-       {{ dbt_utils.surrogate_key(['technology_id', 'allow_orders_with_finishes', 'allow_strategic_orders', 'strategic_orders_priority', 'min_order_amount', 'max_order_amount']) }} as _supplier_attr_sk
+       {{ dbt_utils.surrogate_key(['technology_id',
+                                   'allow_orders_with_custom_finishes',
+                                   'allow_strategic_orders',
+                                   'strategic_orders_priority',
+                                   'min_order_amount',
+                                   'max_order_amount']) }}                     as _supplier_attr_sk -- This surrogate key is used in snapshots to identify changes
 from int_service_supply.supplier_technologies
