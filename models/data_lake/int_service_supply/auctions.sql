@@ -21,8 +21,7 @@ with auctions as (select oqs.created,
                          auctions.ship_by_date,
                          auctions.last_processed_at,
                          auctions.internal_support_ticket_id,
-                         decode(auctions.is_internal_support_ticket_opened, 'true', True, 'false',
-                                False)                                                       as is_internal_support_ticket_opened,
+                         {{ varchar_to_boolean('is_internal_support_ticket_opened') }}, -- From `auctions`
                          decode(auctions.china_throttled, 'true', True, 'false', False)      as is_china_throttled,
                          auctions.base_margin,                  -- For debugging purposes only, do not use for reporting
                          auctions.base_margin_without_discount, -- This field will be used in auctions

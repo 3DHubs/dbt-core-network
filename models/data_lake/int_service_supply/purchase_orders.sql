@@ -6,7 +6,7 @@ select oqs.created,
        po.status,
        po.supplier_support_ticket_id,
        po.packing_slip_uuid,
-       decode(po.is_created_manually, 'false', False, 'true', True) as is_created_manually,
+       {{ varchar_to_boolean('is_created_manually') }}, -- From `po`
        po.voided_at,
        po.supplier_id,
        po.author_id,

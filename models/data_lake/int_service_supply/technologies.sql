@@ -1,13 +1,17 @@
+{% set boolean_fields = [
+        "has_threads",
+        "has_tolerances",
+        "has_gate_positions",
+        "has_parting_lines",
+        "has_rapid_tooling",
+    ]
+%}
+
 select technology_id,
        slug,
        slug_scope,
        decode(admin_only, 'true', True, 'false', False)         as is_admin_only,
        country_codes,
-       decode(has_threads, 'true', True, 'false', False)        as has_threads,
-       decode(has_tolerances, 'true', True, 'false', False)     as has_tolerances,
-       decode(has_gate_positions, 'true', True, 'false', False) as has_gate_positions,
-       decode(has_parting_lines, 'true', True, 'false', False)  as has_parting_lines,
-       decode(has_rapid_tooling, 'true', True, 'false', False)  as has_rapid_tooling,
        standard_tolerance,
        unsupported_country_codes,
        name                                                     as "original_name",
@@ -17,5 +21,9 @@ select technology_id,
               3, 'IM',
               5, 'Urethane Casting',
               6, 'SM',
-              7, 'Casting')                                     as name
+              7, 'Casting')                                     as name,
+       {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.technologies

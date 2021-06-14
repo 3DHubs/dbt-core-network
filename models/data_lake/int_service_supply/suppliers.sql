@@ -1,3 +1,9 @@
+{% set boolean_fields = [
+       "send_automatic_rfq",
+       "allow_for_rfq"
+    ]
+%}
+
 select id,
        address_id,
        name,
@@ -5,12 +11,14 @@ select id,
        created,
        updated,
        deleted,
-       decode(suspended, 'false', False, 'true', True)          as is_suspended,
-       decode(accepts_auctions, 'false', False, 'true', True)   as is_accepting_auctions,
        currency_code,
        unit_preference,
        tax_number_2,
-       decode(send_automatic_rfq, 'false', False, 'true', True) as send_automatic_rfq, -- TODO: better naming convention? {is_,has_}
-       decode(allow_for_rfq, 'false', False, 'true', True)      as allow_for_rfq,      -- TODO: better naming convention? {is_,has_}
-       default_shipping_carrier_id
+       default_shipping_carrier_id,
+       decode(suspended, 'false', False, 'true', True)          as is_suspended,
+       decode(accepts_auctions, 'false', False, 'true', True)   as is_accepting_auctions,
+       {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.suppliers

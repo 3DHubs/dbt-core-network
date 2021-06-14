@@ -1,16 +1,24 @@
+{% set boolean_fields = [
+    "is_expedited",
+    "is_active",
+    "is_allowed_to_override_price",
+    "is_default"
+    ]
+%}
+
 select id,
        name,
        min_price_amount,
        currency_code,
        percentage_from_total,
-       decode(is_expedited, 'true', True, 'false', False)                 as is_expedited,
-       decode(is_active, 'true', True, 'false', False)                    as is_active,
-       decode(is_allowed_to_override_price, 'true', True, 'false', False) as is_allowed_to_override_price,
-       decode(is_default, 'true', True, 'false', False)                   as is_default,
        created,
        updated,
        min_days,
        max_days,
        shipping_leg,
-       region
+       region,
+       {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.shipping_options

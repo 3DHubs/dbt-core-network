@@ -9,6 +9,10 @@ sources:
       - name: hubspot_companies
       - name: hubspot_owners
       - name: hubspot_owners_teams
+      - name: exchange_rate_spot_daily
+        freshness:
+          warn_after: {count: 2, period: day}
+        loaded_at_field: load_timestamp
 
 models:
   - name: fact_supplier_auction_interactions

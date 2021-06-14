@@ -5,11 +5,11 @@ select oqs.created,
        bids.auction_uuid,
        bids.response_type,
        bids.placed_at,
-       decode(bids.has_changed_prices, 'true', True, 'false', False)       as has_changed_prices,
-       decode(bids.has_design_modifications, 'true', True, 'false', False) as has_design_modifications,
+       {{ varchar_to_boolean('has_changed_prices') }}, -- From `bids`
+       {{ varchar_to_boolean('has_design_modifications') }}, -- From `bids`
        bids.ship_by_date,
        bids.rejection_text,
-       decode(bids.is_active, 'true', True, 'false', False)                as is_active,
+       {{ varchar_to_boolean('is_active') }}, -- From `bids`
        bids.supplier_id,
        bids.has_changed_shipping_date,
        bids.rejection_reasons,

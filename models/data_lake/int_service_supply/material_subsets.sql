@@ -1,3 +1,11 @@
+{% set boolean_fields = [
+    "is_available_in_auctions",
+    "is_available_to_suppliers",
+    "has_ral_and_pantone_colors",
+    "show_in_material_pages"
+    ]
+%}
+
 select material_subset_id,
        material_id,
        process_id,
@@ -8,12 +16,8 @@ select material_subset_id,
        image_id,
        slug,
        slug_scope,
-       decode(is_available_in_auctions, 'true', True, 'false', False)   as is_available_in_auctions,
-       decode(is_available_to_suppliers, 'true', True, 'false', False)  as is_available_to_suppliers,
-       decode(has_ral_and_pantone_colors, 'true', True, 'false', False) as has_ral_and_pantone_colors,
        density,
        alternative_name,
-       show_in_material_pages,
        anodizing_compatibility,
        common_applications,
        corrosion_resistance,
@@ -37,5 +41,9 @@ select material_subset_id,
        glass_transition_temperature,
        heat_deflection,
        izod_impact,
-       melting_point
+       melting_point,
+              {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.material_subsets

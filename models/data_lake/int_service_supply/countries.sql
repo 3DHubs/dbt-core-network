@@ -1,3 +1,10 @@
+{% set boolean_fields = [
+    "is_in_eu",
+    "has_payment_embargo",
+    "is_in_efta"
+    ]
+%}
+
 select created,
        updated,
        deleted,
@@ -5,11 +12,12 @@ select created,
        name,
        alpha2_code,
        continent,
-       decode(is_in_eu, 'true', True, 'false', False) as is_in_eu,
-       decode(has_payment_embargo, 'true', True, 'false', False) as has_payment_embargo,
        currency_code,
-       decode(is_in_efta, 'true', True, 'false', False) as is_in_efta,
        coordinates,
        lat,
-       lon
+       lon,
+       {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.countries

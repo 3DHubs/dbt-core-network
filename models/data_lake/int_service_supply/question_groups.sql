@@ -1,11 +1,19 @@
+{% set boolean_fields = [
+    "is_order_level",
+    "is_quote_level",
+    "is_line_item_level"
+    ]
+%}
+
 select created,
        updated,
        deleted,
        id,
        name,
        description,
-       decode(is_order_level, 'true', True, 'false', False)     as is_order_level,
-       decode(is_quote_level, 'true', True, 'false', False)     as is_quote_level,
-       decode(is_line_item_level, 'true', True, 'false', False) as is_line_item_level,
-       machine_name
+       machine_name,
+       {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.question_groups

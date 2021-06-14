@@ -1,3 +1,16 @@
+{% set boolean_fields = [
+    "exceeds_standard_tolerances",
+    "has_threads",
+    "should_quote_manually",
+    "has_technical_drawings",
+    "requires_specific_gate_position",
+    "requires_specific_parting_line",
+    "requires_rapid_tooling",
+    "is_visible_to_supplier",
+    "is_cosmetic"
+    ]
+%}
+
 select created,
        updated,
        deleted,
@@ -23,11 +36,7 @@ select created,
        material_id,
        process_id,
        technology_id,
-       decode(exceeds_standard_tolerances, 'true', True, 'false', False) as exceeds_standard_tolerances,
-       decode(has_threads, 'true', True, 'false', False) as has_threads,
        parent_uuid,
-       decode(should_quote_manually, 'true', True, 'false', False) as should_quote_manually,
-       decode(has_technical_drawings, 'true', True, 'false', False) as has_technical_drawings,
        auto_tooling_price_amount,
        auto_tooling_price_original_amount,
        tooling_price_amount,
@@ -46,10 +55,6 @@ select created,
        tax_price_exempt_amount,
        upload_properties,
        price_multiplier,
-       decode(requires_specific_gate_position, 'true', True, 'false', False) as requires_specific_gate_position,
-       decode(requires_specific_parting_line, 'true', True, 'false', False) as requires_specific_parting_line,
-       decode(requires_rapid_tooling, 'true', True, 'false', False) as requires_rapid_tooling,
-       decode(is_visible_to_supplier, 'true', True, 'false', False) as is_visible_to_supplier,
        commodity_code,
        shipping_option_id,
        target_margin,
@@ -58,8 +63,11 @@ select created,
        custom_tolerance_unit,
        tolerance_id,
        custom_tolerance,
-       decode(is_cosmetic, 'true', True, 'false', False) as is_cosmetic,
        estimated_price_amount,
        estimated_price_original_amount,
-       thickness
+       thickness,
+       {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.line_items

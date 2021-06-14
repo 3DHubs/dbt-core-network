@@ -1,10 +1,16 @@
+{% set boolean_fields = [
+    "is_dismissed",
+    "is_automated_shipping_available",
+    "is_detected_similar",
+    "is_customer_requested_reorder",
+    ]
+%}
+
 select supplier_id,
        auction_uuid,
        assigned_at,
        last_seen_at,
-       decode(is_dismissed, 'true', True, 'false', False) as is_dismissed,
        first_seen_at,
-       decode(is_automated_shipping_available, 'true', True, 'false', False) as is_automated_shipping_available,
        currency_code,
        margin, -- Do not use for reporting, may include discount, which is not used in auction
        margin_without_discount, -- Margin unaffected by discount
@@ -21,6 +27,8 @@ select supplier_id,
        estimated_customs_rate,
        ship_by_date,
        shipping_added_lead_time,
-       decode(is_detected_similar, 'true', True, 'false', False) as is_detected_similar,
-       decode(is_customer_requested_reorder, 'true', True, 'false', False) as is_customer_requested_reorder
+       {% for boolean_field in boolean_fields %}
+           {{ varchar_to_boolean(boolean_field) }}
+           {% if not loop.last %},{% endif %}
+       {% endfor %}
 from int_service_supply.supplier_auctions

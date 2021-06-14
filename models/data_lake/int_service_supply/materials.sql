@@ -11,5 +11,5 @@ select
     price_indication,
     slug_scope,
     header_image_id,
-    decode(show_in_material_pages, 'true', True, 'false', False) as show_in_material_pages
+    {{ varchar_to_boolean('show_in_material_pages') }}
 from int_service_supply.materials

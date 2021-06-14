@@ -51,7 +51,7 @@ select accountid::bigint as account_id,
         nullif(firstpagebid,'--')::double precision as firstpage_cpc_orginal_currency,
         (firstpage_cpc_orginal_currency / rates.rate)::decimal(9,2) as firstpage_cpc_usd
 from keywords_performance_report_ranked
-left join analytics.data_lake.exchange_rate_spot_daily as rates
+left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
     on rates.currency_code_to = keywords_performance_report_ranked.currencycode
     and trunc(keywords_performance_report_ranked.timeperiod) = trunc(rates.date)
 where row_number = 1
