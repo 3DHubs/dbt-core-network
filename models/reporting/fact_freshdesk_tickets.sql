@@ -1,6 +1,5 @@
 {{
        config(
-              materialized = 'table',
               sort = ["ticket_id", "order_uuid"],
               post_hook = "analyze {{ this }}"
        )

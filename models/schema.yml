@@ -14,6 +14,10 @@ sources:
           warn_after: {count: 2, period: day}
         loaded_at_field: load_timestamp
 
+  - name: int_service_supply
+    tables:
+      - name: dispute_line_items_issues
+
 models:
   - name: fact_supplier_auction_interactions
     columns:
