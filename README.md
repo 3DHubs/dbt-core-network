@@ -14,6 +14,12 @@ Generally we distinguish three "layers" of data:
 
 ### `seed`
 - `dbt seed` -- loads all seed data
+- `dbt seed --select seo_page_groups` -- runs only a specific seed
+- `dbt seed --full-refresh` -- refreshes the entire seeds.
+
+More info on DBT's documentation:
+- [DBT seed](https://docs.getdbt.com/docs/building-a-dbt-project/seeds)
+- [DBT seed config](https://docs.getdbt.com/reference/seed-configs)
 
 ### `snapshot`
 - `dbt snapshot` -- refreshes all snapshots (be careful that no user environments have been set-up yet, so this will run snapshots in PROD)

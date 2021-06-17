@@ -94,6 +94,11 @@ seeds:
       description: varchar(56)
       created_by: varchar(56)
     +tags: freshdesk
+  seo_page_groups:
+    +column_types:
+      page: varchar(2056)
+      page_group: varchar(2056)
+    +tags: ["search", "marketing"]
   order_status:
     +column_types:
       order_status_id: int

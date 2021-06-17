@@ -18,6 +18,11 @@ sources:
     tables:
       - name: dispute_line_items_issues
 
+  - name: reporting
+    tables:
+      - name: cube_deals
+      - name: agg_advertising_spend_monthly
+
 models:
   - name: fact_supplier_auction_interactions
     columns:

@@ -94,7 +94,7 @@ stg_cube_invoices_supply as (
             nvl(is_downpayment, false)                                                       as is_downpayment,
             'supply_quotes'                                                                  as _data_source
     from {{ ref('cnc_order_quotes') }} oqsl
-                left outer join {{ ref('fact_deals') }} fd using (order_uuid)
+                left outer join {{ source('reporting', 'cube_deals') }} fd using (order_uuid) -- This should be updated to the future `fact_deals` model.
                 -- left outer join #stg_line_items_supply as li on li.quote_uuid = oqsl.uuid
                 -- Changed this join to rather use the winning_quote (Sales Order) line items from Supply
                 -- Yields more complete data
@@ -183,7 +183,7 @@ stg_cube_invoices_netsuite as (
     from {{ ref('netsuite_invoices') }} as netsuite_trn
                 left outer join {{ ref('cnc_order_quotes') }} oqsl2
                                 on oqsl2.document_number = netsuite_trn.custbodyquotenumber
-                left outer join {{ ref('fact_deals') }} fd on fd.order_uuid = oqsl2.order_uuid
+                left outer join {{ source('reporting', 'cube_deals') }} fd on fd.order_uuid = oqsl2.order_uuid -- To do: this dependency has to be changed once new fact_deals model is ready.
                 left outer join stg_line_items_netsuite as li on li.netsuite_transaction_id = netsuite_trn.tranid
                 left outer join stg_downpayments_netsuite as li_downpayment
                                 on li_downpayment.netsuite_transaction_id = netsuite_trn.tranid
