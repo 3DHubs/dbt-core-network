@@ -1,0 +1,2 @@
+select *
+from int_service_supply.shipping_carriers
