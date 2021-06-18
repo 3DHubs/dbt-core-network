@@ -94,6 +94,14 @@ seeds:
       description: varchar(56)
       created_by: varchar(56)
     +tags: freshdesk
+  macro_factors:
+    +column_types:
+      location: varchar(56)
+      indicator: varchar(56)
+      date: varchar(56)
+      value: int
+      clean_date: date
+    +tags: freshdesk    
   seo_page_groups:
     +column_types:
       page: varchar(2056)
