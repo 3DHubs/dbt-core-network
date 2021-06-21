@@ -1,7 +1,6 @@
 {{
        config(
               materialized='table',
-              pre_hook="analyze data_lake.hubspot_contacts",
               post_hook="analyze {{ this }}"
        )
 }}
