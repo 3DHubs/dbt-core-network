@@ -8,9 +8,9 @@ with line_items as (
                     over (partition by quote_uuid order by quantity desc, price_amount desc) seq,
                     count(upload_id) over (partition by quote_uuid) as uploads
 
-             from data_lake.supply_quote_line_items sqli
-                      left join data_lake.supply_processes sp on sqli.process_id = sp.process_id
-                      left join data_lake.supply_technologies st on sqli.technology_id = st.technology_id
+             from {{ ref('line_items') }} sqli
+                      left join {{ ref('processes') }} sp on sqli.process_id = sp.process_id
+                      left join {{ ref('technologies') }} st on sqli.technology_id = st.technology_id
              where type = 'part'
          ) sqli
     where seq = 1
