@@ -101,7 +101,7 @@ seeds:
       date: varchar(56)
       value: int
       clean_date: date
-    +tags: freshdesk    
+    +tags:     
   seo_page_groups:
     +column_types:
       page: varchar(2056)
