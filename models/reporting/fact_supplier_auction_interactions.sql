@@ -9,7 +9,7 @@ with stg_bids as (
                b.deleted,
                b.uuid,
                b.auction_uuid,
-               case when b.placed_at is null then null else b.response_type end as response_type,
+               case when b.placed_at is not null then b.response_type end as response_type,
                b.placed_at,
                b.ship_by_date,
                b.rejection_text,
