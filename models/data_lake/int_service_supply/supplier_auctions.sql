@@ -27,6 +27,7 @@ select supplier_id,
        estimated_customs_rate,
        ship_by_date,
        shipping_added_lead_time,
+       is_preferred_auction,
        {% for boolean_field in boolean_fields %}
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}
