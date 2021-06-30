@@ -35,6 +35,7 @@ Are used to refer to data populated in the data warehouse. Using sources helps u
 - Join the [chat](http://slack.getdbt.com/) on Slack for live discussions and support
 - Find [dbt events](https://events.getdbt.com) near you
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+- See [dbt style guide](https://github.com/dbt-labs/corp/blob/master/dbt_style_guide.md) for tips how we can organize and format our code.
 
 ## DB Connection
 Currently the Redshift connection is established through `clb-jh-421271935.eu-west-1.elb.amazonaws.com`. Load balancers are managed in the [EC2 console](https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LoadBalancers:sort=loadBalancerName).
