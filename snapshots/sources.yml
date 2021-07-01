@@ -5,7 +5,6 @@ sources:
     database: analytics
     schema: int_service_supply
     tables:
-    - name: line_items
     - name: cnc_order_quotes
     - name: bids
     - name: suppliers
