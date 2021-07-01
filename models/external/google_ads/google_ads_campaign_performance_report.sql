@@ -5,7 +5,7 @@ with campaign_performance_report_ranked as
              select *,
                     row_number()
                     over (partition by day, campaignid, customerid, device order by _sdc_report_datetime desc) as row_number
-             from ext_adwords.campaign_performance_report
+             from {{ source('ext_adwords', 'campaign_performance_report') }}
          )
 select customerid                                          as account_id,
        account                                             as account_name,
@@ -27,7 +27,7 @@ select customerid                                          as account_id,
        searchtopis                                         as search_top_impression_share,
        viewthroughconv                                     as view_trough_conversions
 from campaign_performance_report_ranked
-         left join analytics.data_lake.exchange_rate_spot_daily as rates
+         left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
                    on rates.currency_code_to = campaign_performance_report_ranked.currency
                        and trunc(campaign_performance_report_ranked.day) = trunc(rates.date)
 where row_number = 1

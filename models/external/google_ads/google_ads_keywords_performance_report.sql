@@ -3,7 +3,8 @@
 with keywords_performance_report_ranked as (select *,
                                                    row_number() over (partition by day,
                                                        keywordid, adgroupid, customerid order by _sdc_report_datetime desc) as row_number
-                                            from ext_adwords.keywords_performance_report)
+                                            from {{ source('ext_adwords', 'keywords_performance_report') }}
+                                            )
 select customerid                                                       as account_id,
        account                                                          as account_name,
        adgroup                                                          as adgroup_name,
@@ -53,8 +54,11 @@ select customerid                                                       as accou
        (topofpagecpc / 1000000.0)::decimal(9, 2)                        as top_of_page_cpc_orginal_currency,
        (top_of_page_cpc_orginal_currency / rates.rate)::decimal(9, 2)   as top_of_page_cpc_usd,
        viewthroughconv                                                  as view_trough_conversions
+
 from keywords_performance_report_ranked
-         left join analytics.data_lake.exchange_rate_spot_daily as rates
+
+         left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
                    on rates.currency_code_to = keywords_performance_report_ranked.currency
                        and trunc(keywords_performance_report_ranked.day) = trunc(rates.date)
+
 where row_number = 1

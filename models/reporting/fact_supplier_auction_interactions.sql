@@ -24,7 +24,7 @@ with stg_bids as (
         
         from {{ ref('bids') }} b
                 left outer join {{ ref('cnc_order_quotes') }} q on b.uuid = q.uuid
-                left outer join {{ source('data_lake', 'exchange_rate_spot_daily' )}} e
+                left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} e
                                 on e.currency_code_to = q.currency_code and trunc(e.date) = trunc(q.created)
         ),
 

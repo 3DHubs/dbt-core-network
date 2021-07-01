@@ -1,6 +1,30 @@
 version: 2
 
 sources:
+
+  - name: adwords
+    tables:
+      - name: click_performance_reports
+
+  - name: ext_adwords
+    tables:
+      - name: accounts
+      - name: ad_groups
+      - name: ad_groups__labels
+      - name: campaigns__labels
+      - name: campaign_performance_report
+      - name: campaigns
+      - name: click_performance_report
+      - name: keywords_performance_report
+
+  - name: ext_bing
+    tables:
+      - name: accounts
+      - name: ad_groups
+      - name: campaign_performance_report
+      - name: campaigns
+
+
   - name: data_lake
     tables:
       - name: hubspot_engagements

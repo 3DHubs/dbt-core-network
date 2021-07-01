@@ -3,7 +3,8 @@
 with click_performance_report_ranked as (
     select *,
            row_number() over (partition by day, googleclickid order by _sdc_report_datetime desc) as row_number
-    from ext_adwords.click_performance_report)
+    from {{ source('ext_adwords', 'click_performance_report') }}
+    )
 select account                                      as account_name,
        adgroup,
        adgroupid                                    as adgroup_id,
@@ -83,5 +84,5 @@ select null                                as account_name,
        null                                as region_location_of_interest,
        aoi_most_specific_target_id::bigint as most_specific_location_target_location_of_interest,
        null                                as metro_area_location_of_interest
-from adwords.click_performance_reports -- Data originating from Segment
+from {{ source('adwords', 'click_performance_reports') }} -- Data originating from Segment
 where gcl_id not in (select googleclickid from click_performance_report_ranked where row_number = 1)

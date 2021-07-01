@@ -4,12 +4,6 @@
     )
 }}
 
--- drop table if exists #stg_packages;
--- create table #stg_packages as
-    -- Shipments
---    drop table if exists #stg_shipments;
---     create table #stg_shipments as (
-
 --fetching courier data
 with shipment_carrier_supplier as (
     select package_uuid,
