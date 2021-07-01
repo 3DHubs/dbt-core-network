@@ -41,6 +41,7 @@ sources:
   - name: int_service_supply
     tables:
       - name: dispute_line_items_issues
+      - name: line_items
 
   - name: reporting
     tables:
