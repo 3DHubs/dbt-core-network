@@ -39,9 +39,9 @@ from {{ ref('agg_advertising_spend_daily') }}
 
        -- First assess whether week is complete. The below turns `true` when the _next_ day is
        -- in another week.
-       where case when date_trunc('week', "date") != date_trunc('week', "date" + 1) then true
+       where case when date_trunc('week', "date") != date_trunc('week', "date" + 1) then true end
        -- Then incrementally load latest week data
-       date_trunc('week', date) > (select date_trunc('week', date) from {{ this }} )
+       and date_trunc('week', date) > (select max(date_trunc('week', date)) from {{ this }} )
 
 {% endif %}
 
