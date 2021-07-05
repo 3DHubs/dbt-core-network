@@ -55,11 +55,13 @@ models:
         tests:
           - unique
           - not_null
+
   - name: fact_disputes
     columns:
       - name: order_uuid
         tests:
           - unique
+
   - name: agg_quote_transactions
     columns:
       - name: quote_uuid

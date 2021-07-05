@@ -12,7 +12,7 @@ select client_id,
        advertising_msclkid,
        advertising_source,
        coalesce(cpc.customer_id, keywords.account_id, campaigns.account_id)         as advertising_account_id,
-       coalesce(cpc.campaign_id, keywords.campaign_id, campaigns.campaign_id)        as advertising_campaign_id,
+       coalesce(cpc.campaign_id, keywords.campaign_id, campaigns.campaign_id)       as advertising_campaign_id,
        coalesce(campaigns.campaign_group, keywords.campaign_group)                  as advertising_campaign_group,
        -- Setting keyword_id and adgroup_id to null for campaign_group = 'Display' here, because we only have campaign-level data on reporting.agg_advertising_spend for Display
        case
@@ -24,7 +24,7 @@ select client_id,
        trunc(
                coalesce(cpc.date, hutk_analytics_first_visit_timestamp::timestamp)) as advertising_click_date,
        lower(coalesce(cpc.device, nullif(json_extract_path_text(dcps.first_page_seen_query, 'device'),
-                                           '')))                                      as stg_device,
+                                           '')))                                    as stg_device,
        case
            when stg_device similar to '%desktop%|%computer%|c' then 'Desktop'
            when stg_device similar to '%tablet%|t' then 'Tablet'

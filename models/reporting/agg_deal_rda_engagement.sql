@@ -1,6 +1,3 @@
-/*
- * Author: Diego
- */
 select sai.order_uuid,
        count(distinct sai.sa_supplier_id)                                                        as number_of_suppliers_assigned,
        --General Bid Aggregates

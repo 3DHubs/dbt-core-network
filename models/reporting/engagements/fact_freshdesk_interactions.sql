@@ -1,4 +1,4 @@
-select distinct con.id                                                              as interaction_id,
+select distinct {{ redshift.try_cast('con.id', 'bigint') }}                         as interaction_id,
                 con.ticket_id,
                 null::bigint                                                        as source_ticket_id,
                 con.created_at                                                      as created_date,
@@ -27,7 +27,7 @@ where not (con.source = 2 and con.category = 3) -- this is put in place to filte
   and exists(select 1 from {{ ref('fact_freshdesk_tickets') }} as tix where tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
 union all
 -- Non-primary tickets
-select distinct con.id                                                              as interaction_id,
+select distinct {{ redshift.try_cast('con.id', 'bigint') }}                         as interaction_id,
                 t.ticket_id                                                         as ticket_id,
                 t.linked_ticket_id::bigint                                          as source_ticket_id, -- Conversations that were imported from this ticket id
                 con.created_at                                                      as created_date,
@@ -55,26 +55,26 @@ where not (con.source = 2 and con.category = 3) -- this is put in place to filte
   and t.source <> 'phone'
   and exists(select 1 from {{ ref('fact_freshdesk_tickets') }} as tix where not tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
 union all
-select t.ticket_id                                                                    as interaction_id, -- TODO: better to populate w/ NULL?
-        t.ticket_id,
-        null::bigint                                                                   as source_ticket_id,
-        t.created_date,
-        t.agent_id                                                                     as agent_id,
-        a.contact_name                                                                 as agent_name,
-        null                                                                           as support_email,
-        null                                                                           as from_email,
-        case
-            when t.source = 'portal' then 'portal'
-            when t.source = 'email' then 'customer initiation'
-            when t.source = 'outbound_email' then 'agent initiation'
-            when t.source = 'feedback_widget' then 'customer initiation' end           as interaction_type,
-        case when interaction_type = 'agent initiation' then 1 else 0 end              as agent_interaction_count,
-        0                                                                              as internal_interaction_count,
-        case when interaction_type = 'customer initiation' then 1 else 0 end           as customer_interaction_count,
-        true                                                                           as is_first_interaction,
-        t.ticket_tag_3d_hubs                                                           as ticket_tag,
-        t.source,
-        'reporting.fact_freshdesk_tickets; not source phone'                           as _data_source
+select {{ redshift.try_cast('t.ticket_id', 'bigint') }}                               as interaction_id, -- TODO: better to populate w/ NULL?
+       t.ticket_id,
+       null::bigint                                                                   as source_ticket_id,
+       t.created_date,
+       t.agent_id                                                                     as agent_id,
+       a.contact_name                                                                 as agent_name,
+       null                                                                           as support_email,
+       null                                                                           as from_email,
+       case
+           when t.source = 'portal' then 'portal'
+           when t.source = 'email' then 'customer initiation'
+           when t.source = 'outbound_email' then 'agent initiation'
+           when t.source = 'feedback_widget' then 'customer initiation' end           as interaction_type,
+       case when interaction_type = 'agent initiation' then 1 else 0 end              as agent_interaction_count,
+       0                                                                              as internal_interaction_count,
+       case when interaction_type = 'customer initiation' then 1 else 0 end           as customer_interaction_count,
+       true                                                                           as is_first_interaction,
+       t.ticket_tag_3d_hubs                                                           as ticket_tag,
+       t.source,
+       'reporting.fact_freshdesk_tickets; not source phone'                           as _data_source
 from {{ ref('fact_freshdesk_tickets') }} as t
           left outer join {{ ref ('freshdesk_agents') }} as a on t.agent_id = a.id and a._is_latest
 where true

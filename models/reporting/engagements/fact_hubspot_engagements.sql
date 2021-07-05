@@ -14,7 +14,7 @@ with stg_associations as (
 
     {% if is_incremental() %}
 
-      where id > (select max(id) from {{ this}})
+      where id > (select max(id) from {{ this}} )
 
     {% endif %}
 ),
@@ -43,12 +43,12 @@ engagements_gather1 as (
              from ns
                       inner join engagements_gather2 c on ns.n <= regexp_count(c.engagement_company_id, ',') + 1
          )
-select he.id,
+select he.id::bigint                                                              as id,
        he.created_at,
        he.type,
        he.source,
        he.owner_id as engagement_owner_id,
-       concat(ho.first_name, concat(' ', ho.last_name))                         as engagement_owner_name,
+       concat(ho.first_name, concat(' ', ho.last_name))                           as engagement_owner_name,
        he_gather.contact_id,
        he_gather.company_id,
        he_gather.deal_id,
@@ -73,6 +73,6 @@ from {{ source('data_lake', 'hubspot_engagements') }} as he
 
 {% if is_incremental() %}
 
-  where he.id > (select max(id) from {{ this }})
+  where he.id > (select max(id) from {{ this }} )
 
 {% endif %}
