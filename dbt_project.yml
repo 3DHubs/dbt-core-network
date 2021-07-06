@@ -68,6 +68,25 @@ seeds:
     +column_types:
       industry: varchar(128)
       industry_mapped: varchar(128)
+  countries_mapping:
+    +column_types:
+      created: timestamp
+      updated: timestamp
+      deleted: timestamp
+      country_id: int
+      name: varchar(2048)
+      alpha2_code: varchar(2048)
+      continent: varchar(2048)
+      currency_code: varchar(16)
+      coordinates: varchar(2048)
+      lat: varchar(2048)
+      lon: varchar(2048)
+      region: varchar(2048)
+      market: varchar(2048)
+      country_iso3: varchar(16)
+      is_in_eu: boolean
+      has_payment_embargo: boolean
+      is_in_efta: boolean
   freshdesk_ticket_scope:
     +column_types:
       scope_id: int

@@ -34,6 +34,11 @@ sources:
       - name: hubspot_owners
       - name: hubspot_owners_teams
       - name: exchange_rate_spot_daily
+      - name: google_search_console
+      - name: supply_countries_markets_mapping
+      - name: static_seo_page_group
+      - name: static_seo_targets
+      
         freshness:
           warn_after: {count: 2, period: day}
         loaded_at_field: load_timestamp
@@ -47,7 +52,6 @@ sources:
     tables:
       - name: cube_deals
       - name: agg_advertising_spend_monthly
-
 models:
   - name: fact_supplier_auction_interactions
     columns:
