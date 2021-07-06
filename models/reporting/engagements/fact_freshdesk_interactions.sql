@@ -21,10 +21,10 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                 'True'                                                              as _data_source
 from {{ ref('freshdesk_ticket_conversations') }} as con
           left outer join {{ ref('freshdesk_agents')}} as a on con.user_id = a.id and a._is_latest
-          left outer join {{ ref('fact_freshdesk_tickets') }} as t on t.ticket_id = con.ticket_id
+          left outer join {{ ref('stg_fact_freshdesk_tickets') }} as t on t.ticket_id = con.ticket_id
 where not (con.source = 2 and con.category = 3) -- this is put in place to filter out all public notes (these should not be considered an interaction)
   and t.source <> 'phone'
-  and exists(select 1 from {{ ref('fact_freshdesk_tickets') }} as tix where tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
+  and exists(select 1 from {{ ref('stg_fact_freshdesk_tickets') }} as tix where tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
 union all
 -- Non-primary tickets
 select distinct {{ redshift.try_cast('con.id', 'bigint') }}                         as interaction_id,
@@ -50,10 +50,10 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                 'False'                                                             as _data_source
 from {{ ref('freshdesk_ticket_conversations') }} as con
           left outer join {{ ref ('freshdesk_agents') }} as a on con.user_id = a.id and a._is_latest
-          left outer join {{ ref('fact_freshdesk_tickets') }} as t on t.linked_ticket_id = con.ticket_id
+          left outer join {{ ref('stg_fact_freshdesk_tickets') }} as t on t.linked_ticket_id = con.ticket_id
 where not (con.source = 2 and con.category = 3) -- this is put in place to filter out all public notes (these should not be considered an interaction)
   and t.source <> 'phone'
-  and exists(select 1 from {{ ref('fact_freshdesk_tickets') }} as tix where not tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
+  and exists(select 1 from {{ ref('stg_fact_freshdesk_tickets') }} as tix where not tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
 union all
 select {{ redshift.try_cast('t.ticket_id', 'bigint') }}                               as interaction_id, -- TODO: better to populate w/ NULL?
        t.ticket_id,
@@ -75,7 +75,7 @@ select {{ redshift.try_cast('t.ticket_id', 'bigint') }}                         
        t.ticket_tag_3d_hubs                                                           as ticket_tag,
        t.source,
        'reporting.fact_freshdesk_tickets; not source phone'                           as _data_source
-from {{ ref('fact_freshdesk_tickets') }} as t
+from {{ ref('stg_fact_freshdesk_tickets') }} as t
           left outer join {{ ref ('freshdesk_agents') }} as a on t.agent_id = a.id and a._is_latest
 where true
   and t.source <> 'phone'

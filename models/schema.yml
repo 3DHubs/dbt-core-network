@@ -66,4 +66,3 @@ models:
     columns:
       - name: quote_uuid
         tests:
-          - unique

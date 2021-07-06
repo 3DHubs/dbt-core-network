@@ -1,4 +1,4 @@
-# DBT @ Hubs
+# dbt at Hubs
 
 Generally we distinguish three "layers" of data:
 (1) landing (or staging) -- the layer that consists of raw data
@@ -24,6 +24,9 @@ More info on DBT's documentation:
 ### `snapshot`
 - `dbt snapshot` -- refreshes all snapshots (be careful that no user environments have been set-up yet, so this will run snapshots in PROD)
 
+# Continuous Integration
+- Once you open a PR, a dbt job will kick-off to validate the proposed changes.
+
 # Sources
 Are used to refer to data populated in the data warehouse. Using sources helps us track lineage and allows us to determine source freshness.
 - [Introduction to sources](https://docs.getdbt.com/docs/building-a-dbt-project/using-sources).
@@ -37,5 +40,9 @@ Are used to refer to data populated in the data warehouse. Using sources helps u
 - Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
 - See [dbt style guide](https://github.com/dbt-labs/corp/blob/master/dbt_style_guide.md) for tips how we can organize and format our code.
 
+## Utilities:
+- dbt-utils ([source](https://github.com/dbt-labs/dbt-utils))
+- redshift ([source](https://github.com/dbt-labs/redshift))
+
 ## DB Connection
-Currently the Redshift connection is established through `clb-jh-421271935.eu-west-1.elb.amazonaws.com`. Load balancers are managed in the [EC2 console](https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LoadBalancers:sort=loadBalancerName).
+Currently the Redshift connection is established through a load balancers which is managed in the [EC2 console](https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LoadBalancers:sort=loadBalancerName).
