@@ -1,4 +1,4 @@
-select sai.order_uuid,
+select sai.auction_order_uuid,
        count(distinct sai.sa_supplier_id)                                                        as number_of_suppliers_assigned,
        --General Bid Aggregates
        count(distinct sai.bid_uuid)                                                              as number_of_bids,
@@ -22,5 +22,7 @@ select sai.order_uuid,
        bool_or(
                sai.bid_has_changed_shipping_date = 'true' and sai.is_winning_bid)                as order_has_winning_bid_countered_on_lead_time,
        bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as order_has_winning_bid_countered_on_design
-from reporting.fact_supplier_auction_interactions as sai
+
+from {{ ref('fact_supplier_auction_interactions') }} as sai
+
 group by 1
