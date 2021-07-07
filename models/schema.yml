@@ -23,6 +23,7 @@ sources:
       - name: ad_groups
       - name: campaign_performance_report
       - name: campaigns
+      - name: keyword_performance_report
 
 
   - name: data_lake

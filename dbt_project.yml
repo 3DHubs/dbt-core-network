@@ -27,9 +27,13 @@ clean-targets:         # directories to be removed by `dbt clean`
 # Model config
 models:
   hubs:
-    bing_ads:
-      +schema: data_lake
-      +tags: ["advertising", "bing"]
+    external:
+      bing_ads:
+        +schema: data_lake
+        +tags: ["advertising", "bing"]
+      google_ads:
+        +schema: data_lake
+        +tags: ["advertising", "google"]
     data_lake:
       +schema: data_lake
       int_service_supply:
@@ -38,9 +42,7 @@ models:
         +bind: false
       freshdesk:
         +tags: freshdesk
-    google_ads:
-      +schema: data_lake
-      +tags: ["advertising", "google"]
+    
     hubspot:
       +schema: data_lake
       +tags: ["hubspot", "crm"]
