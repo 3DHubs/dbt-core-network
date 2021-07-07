@@ -2,6 +2,11 @@ version: 2
 
 sources:
 
+  - name: _3d_hubs
+    tables:
+      - name: supply_quote_updated
+      - name: frontend_email_wall_submitted
+
   - name: adwords
     tables:
       - name: click_performance_reports
@@ -38,11 +43,11 @@ sources:
       - name: google_search_console
       - name: supply_countries_markets_mapping
       - name: static_seo_page_group
-      - name: static_seo_targets
-      
+      - name: static_seo_targets      
         freshness:
           warn_after: {count: 2, period: day}
         loaded_at_field: load_timestamp
+      - name: hubspot_email_wall_submissions_20210423
 
   - name: int_service_supply
     tables:
