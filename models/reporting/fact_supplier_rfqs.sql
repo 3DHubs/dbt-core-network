@@ -36,6 +36,7 @@ with winning_bid as (
 select supplier_rfqs.id                                                                     as supplier_rfq_id,
        supplier_rfqs.order_uuid,
        supplier_rfqs.supplier_id,
+       s.name                                                                               as supplier_name,
        supplier_rfqs.created                                                                as supplier_rfq_sent_date,
        bid_quotes.lead_time,
        round(bid_quotes.subtotal_price_amount / 100.00, 2)                                  as rfq_bid_amount,
@@ -49,6 +50,8 @@ from {{ ref('supplier_rfqs') }} as supplier_rfqs
         on supplier_rfqs.order_uuid = bid_quotes.order_uuid
         and bid_quotes.supplier_id = supplier_rfqs.supplier_id
         and supplier_bid_idx = 1
+    left outer join {{ ref('suppliers') }} as s 
+        on s.id = supplier_rfqs.supplier_id
     left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
         on rates.currency_code_to = bid_quotes.currency_code
         and trunc(bid_quotes.created) = trunc(rates.date)
