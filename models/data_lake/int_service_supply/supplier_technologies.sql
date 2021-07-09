@@ -13,6 +13,10 @@ select supplier_id,
        strategic_orders_priority,
        min_order_amount,
        min_lead_time,
+       num_parts_min,
+       num_parts_max,
+       num_units_min,
+       num_units_max,
        {% for boolean_field in boolean_fields %}
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}

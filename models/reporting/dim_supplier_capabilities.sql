@@ -8,7 +8,11 @@ with supplier_tech as (
            st.max_active_orders,
            st.allow_orders_with_custom_finishes,
            st.allow_strategic_orders,
-           st.allow_non_strategic_orders
+           st.allow_non_strategic_orders,
+           st.num_parts_min, 
+           st.num_parts_max, 
+           st.num_units_min, 
+           st.num_units_max
     from {{ ref('suppliers') }} s
              left join {{ ref('supplier_technologies') }} st on st.supplier_id = s.id
              left outer join {{ ref('technologies') }} as tec on st.technology_id = tec.technology_id
@@ -59,7 +63,13 @@ with supplier_tech as (
                 s.name as supplier_name,
                 p.technology_id,
                 p.process_id,
-                p.name as process_name
+                p.name as process_name,
+                sp.depth_min, 
+                sp.depth_max, 
+                sp.width_min, 
+                sp.width_max, 
+                sp.height_min, 
+                sp.height_max
          from {{ ref('suppliers') }} as s
                   left outer join {{ ref('supplier_processes') }} as sp on s.id = sp.supplier_id
                   left outer join {{ ref('processes') }} as p on sp.process_id = p.process_id
@@ -70,7 +80,13 @@ select st.*,
        ms.material_subset_name,
        ms.material_subset_id,
        coalesce(p.process_name, p1.process_name) as process_name,
-       coalesce(p.process_id, p1.process_id)     as process_id
+       coalesce(p.process_id, p1.process_id)     as process_id,
+       p.depth_min, --cnc only
+       p.depth_max,
+       p.width_min,
+       p.width_max,
+       p.height_min,
+       p.height_max
 from supplier_tech st
          left join finishes f on f.supplier_id = st.supplier_id and f.technology_id = st.technology_id
          left join material_subssets ms on ms.id = st.supplier_id and ms.technology_id = st.technology_id
