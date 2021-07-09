@@ -27,7 +27,7 @@ with winning_bid as (
                 on bid_quotes.uuid = bids.uuid
             left outer join {{ ref('cnc_order_quotes') }} as auction_quote
                 on auction_quote.uuid = bid_quotes.parent_uuid
-            left outer join {{ ref('supplier_rfqs_src_auction') }} as auctions
+            inner join {{ ref('supplier_rfqs_src_auction') }} as auctions
                 on auctions.order_quotes_uuid = auction_quote.uuid
         
         where bid_quotes.type = 'bid'
