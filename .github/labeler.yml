@@ -1,0 +1,14 @@
+macro:
+  - macros/**
+
+test:
+  - test/**
+
+analytics:
+  - models/reporting/**
+
+seed:
+  - data/**
+
+config:
+  - '/**/*.yml'
