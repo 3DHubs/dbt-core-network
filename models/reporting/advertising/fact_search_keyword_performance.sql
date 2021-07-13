@@ -1,11 +1,39 @@
 {{
     config(
-        materialized = 'incremental'
+        materialized = 'incremental',
+        unique_key = '_kw_report_sk'
     )
 }}
 
+with akpr as (
+    select *
+    from {{ ref('google_ads_keywords_performance_report') }}
+    where "date" >= '2019-07-01'
+      and "date" < current_date
+
+    {% if is_incremental() %}
+    -- We load the last 30 days because that's how far Stitch looks back at the keyword performance report.
+
+        and trunc("date") >= current_date - 30
+
+    {% endif %}
+),
+
+     bkpr as (
+    select *
+    from {{ ref('bing_ads_keywords_performance_report') }}
+    where date >= '2019-07-01'
+    and date < current_date -- from 2019-07-01 we started properly tracking contact source in Hubspot, so data before this point is not useful
+        {% if is_incremental() %}
+
+            and trunc("date") >= current_date - 30
+
+        {% endif %}
+     )
+
+
 -- Google data
-select trunc(akpr.date)                                          as date,
+select trunc(akpr.date)                                      as date,
        'adwords'                                             as source, --TODO: Requires update to Google Ads?
        akpr.account_id,
        akpr.campaign_id,
@@ -25,20 +53,12 @@ select trunc(akpr.date)                                          as date,
        akpr.historical_quality_score,
        akpr.historical_ad_relevance,
        akpr.historical_expected_ctr,
-       akpr.historical_landingpage_experience
+       akpr.historical_landingpage_experience,
+       akpr._kw_report_sk
 
-from {{ ref('google_ads_keywords_performance_report') }} as akpr
+from akpr
             left join {{ ref ('google_ads_campaigns') }} as ac on ac.id = akpr.campaign_id
             left join {{ ref ('google_ads_ad_groups') }} as aag on aag.id = akpr.adgroup_id
-
-where date >= '2019-07-01'
-    and date < current_date -- from 2019-07-01 we started properly tracking contact source in Hubspot, so data before this point is not useful
-
-{% if is_incremental() %}
-
-    and trunc(akpr.date) > (select max("date") from {{ this }} )
-
-{% endif %}
 
 union all
 
@@ -64,17 +84,9 @@ select trunc(bkpr.date)                                          as date,
        bkpr.historical_quality_score,
        bkpr.historical_ad_relevance,
        bkpr.historical_expected_ctr,
-       bkpr.historical_landingpage_experience
+       bkpr.historical_landingpage_experience,
+       bkpr._kw_report_sk
 
-from {{ ref('bing_ads_keywords_performance_report') }} as bkpr
+from bkpr
             left join {{ ref ('bing_ads_campaigns') }} as bc on bc.id = bkpr.campaign_id
             left join {{ ref ('bing_ads_ad_groups') }} as bad on bad.id = bkpr.adgroup_id
-
-where date >= '2019-07-01'
-    and date < current_date -- from 2019-07-01 we started properly tracking contact source in Hubspot, so data before this point is not useful
-
-{% if is_incremental() %}
-
-    and trunc(bkpr.date) > (select max("date") from {{ this }} )
-
-{% endif %}

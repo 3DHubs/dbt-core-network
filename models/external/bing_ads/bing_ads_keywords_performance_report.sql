@@ -1,8 +1,7 @@
 {{
     config(
-        materialized='table',
-        sort=['keyword_id', 'adgroup_id', 'campaign_id'],
-        dist='date'
+        materialized = 'incremental',
+        unique_key = '_kw_report_sk'
     )
 }}
 
@@ -10,15 +9,22 @@ with keywords_performance_report_ranked as
 (
     select
         *,
+        {{ dbt_utils.surrogate_key(['timeperiod', 'keywordid', 'adgroupid', 'accountid']) }} as _kw_report_sk,
         row_number() over (
-            partition by
-                     timeperiod, keywordid, adgroupid, accountid
-            order by _sdc_report_datetime desc
+            partition by timeperiod, keywordid, adgroupid, accountid
+            order by _sdc_report_datetime desc, _sdc_sequence desc
         ) as row_number
     from {{ source('ext_bing', 'keyword_performance_report') }}
+
+    {% if is_incremental() %}
+
+            where timeperiod >= current_date - 31
+
+    {% endif %}
 )
 
 select
+    _kw_report_sk,
     accountid::bigint as account_id,
     accountname as account_name,
     accountnumber as account_number,

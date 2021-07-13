@@ -1,11 +1,33 @@
-{{ config(bind=False) }}
+{{
+       config(
+              materialized = 'incremental',
+              unique_key = '_kw_report_sk'
+       )
+}}
 
-with keywords_performance_report_ranked as (select *,
-                                                   row_number() over (partition by day,
-                                                       keywordid, adgroupid, customerid order by _sdc_report_datetime desc) as row_number
-                                            from {{ source('ext_adwords', 'keywords_performance_report') }}
-                                            )
-select customerid                                                       as account_id,
+-- Need pre_hook macro to purge duplicates first. Once this has run on the full
+-- data set, it can be run for the last 31 days only as Stitch only fetches l30d
+-- data. If we have the pre_hook in place, we can omit the `row_number()` CTE.
+ 
+with keywords_performance_report_ranked as (
+       select *,
+              {{ dbt_utils.surrogate_key(['day', 'keywordid', 'adgroupid', 'customerid']) }} as _kw_report_sk,
+              row_number() over (
+                     partition by day, keywordid, adgroupid, customerid
+                     order by _sdc_report_datetime desc, _sdc_sequence desc
+              ) as row_number
+       
+       from {{ source('ext_adwords', 'keywords_performance_report') }}
+
+       {% if is_incremental() %}
+
+              where day >= current_date - 31
+
+       {% endif %}
+)
+
+select _kw_report_sk,
+       customerid                                                       as account_id,
        account                                                          as account_name,
        adgroup                                                          as adgroup_name,
        adgroupid                                                        as adgroup_id,
