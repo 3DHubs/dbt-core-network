@@ -46,3 +46,6 @@ Are used to refer to data populated in the data warehouse. Using sources helps u
 
 ## DB Connection
 Currently the Redshift connection is established through a load balancers which is managed in the [EC2 console](https://eu-west-1.console.aws.amazon.com/ec2/v2/home?region=eu-west-1#LoadBalancers:sort=loadBalancerName).
+
+# Actions
+- [Stale](https://github.com/actions/stale)
