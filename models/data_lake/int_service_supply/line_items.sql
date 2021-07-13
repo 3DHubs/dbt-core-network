@@ -1,3 +1,10 @@
+{{
+    config(
+        materialized='incremental',
+        unique_key='uuid'
+    )
+}}
+
 {% set boolean_fields = [
     "exceeds_standard_tolerances",
     "has_threads",
@@ -70,4 +77,12 @@ select created,
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}
        {% endfor %}
+
 from {{ source('int_service_supply', 'line_items') }}
+
+{% if is_incremental() %}
+
+  -- this filter will only be applied on an incremental run
+  where updated >= (select max(updated) from {{ this }})
+
+{% endif %}
