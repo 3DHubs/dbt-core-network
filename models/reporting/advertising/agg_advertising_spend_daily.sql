@@ -63,7 +63,8 @@ with campaign_costs_from_keywords as (
                 null::int                                                     as historical_quality_score,
                 null::int                                                     as historical_ad_relevance,
                 null::int                                                     as historical_expected_ctr,
-                null::int                                                     as historical_landingpage_experience
+                null::int                                                     as historical_landingpage_experience,
+                null::varchar                                                 as _kw_report_sk
 
         from campaign_costs cc
                 left outer join campaign_costs_from_keywords ccfk
