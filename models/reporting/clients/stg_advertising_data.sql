@@ -1,11 +1,11 @@
 -- Warning: hard-coded references to `reporting` model.
 with keywords as (
     select distinct source, account_id, campaign_id, adgroup_id, keyword_id, campaign_group
-    from {{ source('reporting', 'agg_advertising_spend_monthly') }}
+    from {{ ref('agg_advertising_spend_monthly') }}
     ),
      campaigns as (
     select distinct source, account_id, campaign_id, campaign_group
-    from {{ source('reporting', 'agg_advertising_spend_monthly') }}
+    from {{ ref('agg_advertising_spend_monthly') }}
     )
 select client_id,
        advertising_gclid,
