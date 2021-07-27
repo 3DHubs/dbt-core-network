@@ -141,6 +141,19 @@ seeds:
       is_deleted: boolean
       _load_timestamp: timestamp
     +tags: ["crm", "hubspot"]
+  hubspot_dealstages:
+    +column_types: 
+      id_redshift: int
+      dealstage_internal_label: varchar(256)
+      dealstage_internal_value: varchar(256)
+      dealstage_mapped_value: varchar(256)
+      pipeline: varchar(256)
+      sort_index: varchar(4)
+    +tags: ["hubspot"]
+  hubspot_technology_mapping:
+    +column_types:
+      technology_id: int
+      hubspot_technology: varchar(56)    
 
 # Snapshot configuration
 snapshots:

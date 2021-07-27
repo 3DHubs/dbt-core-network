@@ -37,6 +37,7 @@ sources:
       - name: hubspot_deals
       - name: hubspot_contacts
       - name: hubspot_companies
+      - name: hubspot_deal_dealstage_history
       - name: hubspot_owners
       - name: hubspot_owners_teams
       - name: exchange_rate_spot_daily
@@ -48,15 +49,21 @@ sources:
           warn_after: {count: 2, period: day}
         loaded_at_field: load_timestamp
       - name: hubspot_email_wall_submissions_20210423
+      - name: adhoc_drupal_closed_sales_20191211
+      - name: supply_cross_docking_tracking_details_20200911
 
   - name: int_service_supply
     tables:
+      - name: cancellation_reasons
       - name: dispute_line_items_issues
+      - name: lead_time_tiers
       - name: line_items
+      - name: refund_requests
 
   - name: reporting
     tables:
       - name: cube_deals
+
 models:
   - name: fact_supplier_auction_interactions
     columns:
@@ -71,7 +78,8 @@ models:
         tests:
           - unique
 
-  - name: agg_quote_transactions
+  - name: append_orders_rda
     columns:
-      - name: quote_uuid
+      - name: order_uuid
         tests:
+          - unique

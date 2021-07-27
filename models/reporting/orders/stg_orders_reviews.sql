@@ -1,0 +1,55 @@
+----------------------------------------------------------------
+-- TECHNICAL REVIEWS & RFQs
+----------------------------------------------------------------
+
+-- Combines:
+-- 1. Supply Technical Reviews
+-- 2. Reporting Hubspot Deal Reviews
+-- 3. Fact Supplier RFQs
+
+------------- SOURCE: SUPPLY -----------
+
+with agg_supply_technical_review as (
+       select orders.hubspot_deal_id,
+              count(*)              as number_of_technical_reviews,
+              min(str.submitted_at) as supply_first_review_submitted_at,
+              max(str.completed_at) as supply_last_review_completed_at
+       from {{ ref('technical_reviews') }} as str
+                inner join {{ ref('cnc_order_quotes') }} as soq on str.quote_uuid = soq.uuid
+                left join {{ ref('cnc_orders') }} as orders on soq.uuid = orders.quote_uuid
+       group by 1
+       order by 2 desc
+),
+
+     window_agg_hubspot_technical_review as (
+       select deal_id,
+              min(review_completed_date) as hubspot_first_review_completed_at
+       from {{ ref('fact_hubspot_deal_reviews') }}
+       where review_outcome = 'completed'
+       group by 1
+     ),
+
+     rfq_requests as (
+       select order_uuid,
+              true as is_rfq,
+              count(*) number_of_rfq_requests,
+              sum(case when supplier_rfq_responded_date is not null then 1 else 0 end) as number_of_rfq_responded
+       from {{ ref('fact_supplier_rfqs') }} as rfq
+       group by 1  
+     )
+
+-- Final Query
+
+select orders.uuid as order_uuid,
+       true as is_technical_review,
+       supply.number_of_technical_reviews,
+       supply.supply_first_review_submitted_at,
+       hubspot.hubspot_first_review_completed_at,
+       supply.supply_last_review_completed_at,
+       rfq.is_rfq,
+       rfq.number_of_rfq_requests,
+       rfq.number_of_rfq_responded
+from {{ ref('cnc_orders') }} as orders
+left join agg_supply_technical_review as supply on orders.hubspot_deal_id = supply.hubspot_deal_id
+left join window_agg_hubspot_technical_review as hubspot on supply.hubspot_deal_id = hubspot.deal_id
+left join rfq_requests as rfq on orders.uuid = rfq.order_uuid

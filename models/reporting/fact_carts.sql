@@ -68,7 +68,7 @@ on quotes.uuid = orders.quote_uuid
     left join {{ ref ('addresses') }} sa on quotes.shipping_address_id = sa.address_id
     left join {{ ref ('countries') }} sc on sa.country_id = sc.country_id
     left join line_items lit on orders.quote_uuid = lit.quote_uuid
-    left join analytics.data_lake.exchange_rate_spot_daily as rates
+    left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
     on rates.currency_code_to = quotes.currency_code and
     trunc(coalesce (quotes.finalized_at, quotes.created)) = trunc(rates.date)
-where quotes.lead_time != 40
+where quotes.lead_time != 40 -- Way to delete empty carts

@@ -156,7 +156,7 @@ with stg_bids as (
         group by 1
         )
 
-select sai.supplier_auction_uuid,
+select  sai.supplier_auction_uuid,
         sai.sa_supplier_id,
         sai.sa_auction_uuid,
         sai.sa_assigned_at,

@@ -1,0 +1,21 @@
+id_redshift,dealstage_internal_label,dealstage_internal_value,dealstage_mapped_value,pipeline,sort_index
+"3","b635bec3-741c-45db-891c-d28421f914d9","On hold (Quote requests)","On hold (Quote requests)","supply",
+"8","b12da4a0-04de-4704-a916-191beb63301f","Submitted self service orders (Self service orders)","Submitted self service orders (Self service orders)","drupal",
+"13","702ee4a9-f500-4439-9e50-740340ceb99f","Lost self service orders (Self service orders)","Lost self service orders (Self service orders)","drupal",
+"14","c849047a-3b7f-4ff0-a734-be7c9dacf932","Paid self service orders (Self service orders)","Paid self service orders (Self service orders)","drupal",
+"1","appointmentscheduled","New","New","supply","A"
+"7","04fd8bb8-b303-4afe-94f9-66fd068158bc","Ongoing - No quote sent","Ongoing - No quote sent","supply","B"
+"6","e8e8d371-d1d5-4e57-b008-420f07eac1d0","In review - New","In review - New","supply","C"
+"19","958c46a5-a4cf-4925-84cd-621e29eba399","In review - Ongoing","In review - Ongoing","supply","D"
+"5","a963960f-db29-485b-a75a-5d53334e688b","In review - Completed","In review - Completed","supply","E"
+"2","presentationscheduled","Ongoing - Quote sent","Ongoing - Quote sent","supply","F"
+"11","decisionmakerboughtin","Won - Needs sourcing","Won - Needs sourcing","supply","G"
+"4","2c3bf57f-fc53-4c6f-8f24-acf82afd289f","Won - In production","Won - In production","supply","H"
+"16","0285edd6-d54f-4a7f-ab39-836e3c43b0cf","Won - In shipment","Won - In shipment","supply","I"
+"10","819421ae-33ec-40ff-ae5d-a20ff5ebd6e4","Won - Received by customer (review)","Won - Received by customer (review)","supply","J"
+"18","d50b31b0-09e8-426b-a3b7-d19f8c82e8e9","Won - Accepted by customer","Won - Accepted by customer","supply","K"
+"17","0e08eccb-027a-4f3e-b0ed-ac74b36d57e3","Won - Disputed by customer","Won - Disputed by customer","supply","L"
+"15","32e7e501-1b86-4236-a2c0-0ac953654d60","Won - Customer invoiced","Won - Customer invoiced","supply","M"
+"12","f4036e27-df3a-4265-8ee3-68c1bdc58430","Closed - Canceled","Closed - Canceled","supply","N"
+"9","contractsent","Closed - Lost","Closed - Lost","supply","O"
+"20","11450348","In review - Rejected","In review - Rejected","supply","E"

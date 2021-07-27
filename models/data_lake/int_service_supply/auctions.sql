@@ -21,6 +21,7 @@ with auctions as (select oqs.created,
                          auctions.ship_by_date,
                          auctions.last_processed_at,
                          auctions.internal_support_ticket_id,
+                         auctions.internal_support_ticket_opened_at,
                          {{ varchar_to_boolean('is_internal_support_ticket_opened') }}, -- From `auctions`
                          decode(auctions.china_throttled, 'true', True, 'false', False)      as is_china_throttled,
                          auctions.base_margin,                  -- For debugging purposes only, do not use for reporting
