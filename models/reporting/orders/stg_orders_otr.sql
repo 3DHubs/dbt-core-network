@@ -20,7 +20,7 @@ with delays as (
 
 -- Main Query: It compares shipping dates with promised shipping date from order documents (PO & Quote)
 
-select orders.uuid       as order_uuid,
+select distinct orders.uuid       as order_uuid,
 
        case
            when docs.po_active_promised_shipping_at_by_supplier is null then null
@@ -57,6 +57,6 @@ select orders.uuid       as order_uuid,
 
 from {{ ref('cnc_orders') }} as orders
 left join {{ ref ('stg_orders_documents')}} as docs
-on orders.uuid = docs.order_uuid
-    left join {{ ref ('stg_orders_logistics')}} as logistics on orders.uuid = logistics.order_uuid
-    left join delays on orders.uuid = delays.order_uuid
+    on orders.uuid = docs.order_uuid
+left join {{ ref ('stg_orders_logistics')}} as logistics on orders.uuid = logistics.order_uuid
+left join delays on orders.uuid = delays.order_uuid
