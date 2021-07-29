@@ -26,7 +26,7 @@ with stg_us_states as (
                             on lower(states.state) = lower(replace(stg_us_states.administrative_area, 'US-', ''))
      )
 
-select orders.uuid                    as order_uuid,
+select distinct orders.uuid                    as order_uuid,
 
        -- Customer
        addresses_customer.locality    as customer_city,
