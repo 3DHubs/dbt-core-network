@@ -166,6 +166,7 @@ with first_quote as (
 
      active_po as (
          select quotes.order_uuid,
+                quotes.created,
                 round(((subtotal_price_amount / 100.00) / rates.rate), 2)                    as po_active_amount_usd,
                 document_number                                                              as po_active_document_number,
                 purchase_orders.supplier_id::int                                             as po_active_supplier_id,                    -- Used to define is_resourced field
@@ -177,7 +178,9 @@ with first_quote as (
                         then quotes.shipping_date end                                        as po_active_promised_shipping_at_by_supplier,
                 sum(case
                         when sqli.type = 'shipping'
-                            then round(((price_amount / 100.00) / rates.rate), 2) end)       as po_active_shipping_usd
+                            then round(((price_amount / 100.00) / rates.rate), 2) end)       as po_active_shipping_usd,
+                row_number() over (
+                    partition by quotes.order_uuid order by quotes.created desc)             as rn -- Noticed a few orders with 2+ active POs, this helps us guarantee uniqueness
 
                 --todo: if agreed, remove:
 
@@ -190,6 +193,7 @@ with first_quote as (
 --                     else oqsl.shipping_date end                                        as po_shipping_render_date,
 --                 (subtotal_price_amount / 100.00)                                       as order_active_po_amount_source_currency,
 --                 oqsl.currency_code                                                     as order_active_po_source_currency,
+              
 
          from {{ ref('cnc_order_quotes') }} as quotes
     inner join {{ ref('purchase_orders') }} as purchase_orders
@@ -202,7 +206,7 @@ with first_quote as (
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
          where quotes.type = 'purchase_order'
            and purchase_orders.status = 'active'
-         group by 1, 2, 3, 4, 5, 6, 7, 8
+         {{ dbt_utils.group_by(n=9) }}
      ),
 
      -- ALL PURCHASE ORDER FIELDS
@@ -322,5 +326,5 @@ from first_quote as fq
          left join order_quote as oq on fq.order_uuid = oq.order_uuid
          left join agg_all_quotes as aaq on fq.order_uuid = aaq.order_uuid
          left join first_po as fpo on fq.order_uuid = fpo.order_uuid
-         left join active_po as apo on fq.order_uuid = apo.order_uuid
+         left join active_po as apo on fq.order_uuid = apo.order_uuid and apo.rn = 1
          left join agg_all_pos as aapo on fq.order_uuid = aapo.order_uuid
