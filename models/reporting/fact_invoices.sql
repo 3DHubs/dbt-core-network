@@ -66,18 +66,18 @@ stg_cube_invoices_supply as (
             null :: int                                                                      as invoice_supplier_id,
             oqsl.shipping_date                                                               as invoice_shipping_date,
             oqsl.is_admin_only                                                               as invoice_is_admin_only,
-            fd.winning_quote_uuid,
+            fd.order_quote_uuid,
             fd.order_status,
-            fd.delivered_date,
-            fd.shipped_date,
-            fd.technology_id                                                                 as order_technology_id,
-            fd.technology_name                                                               as order_technology_name,
+            fd.delivered_at,
+            fd.order_shipped_at,
+            fd.order_technology_id,
+            fd.order_technology_name,
             case
                 when fd.order_recognized_date < current_date and oqsl.finalized_at < current_date then 1
                 else 0 end                                                                   as invoice_is_recognized_revenue,
             case
-                when oqsl.finalized_at <= fd.first_completed_date then fd.first_completed_date
-                when oqsl.finalized_at > fd.first_completed_date then oqsl.finalized_at
+                when oqsl.finalized_at <= fd.order_first_completed_at then fd.order_first_completed_at
+                when oqsl.finalized_at > fd.order_first_completed_at then oqsl.finalized_at
                 else null end                                                                as invoice_revenue_date_sept_2020,
             case
                 when invoice_revenue_date_sept_2020 < '2020-10-01' then invoice_revenue_date_sept_2020
@@ -94,11 +94,11 @@ stg_cube_invoices_supply as (
             nvl(is_downpayment, false)                                                       as is_downpayment,
             'supply_quotes'                                                                  as _data_source
     from {{ ref('cnc_order_quotes') }} oqsl
-                left outer join {{ source('reporting', 'cube_deals') }} fd using (order_uuid) -- This should be updated to the future `fact_deals` model.
+                left outer join {{ ref('fact_orders') }} fd using (order_uuid) -- This should be updated to the future `fact_deals` model.
                 -- left outer join #stg_line_items_supply as li on li.quote_uuid = oqsl.uuid
                 -- Changed this join to rather use the winning_quote (Sales Order) line items from Supply
                 -- Yields more complete data
-                left outer join {{ ref('agg_quotes_revenue') }} as li on li.quote_uuid = fd.winning_quote_uuid
+                left outer join {{ ref('agg_quotes_revenue') }} as li on li.quote_uuid = fd.order_quote_uuid
                 left outer join stg_downpayments_supply as li_downpayment on li_downpayment.order_uuid = fd.order_uuid
                 left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
                                 on rates.currency_code_to = oqsl.currency_code and
@@ -147,22 +147,22 @@ stg_cube_invoices_netsuite as (
             netsuite_trn._type                                                                      as quote_type,
             -- Used to get it from the Invoice itself in Supply
             -- For Netsuite we now get it from the PO as we believe this is more accurate
-            fd.order_active_po_supplier_id                                                          as invoice_supplier_id,
+            /*fd.order_active_po_supplier_id*/ fd.supplier_id                                       as invoice_supplier_id,
             netsuite_trn.shipdate                                                                   as invoice_shipping_date,
             -- This concept does not exist in Netsuite anymore
             null::boolean                                                                           as invoice_is_admin_only,
-            fd.winning_quote_uuid,
+            fd.order_quote_uuid,
             fd.order_status,
-            fd.delivered_date,
-            fd.shipped_date,
-            fd.technology_id                                                                        as order_technology_id,
-            fd.technology_name                                                                      as order_technology_name,
+            fd.delivered_at,
+            fd.order_shipped_at,
+            fd.order_technology_id,
+            fd.order_technology_name,
             case
                 when fd.order_recognized_date < current_date and netsuite_trn.createddate < current_date then 1
                 else 0 end                                                                          as invoice_is_recognized_revenue,
             case
-                when netsuite_trn.createddate <= fd.first_completed_date then fd.first_completed_date
-                when netsuite_trn.createddate > fd.first_completed_date then netsuite_trn.createddate
+                when netsuite_trn.createddate <= fd.order_first_completed_at then fd.order_first_completed_at
+                when netsuite_trn.createddate > fd.order_first_completed_at then netsuite_trn.createddate
                 else null end                                                                       as invoice_revenue_date_sept_2020,
             case
                 when invoice_revenue_date_sept_2020 < '2020-10-01' then invoice_revenue_date_sept_2020
@@ -183,7 +183,7 @@ stg_cube_invoices_netsuite as (
     from {{ ref('netsuite_invoices') }} as netsuite_trn
                 left outer join {{ ref('cnc_order_quotes') }} oqsl2
                                 on oqsl2.document_number = netsuite_trn.custbodyquotenumber
-                left outer join {{ source('reporting', 'cube_deals') }} fd on fd.order_uuid = oqsl2.order_uuid -- To do: this dependency has to be changed once new fact_deals model is ready.
+                left outer join {{ ref('fact_orders') }} fd on fd.order_uuid = oqsl2.order_uuid -- To do: this dependency has to be changed once new fact_deals model is ready.
                 left outer join stg_line_items_netsuite as li on li.netsuite_transaction_id = netsuite_trn.tranid
                 left outer join stg_downpayments_netsuite as li_downpayment
                                 on li_downpayment.netsuite_transaction_id = netsuite_trn.tranid
@@ -232,10 +232,10 @@ select invoice_created_date,
         invoice_supplier_id,
         invoice_shipping_date,
         invoice_is_admin_only,
-        winning_quote_uuid,
+        order_quote_uuid,
         order_status,
-        delivered_date,
-        shipped_date,
+        delivered_at,
+        order_shipped_at,
         order_technology_id,
         order_technology_name,
         invoice_is_recognized_revenue,
@@ -274,10 +274,10 @@ select invoice_created_date,
         invoice_supplier_id,
         invoice_shipping_date,
         invoice_is_admin_only,
-        winning_quote_uuid,
+        order_quote_uuid,
         order_status,
-        delivered_date,
-        shipped_date,
+        delivered_at,
+        order_shipped_at,
         order_technology_id,
         order_technology_name,
         invoice_is_recognized_revenue,
