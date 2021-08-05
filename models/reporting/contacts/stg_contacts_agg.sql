@@ -2,7 +2,7 @@ with stg as (
     select hubspot_contact_id,
            order_closed_at,
            count(order_uuid) over (partition by hubspot_contact_id)                     as total_number_of_quotes,
-           count(case when is_closed_won then order_uuid end)
+           count(case when is_closed then order_uuid end)
            over (partition by hubspot_contact_id)                                       as total_number_of_closed_orders,
            max(order_closed_at) over (partition by hubspot_contact_id)                      as recent_closed_order_date,
            lag(order_closed_at)

@@ -30,7 +30,7 @@ select distinct orders.uuid       as order_uuid,
            when logistics.shipped_at > docs.po_active_promised_shipping_at_by_supplier then false
            when logistics.shipped_at <= docs.po_active_promised_shipping_at_by_supplier then true
            when logistics.shipped_at is null and dateadd(day, 1, docs.po_active_promised_shipping_at_by_supplier) < current_date then false
-           else null end    is_shipped_on_time_by_mp,
+           else null end    is_shipped_on_time_by_supplier,
 
        case
            when orders.promised_shipping_date is null then null

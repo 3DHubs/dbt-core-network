@@ -27,24 +27,24 @@ select distinct c.hs_contact_id                                          as hubs
                     over ( partition by cd.hubspot_contact_id order by cd.order_submitted_date asc rows between unbounded
                         preceding and unbounded following)                   as first_quote_technology,
                     first_value(
-                    case when cd.is_closed_won then cd.order_technology_name end)
-                    over ( partition by cd.hubspot_contact_id order by cd.is_closed_won desc, cd.order_closed_at asc rows
-                        between unbounded preceding and unbounded following) as first_order_technology, -- returns the technology of the first order that is_closed_won, null when the client has no closed_won orders
+                    case when cd.is_closed then cd.order_technology_name end)
+                    over ( partition by cd.hubspot_contact_id order by cd.is_closed desc, cd.order_closed_at asc rows
+                        between unbounded preceding and unbounded following) as first_order_technology, -- returns the technology of the first order that is_closed, null when the client has no closed_won orders
                     first_value(
-                    case when cd.is_closed_won then cd.line_item_process_name end)
-                    over ( partition by cd.hubspot_contact_id order by cd.is_closed_won desc, cd.order_closed_at asc rows
+                    case when cd.is_closed then cd.line_item_process_name end)
+                    over ( partition by cd.hubspot_contact_id order by cd.is_closed desc, cd.order_closed_at asc rows
                         between unbounded preceding and unbounded following) as first_order_process_name,
-                    nth_value(case when is_closed_won then order_closed_at else null end, 2)
-                    over ( partition by cd.hubspot_contact_id order by cd.is_closed_won desc, cd.order_closed_at asc rows
+                    nth_value(case when is_closed then order_closed_at else null end, 2)
+                    over ( partition by cd.hubspot_contact_id order by cd.is_closed desc, cd.order_closed_at asc rows
                         between unbounded preceding and unbounded following) as second_order_closed_at,
                     sum(case
-                            when cd.is_closed_won and deal.is_new_contact then cd.order_closed_sales_usd end) over ( partition by
+                            when cd.is_closed and deal.is_new_contact then cd.order_closed_sales_usd end) over ( partition by
                         cd.hubspot_contact_id)                               as new_customer_order_closed_sales_usd,
                     sum(case
-                            when cd.is_closed_won and deal.is_new_contact then (cd.order_sourced_sales_usd - cd.po_first_amount_usd)
+                            when cd.is_closed and deal.is_new_contact then (cd.order_sourced_sales_usd - cd.sourced_cost_usd)
                         end)
                     over (partition by cd.hubspot_contact_id)                as new_customer_precalc_margin_usd,
-                    first_value(cd.customer_country_iso2)
+                    first_value(cd.destination_country_iso2)
                     over ( partition by cd.hubspot_contact_id order by cd.order_closed_at asc rows between unbounded preceding
                         and unbounded following)                             as first_quote_country_iso2
     from reporting.stg_dim_contacts c

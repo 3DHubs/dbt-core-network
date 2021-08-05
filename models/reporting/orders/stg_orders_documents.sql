@@ -57,11 +57,11 @@ with first_quote as (
                 quotes.status                                                    as order_quote_status, -- Used to filter out carts
                 quotes.created                                                   as order_quote_created_at,
                 quotes.submitted_at                                              as order_quote_submitted_at,
-                quotes.finalized_at                                              as order_quote_finalized_at,
+                quotes.finalized_at                                              as order_quote_finalised_at,
                 quotes.lead_time                                                 as order_quote_lead_time,
                 lt_tiers.name                                                    as order_quote_lead_time_tier,
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
-                quotes.requires_local_production                                 as order_quote_requires_local_production,
+                quotes.requires_local_production                                 as order_quote_requires_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd
 
                 --todo: if agreed, remove:
@@ -93,12 +93,12 @@ with first_quote as (
          select order_uuid                                        as                      order_uuid,
                 sum(case when is_admin is true then 1 else 0 end) as                      number_of_quote_versions_by_admin,
                 max(revision)                                     as                      number_of_quote_versions,
-                case when number_of_quote_versions_by_admin >= 1 then true else false end has_admin_created_quote_request,
+                case when number_of_quote_versions_by_admin >= 1 then true else false end has_admin_created_quote,
                 sum(case
                         when submitted_at - finalized_at <> interval '0 seconds' then 1
                         else 0 end)                               as                      has_non_locked_quote_review,
                 case
-                    when has_admin_created_quote_request = true or has_non_locked_quote_review > 0 then true
+                    when has_admin_created_quote = true or has_non_locked_quote_review > 0 then true
                     else false end                                                        has_manual_quote_review
 
                 -- has_non_locked_quote_review -- Not leveraged
@@ -117,9 +117,9 @@ with first_quote as (
 
      first_po as (
          with rn as (select order_uuid,
-                            finalized_at                                                           as po_first_sourced_at,
+                            finalized_at                                                           as order_sourced_at,
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
-                            round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as po_first_amount_usd,
+                            round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as sourced_cost_usd,
                             sum(case
                                     when sqli.type = 'shipping'
                                         then round(((price_amount / 100.00) / rates.rate), 2) end) as po_first_shipping_usd,
@@ -146,8 +146,8 @@ with first_quote as (
                      group by 1, 2, 3, 4)
          select order_uuid,
                 po_first_supplier_id, -- Used to define is_resourced
-                po_first_sourced_at,  -- Used to define sourced_date
-                po_first_amount_usd,  -- Used to defined sourced_cost_usd
+                order_sourced_at,  -- Used to define sourced_date
+                sourced_cost_usd,  -- Used to defined sourced_cost_usd
                 po_first_shipping_usd
 
                 --todo: if agreed, remove:
@@ -166,6 +166,7 @@ with first_quote as (
 
      active_po as (
          select quotes.order_uuid,
+                quotes.uuid                                                                  as po_active_uuid,
                 quotes.created,
                 round(((subtotal_price_amount / 100.00) / rates.rate), 2)                    as po_active_amount_usd,
                 document_number                                                              as po_active_document_number,
@@ -206,7 +207,7 @@ with first_quote as (
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
          where quotes.type = 'purchase_order'
            and purchase_orders.status = 'active'
-         {{ dbt_utils.group_by(n=9) }}
+         {{ dbt_utils.group_by(n=10) }}
      ),
 
      -- ALL PURCHASE ORDER FIELDS
@@ -257,11 +258,11 @@ select -- First Quote
        oq.order_quote_status,     -- Used to filter out carts
        oq.order_quote_created_at, -- This is actually not in fact deals?
        oq.order_quote_submitted_at,
-       oq.order_quote_finalized_at,
+       oq.order_quote_finalised_at,
        oq.order_quote_lead_time,
        oq.order_quote_lead_time_tier,
        oq.order_quote_is_cross_docking,
-       oq.order_quote_requires_local_production,
+       oq.order_quote_requires_local_sourcing,
        oq.order_quote_amount_usd,
 
        --    order_quote_shipping_address_id, -- Used for a join on addresses and states
@@ -279,14 +280,14 @@ select -- First Quote
        -- All Quotes
        aaq.number_of_quote_versions,
        aaq.number_of_quote_versions_by_admin,
-       aaq.has_admin_created_quote_request,
+       aaq.has_admin_created_quote,
        aaq.has_manual_quote_review,
 
        -- First PO
 
-       fpo.po_first_sourced_at,
-       fpo.po_first_sourced_at is not null as is_sourced,
-       fpo.po_first_amount_usd,
+       fpo.order_sourced_at,
+       fpo.order_sourced_at is not null as is_sourced,
+       fpo.sourced_cost_usd,
        fpo.po_first_shipping_usd,
        fpo.po_first_supplier_id,
 
@@ -295,6 +296,7 @@ select -- First Quote
        --    fpo.po_first_is_created_manually, -- Previously used for is manually sourced def
 
        -- Active PO
+       apo.po_active_uuid,
        apo.po_active_amount_usd,
        apo.po_active_document_number,
        apo.po_active_company_entity,

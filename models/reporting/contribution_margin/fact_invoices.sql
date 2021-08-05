@@ -73,7 +73,7 @@ stg_cube_invoices_supply as (
             fd.order_technology_id,
             fd.order_technology_name,
             case
-                when fd.order_recognized_date < current_date and oqsl.finalized_at < current_date then 1
+                when fd.order_recognised_at < current_date and oqsl.finalized_at < current_date then 1
                 else 0 end                                                                   as invoice_is_recognized_revenue,
             case
                 when oqsl.finalized_at <= fd.order_first_completed_at then fd.order_first_completed_at
@@ -81,16 +81,16 @@ stg_cube_invoices_supply as (
                 else null end                                                                as invoice_revenue_date_sept_2020,
             case
                 when invoice_revenue_date_sept_2020 < '2020-10-01' then invoice_revenue_date_sept_2020
-                when oqsl.finalized_at <= fd.order_recognized_date then case
-                                                                            when fd.order_recognized_date < '2020-10-01'
+                when oqsl.finalized_at <= fd.order_recognised_at then case
+                                                                            when fd.order_recognised_at < '2020-10-01'
                                                                                 then '2020-10-01'
-                                                                            else fd.order_recognized_date end
-                when oqsl.finalized_at > fd.order_recognized_date then case
+                                                                            else fd.order_recognised_at end
+                when oqsl.finalized_at > fd.order_recognised_at then case
                                                                             when oqsl.finalized_at < '2020-10-01'
                                                                                 then '2020-10-01'
                                                                             else oqsl.finalized_at end
                 else null end                                                                as invoice_revenue_date,
-            (case when oqsl.finalized_at <= fd.order_recognized_date then 1 else 0 end)::int as is_before_delivery,
+            (case when oqsl.finalized_at <= fd.order_recognised_at then 1 else 0 end)::int as is_before_delivery,
             nvl(is_downpayment, false)                                                       as is_downpayment,
             'supply_quotes'                                                                  as _data_source
     from {{ ref('cnc_order_quotes') }} oqsl
@@ -158,7 +158,7 @@ stg_cube_invoices_netsuite as (
             fd.order_technology_id,
             fd.order_technology_name,
             case
-                when fd.order_recognized_date < current_date and netsuite_trn.createddate < current_date then 1
+                when fd.order_recognised_at < current_date and netsuite_trn.createddate < current_date then 1
                 else 0 end                                                                          as invoice_is_recognized_revenue,
             case
                 when netsuite_trn.createddate <= fd.order_first_completed_at then fd.order_first_completed_at
@@ -166,17 +166,17 @@ stg_cube_invoices_netsuite as (
                 else null end                                                                       as invoice_revenue_date_sept_2020,
             case
                 when invoice_revenue_date_sept_2020 < '2020-10-01' then invoice_revenue_date_sept_2020
-                when netsuite_trn.createddate <= fd.order_recognized_date then case
-                                                                                    when fd.order_recognized_date < '2020-10-01'
+                when netsuite_trn.createddate <= fd.order_recognised_at then case
+                                                                                    when fd.order_recognised_at < '2020-10-01'
                                                                                         then '2020-10-01'
-                                                                                    else fd.order_recognized_date end
-                when netsuite_trn.createddate > fd.order_recognized_date then case
+                                                                                    else fd.order_recognised_at end
+                when netsuite_trn.createddate > fd.order_recognised_at then case
                                                                                     when netsuite_trn.createddate < '2020-10-01'
                                                                                         then '2020-10-01'
                                                                                     else netsuite_trn.createddate end
                 else null end                                                                       as invoice_revenue_date,
             (case
-                when netsuite_trn.createddate <= fd.order_recognized_date then 1
+                when netsuite_trn.createddate <= fd.order_recognised_at then 1
                 else 0 end)::int                                                                   as is_before_delivery,
             nvl(is_downpayment, false)                                                              as is_downpayment,
             'netsuite'                                                                              as _data_source

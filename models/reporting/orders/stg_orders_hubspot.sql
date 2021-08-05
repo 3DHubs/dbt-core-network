@@ -12,7 +12,7 @@ with stg as (
         hs.estimated_close_amount                                                         as hubspot_estimated_close_amount_usd,
         hs.deal_category                                                                  as hubspot_deal_category,
         hs.strategic                                                                      as is_hubspot_strategic_deal,
-        hs.high_risk                                                                      as high_risk,
+        hs.high_risk                                                                      as is_hubspot_high_risk,
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields

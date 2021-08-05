@@ -57,6 +57,8 @@ models:
     reporting:
       +schema: reporting
       +materialized: table
+      orders:
+        +tags: ["orders"]
 
 # Seeds
 seeds:

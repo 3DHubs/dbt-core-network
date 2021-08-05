@@ -129,3 +129,4 @@ with disputes as (
      from {{ ref('cnc_orders') }} as orders
      left join disputes on orders.uuid = disputes.order_uuid
      left join dispute_resolution as disr on orders.uuid = disr.order_uuid
+     where dispute_created_at is not null

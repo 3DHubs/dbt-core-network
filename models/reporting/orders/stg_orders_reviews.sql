@@ -11,6 +11,7 @@
 
 with agg_supply_technical_review as (
        select orders.hubspot_deal_id,
+              true                  as order_has_technical_review,
               count(*)              as number_of_technical_reviews,
               min(str.submitted_at) as supply_first_review_submitted_at,
               max(str.completed_at) as supply_last_review_completed_at
@@ -31,7 +32,7 @@ with agg_supply_technical_review as (
 
      rfq_requests as (
        select order_uuid,
-              true as is_rfq,
+              true as order_has_rfq,
               count(*) number_of_rfq_requests,
               sum(case when supplier_rfq_responded_date is not null then 1 else 0 end) as number_of_rfq_responded
        from {{ ref('fact_supplier_rfqs') }} as rfq
@@ -41,12 +42,12 @@ with agg_supply_technical_review as (
 -- Final Query
 
 select orders.uuid as order_uuid,
-       true as is_technical_review,
+       coalesce(supply.order_has_technical_review, false) as order_has_technical_review,
        supply.number_of_technical_reviews,
        supply.supply_first_review_submitted_at,
        hubspot.hubspot_first_review_completed_at,
        supply.supply_last_review_completed_at,
-       rfq.is_rfq,
+       coalesce(rfq.order_has_rfq, false) as order_has_rfq,
        rfq.number_of_rfq_requests,
        rfq.number_of_rfq_responded
 from {{ ref('cnc_orders') }} as orders

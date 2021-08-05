@@ -50,13 +50,13 @@ select
     hs_deals.hubspot_estimated_close_amount_usd,
     hs_deals.hubspot_deal_category,
     hs_deals.is_hubspot_strategic_deal,
-    hs_deals.high_risk,
+    hs_deals.is_hubspot_high_risk,
     hs_deals.hubspot_pipeline,
 
     -- HS Deals: Foreign Fields
     hs_deals.hubspot_company_id,
     hs_deals.hubspot_company_name,
-    hs_deals.is_hubspot_strategic_company,
+    coalesce(hs_deals.is_hubspot_strategic_company, false) as is_hubspot_strategic_company,
     hs_deals.hubspot_contact_id,
     hs_deals.hubspot_technology_id,
     hs_deals.hubspot_company_source,
@@ -105,7 +105,7 @@ select
     ---------- SOURCE: STG ORDERS RDA --------------
 
     -- RDA: Auction Fields
-    rda.is_rda_sourced,
+    coalesce(rda.is_rda_sourced, false) as is_rda_sourced,
     rda.auction_uuid,
     rda.auction_status,
     rda.auction_created_at,
@@ -142,30 +142,32 @@ select
     docs.quote_first_has_part_without_automatic_pricing,
 
     --Documents: Order Quote
+    -- Active/Won Quote if submitted, else First
     docs.order_quote_document_number,
     docs.order_quote_status,
     docs.order_quote_created_at,
     docs.order_quote_submitted_at,
-    docs.order_quote_finalized_at,
+    docs.order_quote_finalised_at,
     docs.order_quote_lead_time,
     docs.order_quote_lead_time_tier,
     docs.order_quote_is_cross_docking,
-    docs.order_quote_requires_local_production,
+    docs.order_quote_requires_local_sourcing,
 
     --Documents: All Quotes
     docs.number_of_quote_versions,
     docs.number_of_quote_versions_by_admin,
-    docs.has_admin_created_quote_request,
+    docs.has_admin_created_quote,
     docs.has_manual_quote_review,
 
     --Documents: First Purchase Order
 
-    docs.po_first_sourced_at,
+    docs.order_sourced_at,
     docs.is_sourced,
-    docs.po_first_amount_usd,
+    docs.sourced_cost_usd,
     docs.po_first_shipping_usd,
 
     --Documents: Active Purchase Order
+    docs.po_active_uuid,
     docs.po_active_amount_usd,
     docs.po_active_document_number,
     docs.po_active_company_entity,
@@ -206,7 +208,7 @@ select
     -- Logistics: Verification and Consistency Fields
     logistics.has_shipment_delivered_to_crossdock_date_consecutive,
     logistics.has_shipment_delivered_to_customer_date_consecutive,
-    logistics.shipping_info_consistent,
+    logistics.has_consistent_shipping_info,
 
     -- Logistics: Shipping Dates
     logistics.shipped_at,
@@ -226,7 +228,7 @@ select
     -- Calculated based on cnc orders, and
     -- the stg tables of documents & logistics
 
-    otr.is_shipped_on_time_by_mp,
+    otr.is_shipped_on_time_by_supplier,
     otr.is_shipped_on_time_to_customer,
     otr.shipping_to_customer_delay_days,
     otr.shipping_by_supplier_delay_days,
@@ -256,12 +258,12 @@ select
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews & RFQs
 
-    reviews.is_technical_review,
+    reviews.order_has_technical_review,
     reviews.number_of_technical_reviews,
     reviews.supply_first_review_submitted_at,
     reviews.hubspot_first_review_completed_at,
     reviews.supply_last_review_completed_at,
-    reviews.is_rfq,
+    reviews.order_has_rfq,
     reviews.number_of_rfq_requests,
     reviews.number_of_rfq_responded,
 
@@ -270,25 +272,26 @@ select
     -- suppliers and company entity
 
     -- Maybe add prefix order_
-    geo.customer_city,
-    geo.customer_latitude,
-    geo.customer_longitude,
-    geo.customer_country,
-    geo.customer_country_iso2,
-    geo.customer_market,
-    geo.customer_region,
-    geo.customer_email_from_hubs,
+    geo.destination_city,
+    geo.destination_latitude,
+    geo.destination_longitude,
+    geo.destination_country,
+    geo.destination_country_iso2,
+    geo.destination_market,
+    geo.destination_region,
+    geo.destination_us_state,
+    geo.contact_email_from_hubs,
     geo.company_entity,
-    geo.supplier_country,
-    geo.supplier_latitude,
-    geo.supplier_longitude,
+    geo.origin_country,
+    geo.origin_latitude,
+    geo.origin_longitude,
 
     ------ SOURCE: STG DEALSTAGE ---------
     -- Combines data from order history events (supply),
     -- hubspot dealstage history (hubspot) and order status.
 
     -- Closing
-    dealstage.is_closed_won,
+    coalesce(dealstage.is_closed, false) as is_closed,
     dealstage.order_closed_at,
 
     -- Cancellation
@@ -314,7 +317,7 @@ select
     -- Data from Disputes and Dispute Resolution
 
     -- Fields from Disputes Tables
-    disputes.is_disputed,
+    coalesce(disputes.is_disputed,false) as is_disputed,
     disputes.dispute_created_at,
 
     disputes.dispute_status,
@@ -348,13 +351,13 @@ select
                   then dealstage.order_first_completed_at
               when order_shipped_at > logistics.full_delivered_at then dealstage.order_first_completed_at
               else logistics.full_delivered_at end,
-          dealstage.order_first_completed_at)                                              as order_recognized_date, -- Let's think of a way to do this better :)
+          dealstage.order_first_completed_at)                                              as order_recognised_at, -- Let's think of a way to do this better :)
 
 
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as order_quote_subtotal_amount_usd,
     case
-        when dealstage.is_closed_won then order_quote_subtotal_amount_usd
+        when dealstage.is_closed then order_quote_subtotal_amount_usd
         else 0 end                                                                         as order_closed_sales_usd,
     case when docs.is_sourced then order_quote_subtotal_amount_usd else 0 end              as order_sourced_sales_usd,
 
@@ -504,6 +507,7 @@ select
     -- order_bid_quote_status, -- Not leveraged in fact deals
     -- order_status, the one in fact deals is the previously mapped one
     -- d2c.client_id -- We will deprecate this?
+    -- rda.auction_created_at, Auction create and started timestamps are the same
 
 from {{ ref('cnc_orders') }} as orders
 
@@ -515,7 +519,7 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ ref ('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
     left join {{ ref ('stg_orders_otr') }} as otr on orders.uuid = otr.order_uuid
     left join {{ ref ('stg_orders_line_items') }} as li on orders.quote_uuid = li.quote_uuid
-    left join {{ ref ('stg_orders_reviews') }} as reviews on hs_deals.hubspot_deal_id = reviews.order_uuid
+    left join {{ ref ('stg_orders_reviews') }} as reviews on orders.uuid = reviews.order_uuid
     left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
     left join {{ ref ('stg_orders_interactions')}} as interactions on orders.uuid = interactions.order_uuid
@@ -531,7 +535,7 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
 
 where true
-  and quotes.lead_time != 40 -- Empty Carts (This condition might be re-defined, Diego July 20th 2021)
+  and number_of_part_line_items > 0 -- New approach to filter empty carts
   and coalesce (orders.hubspot_deal_id
     , -9) != 1062498043 -- Manufacturing agreement, orders were logged separately.
 

@@ -30,7 +30,7 @@ select orders.uuid                                                              
        -- Closing
        case
            when (orders.accepted_at is not null or hdh.order_closed_at is not null or
-                 orders.in_production_at is not null) then true end                        as is_closed_won,
+                 orders.in_production_at is not null) then true end                        as is_closed,
        coalesce(orders.accepted_at, orders.in_production_at, hdh.order_closed_at)          as order_closed_at,
 
        -- Cancellation
@@ -42,7 +42,7 @@ select orders.uuid                                                              
 
        -- Status
        case
-           when is_closed_won is false then 'lost'
+           when is_closed is false then 'lost'
            else coalesce(order_status.mapped_value, stg_hubspot.hubspot_status_mapped) end as order_status
 
 from {{ ref ('cnc_orders') }} as orders

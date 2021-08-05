@@ -137,7 +137,7 @@ select distinct soq.order_uuid                                                  
                     when is_cross_docking_ind and
                          ss.shipment_shipped_to_customer_at > ss.shipment_delivered_to_customer_at
                         then false
-                    else true end                                                               as shipping_info_consistent,
+                    else true end                                                               as has_consistent_shipping_info,
 
                 ----- Shipping Dates -----
                 --------------------------
