@@ -50,21 +50,21 @@ select oqsl.created                                                             
        oqsl.type                                                                             as quote_type,
        oqsl.shipping_date                                                                    as po_shipping_date,
        oqsl.is_admin_only                                                                    as po_is_admin_only,
-       fd.winning_quote_uuid                                                                 as order_first_quote_uuid,
+       fd.order_quote_uuid                                                                   as order_first_quote_uuid,
        fd.order_status                                                                       as order_status,
-       fd.shipped_date                                                                       as order_shipped_date,
-       fd.delivered_date                                                                     as order_delivery_date,
+       fd.order_shipped_at                                                                   as order_shipped_date,
+       fd.delivered_at                                                                       as order_delivery_date,
        osl.completed_at                                                                      as order_completed_date,
        -- Tech is 2 (3DP) when it is null as this is old platform and that is the only option that was available there...
-       fd.technology_id                                                                      as order_technology_id,
-       fd.technology_name                                                                    as order_technology_name,
+       fd.order_technology_id                                                                as order_technology_id,
+       fd.order_technology_name                                                              as order_technology_name,
        spocl.status                                                                          as po_control_status,
        spocl.updated                                                                         as po_control_last_updated_date
 from {{ ref('cnc_order_quotes') }} as oqsl
             left outer join {{ ref('cnc_orders') }} as osl on oqsl.order_uuid = osl.uuid
             left outer join {{ ref('cnc_order_quotes') }} as oqslb on oqsl.parent_uuid = oqslb.uuid and oqslb.type = 'bid'
             left outer join {{ ref('auctions') }} as al on al.order_quotes_uuid = oqslb.parent_uuid and al.is_latest_order_auction = True
-            left outer join {{ source('reporting', 'cube_deals') }} as fd on oqsl.order_uuid = fd.order_uuid
+            left outer join {{ ref('fact_orders') }} as fd on oqsl.order_uuid = fd.order_uuid
             left outer join stg_line_items as li on li.quote_uuid = oqsl.uuid
             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
                             on rates.currency_code_to = oqsl.currency_code
