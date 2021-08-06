@@ -1,3 +1,5 @@
+with freshdesk_interactions as (
+
 select distinct {{ redshift.try_cast('con.id', 'bigint') }}                         as interaction_id,
                 con.ticket_id,
                 null::bigint                                                        as source_ticket_id,
@@ -79,3 +81,38 @@ from {{ ref('stg_fact_freshdesk_tickets') }} as t
           left outer join {{ ref ('freshdesk_agents') }} as a on t.agent_id = a.id and a._is_latest
 where true
   and t.source <> 'phone'
+),
+
+/* Unique conversation ids only
+       This is to take into account scenarios where ticket A got merged into B and B into A, resulting in some odd
+       exceptions. In rare cases duplicates can occur for primary and non-primary tickets. For now we are only allowing
+       unique interaction_ids. In this process we ignore interaction_id values that are in fact ticket_id values. */
+
+freshdesk_interactions_rn as (
+    select *,
+        row_number() over (partition by interaction_id order by null) as rn
+    from freshdesk_interactions
+     )
+
+select interaction_id,
+       ticket_id,
+       source_ticket_id,
+       created_date,
+       agent_id,
+       agent_name,
+       support_email,
+       from_email,
+       interaction_type,
+       agent_interaction_count,
+       internal_interaction_count,
+       customer_interaction_count,
+       is_first_interaction,
+       ticket_tag,
+       source,
+       _data_source
+from freshdesk_interactions_rn
+where case
+          when _data_source != 'reporting.fact_freshdesk_tickets; not source phone; is_primary_ticket = True' then
+                  rn
+                  = 1 end
+   or _data_source = 'reporting.fact_freshdesk_tickets; not source phone; is_primary_ticket = True'

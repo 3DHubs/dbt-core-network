@@ -46,7 +46,7 @@ with fdmapping as (select coalesce(hs.uuid, po.order_uuid, ho.uuid) as order_uui
          where merge_sequence = 1
      ),
      agents as (select id, contact_name from {{ ref('freshdesk_agents') }} where _is_latest),
-     contacts as (select id, name from {{ ref('freshdesk_contacts') }} where _is_latest),
+     contacts as (select id, name, email from {{ ref('freshdesk_contacts') }} where _is_latest),
      groups as (select id::bigint as id, name from {{ ref('freshdesk_groups') }} where _is_latest),
      companies as (select id, name from {{ ref('freshdesk_companies') }} where _is_latest),
      freshdesk_survey_results as (
@@ -63,6 +63,8 @@ select t.id                                                                  as 
        t.responder_id                                                        as agent_id,
        a.contact_name                                                        as ticket_agent_name,
        c.name                                                                as customer_contact,
+       t.requester_id                                                        as requester_id,
+       c.email                                                               as requester_email,
        com.name                                                              as company,
        t.custom_fields_cf_ticketsubcategorised                               as category,
        t.custom_fields_cf_categories                                         as sub_category,
