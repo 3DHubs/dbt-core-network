@@ -1,9 +1,3 @@
-{{
-    config(
-        materialized = 'incremental'
-    )
-}}
-
 select date_trunc('week', date)                                            as date,
        source,
        account_id,
@@ -35,14 +29,22 @@ select date_trunc('week', date)                                            as da
 
 from {{ ref('agg_advertising_spend_daily') }}
 
-{% if is_incremental() %}
+-- The below is_incremental() works well (in theory) but the pitfall is that the data
+-- from the daily ad spend may be incomplete. Thus, even if the week is complete and
+-- we are ready to add another week's of data, it is enough. Instead, we should be
+-- looking whether data from daily ad spend is complete for a week and only then
+-- insert that new week's worth of data into the weekly ad spend table. For now, I am
+-- proposing a "quick" fix by just materializing this model from the ground up each
+-- run. It is not efficient, but giving my limited time that's the best I can do now.
 
-       -- First assess whether week is complete. The below turns `true` when the _next_ day is
-       -- in another week.
-       where case when date_trunc('week', "date") != date_trunc('week', "date" + 1) then true end
-       -- Then incrementally load latest week data
-       and date_trunc('week', date) > (select max(date_trunc('week', date)) from {{ this }} )
+-- {% if is_incremental() %}
 
-{% endif %}
+--        -- First assess whether week is complete. The below turns `true` when the _next_ day is
+--        -- in another week.
+--        where case when date_trunc('week', current_date) != date_trunc('week', current_date + 1) then true end
+--        -- Then incrementally load latest week data
+--        and date_trunc('week', "date") > (select max(date_trunc('week', "date")) from {{ this }} )
+
+-- {% endif %}
 
 {{ dbt_utils.group_by(n=15) }}
