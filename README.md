@@ -25,7 +25,10 @@ More info on DBT's documentation:
 - `dbt snapshot` -- refreshes all snapshots (be careful that no user environments have been set-up yet, so this will run snapshots in PROD)
 
 # Continuous Integration
-- Once you open a PR, a dbt job will kick-off to validate the proposed changes.
+Once you open a PR, a dbt job will kick-off to validate the proposed changes. This job is currently defined [here](https://cloud.getdbt.com/#/accounts/12103/projects/19451/jobs/26919/). The job exists of three steps:
+1.) `dbt seed` -- it (re)creates seed data for all sources in `/data`
+2.) `dbt run --models state:modified+ --threads 2 --fail-fast` -- it runs the test only for modified models and their dependencies. Modified means the definition of a model has been changed in comparison to `master`. `--fail-fast` ensures the test fails as fast as possible.
+3.) `dbt test --models state:modified+` -- tests are executed on modified models and their dependencies only.
 
 # Sources
 Are used to refer to data populated in the data warehouse. Using sources helps us track lineage and allows us to determine source freshness.
