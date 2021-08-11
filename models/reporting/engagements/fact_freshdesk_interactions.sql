@@ -67,8 +67,8 @@ select {{ redshift.try_cast('t.ticket_id', 'bigint') }}                         
        null                                                                           as from_email,
        case
            when t.source = 'portal' then 'portal'
+           when (t.source = 'email' and requester_email ~ '@(3d)?hubs.com') or t.source = 'outbound_email' then 'agent initiation'
            when t.source = 'email' then 'customer initiation'
-           when t.source = 'outbound_email' then 'agent initiation'
            when t.source = 'feedback_widget' then 'customer initiation' end           as interaction_type,
        case when interaction_type = 'agent initiation' then 1 else 0 end              as agent_interaction_count,
        0                                                                              as internal_interaction_count,
