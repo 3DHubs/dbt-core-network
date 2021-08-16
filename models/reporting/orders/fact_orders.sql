@@ -522,7 +522,7 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ ref ('stg_orders_reviews') }} as reviews on orders.uuid = reviews.order_uuid
     left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
-    left join {{ ref ('stg_orders_interactions')}} as interactions on orders.uuid = interactions.order_uuid
+    left join {{ ref ('stg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
 
     -- Reporting
     left join {{ ref ('fact_disputes') }} as disputes on orders.uuid = disputes.order_uuid

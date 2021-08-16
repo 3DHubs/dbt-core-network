@@ -13,7 +13,7 @@
 -- task type.)
 
 select distinct
-    fact_interactions.order_uuid,
+    fact_interactions.hubspot_deal_id,
     count(fact_interactions.interaction_id) as order_number_of_interactions,
     count(
         case
@@ -46,5 +46,5 @@ from {{ ref('fact_interactions') }}
 left join
     {{ ref('fact_hubspot_engagements') }} on
         fact_interactions.interaction_id = fact_hubspot_engagements.id
-where fact_interactions.order_uuid is not null
+where fact_interactions.hubspot_deal_id is not null
 group by 1
