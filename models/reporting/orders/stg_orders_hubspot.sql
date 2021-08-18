@@ -53,7 +53,7 @@ with stg as (
 
         -- Owners
         hs.hubspot_owner_id,
-        own.first_name || ' ' || own.last_name                                            as hubspot_owner_name,
+        own2.first_name || ' ' || own2.last_name                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team_name,
         trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_at,
         hs.bdr_assigned                                                                   as bdr_owner_id,
@@ -69,8 +69,6 @@ with stg as (
         so.first_name || ' ' || so.last_name                                              as hubspot_sourcing_owner_name,
 
         -- Window Functions
-        min(case when bdr_owner_name is not null then hubspot_closed_at end)
-        over (partition by hubspot_company_id)                                         as first_bdr_owner_at,
         row_number() over (partition by hubspot_deal_id order by random())             as rn
 
         -- TODO: if agreed, remove fields below
@@ -107,6 +105,7 @@ with stg as (
         left join {{ source('data_lake', 'hubspot_owners') }} as own
         on own.owner_id = hs.hubspot_owner_id
         and coalesce (hubspot_owner_assigneddate, createdate) between own.start_date and own.end_date
+        left join {{ source('data_lake', 'hubspot_owners') }} own2 on own2.owner_id = hs.hubspot_owner_id and own2.is_current is true
         left join {{ source('data_lake', 'hubspot_owners') }} as bdr
         on bdr.owner_id = hs.bdr_assigned and createdate between bdr.start_date and bdr.end_date
         left join {{ source('data_lake', 'hubspot_owners') }} as bdr2

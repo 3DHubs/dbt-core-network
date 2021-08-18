@@ -50,4 +50,4 @@ select created,
        name,
        customer_edited_at,
        technical_drawing_anonymization_started_at
-from int_service_supply.cnc_order_quotes
+from {{ source('int_service_supply', 'cnc_order_quotes') }}

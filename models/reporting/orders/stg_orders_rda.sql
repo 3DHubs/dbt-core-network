@@ -77,7 +77,7 @@ select
 -------------------- Step 2 --------------------------
 ------------- Combine Data Sources  ------------------
 
-true as is_rda_sourced,
+case when auctions.finished_at is not null then true else false end as is_rda_sourced,
 
 -- SOURCE 1: Adds fields from the rda interactions CTE
 rdai.number_of_suppliers_assigned,

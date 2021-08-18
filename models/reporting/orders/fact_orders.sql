@@ -15,7 +15,7 @@
 -- 7.  Staging Line Items Table
 -- 8.  Staging Reviews Table
 -- 9.  Staging Geo/Location Table
--- 10.  Staging Deal Stage Table
+-- 10. Staging Deal Stage Table
 -- 11. Staging Interactions Table
 
 -- Other Sources:
@@ -26,11 +26,11 @@ select
     ------------- SOURCE: DATA LAKE ORDERS -----------
 
     -- Orders: IDs
-    orders.uuid                                                                            as order_uuid,
+    case when legacy_order_id is not null then orders.legacy_order_id::varchar
+         when legacy_order_id is null then orders.uuid end                                 as order_uuid, -- Most drupal orders exists in supply but we want to keep their original ID
     orders.quote_uuid                                                                      as order_quote_uuid,
     orders.hubspot_deal_id                                                                 as order_hubspot_deal_id,
     orders.reorder_original_order_uuid,
-    orders.number                                                                          as order_document_number,
 
     -- Orders: Dates
     orders.created                                                                         as order_created_at,
@@ -38,9 +38,11 @@ select
         when orders.promised_shipping_date > '2019-10-01'
             then orders.promised_shipping_date end                                         as order_promised_shipping_at_to_customer,
     orders.expected_shipping_date                                                          as order_expected_shipping_at,
-    orders.shipped_at                                                                      as order_shipped_at,
-    orders.delivered_at                                                                    as order_delivered_at,
     orders.completed_at                                                                    as order_completed_at,
+
+    -- Orders. Other Fields
+    'supply'                                                                               as order_data_source,
+    case when orders.legacy_order_id is not null then true else false end                  as order_is_legacy,
 
     ---------- SOURCE: STG ORDERS HUBSPOT --------------
 
@@ -87,7 +89,6 @@ select
     hs_deals.bdr_owner_id,
     hs_deals.bdr_owner_name,
     hs_deals.bdr_owner_primary_team_name,
-    hs_deals.first_bdr_owner_at,
     hs_deals.customer_success_representative_name,
     hs_deals.partner_support_representative_name,
     hs_deals.mechanical_engineer_id,
@@ -186,9 +187,6 @@ select
     finance.stripe_transaction_created_at,
     finance.stripe_is_successful_payment,
 
-    -- Finance: Refund Fields
-    finance.refund_reason,
-
     -- Finance: Netsuite Fields
 
     -- Finance: Fields from Combined Sources
@@ -211,12 +209,12 @@ select
     logistics.has_consistent_shipping_info,
 
     -- Logistics: Shipping Dates
-    logistics.shipped_at,
+    logistics.order_shipped_at,
     logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
 
     -- Logistics: Delivery Dates
-    logistics.delivered_at,
+    logistics.order_delivered_at,
     logistics.full_delivered_at,
     logistics.derived_delivered_at,
     logistics.estimated_delivery_to_cross_dock,
@@ -249,7 +247,7 @@ select
     li.has_technical_drawings,
     li.has_custom_material_subset,
     li.has_custom_finish,
-    li.shipping_price_amount_usd,
+    li.shipping_amount_usd,
     li.is_expedited_shipping,
     li.line_item_technology_id,
     li.line_item_process_id,
@@ -264,6 +262,7 @@ select
     reviews.hubspot_first_review_completed_at,
     reviews.supply_last_review_completed_at,
     reviews.order_has_rfq,
+    reviews.order_is_rfq_sourced,
     reviews.number_of_rfq_requests,
     reviews.number_of_rfq_responded,
 
@@ -340,8 +339,11 @@ select
     ---------- SOURCE: COMBINED FIELDS --------------
     -- Fields that are defined from two or more sources
 
+    -- Document Number: some orders take the value of the order quote
+    coalesce(orders.number, docs.order_quote_document_number)                              as order_document_number,
+
     -- Lifecycle:
-    coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at)                   as order_submitted_date,
+    coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at)                   as order_submitted_at,
     coalesce(cancellation_reasons.title, nullif(hs_deals.hubspot_cancellation_reason, '')) as cancellation_reason,
     coalesce(logistics.full_delivered_at, dealstage.order_first_completed_at) is not null  as is_recognised,
     least(case
@@ -355,11 +357,11 @@ select
 
 
     -- Financial:
-    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as order_quote_subtotal_amount_usd,
+    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as order_submitted_amount_usd,
     case
-        when dealstage.is_closed then order_quote_subtotal_amount_usd
-        else 0 end                                                                         as order_closed_sales_usd,
-    case when docs.is_sourced then order_quote_subtotal_amount_usd else 0 end              as order_sourced_sales_usd,
+        when dealstage.is_closed then order_submitted_amount_usd
+        else 0 end                                                                         as order_closed_amount_usd,
+    case when docs.is_sourced then order_submitted_amount_usd else 0 end              as order_sourced_amount_usd,
 
 
     -- Suppliers:
@@ -377,7 +379,7 @@ select
         when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd > 10 -- Threshold
             and interactions.order_has_underquote_interaction is true then true
         else false end                                                                     as order_is_underquoted,
-    interactions.order_has_svp_interaction or li.has_svp_line_item                         as order_is_svp
+    coalesce(interactions.order_has_svp_interaction or li.has_svp_line_item,false)         as order_is_svp
 
 
     ---------- FIELDS TO REMOVE: --------------
@@ -536,6 +538,5 @@ from {{ ref('cnc_orders') }} as orders
 
 where true
   and number_of_part_line_items > 0 -- New approach to filter empty carts
-  and coalesce (orders.hubspot_deal_id
-    , -9) != 1062498043 -- Manufacturing agreement, orders were logged separately.
-
+  and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth 
+  and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately

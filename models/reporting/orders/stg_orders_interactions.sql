@@ -45,6 +45,6 @@ select distinct
 from {{ ref('fact_interactions') }}
 left join
     {{ ref('fact_hubspot_engagements') }} on
-        fact_interactions.interaction_id = fact_hubspot_engagements.id
+        fact_interactions.interaction_id = fact_hubspot_engagements.engagement_id
 where fact_interactions.hubspot_deal_id is not null
 group by 1

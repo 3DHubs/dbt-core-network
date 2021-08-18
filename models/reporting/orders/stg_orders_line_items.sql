@@ -19,7 +19,7 @@ with agg_line_items as (
            sum(case when line_item_type = 'part' then nvl(line_item_weight_g,0) else 0 end)                      as order_total_weight_grams,
            sum(case when line_item_type = 'part' then nvl(line_item_total_bounding_box_volume_cm3,0) else 0 end) as order_total_bounding_box_volume_cm3,
            sum(case when line_item_type = 'part' then nvl(line_item_total_volume_cm3,0) else 0 end)              as order_total_volume_cm3,
-           sum(case when line_item_type = 'shipping' then nvl(line_item_price_amount, 0) else 0 end)             as shipping_price_amount_usd,
+           sum(case when line_item_type = 'shipping' then nvl(line_item_price_amount, 0) else 0 end)             as shipping_price_amount,
            sum(case when shipping_option_id in
                          (select distinct id
                           from data_lake.supply_shipping_options
@@ -109,9 +109,14 @@ with agg_line_items as (
 -- Combines Fields from the AGGREGATED and SEQUENCE Tables
 
 select agg.*,
+       round((agg.shipping_price_amount / rates.rate) , 2)::decimal(15,2) as shipping_amount_usd,
        seq.line_item_technology_id,
        seq.line_item_technology_name,
        seq.line_item_process_id,
        seq.line_item_process_name
 from agg_line_items as agg
+left join {{ ref('cnc_order_quotes') }} as quotes on agg.quote_uuid = quotes.uuid
+left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+             on quotes.currency_code = rates.currency_code_to 
+             and trunc(coalesce(quotes.finalized_at, quotes.created)) = trunc(rates.date) 
 left join sequence_line_items as seq using(quote_uuid)

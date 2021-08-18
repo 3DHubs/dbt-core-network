@@ -17,7 +17,7 @@ with agg_supply_technical_review as (
               max(str.completed_at) as supply_last_review_completed_at
        from {{ ref('technical_reviews') }} as str
                 inner join {{ ref('cnc_order_quotes') }} as soq on str.quote_uuid = soq.uuid
-                left join {{ ref('cnc_orders') }} as orders on soq.uuid = orders.quote_uuid
+                left join {{ ref('cnc_orders') }} as orders on soq.order_uuid = orders.uuid
        group by 1
        order by 2 desc
 ),
@@ -33,6 +33,7 @@ with agg_supply_technical_review as (
      rfq_requests as (
        select order_uuid,
               true as order_has_rfq,
+              bool_or(is_winning_bid) as order_is_rfq_sourced,
               count(*) number_of_rfq_requests,
               sum(case when supplier_rfq_responded_date is not null then 1 else 0 end) as number_of_rfq_responded
        from {{ ref('fact_supplier_rfqs') }} as rfq
@@ -48,6 +49,7 @@ select orders.uuid as order_uuid,
        hubspot.hubspot_first_review_completed_at,
        supply.supply_last_review_completed_at,
        coalesce(rfq.order_has_rfq, false) as order_has_rfq,
+       rfq.order_is_rfq_sourced,
        rfq.number_of_rfq_requests,
        rfq.number_of_rfq_responded
 from {{ ref('cnc_orders') }} as orders

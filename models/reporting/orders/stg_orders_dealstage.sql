@@ -16,12 +16,13 @@ with hubspot_dealstage_history as (
     having (order_closed_at is not null or order_cancelled_at is not null) -- Filter to reduce table length
 
 ),
+     -- Only used for completion at the moment (Aug, 2021)
      supply_order_events as (
          select order_uuid,
-                min(case when std_event_id = 103 then created end) as order_first_completed_at,
-                max(case when std_event_id = 103 then created end) as order_last_completed_at
-         from {{ ref ('fact_order_events') }}
-         where std_event_id = 103 -- Filter to reduce table length
+                min(created) as order_first_completed_at,
+                max(created) as order_last_completed_at
+         from data_lake.supply_order_history_events -- Replace to fact_order_events once it is validated
+         where description like '%completed%'
          group by 1
      )
 
@@ -30,7 +31,7 @@ select orders.uuid                                                              
        -- Closing
        case
            when (orders.accepted_at is not null or hdh.order_closed_at is not null or
-                 orders.in_production_at is not null) then true end                        as is_closed,
+                 orders.in_production_at is not null) then true else false end             as is_closed,
        coalesce(orders.accepted_at, orders.in_production_at, hdh.order_closed_at)          as order_closed_at,
 
        -- Cancellation
@@ -52,4 +53,3 @@ from {{ ref ('cnc_orders') }} as orders
          left join {{ ref ('order_status') }} as order_status on orders.status = order_status.supply_status_value
          left join {{ ref ('stg_orders_hubspot') }} as stg_hubspot
                    on orders.hubspot_deal_id = stg_hubspot.hubspot_deal_id
-where quotes.submitted_at is not null -- Filter to reduce table length

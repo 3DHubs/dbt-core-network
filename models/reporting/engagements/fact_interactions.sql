@@ -38,7 +38,7 @@ with list_of_emails as (
      ),
 
      hubspot_engagements as (
-         select he.id                                                                         as interaction_id,
+         select he.engagement_id                                                              as interaction_id,
                 'Hubspot'                                                                     as source,
                 he.created_at                                                                 as created_at,
                 initcap(he.type)                                                              as interaction_type,

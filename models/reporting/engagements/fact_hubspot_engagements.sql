@@ -32,24 +32,19 @@ engagements_gather1 as (
              from ns
                       inner join stg_associations e on ns.n <= regexp_count(e.engagement_contact_ids, ',') + 1
          ),
-
--- Add deals
-engagements_gather2 as (
-         select *,
-         trim(split_part(c.engagement_deal_ids, ',', ns.n)) as deal_id
-         from ns
-         inner join engagements_gather1 c on ns.n <= regexp_count(c.engagement_deal_ids, ',') + 1
-),
-
--- Add companies
-engagements_gather3 as (
-         select *,
-         trim(split_part(c.engagement_company_id, ',', ns.n)) as company_id
-         from ns
-         inner join engagements_gather2 c on ns.n <= regexp_count(c.engagement_company_id, ',') + 1
-)
-
-select he.id::bigint as id,
+         engagements_gather2 as (
+             select *,
+                    trim(split_part(c.engagement_deal_ids, ',', ns.n)) as deal_id
+             from ns
+                      inner join engagements_gather1 c on ns.n <= regexp_count(c.engagement_deal_ids, ',') + 1
+         ),
+         engagements_gather3 as (
+             select *,
+                    trim(split_part(c.engagement_company_id, ',', ns.n)) as company_id
+             from ns
+                      inner join engagements_gather2 c on ns.n <= regexp_count(c.engagement_company_id, ',') + 1
+         )
+select he.id::bigint                                                              as engagement_id,
        he.created_at,
        he.type,
        he.source,

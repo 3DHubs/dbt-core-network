@@ -51,9 +51,12 @@ sources:
       - name: hubspot_email_wall_submissions_20210423
       - name: adhoc_drupal_closed_sales_20191211
       - name: supply_cross_docking_tracking_details_20200911
+      - name: legacy_orders
 
   - name: int_service_supply
     tables:
+      - name: cnc_orders
+      - name: cnc_order_quotes
       - name: cancellation_reasons
       - name: dispute_line_items_issues
       - name: lead_time_tiers
@@ -73,12 +76,6 @@ models:
           - not_null
 
   - name: fact_disputes
-    columns:
-      - name: order_uuid
-        tests:
-          - unique
-
-  - name: append_orders_rda
     columns:
       - name: order_uuid
         tests:

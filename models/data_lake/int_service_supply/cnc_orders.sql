@@ -14,12 +14,8 @@ select created,
        delivered_at,
        shipped_at,
        expected_shipping_date,
-       hub_id,
        legacy_order_id,
-       legacy_status,
-       station_id,
        completed_at,
-       billing_request_id,
        {{ varchar_to_boolean('is_automated_shipping_available') }},
        support_ticket_id,
        number,
@@ -30,4 +26,4 @@ select created,
        accepted_at,
        description,
        shipped_to_warehouse_at
-from int_service_supply.cnc_orders
+from {{ source('int_service_supply', 'cnc_orders') }}

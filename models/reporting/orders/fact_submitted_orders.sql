@@ -1,3 +1,16 @@
+with complete_orders as (
+  
+-- This unions the fact_orders table together with the missing_orders table which is a static table
+-- that contains deals from both Drupal and Hubspot that are not found in service supply (~9K).
+
+  {{ dbt_utils.union_relations(
+    relations=[ref('fact_orders'), source('data_lake', 'legacy_orders')]
+) }}
+
+-- The DBT union relations package unions tables even when they have different widths and column orders
+
+)
+
 select 
 
 -- Fields Matching (While Testing)
@@ -11,18 +24,18 @@ bdr_owner_id as bdr_owner_id,
 bdr_owner_name as bdr_owner_name,
 bdr_owner_primary_team_name as bdr_owner_primary_team_name,
 became_customer_date_contact as became_customer_date_contact,
-became_opportunity_date_contact as became_opportunity_date_contact,
-cancellation_reason as cancellation_reason,
+date_trunc('day', became_opportunity_date_contact) as became_opportunity_date_contact,
+-- cancellation_reason as cancellation_reason, -- Definition was changed, not comparable
 order_cancelled_at as cancelled_at,
 change_request_freshdesk_ticket_id as change_request_freshdesk_ticket_id,
 change_request_status as change_request_status,
 destination_city as city,
 order_closed_at as closed_date,
 closed_deal_days_between_previous_deal_contact as closed_deal_days_between_previous_deal_contact,
-closed_deal_days_between_previous_deal_from_delivery_contact as closed_deal_days_between_previous_deal_from_delivery_contact,
+-- closed_deal_days_between_previous_deal_from_delivery_contact as closed_deal_days_between_previous_deal_from_delivery_contact, -- Old KPI
 closed_deal_number_contact as closed_deal_number_contact,
 hubspot_closed_lost_reason as closed_lost_reason,
-order_closed_sales_usd as closed_sales_usd,
+order_closed_amount_usd as closed_sales_usd,
 hubspot_company_name as company_name,
 order_completed_at as completed_date,
 destination_country_iso2 as country_iso2,
@@ -33,7 +46,7 @@ customer_success_representative_name as customer_success_representative_name,
 hubspot_deal_category as deal_category,
 delay_liability as delay_liability,
 delay_status as delay_status,
-delivered_at as delivered_date,
+order_delivered_at as delivered_date,
 delivered_to_cross_dock_at as delivered_date_to_cross_dock,
 derived_delivered_at as derived_delivery_date,
 dispute_created_at as dispute_created_at,
@@ -46,7 +59,7 @@ dispute_type as dispute_type,
 order_document_number as document_number,
 estimated_delivery_to_cross_dock as estimated_delivery_to_cross_dock,
 estimated_delivery_to_customer as estimated_delivery_to_customer,
-first_bdr_owner_at as first_bdr_owner_date,
+first_bdr_owner_date_company as first_bdr_owner_date,
 order_first_completed_at as first_completed_date,
 first_dispute_resolution_type as first_dispute_resolution_type,
 first_time_quote_sent_at as first_time_quote_sent_date,
@@ -111,7 +124,7 @@ number_of_quote_versions as number_of_quote_versions,
 number_of_quote_versions_by_admin as number_of_quote_versions_by_admin,
 number_of_rfq_requests as number_of_suppliers_rfq_requests,
 number_of_rfq_responded as number_of_suppliers_rfq_responded,
-po_active_company_entity as order_active_po_company_entity,
+-- po_active_company_entity as order_active_po_company_entity, -- We accepted the difference, it has more values in DBT
 po_active_uuid as order_active_po_quote_uuid,
 po_active_shipping_usd as order_active_po_shipping_usd,
 order_created_at,
@@ -129,9 +142,9 @@ line_item_process_id as process_id,
 line_item_process_name as process_name,
 qc_inspection_result as qc_inspection_result,
 company_entity as quote_company_entity,
-date_trunc('day', order_submitted_date) as quote_submitted_date,
-order_quote_subtotal_amount_usd as quote_subtotal_amount_usd,
-refund_reason as refund_reason,
+date_trunc('day', order_submitted_at) as quote_submitted_date,
+order_submitted_amount_usd as quote_subtotal_amount_usd,
+-- refund_reason as refund_reason, low to null usage in Looker, the field just delivers one category so is a bit useless, it can be added again later if requested
 destination_region as region,
 reorder_original_order_uuid as reorder_original_order_uuid,
 order_quote_requires_local_sourcing as requires_local_sourcing,
@@ -143,10 +156,10 @@ shipping_by_supplier_delay_days as shipping_by_supplier_days_delay,
 destination_latitude as shipping_latitude,
 destination_longitude as shipping_longitude,
 shipping_to_customer_delay_days as shipping_to_customer_days_delay,
-shipping_price_amount_usd as shipping_usd,
+shipping_amount_usd as shipping_usd,
 sourced_cost_usd as sourced_cost_usd,
 order_sourced_at as sourced_date,
-order_sourced_sales_usd as sourced_sales_usd,
+order_sourced_amount_usd as sourced_sales_usd,
 destination_us_state as state,
 origin_country as supplier_country_name,
 supplier_id as supplier_id,
@@ -157,8 +170,12 @@ order_technology_id as technology_id,
 order_technology_name as technology_name,
 winning_bid_uuid as winning_bid_uuid,
 order_quote_uuid as winning_quote_uuid
+-- order_is_legacy as is_legacy_order
+-- order_data_source as _data_source
 
-from {{ ref('fact_orders') }} as orders
+from complete_orders as orders
 left join {{ ref('agg_orders') }} as agg_orders using(order_uuid) 
 where true
-and (order_quote_status = 'cart') is not true
+and (order_quote_status = 'cart') is not true 
+and order_data_source = 'supply'
+-- or order_data_source in ('hubspot', 'drupal') -- To be added later

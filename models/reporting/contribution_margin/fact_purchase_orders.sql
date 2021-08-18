@@ -53,7 +53,7 @@ select oqsl.created                                                             
        fd.order_quote_uuid                                                                   as order_first_quote_uuid,
        fd.order_status                                                                       as order_status,
        fd.order_shipped_at                                                                   as order_shipped_date,
-       fd.delivered_at                                                                       as order_delivery_date,
+       fd.order_delivered_at                                                                 as order_delivery_date,
        osl.completed_at                                                                      as order_completed_date,
        -- Tech is 2 (3DP) when it is null as this is old platform and that is the only option that was available there...
        fd.order_technology_id                                                                as order_technology_id,

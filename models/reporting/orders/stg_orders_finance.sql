@@ -35,14 +35,8 @@ with stripe_transactions as (
     from {{ ref('transactions') }} as t
     where status != 'new' -- 'Pending' transactions discarded
     group by 1
-),
-     refunds as (
-         select r.paid_quote_uuid,
-                rr.title as refund_reason
-         from {{ ref('refunds') }} r
-                  inner join {{ ref('refund_reasons') }} rr
-         on rr.id = r.reason_id
-     )
+)
+
 select o.uuid                         as order_uuid,
        t.stripe_transaction_created_at,
        t.stripe_is_successful_payment,
@@ -61,8 +55,7 @@ select o.uuid                         as order_uuid,
            when q.customer_purchase_order_uuid is not null then '3. Purchase order upload'
            when q.signed_quote_uuid is not null then '4. Signed quote upload'
            when t.stripe_payment_method is not null then '1. Stripe payment'
-           else '5. Manual Net30' end as payment_method,
-       r.refund_reason
+           else '5. Manual Net30' end as payment_method
 
        -- Note: field "is_instant_payment" is defined in core orders (a.k.a cube deals)
        --       as it requires of the "is_closed_won" field coming from other sources.
@@ -74,6 +67,4 @@ from {{ ref('cnc_orders') }} as o
     on o.quote_uuid = t.quote_uuid
     left join {{ ref ('quote_docusign_requests') }} as d
     on o.quote_uuid = d.quote_uuid
-    left join refunds r 
-    on o.quote_uuid = r.paid_quote_uuid
     left join {{ ref('stg_orders_dealstage') }} as dealstage on o.uuid = dealstage.order_uuid
