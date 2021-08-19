@@ -27,6 +27,7 @@ with disputes as (
              from {{ ref('disputes') }} dis
         left join {{ ref ('dispute_line_items') }} dli
              on dli.dispute_uuid = dis.uuid
+             where dis.status = 'new' and dis.deleted is null
              group by 1
          ),
          disputes_temp as (select dis.order_uuid,
@@ -36,15 +37,12 @@ with disputes as (
                                   dis.type                                                                                       as dispute_type,
                                   dis.status                                                                                     as dispute_status,
 
-                                  row_number() over ( partition by dis.order_uuid order by case
-                                                                                               when status = 'new' then
-                                                                                                   0
-                                                                                               when status = 'draft'
-                                                                                                   then 1 end asc, created desc) as rn -- Prioritize 'new' over 'draft', most recent first
+                                  row_number() over ( partition by dis.order_uuid order by coalesce(lid.line_item_created, created) desc) as rn -- Prioritize 'new' over 'draft', most recent first
                            from {{ ref('disputes') }} dis
                                left join line_item_disputes lid
                            on dis.order_uuid = lid.order_uuid
-                           where deleted is null),
+                           where deleted is null
+                                 and status = 'new'),
          disputes as (
              select order_uuid,
                     dispute_id,
