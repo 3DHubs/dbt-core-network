@@ -52,3 +52,8 @@ Currently the Redshift connection is established through a load balancers which 
 
 # Actions
 - [Stale](https://github.com/actions/stale)
+
+# New dbt developers
+Quick checklist on what's required:
+- dbt developer seat: ask Data Engineering (Nihad) or director of eng (Paul).
+- create Redshift user + password and add user as `dbt_dev` and `ro_group`. The latter is required to get read access on PR-specific dbt schemas in Redshift.

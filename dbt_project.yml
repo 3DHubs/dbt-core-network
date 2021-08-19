@@ -163,3 +163,8 @@ snapshots:
 
 # Tests
 # Can be found in models/schema.yml
+
+# Access
+# On run-end read-only access is granted to the ro_group in Redshift on the target schema's contents.
+on-run-end:
+  - "{{ grant_select_on_schemas(schemas, 'ro_group') }}"
