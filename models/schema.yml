@@ -2,6 +2,14 @@ version: 2
 
 sources:
 
+  - name: ext_hubspot_webhooks
+    tables:
+      - name: data
+
+  - name: landing
+    tables:
+      - name: hubspot_deals_dealstage_history_20201125
+
   - name: _3d_hubs
     tables:
       - name: supply_quote_updated
@@ -37,7 +45,6 @@ sources:
       - name: hubspot_deals
       - name: hubspot_contacts
       - name: hubspot_companies
-      - name: hubspot_deal_dealstage_history
       - name: hubspot_owners
       - name: hubspot_owners_teams
       - name: exchange_rate_spot_daily

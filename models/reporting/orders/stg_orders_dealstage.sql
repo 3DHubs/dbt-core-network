@@ -11,7 +11,7 @@ with hubspot_dealstage_history as (
     select deal_id,
            min(case when dealstage_mapped like 'Won%' then changed_at end)           as order_closed_at,
            min(case when dealstage_mapped = 'Closed - Canceled' then changed_at end) as order_cancelled_at
-    from {{ source('data_lake', 'hubspot_deal_dealstage_history') }}
+    from {{ ref('hubspot_deal_dealstage_history') }}
     group by 1
     having (order_closed_at is not null or order_cancelled_at is not null) -- Filter to reduce table length
 
