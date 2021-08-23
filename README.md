@@ -57,3 +57,43 @@ Currently the Redshift connection is established through a load balancers which 
 Quick checklist on what's required:
 - dbt developer seat: ask Data Engineering (Nihad) or director of eng (Paul).
 - create Redshift user + password and add user as `dbt_dev` and `ro_group`. The latter is required to get read access on PR-specific dbt schemas in Redshift.
+
+# A note about changing incremental models
+In general two types of situations can occur in relation to incremental models.
+
+## Scenario 1: Backfilling source data
+In this scenario the incremental model needs to be backfilled with older data. Incremental models typically only look forward (e.g. `where created_at > (select max(created_at) from {{ this }} )`). It may happen that you need to backfill source event data which requires a `dbt run --<your incremental model> -- full-refresh` for the dependent table. Please ensure you isolate the issue and create a separate job to be run in production only for that job.
+
+Example:
+```
+Before backfill: 
+* Raw table A: n=1000, min date = 2020-01-01
+* Incremental model X: n=1000, min date = 2020-01-01
+
+After backfill, normal `dbt run`:
+* Raw table A: n=2000, min date = 2018-01-01
+* Incremental model X: n=1000, min date = 2020-01-01
+
+After backfill, issue `dbt run --models X --full-refresh`
+* Raw table A: n=2000, min date = 2018-01-01
+* Incremental model X: n=2000, min date = 2018-01-01
+```
+
+## Scenario 2: DDL change in source data
+In this scenario the source data's schema has changed and you want to have that change propagated to children (i.e. downstream dependencies). Here you'll need to update the projection of that model (`SELECT a, b, <new column>`) in order to make that field available _and_ you will need to issue a full refresh.
+
+```
+Before DDL change:
+* Raw table A: columns [col_1, col_2, col_3]
+* Incrumental model X: columns [col_1, col_2, col_3]
+
+After DDL change, normal `dbt run`
+* Raw table A: columns [col_1, col_2, col_4, col_5]
+* Incrumental model X: columns [col_1, col_2, col_3]
+As you see col_3 is not dropped in X despite the fact it was dropped in A. And it does not break the dbt run command.
+
+After DDL change, issue `dbt run --models X --full-refresh`
+* Raw table A: columns [col_1, col_2, col_4, col_5]
+* Incrumental model X: columns [col_1, col_2, col_4, col_5]
+As you can see col_4 and col_5 are added but col_3 is now missing. If you want to keep col_3 make sure you make a back-up first so you can manually backfill that data later.
+```

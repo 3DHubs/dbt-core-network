@@ -5,6 +5,8 @@ service-supply discerns three types of events:
 - record_line_item_event()
 
 This model attempts to standardize some of the events and translate the events into ID (integer) values. Reason behind this it should be easier to pull and process event data this way: you can simply filter on a set of event_ids.
+
+Note 1: on 2021-08-20 we (Diego and Bart) discussed an approach to quicken the data processing of this model and its dependencies by only including events that are currently relevant for children (downstream dependent data models). We changed the methodology to only process that data. If you ever want to change this scope, e.g. add more event types, you'll need to issue a `dbt run --models <this_model> --full-refresh`. Be mindful of the large amount of events. You may want to compile the SQL and do the full refresh in Redshift manually by splitting the data into partitions using the `created` field.
 */
 
 {{
@@ -28,6 +30,8 @@ select
 from {{ ref('order_history_events') }}
 
 where lower(description) !~ '(aftership|shippo)'
+
+    and lower(description) ~ 'completed|canceled an auction|dispute' -- Note 1
 
     {% if is_incremental() %}
 
