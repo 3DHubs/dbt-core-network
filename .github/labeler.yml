@@ -1,14 +1,17 @@
 macro:
-  - macros/**
+  - macros/**/*
 
 test:
-  - test/**
+  - test/**/*
 
 analytics:
-  - models/reporting/**
+  - models/reporting/**/*
 
 seed:
-  - data/**
+  - data/**/*
 
 config:
   - '/**/*.yml'
+
+documentation:
+  - '/**/*.md'
