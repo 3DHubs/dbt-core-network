@@ -22,16 +22,6 @@ with stripe_transactions as (
            min(case when t.status = 'successful' and t.type = 'refund' then 1 end)::bool      as is_successful_refund,
            min(case when t.status = 'failed' and t.type = 'payment' then 1 end)::bool         as is_failed_payment,
            sum(case when t.status = 'failed' and t.type = 'payment' then 1 end)               as num_failed_payments
-
-           --todo: if agreed, remove the following fields :
-           -- coalesce(max(case when status in ('successful', 'refunded') then updated end),
-           --          max(case when status in ('failed', 'new') then updated end))         as updated_at,                                -- Not used
-           -- max(deleted)                                                                  as deleted_at,                                -- Not used
-           -- max(amount::float / 100)::decimal(15, 2)                                      as payment_amount,                            -- Not used
-           -- max(case
-           --         when status <> 'failed' and type = 'payment'
-           --             then pr_payment_method_details_card_brand end)                    as pr_payment_method_details_card_brand,      -- Not used
-
     from {{ ref('transactions') }} as t
     where status != 'new' -- 'Pending' transactions discarded
     group by 1

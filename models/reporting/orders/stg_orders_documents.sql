@@ -15,13 +15,6 @@ with first_quote as (
     with rn as (select order_uuid,
                        uuid                                                                        as quote_uuid,
                        is_admin                                                                    as quote_first_is_admin,
-
-                       -- todo: if agreed, remove fields below
-
---                        finalized_at                                                                as quote_first_finalized_at,
---                        submitted_at                                                                as quote_first_submitted_at,
---                        created                                                                     as quote_first_created_at,
-
                        row_number() over (partition by order_uuid order by created asc nulls last) as rn
                 from {{ ref('cnc_order_quotes') }} soq
                 where type = 'quote'),
@@ -36,11 +29,6 @@ with first_quote as (
     select rn.order_uuid,
            agg_quote_li.has_part_without_automatic_pricing as quote_first_has_part_without_automatic_pricing,
            quote_first_is_admin                            as quote_first_created_by_admin
-
-           -- todo: if agreed, remove fields below
---            quote_first_created_at,
---            quote_first_submitted_at,
---            quote_first_finalized_at
     from rn
              left join agg_quote_li using (quote_uuid)
     where rn = 1
@@ -63,18 +51,6 @@ with first_quote as (
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
                 quotes.requires_local_production                                 as order_quote_requires_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd
-
-                --todo: if agreed, remove:
-
-                -- quotes.shipping_address_id, --Used to join addresses
-                -- quotes.signed_quote_uuid, -- Used in financial fields, can be used in an appending table
-                -- quotes.currency_code, -- Not leveraged
-                -- quotes.price_multiplier    as order_quote_price_multiplier, -- Not leveraged
-                -- quotes.type                as order_quote_type, -- Very unnecessary, is a type quote
-                -- quotes.tax_category_id, -- Not leveraged
-                -- quotes.shipping_speed, -- Not leveraged
-                -- quotes.cross_docking_added_lead_time, -- Not leveraged
-
          from {{ ref('cnc_orders') }} as orders
          left join {{ ref('cnc_order_quotes') }} as quotes
          on orders.quote_uuid = quotes.uuid
@@ -100,9 +76,6 @@ with first_quote as (
                 case
                     when has_admin_created_quote = true or has_non_locked_quote_review > 0 then true
                     else false end                                                        has_manual_quote_review
-
-                -- has_non_locked_quote_review -- Not leveraged
-
          from {{ ref('cnc_order_quotes') }}
          where type = 'quote'
          group by 1
@@ -124,15 +97,6 @@ with first_quote as (
                                     when sqli.type = 'shipping'
                                         then round(((price_amount / 100.00) / rates.rate), 2) end) as po_first_shipping_usd,
                             row_number() over (partition by order_uuid order by finalized_at)      as rn
-
-                            --todo: if agreed, remove:
-
---                             quote_uuid,
---                             document_number,
---                             (subtotal_price_amount / 100.00)                                       as po_first_amount_source_currency,
---                             currency_code                                                          as po_first_source_currency,
---                             is_created_manually                                                    as po_first_is_created_manually,
-
                      from {{ ref('cnc_order_quotes') }} as soq
     --todo: couldn't find this table in the models
     left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
@@ -149,14 +113,6 @@ with first_quote as (
                 order_sourced_at,  -- Used to define sourced_date
                 sourced_cost_usd,  -- Used to defined sourced_cost_usd
                 po_first_shipping_usd
-
-                --todo: if agreed, remove:
-
---                 po_first_amount_source_currency,
---                 po_first_source_currency,
---                 po_first_is_created_manually,
---                 po_first_supplier_id
-
          from rn
          where rn = 1
      ),
@@ -170,7 +126,7 @@ with first_quote as (
                 quotes.created,
                 round(((subtotal_price_amount / 100.00) / rates.rate), 2)                    as po_active_amount_usd,
                 document_number                                                              as po_active_document_number,
-                purchase_orders.supplier_id::int                                             as po_active_supplier_id,                    -- Used to define is_resourced field
+                purchase_orders.supplier_id::int                                             as po_active_supplier_id, -- Used to define is_resourced field
                 suppliers.name                                                               as po_active_supplier_name,
                 suppliers.address_id                                                         as po_active_supplier_address_id,
                 countries.name                                                               as po_active_company_entity,
@@ -182,20 +138,6 @@ with first_quote as (
                             then round(((price_amount / 100.00) / rates.rate), 2) end)       as po_active_shipping_usd,
                 row_number() over (
                     partition by quotes.order_uuid order by quotes.created desc)             as rn -- Noticed a few orders with 2+ active POs, this helps us guarantee uniqueness
-
-                --todo: if agreed, remove:
-
---                 oqsl.uuid                                                              as order_active_po_uuid, --It is leveraged in fact deals but is it necessary there?
---                 is_created_manually                                                    as order_active_po_is_created_manually, -- Not leveraged
---                 case
---                     when oqsl.created >= '2020-08-22' then convert_timezone(sa.timezone, oqsl.shipping_date)
---                     when oqsl.created < '2020-08-22' and oqsl.shipping_date not like '%23:59:59%'
---                         then convert_timezone(sa.timezone, oqsl.shipping_date)
---                     else oqsl.shipping_date end                                        as po_shipping_render_date,
---                 (subtotal_price_amount / 100.00)                                       as order_active_po_amount_source_currency,
---                 oqsl.currency_code                                                     as order_active_po_source_currency,
-              
-
          from {{ ref('cnc_order_quotes') }} as quotes
     inner join {{ ref('purchase_orders') }} as purchase_orders
          on quotes.uuid = purchase_orders.uuid
@@ -214,21 +156,7 @@ with first_quote as (
 
      agg_all_pos as (
          select osl.uuid as order_uuid,
-                count(*) as number_of_purchase_orders -- Not leveraged? But seems key.
-
-                --todo: if agreed, remove:
-
---                 sum(oqsl.subtotal_price_amount / 100.00)::decimal(15, 2)        as po_sum_of_price_sourced_amount,
---                 sum(oqsl.tax_price_amount / 100.00)::decimal(15, 2)             as po_sum_of_tax_amount,
---                 sum(
---                         round(((oqsl.subtotal_price_amount / 100.00)
---                             / rates.rate), 2))::decimal(15, 2)                  as po_sum_of_price_sourced_amount_usd,
---                 listagg(oqsl.status + ';') within group (order by oqsl.updated) as po_status_descriptions,
---                 listagg(oqsl.uuid + ': ' + oqsl.created + ';')
---                 within group (order by oqsl.updated)                            as po_create_dates,
---                 min(oqsl.created)                                               as po_first_issue_date,
---                 max(oqsl.created)                                               as po_last_issue_date
-
+                count(*) as number_of_purchase_orders -- Not leveraged? But seems important.
          from {{ ref('cnc_order_quotes') }} as oqsl
     inner join {{ ref('cnc_orders') }} as osl
          on oqsl.order_uuid = osl.uuid

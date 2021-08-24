@@ -71,32 +71,6 @@ with stg as (
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn
 
-        -- TODO: if agreed, remove fields below
-        -- hs.associations                                                                as hubspot_associations,
-        -- hs.dealname                                                                    as hubspot_dealname,
-        -- hs.amount_in_home_currency                                                     as hubspot_amount,
-        -- hs.currency_on_submit                                                          as hubspot_currency_on_submit,
-        -- hs.material                                                                    as hubspot_material,
-        -- hs.price_to_customer                                                           as hubspot_price_to_customer,
-        -- hs.quote_number                                                                as hubspot_quote_number,
-        -- hs.tax                                                                         as hubspot_tax_amount,
-        -- hs.technologies                                                                as hubspot_technologies,
-        -- hs.sourced_manually                                                            as hubspot_sourced_manually,
-        -- hs.dealstage                                                                   as hubspot_dealstage,
-        -- hs.customer_success_manager                                                    as customer_success_representative_id,
-        -- hs.supply_owner                                                                as partner_support_representative_id,
-        -- hs.hs_createdate                                                               as hubspot_hs_createdate,
-        -- hs.deal_number                                                                 as hubspot_deal_number,
-        -- hs.cost_shipping_to_3d_hubs_                                                   as hubspot_cost_shipping_to_3d_hubs_,
-        -- hs.cost_shipping_to_customer_                                                  as hubspot_cost_shipping_to_customer_,
-        -- hs.cost_shipping_self_service                                                  as hubspot_cost_shipping_self_service,
-        -- hs.date_delivered                                                              as hubspot_date_delivered,
-        -- hs.shipping_price_to_customer                                                  as hubspot_shipping_price_to_customer,
-        -- hs.actual_ship_date                                                            as hubspot_actual_ship_date,
-        -- hs.expected_ship_date_supplier                                                 as hubspot_expected_ship_date_supplier,
-        -- hs.date_shipped                                                                as hubspot_date_shipped,
-        -- case when data_lake.isnumeric(deal_number) then deal_number else deal_id::text end as hubspot_supply_join_field,
-
     from {{ source('data_lake', 'hubspot_deals') }} as hs
             left join {{ ref('hubspot_dealstages') }} as dealstage
     on hs.dealstage = dealstage.dealstage_internal_label

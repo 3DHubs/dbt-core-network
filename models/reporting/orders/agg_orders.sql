@@ -37,7 +37,7 @@ select order_uuid,
                                                                over (partition by hubspot_contact_id order by order_closed_at asc))) /
                        1440,
                        1) end                                                                                                                     as closed_deal_days_between_previous_deal_contact,
-       datediff('month', became_customer_date_contact, order_closed_at) = 0                                                                       as is_new_customer_contact,
+       coalesce(datediff('month', became_customer_date_contact, order_closed_at) = 0, false)                                                                       as is_new_customer_contact,
 
        -- Company Fields
        case
@@ -55,7 +55,7 @@ select order_uuid,
                                                                over (partition by hubspot_company_id order by order_closed_at asc))) /
                        1440,
                        1) end                                                                                                                     as closed_deal_days_between_previous_deal_company,
-       datediff('month', became_customer_date_company, order_closed_at) = 0                                                                       as is_new_customer_company,
+       coalesce(datediff('month', became_customer_date_company, order_closed_at) = 0, false)                                                                       as is_new_customer_company,
        case
            when hubspot_company_id is not null then min(case when bdr_owner_name is not null then order_closed_at end)
                                                     over (partition by hubspot_company_id) end                                                    as first_bdr_owner_date_company

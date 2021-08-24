@@ -4,22 +4,26 @@
 --  |  _/ ___ \ |___  | |   | |_| |  _ <| |_| | |___|  _ < ___) |
 --  |_|/_/   \_\____| |_|    \___/|_| \_\____/|_____|_| \_\____/
 
+-- This table is created by combining supply's cnc orders table with 
+-- several staging tables and other few secondary sources
 
--- Combines:
--- 1.  Datalake Supply Orders Table
--- 2.  Staging Orders Hubspot Table
--- 3.  Staging Orders RDA Table
--- 4.  Staging Orders Documents Table
--- 5.  Staging Finance Table
--- 6.  Staging Logistics Table
+-- Staging Tables:
+-- 1.  Staging Orders Hubspot Table
+-- 2.  Staging Orders RDA Table
+-- 3.  Staging Orders Documents Table (Quotes & POs)
+-- 4.  Staging Finance Table
+-- 5.  Staging Logistics Table
+-- 6.  Staging OTR Table (Depends on Documents & Logistics)
 -- 7.  Staging Line Items Table
 -- 8.  Staging Reviews Table
--- 9.  Staging Geo/Location Table
+-- 9. Staging Geo/Location Table
 -- 10. Staging Deal Stage Table
 -- 11. Staging Interactions Table
 
 -- Other Sources:
+-- Disputes
 -- Cancellation Reasons
+-- Change Requests
 
 select
 
@@ -29,7 +33,6 @@ select
     case when legacy_order_id is not null then orders.legacy_order_id::varchar
          when legacy_order_id is null then orders.uuid end                                 as order_uuid, -- Most drupal orders exists in supply but we want to keep their original ID
     orders.quote_uuid                                                                      as order_quote_uuid,
-    orders.hubspot_deal_id                                                                 as order_hubspot_deal_id,
     orders.reorder_original_order_uuid,
 
     -- Orders: Dates
@@ -47,7 +50,6 @@ select
     ---------- SOURCE: STG ORDERS HUBSPOT --------------
 
     -- HS Deals: Main Fields
-    hs_deals.hubspot_deal_id,
     hs_deals.hubspot_amount_usd,
     hs_deals.hubspot_estimated_close_amount_usd,
     hs_deals.hubspot_deal_category,
@@ -339,15 +341,17 @@ select
     ---------- SOURCE: COMBINED FIELDS --------------
     -- Fields that are defined from two or more sources
 
-    -- Document Number: some orders take the value of the order quote
+    -- IDs
+    coalesce(orders.hubspot_deal_id, hs_deals.hubspot_deal_id)                             as hubspot_deal_id,
     coalesce(orders.number, docs.order_quote_document_number)                              as order_document_number,
 
     -- Lifecycle:
-    coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at)                   as order_submitted_at,
+    case when order_quote_status = 'cart' then null else -- In June 2021 some carts started being created in HS
+        coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at) end           as order_submitted_at,
     coalesce(cancellation_reasons.title, nullif(hs_deals.hubspot_cancellation_reason, '')) as cancellation_reason,
     coalesce(logistics.full_delivered_at, dealstage.order_first_completed_at) is not null  as is_recognised,
     least(case
-              when order_hubspot_deal_id in
+              when orders.hubspot_deal_id in
                    ('2934481798', '2920072973', '2914482547', '2770247355', '3033179401', '2410602207', '2966346046',
                     '3020615482', '2975227287', '2887063884', '2950247669', '2901736923', '2860257553', '3021663769')
                   then dealstage.order_first_completed_at
@@ -361,7 +365,7 @@ select
     case
         when dealstage.is_closed then order_submitted_amount_usd
         else 0 end                                                                         as order_closed_amount_usd,
-    case when docs.is_sourced then order_submitted_amount_usd else 0 end              as order_sourced_amount_usd,
+    case when docs.is_sourced then order_submitted_amount_usd else 0 end                   as order_sourced_amount_usd,
 
 
     -- Suppliers:
@@ -380,136 +384,6 @@ select
             and interactions.order_has_underquote_interaction is true then true
         else false end                                                                     as order_is_underquoted,
     coalesce(interactions.order_has_svp_interaction or li.has_svp_line_item,false)         as order_is_svp
-
-
-    ---------- FIELDS TO REMOVE: --------------
-
-    -- orders.billing_request_id                                                as  order_billing_request_id, -- Not leveraged
-    -- orders.hub_id                                                            as  order_hub_id, -- Not leveraged
-    -- orders.cancellation_reason_id                                            as  order_cancellation_reason_id, -- Not leveraged
-    -- orders.is_admin                                                          as  order_is_admin, -- Not leveraged
-    -- orders.is_automated_shipping_available                                   as  order_is_auto_shipping_available, -- Not leveraged
-    -- orders.is_strategic                                                      as  order_is_strategic, -- Not leveraged
-    -- orders.session_id                                                        as  order_session_id, -- Not leveraged
-    -- orders.accepted_at                                                       as  order_accepted_date, -- Raw field used for further definitions, not leveraged as output
-    -- orders.user_id                                                           as  order_user_id, -- Not leveraged
-
-    -- hs_deals.hubspot_associations,
-    -- hs_deals.hubspot_dealname,
-    -- hs_deals.hubspot_amount,
-    -- hs_deals.hubspot_currency_on_submit,
-    -- hs_deals.hubspot_material,
-    -- hs_deals.hubspot_price_to_customer,
-    -- hs_deals.hubspot_quote_number,
-    -- hs_deals.hubspot_tax_amount,
-    -- hs_deals.hubspot_technologies,
-    -- hs_deals.hubspot_sourced_manually,
-    -- hs_deals.hubspot_dealstage,
-    -- hs_deals.hubspot_hs_createdate,
-    -- hs_deals.hubspot_deal_number,
-    -- hs_deals.hubspot_cost_shipping_to_3d_hubs_,
-    -- hs_deals.hubspot_cost_shipping_to_customer_,
-    -- hs_deals.hubspot_cost_shipping_self_service,
-    -- hs_deals.hubspot_date_delivered,
-    -- hs_deals.hubspot_shipping_price_to_customer,
-    -- hs_deals.hubspot_actual_ship_date,
-    -- hs_deals.hubspot_expected_ship_date_supplier,
-    -- hs_deals.hubspot_date_shipped,
-    -- hs_deals.hubspot_supply_join_field,
-    -- hs_deals.customer_success_representative_id,
-    -- hs_deals.partner_support_representative_id,
-
-    -- These fields are defined in cube deal but not leveraged in fact deals
-    -- They could be useful but if needed better to add them in the agg_deal_rda table.
-    -- started_at,
-    -- last_processed_at,
-    -- bids.response_type             as  winning_bid_response_type,
-    -- bids.has_changed_prices        as  winning_bid_changed_price_ind,
-    -- bids.has_changed_shipping_date as  winning_bid_changed_shipping_date_ind,
-    -- bids.has_design_modifications  as  winning_bid_design_mod_ind,
-    -- bids.rejection_reasons         as  winning_bid_rejection_reason,
-    -- bids.rejection_text            as  winning_bid_rejection_text,
-    -- bids.accepted_ship_by_date     as  winning_accepted_ship_by_date,
-    -- bids.supplier_id               as  winning_bids_supplier_id,
-
-    -- docs.quote_first_created_at, -- Not leveraged
-    -- docs.quote_first_submitted_at, -- Not leveraged
-    -- docs.quote_first_finalized_at, -- Not leveraged
-    -- docs.order_quote_shipping_address_id, -- Used for a join on addresses and states
-    -- docs.order_quote_type, -- Useless, type = quote
-    -- docs.order_currency_code_sold, -- Not leveraged
-    -- docs.order_quote_price_multiplier, -- Not leveraged
-    -- docs.order_quote_price_sold_amount, -- Only USD leveraged
-    -- docs.order_quote_tax_amount, -- Not leveraged
-    -- docs.order_quote_tax_amount_usd, -- Not leveraged
-    -- docs.order_quote_signed_quote_uuid, -- Used in financial fields, can be used in an staging table
-    -- docs.order_quote_tax_category_id, -- Not leveraged
-    -- docs.order_quote_shipping_speed, -- Not leveraged
-    -- docs.order_quote_cross_docking_added_lead_time,
-    -- docs.po_first_amount_source_currency,
-    -- docs.po_first_source_currency,
-    -- docs.po_first_is_created_manually, -- Previously used for is manually sourced def
-    -- docs.order_active_po_quote_uuid,
-    -- docs.order_active_po_amount_source_currency,
-    -- docs.order_active_po_source_currency,
-    -- docs.po_sum_of_tax_amount,
-    -- docs.po_status_descriptions,
-    -- docs.po_create_dates,
-    -- docs.po_first_issue_date,
-    -- docs.po_last_issue_date,
-
-    -- li.expedited_shipping_name, Is a list, not think it is used actively
-    -- li.part_auto_price_original_amount,
-    -- li.part_auto_price_amount,
-    -- li.part_price_amount,
-    -- li.part_tax_amount,
-    -- li.part_auto_tooling_price_original_amount,
-    -- li.part_auto_tooling_price_amount,
-    -- li.part_tooling_price_amount,
-    -- li.shipping_tax_amount,
-    -- li.shipping_tax_excempt_amount,
-    -- li.surcharge_price_amount,
-    -- li.surcharge_tax_amount,
-    -- li.surcharge_tax_excempt_amount
-    -- li.technology_id,
-
-    -- lib.bid_shipping_price_amount,
-    -- lib.bid_shipping_tax_amount,
-    -- lib.bid_shipping_tax_excempt_amount,
-
-    -- li.expedited_shipping_name, Is a list, not think it is used actively
-    -- li.part_auto_price_original_amount,
-    -- li.part_auto_price_amount,
-    -- li.part_price_amount,
-    -- li.part_tax_amount,
-    -- li.part_auto_tooling_price_original_amount,
-    -- li.part_auto_tooling_price_amount,
-    -- li.part_tooling_price_amount,
-    -- li.shipping_tax_amount,
-    -- li.shipping_tax_excempt_amount,
-    -- li.surcharge_price_amount,
-    -- li.surcharge_tax_amount,
-    -- li.surcharge_tax_excempt_amount
-    -- li.technology_id,
-    -- lib.bid_shipping_price_amount,
-    -- lib.bid_shipping_tax_amount,
-    -- lib.bid_shipping_tax_excempt_amount,
-
-    -- order_hubspot_join_field,
-    -- technical_review_submitted_at, -- Not used anymore, not at the quote level
-    -- technical_review_completed_at, -- Not used anymore, not at the quote level
-    -- order_events_history_first_accepted_date, -- Not leveraged in fact deals
-    -- is_shipped_on_time_by_mp_legacy
-    -- is_shipped_on_time_customer_legacy
-    -- order_quote_tax_amount, -- Not leveraged in fact deals
-    -- order_quote_tax_amount_usd, -- Not leveraged in fact deals
-    -- order_currency_code_sourced, -- Not leveraged in fact deals
-    -- order_price_sourced_amount, -- Not leveraged in fact deals
-    -- order_price_sourced_amount_usd, -- Not leveraged in fact deals
-    -- order_bid_quote_status, -- Not leveraged in fact deals
-    -- order_status, the one in fact deals is the previously mapped one
-    -- d2c.client_id -- We will deprecate this?
-    -- rda.auction_created_at, Auction create and started timestamps are the same
 
 from {{ ref('cnc_orders') }} as orders
 
@@ -537,6 +411,6 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
 
 where true
-  and number_of_part_line_items > 0 -- New approach to filter empty carts
-  and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth 
+  and li.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
+  and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth in a later stage
   and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately
