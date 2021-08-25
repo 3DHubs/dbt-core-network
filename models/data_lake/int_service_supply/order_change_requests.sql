@@ -1,2 +1,2 @@
 select *
-from int_service_supply.order_change_requests
+from {{ source('int_service_supply', 'order_change_requests') }}

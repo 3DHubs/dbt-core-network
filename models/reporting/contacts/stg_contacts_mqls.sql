@@ -18,9 +18,12 @@ with submit as (
                          group by 1
                          )
     select hc.contact_id,
-        least(submit.mql_submit, upload.mql_upload, frontend.mql_wall_event,
-                hc.hs_lifecyclestage_marketingqualifiedlead_date,
-                became_opportunity_date) as mql_date
+           least(
+               submit.mql_submit,
+               upload.mql_upload,
+               frontend.mql_wall_event,
+               hc.hs_lifecyclestage_marketingqualifiedlead_date,
+               became_opportunity_date) as mql_date
     from {{ source('data_lake', 'hubspot_contacts') }} hc
             left join submit on submit.email = hc.email
             left join upload on upload.email = hc.email

@@ -12,4 +12,5 @@ select
     slug_scope,
     header_image_id,
     {{ varchar_to_boolean('show_in_material_pages') }}
-from int_service_supply.materials
+
+from {{ source('int_service_supply', 'materials') }}

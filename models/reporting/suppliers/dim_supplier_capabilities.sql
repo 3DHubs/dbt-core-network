@@ -16,8 +16,8 @@ with supplier_tech as (
     from {{ ref('suppliers') }} s
              left join {{ ref('supplier_technologies') }} st on st.supplier_id = s.id
              left outer join {{ ref('technologies') }} as tec on st.technology_id = tec.technology_id
-             left outer join data_lake.supply_supplier_users as ssu on s.id = ssu.supplier_id
-             left outer join data_lake.supply_users as su on ssu.user_id = su.user_id
+             left outer join {{ ref('supplier_users') }} as ssu on s.id = ssu.supplier_id
+             left outer join {{ ref('users') }} as su on ssu.user_id = su.user_id
     where su.mail !~ '@(3d)?hubs.com'
 ),
      finishes_prep as (

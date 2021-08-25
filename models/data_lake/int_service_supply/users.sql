@@ -28,5 +28,6 @@ select created,
            when last_sign_in_at_days_ago >= 365 or not last_sign_in_at_days_ago then False
            else decode(is_active, 'true', True, 'false', False)
            end                                                               is_active,
-       mail ~ '@3dhubs.com'                                               as is_internal
-from int_service_supply.users
+       mail ~ '@(3d)?hubs.com'                                               as is_internal
+
+from {{ source('int_service_supply', 'users') }}

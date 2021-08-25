@@ -29,5 +29,7 @@ select dcu.client_id,
                '')           as stg_utm_term,
        first_page_seen_query,
        hutk_analytics_first_visit_timestamp
+
 from {{ ref('stg_clients') }} dcu
+
 where channel in ('paid_search', 'branded_paid_search')

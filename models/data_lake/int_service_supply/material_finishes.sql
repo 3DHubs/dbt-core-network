@@ -9,4 +9,4 @@ select id,
        surface_roughness,
        tolerances,
        cosmetic_type
-from int_service_supply.material_finishes
+from {{ source('int_service_supply','material_finishes') }}

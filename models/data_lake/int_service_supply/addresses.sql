@@ -21,4 +21,4 @@ select created,
        phone,
        industry,
        timezone
-from int_service_supply.addresses
+from {{ source('int_service_supply', 'addresses') }}

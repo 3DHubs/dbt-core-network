@@ -31,7 +31,7 @@ with auctions as (select oqs.created,
                          decode(auctions.is_resourcing, 'true', True, 'false', False)        as is_resourcing,
                          row_number() over (partition by oqs.order_uuid order by auctions.started_at desc nulls last)
                                                                                              as recency_idx
-                  from int_service_supply.auctions as auctions
+                  from {{ source('int_service_supply', 'auctions') }} as auctions
                            inner join {{ ref('cnc_order_quotes') }} as oqs
                                       on auctions.uuid = oqs.uuid
                   where not decode(auctions.is_rfq, 'true', True, 'false', False))

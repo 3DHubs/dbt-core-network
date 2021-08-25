@@ -12,5 +12,7 @@ select hs_company_id,
        min(became_customer_date)              as became_customer_date,
        max(recent_closed_order_date)          as recent_closed_order_date,
        min(second_order_closed_at)            as second_order_closed_at
+
 from {{ ref('dim_contacts') }}
+
 group by 1

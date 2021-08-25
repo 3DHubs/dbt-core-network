@@ -75,29 +75,29 @@ with stg as (
             left join {{ ref('hubspot_dealstages') }} as dealstage
     on hs.dealstage = dealstage.dealstage_internal_label
         left join {{ ref('order_status') }} as status
-        on dealstage.dealstage_mapped_value = status.hubspot_status_value
+            on dealstage.dealstage_mapped_value = status.hubspot_status_value
         left join {{ source('data_lake', 'hubspot_owners') }} as own
-        on own.owner_id = hs.hubspot_owner_id
-        and coalesce (hubspot_owner_assigneddate, createdate) between own.start_date and own.end_date
+            on own.owner_id = hs.hubspot_owner_id
+            and coalesce (hubspot_owner_assigneddate, createdate) between own.start_date and own.end_date
         left join {{ source('data_lake', 'hubspot_owners') }} own2 on own2.owner_id = hs.hubspot_owner_id and own2.is_current is true
         left join {{ source('data_lake', 'hubspot_owners') }} as bdr
-        on bdr.owner_id = hs.bdr_assigned and createdate between bdr.start_date and bdr.end_date
+            on bdr.owner_id = hs.bdr_assigned and createdate between bdr.start_date and bdr.end_date
         left join {{ source('data_lake', 'hubspot_owners') }} as bdr2
-        on bdr2.owner_id = hs.bdr_assigned and bdr2.is_current is true
+            on bdr2.owner_id = hs.bdr_assigned and bdr2.is_current is true
         left join {{ source('data_lake', 'hubspot_owners') }} as me
-        on me.owner_id = hs.sales_engineer and me.is_current is true
+            on me.owner_id = hs.sales_engineer and me.is_current is true
         left join {{ source('data_lake', 'hubspot_owners') }} as csr
-        on csr.owner_id = hs.customer_success_manager and csr.is_current is true
+            on csr.owner_id = hs.customer_success_manager and csr.is_current is true
         left join {{ source('data_lake', 'hubspot_owners') }} as psr
-        on psr.owner_id = hs.supply_owner and psr.is_current is true
+            on psr.owner_id = hs.supply_owner and psr.is_current is true
         left join {{ source('data_lake', 'hubspot_owners') }} as so
-        on so.owner_id = hs.sourcing_owner and so.is_current is true
+            on so.owner_id = hs.sourcing_owner and so.is_current is true
         left join {{ ref('hubspot_technology_mapping') }} as htm
-        on hs.technologies = htm.hubspot_technology
+            on hs.technologies = htm.hubspot_technology
         left join {{ ref ('technologies') }} as technologies
-        on htm.technology_id = technologies.technology_id
+            on htm.technology_id = technologies.technology_id
         left join {{ source('data_lake', 'hubspot_companies') }} as hcom 
-        on hs.hs_latest_associated_company_id = hcom.company_id
+            on hs.hs_latest_associated_company_id = hcom.company_id
 )
 select *
 from stg

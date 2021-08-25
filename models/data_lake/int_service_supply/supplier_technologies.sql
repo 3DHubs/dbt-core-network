@@ -27,4 +27,5 @@ select supplier_id,
                                    'strategic_orders_priority',
                                    'min_order_amount',
                                    'max_order_amount']) }}                     as _supplier_attr_sk -- This surrogate key is used in snapshots to identify changes
-from int_service_supply.supplier_technologies
+
+from {{ source('int_service_supply', 'supplier_technologies') }}

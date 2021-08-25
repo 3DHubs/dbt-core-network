@@ -34,7 +34,7 @@ select issc.created,
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}
        {% endfor %}
-from int_service_supply.countries as issc
+from {{ source('int_service_supply', 'countries') }} as issc
 left join {{ source('data_lake', 'supply_countries_markets_mapping')}} as scmm on lower(issc.alpha2_code) = scmm.country_iso2
 
 

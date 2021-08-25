@@ -1,2 +1,2 @@
 select *
-from int_service_supply.technical_reviews
+from {{ source('int_service_supply', 'technical_reviews') }}

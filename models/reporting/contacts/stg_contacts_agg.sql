@@ -17,5 +17,7 @@ select hubspot_contact_id,
         round(avg(extract(day from order_closed_at - previous_closed_order_date)),
             1)                                                           as average_days_between_closed_orders,
         median(extract(day from order_closed_at - previous_closed_order_date)) as median_days_between_closed_orders
+
 from stg
-group by 1
+
+group by hubspot_contact_id

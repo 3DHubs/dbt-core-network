@@ -29,11 +29,11 @@ select
     least(submit.mql_submit, upload.mql_upload, frontend.mql_wall_event,
           data_lake_hubspot_contacts.hs_lifecyclestage_marketingqualifiedlead_date,
         became_opportunity_date) as mql_date
+
 from {{ source('data_lake', 'hubspot_contacts') }} as data_lake_hubspot_contacts
 left join submit on submit.email = data_lake_hubspot_contacts.email
 left join upload on upload.email = data_lake_hubspot_contacts.email
 left join frontend on frontend.email = data_lake_hubspot_contacts.email
-left join
-    opportunity on
-        opportunity.hubspot_contact_id = data_lake_hubspot_contacts.contact_id
+left join opportunity on opportunity.hubspot_contact_id = data_lake_hubspot_contacts.contact_id
+
 group by 1, 2, 3

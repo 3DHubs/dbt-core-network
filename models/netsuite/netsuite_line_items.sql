@@ -1,4 +1,4 @@
 {{ config(bind=False) }}
 
 select *
-from ext_netsuite.transaction__itemlist__item
+from {{ source('ext_netsuite', 'transaction__itemlist__item') }}

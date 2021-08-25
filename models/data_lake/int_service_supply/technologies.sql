@@ -26,4 +26,5 @@ select technology_id,
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}
        {% endfor %}
-from int_service_supply.technologies
+
+from {{ source('int_service_supply', 'technologies') }}

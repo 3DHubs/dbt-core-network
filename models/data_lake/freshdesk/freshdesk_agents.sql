@@ -1,6 +1,6 @@
 with
     agents as ( select *, row_number() over (partition by id order by load_timestamp nulls last) as rn
-                from landing.freshdesk_agents_landing fal )
+                from {{ source('landing', 'freshdesk_agents_landing') }} fal )
 select agents.id,
        agents.ticket_scope,
        ftsm.description as ticket_scope_description,

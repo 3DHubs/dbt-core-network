@@ -6,4 +6,5 @@ select created,
        description,
        new_shipping_date,
        reason
-from analytics.int_service_supply.order_delays
+
+from {{ source('int_service_supply', 'order_delays') }}

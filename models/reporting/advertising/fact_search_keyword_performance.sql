@@ -24,6 +24,7 @@ with akpr as (
     from {{ ref('bing_ads_keywords_performance_report') }}
     where date >= '2019-07-01'
     and date < current_date -- from 2019-07-01 we started properly tracking contact source in Hubspot, so data before this point is not useful
+
         {% if is_incremental() %}
 
             and trunc("date") >= current_date - 30

@@ -12,4 +12,4 @@ select created,
        tax_country_id,
        tax_number_2,
        tax_registration_name_2
-from int_service_supply.company_entities
+from {{ source('int_service_supply', 'company_entities') }}

@@ -1,2 +1,2 @@
 select *
-from int_service_supply.cnc_order_quote_attachments
+from {{ source('int_service_supply', 'cnc_order_quote_attachments') }}

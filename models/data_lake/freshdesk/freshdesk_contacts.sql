@@ -1,7 +1,7 @@
     with contacts as (
         select *,
                row_number() over (partition by id order by load_timestamp desc nulls last) as rn
-        from landing.freshdesk_contacts_landing
+        from {{ source('landing', 'freshdesk_contacts_landing') }}
         )
 select contacts.active,
        contacts.address,

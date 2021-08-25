@@ -1,2 +1,2 @@
 select *
-from int_service_supply.netsuite_customer_addresses
+from {{ source('int_service_supply', 'netsuite_customer_addresses') }}

@@ -1,2 +1,2 @@
 select *
-from int_service_supply.reply_options
+from {{ source('int_service_supply', 'reply_options') }}

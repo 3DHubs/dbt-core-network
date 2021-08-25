@@ -1,14 +1,38 @@
 version: 2
 
+
+###########
+# SOURCES #
+###########
+
 sources:
 
   - name: ext_hubspot_webhooks
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _sdc_received_at
     tables:
       - name: data
 
   - name: landing
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    loaded_at_field: load_timestamp
     tables:
       - name: hubspot_deals_dealstage_history_20201125
+        freshness: null  # Ignoring freshness for this data source
+      - name: freshdesk_agents_landing
+      - name: freshdesk_companies_landing
+      - name: freshdesk_contacts_landing
+      - name: freshdesk_groups_landing
+      - name: freshdesk_surveys_landing
+      - name: freshdesk_survey_results_landing
+      - name: freshdesk_ticket_conversations_landing
+      - name: freshdesk_tickets_landing
+      - name: freshdesk_tickets_groups_backup_20200401
+        freshness: null  # Ignoring freshness for this data source
 
   - name: _3d_hubs
     tables:
@@ -20,6 +44,10 @@ sources:
       - name: click_performance_reports
 
   - name: ext_adwords
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _sdc_received_at
     tables:
       - name: accounts
       - name: ad_groups
@@ -31,12 +59,26 @@ sources:
       - name: keywords_performance_report
 
   - name: ext_bing
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _sdc_received_at
     tables:
       - name: accounts
       - name: ad_groups
       - name: campaign_performance_report
       - name: campaigns
       - name: keyword_performance_report
+  
+  - name: ext_netsuite
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _sdc_received_at
+    tables:
+      - name: currencyrate
+      - name: transaction
+      - name: transaction__itemlist__item
 
 
   - name: data_lake
@@ -51,29 +93,81 @@ sources:
       - name: google_search_console
       - name: supply_countries_markets_mapping
       - name: static_seo_page_group
-      - name: static_seo_targets      
-        freshness:
-          warn_after: {count: 2, period: day}
-        loaded_at_field: load_timestamp
+      - name: static_seo_targets
       - name: hubspot_email_wall_submissions_20210423
       - name: adhoc_drupal_closed_sales_20191211
       - name: supply_cross_docking_tracking_details_20200911
       - name: legacy_orders
+      - name: freshdesk_groups_legacy_20200401
 
   - name: int_service_supply
     tables:
+      - name: addresses
+      - name: auctions
+      - name: bids
+      - name: branded_materials
+      - name: cancellation_reasons
+      - name: cnc_order_parts_inspection_attachments
+      - name: cnc_order_quote_attachments
       - name: cnc_orders
       - name: cnc_order_quotes
-      - name: cancellation_reasons
+      - name: company_entities
+      - name: countries
+      - name: dispute_issues
+      - name: dispute_line_items
       - name: dispute_line_items_issues
+      - name: disputes
       - name: lead_time_tiers
       - name: line_items
+      - name: material_colors
+      - name: material_finishes
+      - name: material_subsets
+      - name: materials
+      - name: materials_material_finishes
+      - name: netsuite_customer_addresses
+      - name: netsuite_customers
+      - name: netsuite_sales_order
+      - name: order_change_requests
+      - name: order_delays
+      - name: order_history_events
+      - name: packages
+      - name: processes
+      - name: purchase_orders
+      - name: question_groups
+      - name: question_types
+      - name: questions
+      - name: quote_docusign_requests
+      - name: refund_reasons
       - name: refund_requests
+      - name: refunds
+      - name: replies
+      - name: reply_options
+      - name: shipments
+      - name: shipping_carriers
+      - name: shipping_options
+      - name: supplier_auction_line_items
+      - name: supplier_auctions
+      - name: supplier_finishes
+      - name: supplier_processes
+      - name: supplier_rfqs
+      - name: supplier_technologies
+      - name: supplier_users
+      - name: suppliers
+      - name: suppliers_material_subsets
+      - name: technical_reviews
+      - name: technologies
+      - name: tolerances
+      - name: transactions
+      - name: users
       - name: currencies
 
   - name: reporting
     tables:
       - name: cube_deals
+
+#########
+# TESTS #
+#########
 
 models:
   - name: fact_supplier_auction_interactions

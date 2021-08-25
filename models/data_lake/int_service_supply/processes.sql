@@ -19,4 +19,5 @@ select created,
        nullif(layer_height_z_resolution, '-') as layer_height_z_resolution,
        layer_height_z_resolution_default,
        layer_height_z_resolutions
-from int_service_supply.processes
+
+from {{ source('int_service_supply', 'processes') }}

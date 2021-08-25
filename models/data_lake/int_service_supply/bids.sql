@@ -17,6 +17,6 @@ select oqs.created,
        bids.author_id,
        bids.margin, -- For debugging purposes only, do not use for reporting
        bids.margin_without_discount -- This field will be used in auctions
-from int_service_supply.bids as bids
+from {{ source('int_service_supply', 'bids') }} as bids
          inner join {{ ref('cnc_order_quotes') }} as oqs
                     on bids.uuid = oqs.uuid

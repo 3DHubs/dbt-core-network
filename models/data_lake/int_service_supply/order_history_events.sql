@@ -12,7 +12,8 @@ select id,
        user_id,
        anonymous_id,
        description
-from int_service_supply.order_history_events
+
+from {{ source('int_service_supply', 'order_history_events') }}
 
 {% if is_incremental() %}
 

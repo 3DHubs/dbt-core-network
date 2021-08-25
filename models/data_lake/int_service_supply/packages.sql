@@ -9,4 +9,5 @@ select created,
        at_warehouse_at,
        transit_to_customer_at,
        delivered_at
-from int_service_supply.packages
+
+from {{ source('int_service_supply', 'packages') }}

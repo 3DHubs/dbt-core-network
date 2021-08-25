@@ -16,4 +16,5 @@ select created,
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}
        {% endfor %}
-from int_service_supply.question_groups
+
+from {{ source('int_service_supply', 'question_groups') }}

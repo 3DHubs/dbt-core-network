@@ -8,4 +8,5 @@ select id,
        updated,
        completed_at,
        hubspot_warning_sent_at
-from int_service_supply.quote_docusign_requests
+
+from {{ source('int_service_supply', 'quote_docusign_requests') }}

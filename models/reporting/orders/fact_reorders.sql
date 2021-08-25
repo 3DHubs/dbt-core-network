@@ -5,7 +5,7 @@ with reorders as (select reorder_original_order_uuid,
                          part_quantity,
                          is_expedited_shipping,
                          quote_subtotal_amount_usd
-                  from reporting.cube_deals
+                  from {{ source('reporting', 'cube_deals') }}
                   where reorder_original_order_uuid is not null)
 select reorders.order_uuid                                                                                  as reorder_order_uuid,
        reorders.reorder_original_order_uuid,
@@ -32,4 +32,4 @@ select reorders.order_uuid                                                      
        reorder_total_quantity != original_order_total_quantity                                              as has_changed_quantity,
        reorder_lead_time != original_order_lead_time                                                        as has_changed_lead_time
 from reorders
-         inner join reporting.cube_deals cd on reorders.reorder_original_order_uuid = cd.order_uuid
+         inner join {{ source('reporting', 'cube_deals') }} cd on reorders.reorder_original_order_uuid = cd.order_uuid

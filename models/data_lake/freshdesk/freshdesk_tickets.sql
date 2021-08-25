@@ -1,6 +1,6 @@
 with tickets as (
     select *, row_number() over (partition by id order by updated_at desc, load_timestamp desc nulls last) as rn
-    from landing.freshdesk_tickets_landing
+    from {{ source('landing', 'freshdesk_tickets_landing') }}
 )
 select tickets.id,
        tickets.type,
@@ -85,5 +85,5 @@ from tickets
                          on tickets.priority = ftpm.priority_id
          left outer join {{ ref('freshdesk_ticket_status') }} ftstam
                          on tickets.status = ftstam.status_id
-         left outer join landing.freshdesk_tickets_groups_backup_20200401 ftgb20200401 -- This table may need to be migrated to /data
+         left outer join {{ source('landing', 'freshdesk_tickets_groups_backup_20200401') }} ftgb20200401
                          on tickets.id = ftgb20200401.ticket_id

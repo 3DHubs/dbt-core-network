@@ -1,2 +1,2 @@
 select *
-from int_service_supply.refund_reasons
+from {{ source('int_service_supply', 'refund_reasons') }}

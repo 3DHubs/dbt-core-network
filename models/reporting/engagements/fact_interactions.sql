@@ -70,8 +70,7 @@ with list_of_emails as (
 
              {% if is_incremental() %}
 
-         where he.created_at
-             > (select max (created_at) from {{ this }} where "source" = 'Hubspot')
+                 where he.created_at > (select max (created_at) from {{ this }} where "source" = 'Hubspot')
 
              {% endif %}
      ),
@@ -118,8 +117,7 @@ with list_of_emails as (
 
              {% if is_incremental() %}
 
-         where fdi.created_date
-             > (select max (created_at) from {{ this }} where "source" = 'Freshdesk')
+                 where fdi.created_date > (select max (created_at) from {{ this }} where "source" = 'Freshdesk')
 
              {% endif %}
      )

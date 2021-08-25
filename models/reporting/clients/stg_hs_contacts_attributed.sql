@@ -50,6 +50,8 @@ select coalesce(page_group, 'Ungrouped')                                  as tmp
            when channel in ('branded_organic_search', 'direct_traffic') then 'direct/brand'
            else channel end                                                  channel_grouped,
        contacts.*
+
 from {{ ref('stg_hs_contacts_attributed_prep') }} as contacts
-            left join {{ ref('seo_page_groups') }} pg on pg.page = contacts.hutk_analytics_first_page
+            left outer join {{ ref('seo_page_groups') }} pg on pg.page = contacts.hutk_analytics_first_page
+
 where not (contacts.channel_type = 'outbound' and contacts.lifecyclestage in ('lead', 'subscriber'))

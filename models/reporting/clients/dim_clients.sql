@@ -121,7 +121,7 @@ with stg_agg_contact as (
                 round(avg(Extract(day from closed_date - previous_closed_order_date)),
                       1
                     ) as average_days_between_closed_orders,
-                Median(
+                median(
                         extract(day from closed_date - previous_closed_order_date)
                     ) as median_days_between_closed_orders
          from stg_companies
@@ -310,21 +310,17 @@ select stg_clients."created_date",
        stg_clients."industry_mapped"
 
 from {{ ref('stg_clients') }} as stg_clients
-         left outer join
-     {{ ref('stg_advertising_data') }} as stg_advertising_data
-on
-    (stg_clients.client_id = stg_advertising_data.client_id)
-    left outer join
-    stg_agg_contact on
-    stg_agg_contact.hubspot_contact_id = stg_clients.hs_contact_id
-    left outer join
-    agg_contact_w_company on
-    agg_contact_w_company.hubspot_contact_id = stg_clients.hs_contact_id
-    left outer join stg_clients as fda on fda.client_id = stg_clients.client_id
-    left outer join agg_companies on stg_clients.client_id = agg_companies.client_id
-    left outer join
-    company_mqls on
-    company_mqls.company_id = stg_clients.hs_company_id and stg_clients.type = 'company'
-    left outer join
-    contact_mqls on
-    contact_mqls.contact_id = stg_clients.hs_contact_id and stg_clients.type = 'contact'
+    left outer join {{ ref('stg_advertising_data') }} as stg_advertising_data
+        on (stg_clients.client_id = stg_advertising_data.client_id)
+    left outer join stg_agg_contact
+        on stg_agg_contact.hubspot_contact_id = stg_clients.hs_contact_id
+    left outer join agg_contact_w_company
+        on agg_contact_w_company.hubspot_contact_id = stg_clients.hs_contact_id
+    left outer join stg_clients as fda
+        on fda.client_id = stg_clients.client_id
+    left outer join agg_companies
+        on stg_clients.client_id = agg_companies.client_id
+    left outer join company_mqls
+        on company_mqls.company_id = stg_clients.hs_company_id and stg_clients.type = 'company'
+    left outer join contact_mqls
+        on contact_mqls.contact_id = stg_clients.hs_contact_id and stg_clients.type = 'contact'

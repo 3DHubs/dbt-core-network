@@ -1,7 +1,7 @@
 {{ config(bind=False) }}
 
 select *
-from ext_netsuite.transaction
+from {{ source('ext_netsuite', 'transaction') }}
 where true
     and _type in (
         'Invoice',

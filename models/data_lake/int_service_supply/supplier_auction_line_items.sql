@@ -5,7 +5,8 @@
 }}
 
 select *
-from int_service_supply.supplier_auction_line_items
+
+from {{ source('int_service_supply', 'supplier_auction_line_items') }}
 
 {% if is_incremental() %}
 

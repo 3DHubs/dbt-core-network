@@ -1,7 +1,7 @@
 with groups as (
     select *,
            row_number() over (partition by id order by updated_at desc, load_timestamp desc) as rn
-    from landing.freshdesk_groups_landing
+    from {{ source('landing', 'freshdesk_groups_landing') }}
 ),
      fd_groups as (
          select groups.id,
@@ -22,4 +22,4 @@ select *
 from fd_groups
 union all
 select *
-from data_lake.freshdesk_groups_legacy_20200401 --TODO: we may want to move this table into the /data directory
+from {{ source('data_lake', 'freshdesk_groups_legacy_20200401') }}

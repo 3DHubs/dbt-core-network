@@ -388,24 +388,24 @@ select
 from {{ ref('cnc_orders') }} as orders
 
     -- Staging
-    left join {{ ref ('stg_orders_hubspot') }} as hs_deals on hs_deals.hubspot_deal_id = orders.hubspot_deal_id
-    left join {{ ref ('stg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
-    left join {{ ref ('stg_orders_documents') }} as docs on orders.uuid = docs.order_uuid
-    left join {{ ref ('stg_orders_finance') }} as finance on orders.uuid = finance.order_uuid
-    left join {{ ref ('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
-    left join {{ ref ('stg_orders_otr') }} as otr on orders.uuid = otr.order_uuid
-    left join {{ ref ('stg_orders_line_items') }} as li on orders.quote_uuid = li.quote_uuid
-    left join {{ ref ('stg_orders_reviews') }} as reviews on orders.uuid = reviews.order_uuid
-    left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
-    left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
-    left join {{ ref ('stg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
+    left join {{ ref('stg_orders_hubspot') }} as hs_deals on hs_deals.hubspot_deal_id = orders.hubspot_deal_id
+    left join {{ ref('stg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
+    left join {{ ref('stg_orders_documents') }} as docs on orders.uuid = docs.order_uuid
+    left join {{ ref('stg_orders_finance') }} as finance on orders.uuid = finance.order_uuid
+    left join {{ ref('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
+    left join {{ ref('stg_orders_otr') }} as otr on orders.uuid = otr.order_uuid
+    left join {{ ref('stg_orders_line_items') }} as li on orders.quote_uuid = li.quote_uuid
+    left join {{ ref('stg_orders_reviews') }} as reviews on orders.uuid = reviews.order_uuid
+    left join {{ ref('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
+    left join {{ ref('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
+    left join {{ ref('stg_orders_interactions') }} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
 
     -- Reporting
-    left join {{ ref ('fact_disputes') }} as disputes on orders.uuid = disputes.order_uuid
+    left join {{ ref('fact_disputes') }} as disputes on orders.uuid = disputes.order_uuid
 
     -- Data Lake
-    left join {{ ref ('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
-    left join {{ ref ('order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
+    left join {{ ref('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
+    left join {{ ref('order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
 
     -- Service Supply
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id

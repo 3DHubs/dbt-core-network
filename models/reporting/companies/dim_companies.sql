@@ -55,4 +55,5 @@ from {{ source('data_lake', 'hubspot_companies') }} hc
                             on own.is_current = true and own.owner_id::bigint = hc.hubspot_owner_id::bigint
             left outer join {{ source('data_lake', 'hubspot_owners') }} as ae on ae.is_current = true and ae.owner_id = hc.ae_assigned
             left outer join {{ ref('stg_companies_deals') }} as dc on dc.hubspot_company_id = hc.company_id
+
 where hc.company_id >= 1

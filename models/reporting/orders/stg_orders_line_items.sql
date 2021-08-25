@@ -45,7 +45,6 @@ with agg_line_items as (
            bool_or(case
                        when lower(line_item_title) like ('%svp required%') then true
                        else false end) as                                                 has_svp_line_item
-
     from {{ ref('line_items') }} as li
     left join {{ ref('fact_line_items') }} as fli on li.id = fli.line_item_id
     left join {{ ref('shipping_options') }} as so on li.shipping_option_id = so.id

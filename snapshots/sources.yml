@@ -1,12 +1,1 @@
 version: 2
-
-sources:
-  - name: int_service_supply
-    database: analytics
-    schema: int_service_supply
-    tables:
-    - name: bids
-    - name: suppliers
-    - name: countries
-    - name: supplier_users
-    - name: supplier_technologies

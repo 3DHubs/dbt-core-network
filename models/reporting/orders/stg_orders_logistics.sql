@@ -51,8 +51,8 @@ with supply_cdt as (
                         when shipping_leg = 'drop_shipping:customer'
                             then estimated_delivery end)                                          as estimated_delivery_to_customer
          from {{ ref('shipments') }} shp
-                  left join {{ ref('addresses') }} ship_a
-         on shp.shipping_address_id = ship_a.address_id
+             left join {{ ref('addresses') }} ship_a
+                 on shp.shipping_address_id = ship_a.address_id
              left join {{ ref('countries') }} ship_c on ship_a.country_id = ship_c.country_id
              left join {{ ref('shipping_carriers') }} car on car.id = shp.tracking_carrier_id
          where order_uuid not in

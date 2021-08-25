@@ -35,6 +35,9 @@ Are used to refer to data populated in the data warehouse. Using sources helps u
 - [Introduction to sources](https://docs.getdbt.com/docs/building-a-dbt-project/using-sources).
 - More info here on [source properties](https://docs.getdbt.com/reference/resource-properties/freshness).
 
+## Source freshness
+Source freshness is configured in [schema.yml](models/schema.yml).
+
 ### Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
 - Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
