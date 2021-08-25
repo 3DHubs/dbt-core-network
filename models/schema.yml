@@ -69,6 +69,7 @@ sources:
       - name: lead_time_tiers
       - name: line_items
       - name: refund_requests
+      - name: currencies
 
   - name: reporting
     tables:
