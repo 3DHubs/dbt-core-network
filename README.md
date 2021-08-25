@@ -61,7 +61,7 @@ Quick checklist on what's required:
 - dbt developer seat: ask Data Engineering (Nihad) or director of eng (Paul).
 - create Redshift user + password and add user as `dbt_dev` and `ro_group`. The latter is required to get read access on PR-specific dbt schemas in Redshift.
 
-# A note about changing incremental models
+# A note about incremental models
 In general two types of situations can occur in relation to incremental models.
 
 ## Scenario 1: Backfilling source data
@@ -100,3 +100,5 @@ After DDL change, issue `dbt run --models X --full-refresh`
 * Incrumental model X: columns [col_1, col_2, col_4, col_5]
 As you can see col_4 and col_5 are added but col_3 is now missing. If you want to keep col_3 make sure you make a back-up first so you can manually backfill that data later.
 ```
+## Managing incremental models
+dbt offers control over what models are allowed to be fully refreshed. Check [their documentation](https://docs.getdbt.com/reference/resource-configs/full_refresh/) on how to configure this.
