@@ -7,37 +7,42 @@
 
 -- This is an ephemeral model in preparation for `stg_hs_contacts_attributed.sql`.
 with hc as (
-    select contact_id,
-           email,
-           firstname,
-           lastname,
-           lower(hs_analytics_source)                                       as hs_analytics_source,
-           nullif(hubspot_user_token, '')                                   as hubspot_user_token,
-           nvl(hubspot_user_token, contact_id::varchar)                     as hs_user_uuid,
-           least(hs_analytics_first_visit_timestamp::timestamp, createdate) as earliest_timestamp,
-           lower(hs_analytics_source_data_1)                                as hs_analytics_source_data_1,
-           lower(hs_analytics_source_data_2)                                as hs_analytics_source_data_2,
-           hs_analytics_first_url,
-           hs_analytics_first_visit_timestamp,
-           nullif(ip_country_code, '')                                      as ip_country_code,
-           createdate,
-           nullif(lifecyclestage, '')                                       as lifecyclestage,
-           associatedcompanyid,
-           hs_lifecyclestage_lead_date,
-           hs_lifecyclestage_marketingqualifiedlead_date,
-           hs_lifecyclestage_salesqualifiedlead_date,
-           hubspot_owner_id,
-           bdr_assigned,
-           nullif(account_category, '')                                     as account_category,
-           nullif(emailtype, '')                                            as email_type,
-           trunc(hubspot_owner_assigneddate)                                as
+    select hubspot_contacts.contact_id,
+           hubspot_contacts.email,
+           hubspot_contacts.firstname,
+           hubspot_contacts.lastname,
+           lower(hubspot_contacts.hs_analytics_source)                                       as hs_analytics_source,
+           nullif(hubspot_contacts.hubspot_user_token, '')                                   as hubspot_user_token,
+           nvl(hubspot_contacts.hubspot_user_token, hubspot_contacts.contact_id::varchar)                     as hs_user_uuid,
+           least(hubspot_contacts.hs_analytics_first_visit_timestamp::timestamp, hubspot_contacts.createdate) as earliest_timestamp,
+           lower(hubspot_contacts.hs_analytics_source_data_1)                                as hs_analytics_source_data_1,
+           lower(hubspot_contacts.hs_analytics_source_data_2)                                as hs_analytics_source_data_2,
+           hubspot_contacts.hs_analytics_first_url,
+           hubspot_contacts.hs_analytics_first_visit_timestamp,
+           coalesce(hubspot_contacts.ip_country_code, ac2.alpha2_code, country_names.alpha2_code) as ip_country_code,
+           hubspot_contacts.createdate,
+           nullif(hubspot_contacts.lifecyclestage, '')                                       as lifecyclestage,
+           hubspot_contacts.associatedcompanyid,
+           hubspot_contacts.hs_lifecyclestage_lead_date,
+           hubspot_contacts.hs_lifecyclestage_marketingqualifiedlead_date,
+           hubspot_contacts.hs_lifecyclestage_salesqualifiedlead_date,
+           hubspot_contacts.hubspot_owner_id,
+           hubspot_contacts.bdr_assigned,
+           nullif(hubspot_contacts.account_category, '')                                     as account_category,
+           nullif(hubspot_contacts.emailtype, '')                                            as email_type,
+           trunc(hubspot_contacts.hubspot_owner_assigneddate)                                as
                                                                                hubspot_owner_assigned_date,
-           nullif(hs_lead_status, '')                                       as hs_lead_status,
-           bdr_qualification,
-           nullif(lead_source, '')                                          as contact_source,
-           jobtitle,
-           hubspotscore::int                                                as hubspotscore
+           nullif(hubspot_contacts.hs_lead_status, '')                                       as hs_lead_status,
+           hubspot_contacts.bdr_qualification,
+           nullif(hubspot_contacts.lead_source, '')                                          as contact_source,
+           hubspot_contacts.jobtitle,
+           hubspot_contacts.hubspotscore::int                                                as hubspotscore
+    
     from {{ source('data_lake', 'hubspot_contacts') }}
+    left outer join {{ ref('countries') }} as ac2
+        on case when len(hubspot_contacts.country) = 2 then lower(hubspot_contacts.country) end = lower(ac2.alpha2_code)
+    left outer join {{ ref('countries') }} as country_names
+        on case when len(hubspot_contacts.country) >= 3 then lower(hubspot_contacts.country) end = lower(country_names."name")
 )
 select hc.contact_id,
        hc.email,
