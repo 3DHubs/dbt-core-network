@@ -51,7 +51,7 @@ select con.createdate                                             as created_dat
            dc.name                                                    as country_name,
            dc.market,
            dc.region,
-           dc.continent
+           lower(dc.continent)                                        as continent
     from {{ ref('stg_hs_contacts_attributed') }} as con
              left outer join {{ ref('countries') }} dc on lower(con.country_iso2) = lower(dc.alpha2_code)
              left outer join {{ source('data_lake', 'hubspot_owners') }} own

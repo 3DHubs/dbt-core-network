@@ -15,11 +15,12 @@ with hc as (
            nullif(hubspot_user_token, '')                                   as hubspot_user_token,
            nvl(hubspot_user_token, contact_id::varchar)                     as hs_user_uuid,
            least(hs_analytics_first_visit_timestamp::timestamp, createdate) as earliest_timestamp,
-           lower(hs_analytics_source_data_1)                                as hs_analytics_source_data_1,
-           lower(hs_analytics_source_data_2)                                as hs_analytics_source_data_2,
+           hs_analytics_source_data_1                                       as hs_analytics_source_data_1,
+           hs_analytics_source_data_2                                       as hs_analytics_source_data_2,
            hs_analytics_first_url,
            hs_analytics_first_visit_timestamp,
            nullif(ip_country_code, '')                                      as ip_country_code,
+           lower(coalesce(nullif(hc.ip_country_code, ''), dc.alpha2_code))  as country_iso2,
            createdate,
            nullif(lifecyclestage, '')                                       as lifecyclestage,
            associatedcompanyid,
@@ -37,28 +38,35 @@ with hc as (
            nullif(lead_source, '')                                          as contact_source,
            jobtitle,
            hubspotscore::int                                                as hubspotscore
-    from {{ source('data_lake', 'hubspot_contacts') }}
+    from {{ source('data_lake', 'hubspot_contacts') }} hc
+           left join {{ ref('countries') }} dc on (dc.name = lower(hc.country) or
+                                                         lower(dc.alpha2_code) = lower(hc.country))
 )
 select hc.contact_id,
        hc.email,
        hc.firstname,
        hc.lastname,
-       first_value(hs_analytics_source)
-       over ( partition by hs_user_uuid
-           order by earliest_timestamp asc rows between unbounded preceding and unbounded following) as hutk_analytics_source,
-       first_value(hs_analytics_source_data_1)
-       over ( partition by hs_user_uuid
-           order by earliest_timestamp asc rows between unbounded preceding and unbounded following) as hutk_analytics_source_data_1,
-       first_value(hs_analytics_source_data_2)
-       over ( partition by hs_user_uuid
-           order by earliest_timestamp asc rows between unbounded preceding and unbounded following) as hutk_analytics_source_data_2,
-       first_value(hs_analytics_first_url)
-       over ( partition by hs_user_uuid
-           order by earliest_timestamp asc rows between unbounded preceding and unbounded following) as hutk_analytics_first_url,
-       urlsplit(hutk_analytics_first_url, 'path')                                                    as hutk_analytics_first_page,
-       first_value(hs_analytics_first_visit_timestamp)
-       over ( partition by hs_user_uuid
-           order by earliest_timestamp asc rows between unbounded preceding and unbounded following) as hutk_analytics_first_visit_timestamp,
+       first_value(lower(hc.hs_analytics_source))
+           over ( partition by nvl(nullif(hc.hubspot_user_token, ''), hc.contact_id::varchar)
+               order by least(hc.hs_analytics_first_visit_timestamp::timestamp, hc.createdate) asc
+               rows between unbounded preceding and unbounded following)                   as hutk_analytics_source,
+           first_value(hc.hs_analytics_source_data_1)
+           over ( partition by nvl(nullif(hc.hubspot_user_token, ''), hc.contact_id::varchar)
+               order by least(hc.hs_analytics_first_visit_timestamp::timestamp, hc.createdate) asc
+               rows between unbounded preceding and unbounded following)                   as hutk_analytics_source_data_1,
+           first_value(hc.hs_analytics_source_data_2)
+           over ( partition by nvl(nullif(hc.hubspot_user_token, ''), hc.contact_id::varchar)
+               order by least(hc.hs_analytics_first_visit_timestamp::timestamp, hc.createdate) asc
+               rows between unbounded preceding and unbounded following)                   as hutk_analytics_source_data_2,
+           first_value(split_part(hc.hs_analytics_first_url, '#', 1))
+           over ( partition by nvl(nullif(hc.hubspot_user_token, ''), hc.contact_id::varchar)
+               order by least(hc.hs_analytics_first_visit_timestamp::timestamp, hc.createdate) asc
+               rows between unbounded preceding and unbounded following)                   as hutk_analytics_first_url,
+           urlsplit(hutk_analytics_first_url, 'path')                                      as hutk_analytics_first_page,
+           first_value(hc.hs_analytics_first_visit_timestamp)
+           over ( partition by nvl(nullif(hc.hubspot_user_token, ''), hc.contact_id::varchar)
+               order by least(hc.hs_analytics_first_visit_timestamp::timestamp, hc.createdate) asc
+               rows between unbounded preceding and unbounded following)                   as hutk_analytics_first_visit_timestamp,
        nullif(hc.ip_country_code, '')                                                                as ip_country_code,
        hc.createdate,
        case
@@ -68,7 +76,7 @@ select hc.contact_id,
        hc.hs_lifecyclestage_lead_date,
        hc.hs_lifecyclestage_marketingqualifiedlead_date,
        hc.hs_lifecyclestage_salesqualifiedlead_date,
-       hc.ip_country_code                                                                            as country_iso2,
+       hc.country_iso2,
        hc.hubspot_owner_id                                                                           as hubspot_owner_id,
        hc.bdr_assigned                                                                               as bdr_owner_id,
        hc.account_category,
@@ -83,10 +91,10 @@ select hc.contact_id,
        hc.jobtitle,
        case when hc.createdate >= '2020-07-01' then hc.hubspotscore end                              as lead_score,
        case
-           when hutk_analytics_source ~ 'offline' and
-                hutk_analytics_source_data_1 ~ 'import' and
+           when lower(hutk_analytics_source) ~ 'offline' and
+                lower(hutk_analytics_source_data_1) ~ 'import' and
                 hc.createdate > '2018-11-18' then 'outbound'
-           when hutk_analytics_source_data_1 = 'integration' and
+           when lower(hutk_analytics_source_data_1) = 'integration' and
                 hutk_analytics_source_data_2 = '52073'
                then 'outbound'
            else 'inbound' end                                                                        as channel_type

@@ -1,7 +1,7 @@
 select base.created_date,
        base.client_id,
        base.name,
-       coalesce(scl.first_quote_country_iso2, base.country_iso2)                 as country_iso2, -- Coalesce the first_quote_country_iso2 as it is more accurate
+       lower(coalesce(scl.first_quote_country_iso2, base.country_iso2))          as country_iso2, -- Coalesce the first_quote_country_iso2 as it is more accurate
        base.hs_company_id,
        case when base.hs_company_id is null then false else true end             as is_part_of_company,
        base.hs_contact_id,

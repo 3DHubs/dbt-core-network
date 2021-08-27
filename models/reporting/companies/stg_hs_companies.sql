@@ -25,7 +25,7 @@ with company_agg as (select distinct hc.hs_company_id,
                                          first_value(hc.contact_source)
                                          over ( partition by hs_company_id order by least(hutk_analytics_first_visit_timestamp::timestamp, createdate) asc rows between unbounded preceding and unbounded following) as contact_source
                          from {{ ref('stg_hs_contacts_attributed') }} hc
-                         where hs_company_id is not null)
+                         where hs_company_id is not null and not (hc.channel_type = 'outbound' and hc.lifecyclestage in ('lead', 'subscriber')))
 select hc.createdate                                                             as created_date,
         md5(concat('company', hc.company_id))                                     as client_id,
         'company'                                                                 as type,

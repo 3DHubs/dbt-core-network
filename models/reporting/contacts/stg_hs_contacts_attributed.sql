@@ -31,27 +31,27 @@ select coalesce(page_group, 'Ungrouped')                                  as tmp
                 hutk_analytics_first_url = 'https://www.3dhubs.com/manufacture%' and
                 createdate <= '2021-03-25' -- after implementing 1st party tracking on /manufacturing on 2021-03-25 this is not needed anymore
                then 'unknown_channel'
-           else nullif(hutk_analytics_source, '') end                        channel,
+           when hutk_analytics_source is null then 'unknown_channel'
+            else hutk_analytics_source end                                                as channel, 
        case
-           when channel is not null then tmp_first_page_seen_grouped end  as first_page_seen_grouped,
+           when channel not like 'unknown_channel%' then tmp_first_page_seen_grouped end  as first_page_seen_grouped,
        case
-           when channel is not null then hutk_analytics_first_page end    as first_page_seen,
+           when channel not like 'unknown_channel%' then hutk_analytics_first_page end    as first_page_seen,
        case
-           when channel is not null then substring(nullif(regexp_substr(hutk_analytics_first_url, '\\?.*'), ''),
+           when channel not like 'unknown_channel%' then substring(nullif(regexp_substr(hutk_analytics_first_url, '\\?.*'), ''),
                                                    2) end                 as first_page_seen_query,
        case
-           when channel is not null then hutk_analytics_source_data_1 end as channel_drilldown1,
+           when channel not like 'unknown_channel%' then hutk_analytics_source_data_1 end as channel_drilldown1,
        case
-           when channel is not null then hutk_analytics_source_data_2 end as channel_drilldown2,
-       case
-           when channel = 'display' then 'display'
-           when channel = 'youtube' then 'youtube'
-           when channel in ('social_media', 'referrals', 'other_campaigns', 'email_marketing') then 'other'
-           when channel in ('branded_organic_search', 'direct_traffic') then 'direct/brand'
-           else channel end                                                  channel_grouped,
+           when channel not like 'unknown_channel%' then hutk_analytics_source_data_2 end as channel_drilldown2,
+        case
+            when left(channel, 7) = 'unknown' or channel is null then 'unknown'
+            when channel = 'display' then 'display'
+            when channel = 'youtube' then 'youtube'
+            when channel in ('social_media', 'referrals', 'other_campaigns', 'email_marketing') then 'other'
+            when channel in ('branded_organic_search', 'direct_traffic') then 'direct/brand'
+            else channel end                                                 channel_grouped,
        contacts.*
 
 from {{ ref('stg_hs_contacts_attributed_prep') }} as contacts
             left outer join {{ ref('seo_page_groups') }} pg on pg.page = contacts.hutk_analytics_first_page
-
-where not (contacts.channel_type = 'outbound' and contacts.lifecyclestage in ('lead', 'subscriber'))
