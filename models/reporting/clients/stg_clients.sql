@@ -81,7 +81,7 @@ with dim_clients_union as (select * from {{ ref('stg_hs_companies') }} union all
            dcu.is_qualified
 
     from dim_clients_union dcu
-             left outer join {{ ref('countries') }} dc on dcu.country_iso2 = lower(dc.alpha2_code)
+             left outer join {{ ref('countries') }} dc on lower(dcu.country_iso2) = lower(dc.alpha2_code)
              left outer join {{ source('data_lake', 'hubspot_owners') }} as own
                              on own.is_current = true and own.owner_id::bigint = dcu.hubspot_owner_id::bigint
              left outer join {{ source('data_lake', 'hubspot_owners') }} as bdr on bdr.is_current = true and bdr.owner_id = dcu.bdr_owner_id

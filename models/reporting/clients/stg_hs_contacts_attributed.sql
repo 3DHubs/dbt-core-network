@@ -33,16 +33,16 @@ select coalesce(page_group, 'Ungrouped')                                  as tmp
                then 'unknown_channel'
            else nullif(hutk_analytics_source, '') end                        channel,
        case
-           when channel !~ 'unknown' then tmp_first_page_seen_grouped end  as first_page_seen_grouped,
+           when channel is not null then tmp_first_page_seen_grouped end  as first_page_seen_grouped,
        case
-           when channel !~ 'unknown' then hutk_analytics_first_page end    as first_page_seen,
+           when channel is not null then hutk_analytics_first_page end    as first_page_seen,
        case
-           when channel !~ 'unknown' then substring(nullif(regexp_substr(hutk_analytics_first_url, '\\?.*'), ''),
+           when channel is not null then substring(nullif(regexp_substr(hutk_analytics_first_url, '\\?.*'), ''),
                                                    2) end                 as first_page_seen_query,
        case
-           when channel !~ 'unknown' then hutk_analytics_source_data_1 end as channel_drilldown1,
+           when channel is not null then hutk_analytics_source_data_1 end as channel_drilldown1,
        case
-           when channel !~ 'unknown' then hutk_analytics_source_data_2 end as channel_drilldown2,
+           when channel is not null then hutk_analytics_source_data_2 end as channel_drilldown2,
        case
            when channel = 'display' then 'display'
            when channel = 'youtube' then 'youtube'

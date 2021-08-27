@@ -12,7 +12,7 @@ select con.createdate                                             as created_dat
            null::int                                                  as number_of_employees,
            null::varchar                                              as industry,
            null::varchar                                              as industry_mapped,
-           lower(con.country_iso2)                                    as country_iso2,
+           con.country_iso2,
            con.hs_company_id,
            con.contact_id                                             as hs_contact_id,
            nullif(trim(con.hutk_analytics_source), '')                as hutk_analytics_source,
