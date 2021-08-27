@@ -30,7 +30,7 @@ with tmp_cogs as (
            poc.order_shipping_cost_usd,
            poc.order_surcharge_usd
     from {{ ref('fact_purchase_orders') }} as poc
-             left outer join {{ ref('fact_orders') }} as orders on poc.po_order_uuid = orders.order_uuid
+             left outer join {{ ref('stg_fact_orders') }} as orders on poc.po_order_uuid = orders.order_uuid
     where true
       and orders.order_recognised_at <= current_date
       and poc.po_finalized_at <= current_date -- Locked PO's only

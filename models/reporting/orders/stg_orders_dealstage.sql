@@ -21,8 +21,8 @@ with hubspot_dealstage_history as (
          select order_uuid,
                 min(created) as order_first_completed_at,
                 max(created) as order_last_completed_at
-         from data_lake.supply_order_history_events -- Replace to fact_order_events once it is validated
-         where description like '%completed%'
+         from {{ ref('fact_order_events') }}
+         where std_event_id = 102
          group by 1
      )
 

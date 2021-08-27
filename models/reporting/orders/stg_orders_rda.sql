@@ -53,8 +53,8 @@ with rda_interactions as (
 ),
 canceled as (
     select order_uuid, min(created) as min_created
-    from {{ ref('order_history_events') }}
-    where description like 'Canceled an auction'
+    from {{ ref('fact_order_events') }}
+    where std_event_id = 222
     group by 1
 ),
 rejected as (

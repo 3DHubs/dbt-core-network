@@ -132,7 +132,7 @@ with first_quote as (
                 countries.name                                                               as po_active_company_entity,
                 case
                     when quotes.shipping_date >= '2019-10-01'
-                        then quotes.shipping_date end                                        as po_active_promised_shipping_at_by_supplier,
+                        then quotes.shipping_date end                                        as order_promised_shipping_at_by_supplier,
                 sum(case
                         when sqli.type = 'shipping'
                             then round(((price_amount / 100.00) / rates.rate), 2) end)       as po_active_shipping_usd,
@@ -228,7 +228,7 @@ select -- First Quote
        apo.po_active_amount_usd,
        apo.po_active_document_number,
        apo.po_active_company_entity,
-       apo.po_active_promised_shipping_at_by_supplier,
+       apo.order_promised_shipping_at_by_supplier,
        apo.po_active_shipping_usd,
        apo.po_active_supplier_id,
        apo.po_active_supplier_name,

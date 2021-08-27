@@ -14,12 +14,12 @@ with disputes as (
 
     with hubspot_events as (
         select order_uuid,
-               min(created)                  as dispute_created_at,
                'new'                         as dispute_status, -- Regard all events as 'new'
+               min(created)                  as dispute_created_at,
                'supply_order_history_events' as _data_source
-        from {{ ref('order_history_events') }}
+        from {{ ref('fact_order_events') }}
         where description ~ 'dispute'
-        group by 1, 3
+        group by 1, 2
     ),
          line_item_disputes as (
              select order_uuid,

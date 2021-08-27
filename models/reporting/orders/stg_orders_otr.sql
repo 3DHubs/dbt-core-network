@@ -23,13 +23,13 @@ with delays as (
 select distinct orders.uuid       as order_uuid,
 
        case
-           when docs.po_active_promised_shipping_at_by_supplier is null then null
+           when docs.order_promised_shipping_at_by_supplier is null then null
            when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and logistics.order_shipped_at is null
                then null
            when orders.status = 'canceled' then null
-           when logistics.order_shipped_at > docs.po_active_promised_shipping_at_by_supplier then false
-           when logistics.order_shipped_at <= docs.po_active_promised_shipping_at_by_supplier then true
-           when logistics.order_shipped_at is null and dateadd(day, 1, docs.po_active_promised_shipping_at_by_supplier) < current_date then false
+           when logistics.order_shipped_at > docs.order_promised_shipping_at_by_supplier then false
+           when logistics.order_shipped_at <= docs.order_promised_shipping_at_by_supplier then true
+           when logistics.order_shipped_at is null and dateadd(day, 1, docs.order_promised_shipping_at_by_supplier) < current_date then false
            else null end    is_shipped_on_time_by_supplier,
 
        case
@@ -49,7 +49,7 @@ select distinct orders.uuid       as order_uuid,
              1)          as shipping_to_customer_delay_days,
 
        round(extract(minutes
-                     from (logistics.order_shipped_at - docs.po_active_promised_shipping_at_by_supplier)) / 1440,
+                     from (logistics.order_shipped_at - docs.order_promised_shipping_at_by_supplier)) / 1440,
              1)          as shipping_by_supplier_delay_days,
 
        delays.first_delay_submitted_at
