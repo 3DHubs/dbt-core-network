@@ -35,6 +35,10 @@ sources:
         freshness: null  # Ignoring freshness for this data source
 
   - name: _3d_hubs
+    freshness:
+      warn_after: {count: 6, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: received_at
     tables:
       - name: supply_quote_updated
       - name: frontend_email_wall_submitted
@@ -84,17 +88,50 @@ sources:
   - name: data_lake
     tables:
       - name: hubspot_engagements
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: load_timestamp
       - name: hubspot_deals
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: load_timestamp
       - name: hubspot_contacts
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: load_timestamp
       - name: hubspot_companies
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: load_timestamp
       - name: hubspot_owners
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: load_timestamp
       - name: hubspot_owners_teams
+      - name: hubspot_email_wall_submissions_20210423
+
       - name: exchange_rate_spot_daily
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: load_timestamp
+
       - name: google_search_console
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: load_timestamp
+
       - name: supply_countries_markets_mapping
+
       - name: static_seo_page_group
       - name: static_seo_targets
-      - name: hubspot_email_wall_submissions_20210423
+
       - name: adhoc_drupal_closed_sales_20191211
       - name: supply_cross_docking_tracking_details_20200911
       - name: legacy_orders
