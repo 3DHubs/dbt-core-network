@@ -1,8 +1,3 @@
-{{
-    config(
-        materialized = 'incremental'
-    )
-}}
 
 with campaign_costs_from_keywords as (
          select date,
@@ -15,11 +10,11 @@ with campaign_costs_from_keywords as (
          
          from {{ ref('fact_search_keyword_performance') }}
          
-         {% if is_incremental() %}
+        --  {% if is_incremental() %}
 
-             where trunc("date") > (select max("date") from {{ this }} )
+        --      where trunc("date") > (select max("date") from {{ this }} )
   
-         {% endif %}
+        --  {% endif %}
 
          group by 1, 2, 3
          ),
@@ -37,11 +32,11 @@ with campaign_costs_from_keywords as (
 
          from {{ ref('fact_search_campaign_performance') }}
 
-         {% if is_incremental() %}
+        --  {% if is_incremental() %}
 
-             where trunc("date") > (select max("date") from {{ this }} )
+        --      where trunc("date") > (select max("date") from {{ this }} )
   
-         {% endif %}
+        --  {% endif %}
 
          group by 1, 2, 3, 4, 5
          ),
@@ -72,11 +67,11 @@ with campaign_costs_from_keywords as (
 
         where cc.cost_orginal_currency - nvl(ccfk.cost_orginal_currency, 0) not between -0.03 and 0.03
 
-        {% if is_incremental() %}
+        -- {% if is_incremental() %}
 
-             and trunc(cc."date") > (select max("date") from {{ this }} )
+        --      and trunc(cc."date") > (select max("date") from {{ this }} )
   
-        {% endif %}
+        -- {% endif %}
      ),
     
       stg_cost_union as (
@@ -113,8 +108,8 @@ select *,
 
 from stg_cost_union
 
-{% if is_incremental() %}
+-- {% if is_incremental() %}
 
-       where trunc("date") > (select max("date") from {{ this }} )
+--        where trunc("date") > (select max("date") from {{ this }} )
 
-{% endif %}
+-- {% endif %}

@@ -1,9 +1,3 @@
-{{
-    config(
-        materialized = 'incremental',
-        unique_key = '_kw_report_sk'
-    )
-}}
 
 with akpr as (
     select *
@@ -11,12 +5,12 @@ with akpr as (
     where "date" >= '2019-07-01'
       and "date" < current_date
 
-    {% if is_incremental() %}
-    -- We load the last 30 days because that's how far Stitch looks back at the keyword performance report.
+    -- {% if is_incremental() %}
+    -- -- We load the last 30 days because that's how far Stitch looks back at the keyword performance report.
 
-        and trunc("date") >= current_date - 30
+    --     and trunc("date") >= current_date - 30
 
-    {% endif %}
+    -- {% endif %}
 ),
 
      bkpr as (
@@ -25,11 +19,11 @@ with akpr as (
     where date >= '2019-07-01'
     and date < current_date -- from 2019-07-01 we started properly tracking contact source in Hubspot, so data before this point is not useful
 
-        {% if is_incremental() %}
+        -- {% if is_incremental() %}
 
-            and trunc("date") >= current_date - 30
+        --     and trunc("date") >= current_date - 30
 
-        {% endif %}
+        -- {% endif %}
      )
 
 

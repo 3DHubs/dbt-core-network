@@ -1,8 +1,4 @@
-{{
-    config(
-        materialized = 'incremental'
-    )
-}}
+
 
 select trunc(acpr.date)                                          as date,
        'adwords'                                                 as source, --TODO: Requires update to Google Ads?
@@ -24,11 +20,11 @@ where acpr.date >= '2019-07-01'
     and acpr.date < current_date -- from 2019-07-01 we started properly tracking contact source in Hubspot, so data
     -- before this point is not useful
 
-{% if is_incremental() %}
+-- {% if is_incremental() %}
 
-    and trunc(acpr.date) > (select max("date") from {{ this }} )
+--     and trunc(acpr.date) > (select max("date") from {{ this }} )
 
-{% endif %}
+-- {% endif %}
 
 union all
 
@@ -52,8 +48,8 @@ from {{ ref('bing_ads_campaign_performance_report') }} as bcpr
 where bcpr.date >= '2019-07-01'
     and bcpr.date < current_date
 
-{% if is_incremental() %}
+-- {% if is_incremental() %}
 
-    and trunc(bcpr.date) > (select max("date") from {{ this }} )
+--     and trunc(bcpr.date) > (select max("date") from {{ this }} )
 
-{% endif %}
+-- {% endif %}
