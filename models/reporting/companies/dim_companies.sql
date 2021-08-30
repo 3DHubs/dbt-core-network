@@ -30,7 +30,7 @@ select hc.createdate                                                            
            hc.reactivated_customer                                                   as is_reactivated_customer,
            hc.reactivated_customer_date                                              as reactivated_customer_date,
            ac.recent_closed_order_date                                               as recent_closed_order_date,
-           ac.second_order_closed_at                                               as second_closed_order_at,
+           ac.second_order_closed_at                                                 as second_closed_order_date,
            hc.company_lead_score::int                                                as lead_score,
            hc.tier::int                                                              as tier,
            hc.qualified                                                              as is_qualified,
@@ -41,7 +41,7 @@ select hc.createdate                                                            
            adc.channel_grouped,
            adc.first_order_technology,
            adc.first_quote_technology,
-           dc.new_customer_order_closed_sales_usd,
+           dc.new_customer_closed_sales_usd,
            dc.new_customer_precalc_margin_usd,
            ac.number_of_company_mqls,
            ac.number_of_company_opportunities,
@@ -50,7 +50,7 @@ select hc.createdate                                                            
 from {{ source('data_lake', 'hubspot_companies') }} hc
             left outer join {{ ref('stg_companies_agg') }} as ac on ac.hs_company_id = hc.company_id
             left outer join {{ ref('stg_companies_dimensions') }} as adc on adc.hs_company_id = hc.company_id
-            left outer join {{ ref('industries') }} as indm on indm.industry = lower(hc.industry)
+            left outer join {{ ref('industry_mapping') }} as indm on indm.industry = lower(hc.industry)
             left outer join {{ source('data_lake', 'hubspot_owners') }} as own
                             on own.is_current = true and own.owner_id::bigint = hc.hubspot_owner_id::bigint
             left outer join {{ source('data_lake', 'hubspot_owners') }} as ae on ae.is_current = true and ae.owner_id = hc.ae_assigned

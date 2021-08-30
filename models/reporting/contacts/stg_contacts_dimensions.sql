@@ -31,6 +31,6 @@ select dcu.hs_contact_id,
        first_page_seen_query,
        hutk_analytics_first_visit_timestamp
 
-from {{ ref('stg_hs_contacts') }} as dcu
+from {{ ref('stg_contacts_owners') }} as dcu
 
 where channel in ('paid_search', 'branded_paid_search')

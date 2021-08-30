@@ -2,7 +2,7 @@ select distinct orders.hubspot_company_id,
        sum(case
                when orders.order_is_closed and agg_orders.is_new_customer_company then order_closed_amount_usd
                end)
-       over ( partition by orders.hubspot_company_id) as new_customer_order_closed_sales_usd,
+       over ( partition by orders.hubspot_company_id) as new_customer_closed_sales_usd,
        sum(case
                when orders.order_is_closed and agg_orders.is_new_customer_company then (orders.order_sourced_amount_usd - orders.sourced_cost_usd)
                end)

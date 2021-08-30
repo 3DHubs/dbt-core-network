@@ -30,6 +30,7 @@ select con.createdate                                             as created_dat
            own.primary_team_name                                      as hubspot_owner_primary_team_name,
            con.account_category                                       as contact_category,
            con.email_type                                             as email_type,
+           con.lifecyclestage                                         as lifecyclestage,
            con.hs_lifecyclestage_lead_date                            as became_lead_date,
            con.hs_lifecyclestage_salesqualifiedlead_date              as became_sql_date,
            con.hs_lead_status                                         as hs_lead_status,
