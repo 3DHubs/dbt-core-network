@@ -36,9 +36,15 @@ with stg_states as (
                 s.unit_preference,
                 sa.country_id,
                 c.name                                                                       as country_name,
-                c.alpha2_code                                                                as country_code,
-                c.continent,
+                lower(c.alpha2_code)                                                         as country_code,
+                lower(c.continent)                                                           as continent,
                 sa.locality                                                                  as city,
+                case when country_name = 'United States' then 'US'
+                     when country_name = 'Mexico' then 'Mexico'
+                     when country_name = 'India' THEN 'India'
+                     when country_name = 'China' THEN 'China'
+                     when continent = 'eu' THEN 'Europe'
+                     else 'RoW' end                                                         as region,
                 states.state
          from {{ ref('suppliers') }} s
                 left outer join {{ ref('addresses') }} sa
@@ -64,6 +70,7 @@ select supplier_id,
        country_name,
        country_code,
        continent,
+       region,
        city,
        state
 from t2
