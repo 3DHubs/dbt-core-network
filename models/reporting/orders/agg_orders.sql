@@ -29,7 +29,7 @@ select order_uuid,
            when hubspot_contact_id is not null then
            min(order_closed_at) over (partition by hubspot_contact_id) end                                                                   as became_customer_date_contact,
        case
-           when is_closed is true and hubspot_contact_id is not null then rank()
+           when order_is_closed is true and hubspot_contact_id is not null then rank()
                                                                           over (partition by hubspot_contact_id order by order_closed_at asc) end as closed_deal_number_contact,
        case
            when hubspot_contact_id is not null then round(
@@ -47,7 +47,7 @@ select order_uuid,
            when hubspot_company_id is not null
                then min(order_closed_at) over (partition by hubspot_company_id) end                                                               as became_customer_date_company,
        case
-           when is_closed is true and hubspot_company_id is not null then rank()
+           when order_is_closed is true and hubspot_company_id is not null then rank()
                                                                           over (partition by hubspot_company_id order by order_closed_at asc) end as closed_deal_number_company,
        case
            when hubspot_company_id is not null then round(
@@ -59,14 +59,5 @@ select order_uuid,
        case
            when hubspot_company_id is not null then min(case when bdr_owner_name is not null then order_closed_at end)
                                                     over (partition by hubspot_company_id) end                                                    as first_bdr_owner_date_company
-
-    -- Legacy Fields (Defined based on Client Legacy Concept)
-
---     became_opportunity_date
---     became_customer_date
---     closed_deal_number
---     closed_deal_days_between_previous_deal,
---     closed_deal_days_between_previous_deal_from_delivery
---     is_new_customer
 
 from complete_orders as orders
