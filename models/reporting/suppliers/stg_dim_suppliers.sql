@@ -43,7 +43,7 @@ with stg_states as (
                      when country_name = 'Mexico' then 'Mexico'
                      when country_name = 'India' THEN 'India'
                      when country_name = 'China' THEN 'China'
-                     when continent = 'eu' THEN 'Europe'
+                     when lower(continent) = 'eu' THEN 'Europe'
                      else 'RoW' end                                                         as region,
                 states.state
          from {{ ref('suppliers') }} s
