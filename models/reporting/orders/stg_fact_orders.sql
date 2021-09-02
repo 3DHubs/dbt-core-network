@@ -347,7 +347,7 @@ select
         coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at) end           as order_submitted_at,
     order_submitted_at is not null                                                         as order_is_submitted,
     coalesce(cancellation_reasons.title, nullif(hs_deals.hubspot_cancellation_reason, '')) as cancellation_reason,
-    coalesce(logistics.full_delivered_at, dealstage.order_first_completed_at) is not null  as order_is_recognised,
+    coalesce(logistics.full_delivered_at, dealstage.order_first_completed_at) is not null  as order_is_recognized,
     least(case
               when orders.hubspot_deal_id in
                    ('2934481798', '2920072973', '2914482547', '2770247355', '3033179401', '2410602207', '2966346046',
@@ -355,7 +355,7 @@ select
                   then dealstage.order_first_completed_at
               when order_shipped_at > logistics.full_delivered_at then dealstage.order_first_completed_at
               else logistics.full_delivered_at end,
-          dealstage.order_first_completed_at)                                              as order_recognised_at, -- Let's think of a way to do this better :)
+          dealstage.order_first_completed_at)                                              as order_recognized_at, -- Let's think of a way to do this better :)
 
 
     -- Financial:

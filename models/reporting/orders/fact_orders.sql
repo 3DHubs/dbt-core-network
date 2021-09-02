@@ -22,7 +22,7 @@ with complete_orders as (
 select
 
 -- Primary Key
-order_uuid,
+orders.order_uuid,
 order_hubspot_deal_id,
 order_document_number,
 
@@ -74,7 +74,7 @@ estimated_delivery_to_customer,
 order_delivered_at,
 derived_delivered_at,
 full_delivered_at,
-order_recognised_at,
+order_recognized_at,
 order_completed_at,
 order_first_completed_at,
 order_last_completed_at,
@@ -90,7 +90,7 @@ order_exists_in_hubspot,
 order_is_resourced,
 qc_inspection_result,
 cancellation_reason,
-order_is_recognised,
+order_is_recognized,
 order_is_disputed,
 
 -- Purchase Orders
@@ -129,6 +129,11 @@ po_active_amount_usd,
 po_active_shipping_usd,
 hubspot_amount_usd,
 hubspot_estimated_close_amount_usd,
+
+-- Amounts Agg (USD)
+order_cogs_amount_usd,
+order_recognized_revenue_amount_usd,
+order_margin_amount_usd,
 
 -- Geo/Location
 cross_dock_city,
@@ -262,7 +267,8 @@ order_is_underquoted,
 order_is_svp
 
 from complete_orders as orders
-left join {{ ref('agg_orders') }} as agg_orders using(order_uuid)
+left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
+left join {{ ref('agg_orders_cm1') }} as agg_cm1 on agg_cm1.order_uuid = orders.order_uuid
 where true
 -- Let's try including carts and filtering them out in Looker
 -- and (order_quote_status = 'cart') is not true

@@ -6,11 +6,11 @@ with tmp_cogs as (
                else null end   as cost_recognized_date_sept_2020,
            case
                when cost_recognized_date_sept_2020 < '2020-10-01' then cost_recognized_date_sept_2020
-               when poc.po_finalized_at <= orders.order_recognised_at then case
-                                                                          when orders.order_recognised_at < '2020-10-01'
+               when poc.po_finalized_at <= orders.order_recognized_at then case
+                                                                          when orders.order_recognized_at < '2020-10-01'
                                                                               then '2020-10-01'
-                                                                          else orders.order_recognised_at end
-               when poc.po_finalized_at > orders.order_recognised_at then case
+                                                                          else orders.order_recognized_at end
+               when poc.po_finalized_at > orders.order_recognized_at then case
                                                                          when poc.po_finalized_at < '2020-10-01'
                                                                              then '2020-10-01'
                                                                          else poc.po_finalized_at end
@@ -32,7 +32,7 @@ with tmp_cogs as (
     from {{ ref('fact_purchase_orders') }} as poc
              left outer join {{ ref('stg_fact_orders') }} as orders on poc.po_order_uuid = orders.order_uuid
     where true
-      and orders.order_recognised_at <= current_date
+      and orders.order_recognized_at <= current_date
       and poc.po_finalized_at <= current_date -- Locked PO's only
       -- Order must have at least 1 active PO
       and exists(select 1

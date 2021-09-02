@@ -2,7 +2,7 @@
 
 -- This model combines data from the supply DB for old data and unions
 -- with Netsuite data for data after March 2021. Invoices with negative sign
--- are credit memos. Invoices are considered recognised based on the recognition date of the order.
+-- are credit memos. Invoices are considered recognized based on the recognition date of the order.
 
 with stg_line_items_netsuite as (
     select custbodyquotenumber as quote_uuid,
@@ -43,19 +43,19 @@ with stg_line_items_netsuite as (
                 round(((nvl(sli.order_shipping_revenue, 0) / 100.00) / rates.rate),
                       2)                                                           as order_shipping_revenue_usd,
                 case
-                    when orders.order_recognised_at < current_date and invoices.finalized_at < current_date
-                        then true end                                              as invoice_is_recognised,
+                    when orders.order_recognized_at < current_date and invoices.finalized_at < current_date
+                        then true end                                              as invoice_is_recognized,
                 case
                     when invoices.finalized_at <= orders.order_first_completed_at then orders.order_first_completed_at
                     when invoices.finalized_at > orders.order_first_completed_at then invoices.finalized_at
                     else null end                                                  as invoice_revenue_date_legacy,
                 case
                     when invoice_revenue_date_legacy < '2020-10-01' then invoice_revenue_date_legacy
-                    when invoices.finalized_at <= orders.order_recognised_at then case
-                                                                                      when orders.order_recognised_at < '2020-10-01'
+                    when invoices.finalized_at <= orders.order_recognized_at then case
+                                                                                      when orders.order_recognized_at < '2020-10-01'
                                                                                           then '2020-10-01'
-                                                                                      else orders.order_recognised_at end
-                    when invoices.finalized_at > orders.order_recognised_at then case
+                                                                                      else orders.order_recognized_at end
+                    when invoices.finalized_at > orders.order_recognized_at then case
                                                                                      when invoices.finalized_at < '2020-10-01'
                                                                                          then '2020-10-01'
                                                                                      else invoices.finalized_at end
@@ -99,8 +99,8 @@ with stg_line_items_netsuite as (
 
                 nvl(li.order_shipping_revenue * nvl(rates.exchangerate, 1.0000), 0) as order_shipping_revenue_usd,
                 case
-                    when orders.order_recognised_at < current_date and netsuite_trn.createddate < current_date
-                        then true end                                               as invoice_is_recognised,
+                    when orders.order_recognized_at < current_date and netsuite_trn.createddate < current_date
+                        then true end                                               as invoice_is_recognized,
                 case
                     when netsuite_trn.createddate <= orders.order_first_completed_at
                         then orders.order_first_completed_at
@@ -108,11 +108,11 @@ with stg_line_items_netsuite as (
                     else null end                                                   as invoice_revenue_date_legacy,
                 case
                     when invoice_revenue_date_legacy < '2020-10-01' then invoice_revenue_date_legacy
-                    when netsuite_trn.createddate <= orders.order_recognised_at then case
-                                                                                         when orders.order_recognised_at < '2020-10-01'
+                    when netsuite_trn.createddate <= orders.order_recognized_at then case
+                                                                                         when orders.order_recognized_at < '2020-10-01'
                                                                                              then '2020-10-01'
-                                                                                         else orders.order_recognised_at end
-                    when netsuite_trn.createddate > orders.order_recognised_at then case
+                                                                                         else orders.order_recognized_at end
+                    when netsuite_trn.createddate > orders.order_recognized_at then case
                                                                                         when netsuite_trn.createddate < '2020-10-01'
                                                                                             then '2020-10-01'
                                                                                         else netsuite_trn.createddate end
@@ -146,7 +146,7 @@ select invoice_uuid,
        invoice_remaining_amount,
        invoice_remaining_amount_usd,
        order_shipping_revenue_usd,
-       invoice_is_recognised,
+       invoice_is_recognized,
        invoice_revenue_date_legacy,
        invoice_revenue_date,
        is_downpayment,
@@ -165,7 +165,7 @@ select invoice_uuid,
        invoice_remaining_amount,
        invoice_remaining_amount_usd,
        order_shipping_revenue_usd,
-       invoice_is_recognised,
+       invoice_is_recognized,
        invoice_revenue_date_legacy,
        invoice_revenue_date,
        is_downpayment,

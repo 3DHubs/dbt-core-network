@@ -13,5 +13,5 @@ select invoice_uuid,
        invoice_document_number
 from {{ ref('fact_invoices') }}
 where true
-    and invoice_is_recognised is true
+    and invoice_is_recognized is true
     and invoice_status !~ 'processing' -- Processing = draft
