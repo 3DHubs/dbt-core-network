@@ -1,4 +1,4 @@
-select dcu.hs_contact_id,
+select dcu.hubspot_contact_id,
        nullif(json_extract_path_text(dcu.first_page_seen_query, 'gclid'),
               '')           as advertising_gclid,
        nullif(json_extract_path_text(dcu.first_page_seen_query, 'msclkid'),
@@ -31,6 +31,6 @@ select dcu.hs_contact_id,
        first_page_seen_query,
        hutk_analytics_first_visit_timestamp
 
-from {{ ref('stg_contacts_owners') }} as dcu
+from {{ ref('stg_dim_contacts') }} as dcu
 
 where channel in ('paid_search', 'branded_paid_search')

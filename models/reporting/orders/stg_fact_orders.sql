@@ -247,7 +247,7 @@ select
     li.shipping_amount_usd,
     li.is_expedited_shipping,
     li.line_item_technology_id,
-    li.line_item_process_id as order_process_id,
+    li.line_item_process_id as process_id,
     li.line_item_process_name as order_process_name,
 
     ------ SOURCE: STG REVIEWS ---------

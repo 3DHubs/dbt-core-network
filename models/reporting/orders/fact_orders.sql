@@ -27,11 +27,11 @@ order_hubspot_deal_id,
 order_document_number,
 
 -- Foreign Keys
-order_quote_uuid
-line_item_process_id,
+order_quote_uuid,
+process_id,
 order_technology_id,
-hubspot_company_id,
-hubspot_contact_id,
+orders.hubspot_company_id,
+orders.hubspot_contact_id,
 supplier_id,
 po_active_uuid,
 auction_uuid,
@@ -62,6 +62,8 @@ supply_last_review_completed_at,
 order_closed_at, -- When clients pays, also known as won
 hubspot_closed_at,
 order_cancelled_at,
+auction_created_at, -- When the auctions enters the RDA
+auction_finished_at,
 order_sourced_at,
 first_delay_submitted_at,
 order_shipped_at,
@@ -189,8 +191,6 @@ has_custom_finish,
 -- RDA (Reverse Dutch Auction)
 auction_document_number,
 auction_status,
-auction_created_at,
-auction_finished_at,
 auction_is_accepted_manually,
 auction_is_reviewed_manually,
 auction_is_cancelled_manually,
@@ -264,7 +264,9 @@ has_change_request,
 
 -- Other Attributes
 order_is_underquoted,
-order_is_svp
+order_is_svp,
+order_data_source,
+order_is_legacy
 
 from complete_orders as orders
 left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid

@@ -31,8 +31,7 @@ with hc as (
            bdr_assigned,
            nullif(account_category, '')                                     as account_category,
            nullif(emailtype, '')                                            as email_type,
-           trunc(hubspot_owner_assigneddate)                                as
-                                                                               hubspot_owner_assigned_date,
+           trunc(hubspot_owner_assigneddate)                                as hubspot_owner_assigned_date,
            nullif(hs_lead_status, '')                                       as hs_lead_status,
            bdr_qualification,
            nullif(lead_source, '')                                          as contact_source,

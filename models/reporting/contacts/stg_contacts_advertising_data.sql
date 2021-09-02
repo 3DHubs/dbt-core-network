@@ -8,7 +8,7 @@ with keywords as (select distinct source, account_id, campaign_id, adgroup_id, k
                        from {{ ref('agg_advertising_spend_monthly') }}
                        )
 
-select dcps.hs_contact_id,
+select  dcps.hubspot_contact_id,
         dcps.advertising_gclid,
         dcps.advertising_msclkid,
         dcps.advertising_source,
