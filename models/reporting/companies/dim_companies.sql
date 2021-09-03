@@ -38,17 +38,17 @@ select hc.createdate                                                            
        adc.region,
        adc.channel_grouped,
        -- Aggregates from Orders
-       agg_orders.became_opportunity_at_company, -- New Field (1st Sept 2021)
-       agg_orders.became_customer_at_company,
-       agg_orders.second_order_closed_at_company,     
-       agg_orders.recent_closed_order_at_company,
-       agg_orders.number_of_submitted_orders_company, -- New Field (1st Sept 2021)
-       agg_orders.number_of_closed_orders_company, -- New Field (1st Sept 2021)
-       agg_orders.closed_sales_usd_company, -- New Field (1st Sept 2021)
-       agg_orders.closed_sales_usd_new_customer_company, 
-       agg_orders.total_precalc_margin_usd_new_customer_company,
-       agg_orders.first_submitted_order_technology_company,
-       agg_orders.first_closed_order_technology_company,
+       agg_orders.became_opportunity_at_company                                 as became_opportunity_at, -- New Field (1st Sept 2021)   as 
+       agg_orders.became_customer_at_company                                    as became_customer_at,   
+       agg_orders.second_order_closed_at_company                                as second_order_closed_at,     
+       agg_orders.recent_closed_order_at_company                                as recent_closed_order_at,
+       agg_orders.number_of_submitted_orders_company                            as number_of_submitted_orders, -- New Field (1st Sept 2021)
+       agg_orders.number_of_closed_orders_company                               as number_of_closed_orders, -- New Field (1st Sept 2021)
+       agg_orders.closed_sales_usd_company                                      as closed_sales_usd, -- New Field (1st Sept 2021)
+       agg_orders.closed_sales_usd_new_customer_company                         as closed_sales_usd_new_customer, 
+       agg_orders.total_precalc_margin_usd_new_customer_company                 as precalc_margin_usd_new_customer,
+       agg_orders.first_submitted_order_technology_company                      as first_submitted_order_technology,
+       agg_orders.first_closed_order_technology_company                         as first_closed_order_technology,
        -- Aggregates from Contacts
        acc.number_of_inside_mqls,
        acc.number_of_inside_opportunities,
