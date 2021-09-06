@@ -2,21 +2,22 @@
 -- several staging tables and other few secondary sources
 
 -- Staging Tables:
--- 1.  Staging Orders Hubspot Table
--- 2.  Staging Orders RDA Table
--- 3.  Staging Orders Documents Table (Quotes & POs)
--- 4.  Staging Finance Table
--- 5.  Staging Logistics Table
--- 6.  Staging OTR Table (Depends on Documents & Logistics)
--- 7.  Staging Line Items Table
--- 8.  Staging Reviews Table
--- 9.  Staging Geo/Location Table
--- 10. Staging Deal Stage Table
--- 11. Staging Interactions Table
--- 12. Staging Disputes Table
+-- Stg Orders Hubspot Table
+-- Stg Orders Documents Table (Quotes & POs)
+-- Stg Finance Table
+-- Stg Logistics Table
+-- Stg OTR Table (Depends on Documents & Logistics)
+-- Stg Reviews Table
+-- Stg Geo/Location Table
+-- Stg Deal Stage Table
+-- Stg Disputes Table
+
+-- Aggregate Tables:
+-- Agg Orders RDA Table
+-- Agg Line Items Table
+-- Agg Interactions Table
 
 -- Other Sources:
--- Disputes
 -- Cancellation Reasons
 -- Change Requests
 
@@ -31,16 +32,16 @@ select
     orders.reorder_original_order_uuid,
 
     -- Orders: Dates
-    orders.created                                                                         as order_created_at,
+    orders.created                                                                         as created_at,
     case
         when orders.promised_shipping_date > '2019-10-01'
-            then orders.promised_shipping_date end                                         as order_promised_shipping_at_to_customer,
-    orders.expected_shipping_date                                                          as order_expected_shipping_at,
-    orders.completed_at                                                                    as order_completed_at,
+            then orders.promised_shipping_date end                                         as promised_shipping_at_to_customer,
+    orders.expected_shipping_date                                                          as expected_shipping_at,
+    orders.completed_at,
 
     -- Orders. Other Fields
-    'supply'                                                                               as order_data_source,
-    case when orders.legacy_order_id is not null then true else false end                  as order_is_legacy,
+    'supply'                                                                               as data_source,
+    case when orders.legacy_order_id is not null then true else false end                  as is_legacy,
 
     ---------- SOURCE: STG ORDERS HUBSPOT --------------
 
@@ -48,14 +49,12 @@ select
     hs_deals.hubspot_amount_usd,
     hs_deals.hubspot_estimated_close_amount_usd,
     hs_deals.hubspot_deal_category,
-    hs_deals.is_hubspot_strategic_deal,
     hs_deals.is_hubspot_high_risk,
     hs_deals.hubspot_pipeline,
 
     -- HS Deals: Foreign Fields
     hs_deals.hubspot_company_id,
     hs_deals.hubspot_company_name,
-    coalesce(hs_deals.is_hubspot_strategic_company, false) as is_hubspot_strategic_company,
     hs_deals.hubspot_contact_id,
     hs_deals.hubspot_technology_id,
     hs_deals.hubspot_company_source,
@@ -85,14 +84,14 @@ select
     -- HS Deals: Owners
     hs_deals.bdr_owner_id,
     hs_deals.bdr_owner_name,
-    hs_deals.bdr_owner_primary_team_name,
+    hs_deals.bdr_owner_primary_team,
     hs_deals.customer_success_representative_name,
     hs_deals.partner_support_representative_name,
     hs_deals.mechanical_engineer_id,
     hs_deals.mechanical_engineer_name,
     hs_deals.hubspot_owner_id,
     hs_deals.hubspot_owner_name,
-    hs_deals.hubspot_owner_primary_team_name,
+    hs_deals.hubspot_owner_primary_team,
     hs_deals.hubspot_purchasing_manager,
     hs_deals.hubspot_technical_review_owner,
     hs_deals.hubspot_sourcing_owner_id,
@@ -103,7 +102,7 @@ select
     ---------- SOURCE: STG ORDERS RDA --------------
 
     -- RDA: Auction Fields
-    coalesce(rda.is_rda_sourced, false) as order_is_rda_sourced,
+    coalesce(rda.is_rda_sourced, false) as is_rda_sourced,
     rda.auction_uuid,
     rda.auction_status,
     rda.auction_created_at,
@@ -127,10 +126,10 @@ select
 
     --RDA: Winning Bid Fields
     rda.winning_bid_uuid,
-    rda.order_has_winning_bid,
-    rda.order_has_accepted_winning_bid,
-    rda.order_has_winning_bid_countered_on_price,
-    rda.order_has_winning_bid_countered_on_design,
+    rda.has_winning_bid,
+    rda.has_accepted_winning_bid,
+    rda.has_winning_bid_countered_on_price,
+    rda.has_winning_bid_countered_on_design,
 
 
     --------- SOURCE: STG ORDERS DOCUMENTS ---------
@@ -146,21 +145,19 @@ select
     docs.order_quote_created_at,
     docs.order_quote_submitted_at,
     docs.order_quote_finalised_at,
-    docs.order_quote_lead_time as order_lead_time,
-    docs.order_quote_lead_time_tier as order_lead_time_tier,
-    docs.order_quote_is_cross_docking,
+    docs.order_quote_lead_time as lead_time,
+    docs.order_quote_lead_time_tier as lead_time_tier,
+    docs.order_quote_is_cross_docking as is_cross_docking,
     docs.order_quote_requires_local_sourcing,
 
     --Documents: All Quotes
     docs.number_of_quote_versions,
-    docs.number_of_quote_versions_by_admin,
     docs.has_admin_created_quote,
     docs.has_manual_quote_review,
 
     --Documents: First Purchase Order
-
-    docs.order_sourced_at,
-    docs.is_sourced as order_is_sourced,
+    docs.sourced_at,
+    docs.is_sourced,
     docs.sourced_cost_usd,
     docs.po_first_shipping_usd,
 
@@ -169,19 +166,18 @@ select
     docs.po_active_amount_usd,
     docs.po_active_document_number,
     docs.po_active_company_entity,
-    docs.order_promised_shipping_at_by_supplier,
+    docs.promised_shipping_at_by_supplier,
     docs.po_active_shipping_usd,
 
     --Documents: All Purchase Orders
     docs.number_of_purchase_orders,
 
     --Documents: Combined Fields
-    docs.is_resourced as order_is_resourced,
+    docs.is_resourced,
 
     --------- SOURCE: STG ORDERS FINANCE ---------
 
     -- Finance: Stripe Fields
-    finance.stripe_transaction_created_at,
     finance.stripe_is_successful_payment,
 
     -- Finance: Netsuite Fields
@@ -206,12 +202,12 @@ select
     logistics.has_consistent_shipping_info,
 
     -- Logistics: Shipping Dates
-    logistics.order_shipped_at,
+    logistics.shipped_at as order_shipped_at, -- Prefix to avoid ambiguous field
     logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
 
     -- Logistics: Delivery Dates
-    logistics.order_delivered_at,
+    logistics.delivered_at,
     logistics.full_delivered_at,
     logistics.derived_delivered_at,
     logistics.estimated_delivery_to_cross_dock,
@@ -234,10 +230,10 @@ select
     li.number_of_part_line_items,
     li.number_of_materials,
     li.number_of_processes,
-    li.order_total_quantity,
-    li.order_total_weight_grams,
-    li.order_total_bounding_box_volume_cm3,
-    li.order_total_volume_cm3,
+    li.total_quantity,
+    li.total_weight_grams,
+    li.total_bounding_box_volume_cm3,
+    li.total_volume_cm3,
     li.number_of_expedited_shipping_line_items,
     li.has_customer_note,
     li.has_exceeded_standard_tolerances,
@@ -245,21 +241,18 @@ select
     li.has_custom_material_subset,
     li.has_custom_finish,
     li.shipping_amount_usd,
-    li.is_expedited_shipping,
     li.line_item_technology_id,
     li.line_item_process_id as process_id,
-    li.line_item_process_name as order_process_name,
+    li.line_item_process_name as process_name,
 
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews & RFQs
 
-    reviews.order_has_technical_review,
+    reviews.has_technical_review,
     reviews.number_of_technical_reviews,
-    reviews.supply_first_review_submitted_at,
-    reviews.hubspot_first_review_completed_at,
-    reviews.supply_last_review_completed_at,
-    reviews.order_has_rfq,
-    reviews.order_is_rfq_sourced,
+    reviews.hubspot_first_technical_review_completed_at,
+    reviews.has_rfq,
+    reviews.is_rfq_sourced,
     reviews.number_of_rfq_requests,
     reviews.number_of_rfq_responded,
 
@@ -267,7 +260,6 @@ select
     -- Location data from customers,
     -- suppliers and company entity
 
-    -- Maybe add prefix order_
     geo.destination_city,
     geo.destination_latitude,
     geo.destination_longitude,
@@ -287,15 +279,14 @@ select
     -- hubspot dealstage history (hubspot) and order status.
 
     -- Closing
-    coalesce(dealstage.is_closed, false) as order_is_closed,
-    dealstage.order_closed_at,
+    coalesce(dealstage.is_closed, false) as is_closed,
+    dealstage.closed_at,
 
     -- Cancellation
-    dealstage.order_cancelled_at,
+    dealstage.cancelled_at,
 
     -- Completion
-    dealstage.order_first_completed_at,
-    dealstage.order_last_completed_at,
+    dealstage.first_completed_at,
 
     -- Status
     dealstage.order_status,
@@ -305,15 +296,15 @@ select
     -- fact_interactions which combines the sources of
     -- freshdesk interactions and hubspot engagements.
 
-    interactions.order_number_of_interactions,
-    interactions.order_number_of_outgoing_emails,
-    interactions.order_number_of_incoming_emails,
+    interactions.number_of_interactions,
+    interactions.number_of_outgoing_emails,
+    interactions.number_of_incoming_emails,
 
     ------ SOURCE: FACT DISPUTES ---------
     -- Data from Disputes and Dispute Resolution
 
     -- Fields from Disputes Tables
-    coalesce(disputes.is_disputed,false) as order_is_disputed,
+    coalesce(disputes.is_quality_disputed,false) as is_quality_disputed,
     disputes.dispute_created_at,
 
     disputes.dispute_status,
@@ -337,33 +328,33 @@ select
     -- Fields that are defined from two or more sources
 
     -- IDs
-    coalesce(orders.hubspot_deal_id, hs_deals.hubspot_deal_id)                             as order_hubspot_deal_id,
-    coalesce(orders.number, docs.order_quote_document_number)                              as order_document_number,
+    coalesce(orders.hubspot_deal_id, hs_deals.hubspot_deal_id)                             as order_hubspot_deal_id, -- Prefix to avoid ambiguous field
+    coalesce(orders.number, docs.order_quote_document_number)                              as document_number,
 
     -- Lifecycle:
-    order_hubspot_deal_id is not null                                                      as order_exists_in_hubspot,
-    order_quote_status = 'cart'                                                            as order_is_cart,
+    order_hubspot_deal_id is not null                                                      as exists_in_hubspot,
+    order_quote_status = 'cart'                                                            as is_cart,
     case when order_quote_status = 'cart' then null else -- In June 2021 some carts started being created in HS
-        coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at) end           as order_submitted_at,
-    order_submitted_at is not null                                                         as order_is_submitted,
+        coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at) end           as submitted_at,
+    submitted_at is not null                                                               as is_submitted,
     coalesce(cancellation_reasons.title, nullif(hs_deals.hubspot_cancellation_reason, '')) as cancellation_reason,
-    coalesce(logistics.full_delivered_at, dealstage.order_first_completed_at) is not null  as order_is_recognized,
+    coalesce(logistics.full_delivered_at, dealstage.first_completed_at) is not null        as is_recognized,
     least(case
-              when orders.hubspot_deal_id in
-                   ('2934481798', '2920072973', '2914482547', '2770247355', '3033179401', '2410602207', '2966346046',
-                    '3020615482', '2975227287', '2887063884', '2950247669', '2901736923', '2860257553', '3021663769')
-                  then dealstage.order_first_completed_at
-              when order_shipped_at > logistics.full_delivered_at then dealstage.order_first_completed_at
-              else logistics.full_delivered_at end,
-          dealstage.order_first_completed_at)                                              as order_recognized_at, -- Let's think of a way to do this better :)
-
+          when orders.hubspot_deal_id in
+                ('2934481798', '2920072973', '2914482547', '2770247355', 
+                 '3033179401', '2410602207', '2966346046', '3020615482', 
+                 '2975227287', '2887063884', '2950247669', '2901736923', 
+                 '2860257553', '3021663769') then dealstage.first_completed_at
+          when order_shipped_at > logistics.full_delivered_at 
+          then dealstage.first_completed_at
+          else logistics.full_delivered_at end, dealstage.first_completed_at)              as recognized_at, -- Let's think of a way to do this better :)
 
     -- Financial:
-    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as order_amount_usd,
+    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as amount_usd,
     case
-        when order_is_closed then order_amount_usd
-        else 0 end                                                                         as order_closed_amount_usd,
-    case when order_is_sourced then order_amount_usd else 0 end                            as order_sourced_amount_usd,
+        when is_closed then amount_usd
+        else 0 end                                                                         as closed_amount_usd,
+    case when is_sourced then amount_usd else 0 end                                        as sourced_amount_usd,
 
 
     -- Suppliers:
@@ -372,32 +363,34 @@ select
     coalesce(docs.po_active_supplier_address_id, rda.auction_supplier_address_id)          as supplier_address_id,
 
     -- Technology:
-    coalesce(rda.auction_technology_id, li.line_item_technology_id, hubspot_technology_id) as order_technology_id,
+    coalesce(rda.auction_technology_id, li.line_item_technology_id, hubspot_technology_id) as technology_id,
     coalesce(rda.auction_technology_name, li.line_item_technology_name,
-             hubspot_technology_name)                                                      as order_technology_name,
+             hubspot_technology_name)                                                      as technology_name,
 
     -- Commission Related:
     case
         when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd > 10 -- Threshold
-            and interactions.order_has_underquote_interaction is true then true
-        else false end                                                                     as order_is_underquoted,
-    coalesce(interactions.order_has_svp_interaction or li.has_svp_line_item,false)         as order_is_svp
+            and interactions.has_underquote_interaction is true then true
+        else false end                                                                     as is_underquoted, -- This still needs to be checked (Sep 2, 2021)
+    coalesce(interactions.has_svp_interaction or li.has_svp_line_item,false)               as is_svp
 
 from {{ ref('cnc_orders') }} as orders
 
     -- Staging
     left join {{ ref ('stg_orders_hubspot') }} as hs_deals on hs_deals.hubspot_deal_id = orders.hubspot_deal_id
-    left join {{ ref ('stg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
     left join {{ ref ('stg_orders_documents') }} as docs on orders.uuid = docs.order_uuid
     left join {{ ref ('stg_orders_finance') }} as finance on orders.uuid = finance.order_uuid
     left join {{ ref ('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
     left join {{ ref ('stg_orders_otr') }} as otr on orders.uuid = otr.order_uuid
-    left join {{ ref ('stg_orders_line_items') }} as li on orders.quote_uuid = li.quote_uuid
     left join {{ ref ('stg_orders_reviews') }} as reviews on orders.uuid = reviews.order_uuid
     left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
-    left join {{ ref ('stg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
     left join {{ ref ('stg_orders_disputes') }} as disputes on orders.uuid = disputes.order_uuid
+
+    -- Aggregates
+    left join {{ ref ('agg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
+    left join {{ ref ('agg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
+    left join {{ ref ('agg_orders_line_items') }} as li on orders.quote_uuid = li.quote_uuid
 
     -- Data Lake
     left join {{ ref ('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid

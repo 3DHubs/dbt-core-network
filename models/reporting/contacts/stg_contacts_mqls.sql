@@ -13,7 +13,7 @@ with submit as (
                      group by 1
                      ),
          opportunity as (
-             select hubspot_contact_id, min(order_submitted_at) as became_opportunity_date
+             select hubspot_contact_id, min(submitted_at) as became_opportunity_date
              from {{ ref('fact_orders') }}
                          group by 1
                          )

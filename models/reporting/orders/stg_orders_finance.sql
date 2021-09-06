@@ -36,7 +36,7 @@ select o.uuid                         as order_uuid,
            when t.stripe_is_successful_payment is true then true
            else false end                is_auto_payment,
        case
-           when t.stripe_transaction_created_at::date = dealstage.order_closed_at::date
+           when t.stripe_transaction_created_at::date = dealstage.closed_at::date
                and t.stripe_payment_method <> 'stripe_source_sofort'
                and t.stripe_is_successful_payment is true then true
            else false end             as is_instant_payment,

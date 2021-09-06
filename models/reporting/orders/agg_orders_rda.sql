@@ -25,13 +25,10 @@ with rda_interactions as (
            count(distinct sai.sa_supplier_id)                                                        as number_of_suppliers_assigned,
            --General Bid Aggregates
            count(distinct sai.bid_uuid)                                                              as number_of_bids,
-           count(distinct (case when sai.bid_supplier_response = 'countered' then sai.bid_uuid end)) as
-                                                                                                        number_of_counterbids,
-           count(distinct (case when sai.bid_supplier_response = 'rejected' then sai.bid_uuid end))  as
-                                                                                                        number_of_rejected_bids,
+           count(distinct (case when sai.bid_supplier_response = 'countered' then sai.bid_uuid end)) as number_of_counterbids,
+           count(distinct (case when sai.bid_supplier_response = 'rejected' then sai.bid_uuid end))  as number_of_rejected_bids,
            --Counter Bids Count by Type
-           count(distinct (case when sai.bid_has_design_modifications then sai.bid_uuid end))        as
-                                                                                                        number_of_design_counterbids,
+           count(distinct (case when sai.bid_has_design_modifications then sai.bid_uuid end))        as number_of_design_counterbids,
            --todo:replace data type at source
            count(distinct (case
                                when sai.bid_has_changed_shipping_date = 'true'
@@ -39,13 +36,12 @@ with rda_interactions as (
            count(distinct
                  (case when sai.bid_has_changed_prices then sai.bid_uuid end))                       as number_of_price_counterbids,
            --Winning Bid Results
-           bool_or(sai.is_winning_bid)                                                               as order_has_winning_bid,
-           bool_or(sai.is_winning_bid and sai.bid_supplier_response = 'accepted')                    as order_has_accepted_winning_bid,
-           bool_or(sai.bid_has_changed_prices and sai.is_winning_bid)                                as order_has_winning_bid_countered_on_price,
-           bool_or(
-                   sai.bid_has_changed_shipping_date = 'true' and sai.is_winning_bid)                as order_has_winning_bid_countered_on_lead_time,
-           bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as order_has_winning_bid_countered_on_design
-           --todo: DBT table does not contain the order_uuid
+           bool_or(sai.is_winning_bid)                                                               as has_winning_bid,
+           bool_or(sai.is_winning_bid and sai.bid_supplier_response = 'accepted')                    as has_accepted_winning_bid,
+           bool_or(sai.bid_has_changed_prices and sai.is_winning_bid)                                as has_winning_bid_countered_on_price,
+           bool_or(sai.bid_has_changed_shipping_date = 'true' and sai.is_winning_bid)                as has_winning_bid_countered_on_lead_time,
+           bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
+
     from {{ ref('fact_supplier_auction_interactions') }} as sai
     group by 1
 
@@ -87,10 +83,10 @@ rdai.number_of_rejected_bids,
 rdai.number_of_design_counterbids,
 rdai.number_of_lead_time_counterbids,
 rdai.number_of_price_counterbids,
-rdai.order_has_winning_bid,
-rdai.order_has_accepted_winning_bid,
-rdai.order_has_winning_bid_countered_on_price,
-rdai.order_has_winning_bid_countered_on_design,
+rdai.has_winning_bid,
+rdai.has_accepted_winning_bid,
+rdai.has_winning_bid_countered_on_price,
+rdai.has_winning_bid_countered_on_design,
 
 -- SOURCE 2: Auctions Manually Cancelled
 can.auction_is_cancelled_manually,

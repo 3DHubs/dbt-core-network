@@ -147,11 +147,11 @@ select distinct soq.order_uuid                                                  
                     when is_cross_docking_ind = false then ss.shipment_shipped_to_customer_at
                     when is_cross_docking_ind then ss.shipment_shipped_to_crossdock_at end     as shipped_at_raw,
                 case
-                    when date_trunc('day', shipped_at_raw) >= '2019-10-01' then shipped_at_raw end   as order_shipped_at,
+                    when date_trunc('day', shipped_at_raw) >= '2019-10-01' then shipped_at_raw end   as shipped_at,
                 case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_from_cross_dock_at
                     when is_cross_docking_ind then ss.shipment_shipped_to_customer_at
-                    else order_shipped_at end                                                     as shipped_to_customer_at,
+                    else shipped_at end                                                     as shipped_to_customer_at,
                 case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_from_cross_dock_at
                     when is_cross_docking_ind
@@ -162,12 +162,12 @@ select distinct soq.order_uuid                                                  
                 case
                     when cdt.order_uuid is not null then coalesce(cdt.cdtd_delivered_at, o.delivered_at)
                     when has_shipment_delivered_to_customer_date_consecutive
-                        then coalesce(ss.shipment_delivered_to_customer_at, o.delivered_at) end as order_delivered_at,
+                        then coalesce(ss.shipment_delivered_to_customer_at, o.delivered_at) end as delivered_at,
 
                 coalesce(case
-                             when order_delivered_at is not null then order_delivered_at
+                             when delivered_at is not null then delivered_at
                              when shipped_to_customer_at + interval '7 days' < current_date and
-                                  order_delivered_at is null then shipped_to_customer_at + interval '7 days' end,
+                                  delivered_at is null then shipped_to_customer_at + interval '7 days' end,
                          o.completed_at)                                                        as derived_delivered_at,
 
                 case

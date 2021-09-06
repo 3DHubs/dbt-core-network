@@ -16,16 +16,16 @@ with agg_line_items as (
            count(case when li.type = 'part' then line_item_id end) as                     number_of_part_line_items,
 
            -- Totals
-           sum(case when li.type = 'part' then nvl(li.quantity, 0) else 0 end) as         order_total_quantity, -- not leveraged
+           sum(case when li.type = 'part' then nvl(li.quantity, 0) else 0 end) as         total_quantity, -- not leveraged
            sum(case
                    when li.type = 'part' then nvl(fli.line_item_weight_g, 0)
-                   else 0 end) as                                                         order_total_weight_grams,
+                   else 0 end) as                                                         total_weight_grams,
            sum(case
                    when li.type = 'part' then nvl(fli.line_item_total_bounding_box_volume_cm3, 0)
-                   else 0 end) as                                                         order_total_bounding_box_volume_cm3,
+                   else 0 end) as                                                         total_bounding_box_volume_cm3,
            sum(case
                    when li.type = 'part' then nvl(fli.line_item_total_volume_cm3, 0)
-                   else 0 end) as                                                         order_total_volume_cm3,
+                   else 0 end) as                                                         total_volume_cm3,
            sum(case when li.type = 'shipping' then nvl(li.price_amount, 0) else 0 end) as shipping_price_amount,
            sum(case
                    when li.shipping_option_id in

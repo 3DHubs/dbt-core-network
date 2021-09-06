@@ -67,9 +67,8 @@ with first_quote as (
 
      agg_all_quotes as (
          select order_uuid                                        as                      order_uuid,
-                sum(case when is_admin is true then 1 else 0 end) as                      number_of_quote_versions_by_admin,
                 max(revision)                                     as                      number_of_quote_versions,
-                case when number_of_quote_versions_by_admin >= 1 then true else false end has_admin_created_quote,
+                bool_or(is_admin)                                 as                      has_admin_created_quote,
                 sum(case
                         when submitted_at - finalized_at <> interval '0 seconds' then 1
                         else 0 end)                               as                      has_non_locked_quote_review,
@@ -90,7 +89,7 @@ with first_quote as (
 
      first_po as (
          with rn as (select order_uuid,
-                            finalized_at                                                           as order_sourced_at,
+                            finalized_at                                                           as sourced_at,
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
                             round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as sourced_cost_usd,
                             sum(case
@@ -98,7 +97,6 @@ with first_quote as (
                                         then round(((price_amount / 100.00) / rates.rate), 2) end) as po_first_shipping_usd,
                             row_number() over (partition by order_uuid order by finalized_at)      as rn
                      from {{ ref('cnc_order_quotes') }} as soq
-    --todo: couldn't find this table in the models
     left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
                      on rates.currency_code_to = soq.currency_code and
                          rates.date = trunc(soq.finalized_at)
@@ -110,7 +108,7 @@ with first_quote as (
                      group by 1, 2, 3, 4)
          select order_uuid,
                 po_first_supplier_id, -- Used to define is_resourced
-                order_sourced_at,  -- Used to define sourced_date
+                sourced_at,  -- Used to define sourced_date
                 sourced_cost_usd,  -- Used to defined sourced_cost_usd
                 po_first_shipping_usd
          from rn
@@ -132,7 +130,7 @@ with first_quote as (
                 countries.name                                                               as po_active_company_entity,
                 case
                     when quotes.shipping_date >= '2019-10-01'
-                        then quotes.shipping_date end                                        as order_promised_shipping_at_by_supplier,
+                        then quotes.shipping_date end                                        as promised_shipping_at_by_supplier,
                 sum(case
                         when sqli.type = 'shipping'
                             then round(((price_amount / 100.00) / rates.rate), 2) end)       as po_active_shipping_usd,
@@ -207,14 +205,13 @@ select -- First Quote
 
        -- All Quotes
        aaq.number_of_quote_versions,
-       aaq.number_of_quote_versions_by_admin,
        aaq.has_admin_created_quote,
        aaq.has_manual_quote_review,
 
        -- First PO
 
-       fpo.order_sourced_at,
-       fpo.order_sourced_at is not null as is_sourced,
+       fpo.sourced_at,
+       fpo.sourced_at is not null as is_sourced,
        fpo.sourced_cost_usd,
        fpo.po_first_shipping_usd,
        fpo.po_first_supplier_id,
@@ -228,7 +225,7 @@ select -- First Quote
        apo.po_active_amount_usd,
        apo.po_active_document_number,
        apo.po_active_company_entity,
-       apo.order_promised_shipping_at_by_supplier,
+       apo.promised_shipping_at_by_supplier, -- This field has a different naming convention because is a key field
        apo.po_active_shipping_usd,
        apo.po_active_supplier_id,
        apo.po_active_supplier_name,

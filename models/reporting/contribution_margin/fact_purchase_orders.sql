@@ -50,14 +50,14 @@ select oqsl.created                                                             
        oqsl.type                                                                             as quote_type,
        oqsl.shipping_date                                                                    as po_shipping_date,
        oqsl.is_admin_only                                                                    as po_is_admin_only,
-       orders.order_quote_uuid                                                                   as order_first_quote_uuid,
-       orders.order_status                                                                       as order_status,
-       orders.order_shipped_at                                                                   as order_shipped_date,
-       orders.order_delivered_at                                                                 as order_delivery_date,
-       osl.completed_at                                                                      as order_completed_date,
+       orders.order_quote_uuid                                                               as order_first_quote_uuid,
+       orders.order_status                                                                   as order_status,
+       orders.order_shipped_at                                                               as order_shipped_at,
+       orders.delivered_at                                                                   as order_delivery_at,
+       osl.completed_at                                                                      as order_completed_at,
        -- Tech is 2 (3DP) when it is null as this is old platform and that is the only option that was available there...
-       orders.order_technology_id                                                                as order_technology_id,
-       orders.order_technology_name                                                              as order_technology_name,
+       orders.technology_id                                                                  as order_technology_id,
+       orders.technology_name                                                                as order_technology_name,
        spocl.status                                                                          as po_control_status,
        spocl.updated                                                                         as po_control_last_updated_date
 from {{ ref('cnc_order_quotes') }} as oqsl

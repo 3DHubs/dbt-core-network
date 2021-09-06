@@ -9,18 +9,18 @@
 
 with hubspot_dealstage_history as (
     select deal_id,
-           min(case when dealstage_mapped like 'Won%' then changed_at end)           as order_closed_at,
-           min(case when dealstage_mapped = 'Closed - Canceled' then changed_at end) as order_cancelled_at
+           min(case when dealstage_mapped like 'Won%' then changed_at end)           as closed_at,
+           min(case when dealstage_mapped = 'Closed - Canceled' then changed_at end) as cancelled_at
     from {{ ref('hubspot_deal_dealstage_history') }}
     group by 1
-    having (order_closed_at is not null or order_cancelled_at is not null) -- Filter to reduce table length
+    having (closed_at is not null or cancelled_at is not null) -- Filter to reduce table length
 
 ),
      -- Only used for completion at the moment (Aug, 2021)
      supply_order_events as (
          select order_uuid,
-                min(created) as order_first_completed_at,
-                max(created) as order_last_completed_at
+                min(created) as first_completed_at,
+                max(created) as last_completed_at
          from {{ ref('fact_order_events') }}
          where std_event_id = 102
          group by 1
@@ -29,17 +29,16 @@ with hubspot_dealstage_history as (
 select orders.uuid                                                                         as order_uuid,
 
        -- Closing
-       case
-           when (orders.accepted_at is not null or hdh.order_closed_at is not null or
+       case when (orders.accepted_at is not null or hdh.closed_at is not null or
                  orders.in_production_at is not null) then true else false end             as is_closed,
-       coalesce(orders.accepted_at, orders.in_production_at, hdh.order_closed_at)          as order_closed_at,
+       coalesce(orders.accepted_at, orders.in_production_at, hdh.closed_at)                as closed_at,
 
        -- Cancellation
-       hdh.order_cancelled_at,
+       hdh.cancelled_at,
 
        -- Completion
-       soe.order_first_completed_at,
-       soe.order_last_completed_at,
+       soe.first_completed_at,
+       soe.last_completed_at,
 
        -- Status
        case

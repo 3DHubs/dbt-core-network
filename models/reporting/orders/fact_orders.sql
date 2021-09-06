@@ -24,12 +24,12 @@ select
 -- Primary Key
 orders.order_uuid,
 order_hubspot_deal_id,
-order_document_number,
+document_number,
 
 -- Foreign Keys
 order_quote_uuid,
 process_id,
-order_technology_id,
+technology_id,
 orders.hubspot_company_id,
 orders.hubspot_contact_id,
 supplier_id,
@@ -43,57 +43,56 @@ mechanical_engineer_id,
 hubspot_owner_id,
 hubspot_sourcing_owner_id,
 
--- Main Attributes
-order_process_name,
-order_technology_name,
-order_lead_time,
-order_lead_time_tier,
-is_expedited_shipping,
+-- General Attributes
+process_name,
+technology_name,
+lead_time,
+lead_time_tier,
+is_underquoted, -- Still needs testing
+is_svp,
+data_source,
+is_legacy, 
 
 -- Lifecycle Dates
-order_created_at, -- Upload/cart
-order_submitted_at, -- Quote request
+created_at, -- Upload/cart
+submitted_at, -- Quote request
 hubspot_owner_assigned_at,
 first_time_quote_sent_at,
 first_time_response_at,
-supply_first_review_submitted_at,
-hubspot_first_review_completed_at,
-supply_last_review_completed_at,
-order_closed_at, -- When clients pays, also known as won
+hubspot_first_technical_review_completed_at,
+closed_at, -- When clients pays, also known as won
 hubspot_closed_at,
-order_cancelled_at,
+cancelled_at,
 auction_created_at, -- When the auctions enters the RDA
 auction_finished_at,
-order_sourced_at,
+sourced_at,
 first_delay_submitted_at,
 order_shipped_at,
-order_promised_shipping_at_to_customer, -- From order quote
-order_promised_shipping_at_by_supplier, -- From active PO
+promised_shipping_at_to_customer, -- From order quote
+promised_shipping_at_by_supplier, -- From active PO
 estimated_delivery_to_cross_dock,
 delivered_to_cross_dock_at,
 shipped_from_cross_dock_at,
 estimated_delivery_to_customer,
-order_delivered_at,
+delivered_at,
 derived_delivered_at,
 full_delivered_at,
-order_recognized_at,
-order_completed_at,
-order_first_completed_at,
-order_last_completed_at,
+recognized_at,
+completed_at,
 dispute_created_at,
 dispute_resolution_at,
 
 -- Lifecycle
-order_is_cart,
-order_is_closed,
-order_is_sourced,
+is_cart,
+is_closed,
+is_sourced,
 order_status,
-order_exists_in_hubspot,
-order_is_resourced,
+exists_in_hubspot,
+is_resourced,
 qc_inspection_result,
 cancellation_reason,
-order_is_recognized,
-order_is_disputed,
+is_recognized,
+is_quality_disputed,
 
 -- Purchase Orders
 number_of_purchase_orders,
@@ -105,25 +104,34 @@ order_quote_status,
 quote_first_created_by_admin,
 quote_first_has_part_without_automatic_pricing,
 number_of_quote_versions,
-number_of_quote_versions_by_admin,
 has_admin_created_quote,
 has_manual_quote_review,
 
 -- Company Attributes
 hubspot_company_name,
-is_hubspot_strategic_company,
 hubspot_company_source,
+agg.became_opportunity_at_company,
+agg.became_customer_at_company,
+agg.closed_order_is_from_new_customer_company,
+agg.closed_order_number_company,
+agg.days_from_previous_closed_order_company,
+agg.first_bdr_owner_at_company,
 
 -- Contact Attributes
 contact_email_from_hubs,
+agg.became_opportunity_at_contact,
+agg.became_customer_at_contact,
+agg.closed_order_is_from_new_customer_contact,
+agg.closed_order_number_contact,
+agg.days_from_previous_closed_order_contact,
 
 -- Supplier Attributes
 supplier_name,
 
 -- Amounts (USD)
-order_amount_usd,
-order_closed_amount_usd,
-order_sourced_amount_usd,
+amount_usd,
+closed_amount_usd,
+sourced_amount_usd,
 sourced_cost_usd, -- From First PO
 shipping_amount_usd, -- From Line Items
 po_first_shipping_usd,
@@ -132,10 +140,10 @@ po_active_shipping_usd,
 hubspot_amount_usd,
 hubspot_estimated_close_amount_usd,
 
--- Amounts Agg (USD)
-order_cogs_amount_usd,
-order_recognized_revenue_amount_usd,
-order_margin_amount_usd,
+-- Amounts CM1 (USD)
+cogs_amount_usd,
+recognized_revenue_amount_usd,
+contribution_margin_amount_usd,
 
 -- Geo/Location
 cross_dock_city,
@@ -155,7 +163,6 @@ origin_longitude,
 -- Hubspot Attributes
 hubspot_pipeline,
 hubspot_deal_category,
-is_hubspot_strategic_deal,
 is_hubspot_high_risk,
 hubspot_dealstage_mapped,
 hubspot_dealstage_mapped_sort_index,
@@ -163,9 +170,9 @@ hubspot_closed_lost_reason,
 
 -- Hubspot Owners
 hubspot_owner_name,
-hubspot_owner_primary_team_name,
+hubspot_owner_primary_team,
 bdr_owner_name,
-bdr_owner_primary_team_name,
+bdr_owner_primary_team,
 customer_success_representative_name,
 partner_support_representative_name,
 mechanical_engineer_name,
@@ -177,10 +184,10 @@ hubspot_sourcing_owner_name,
 number_of_part_line_items,
 number_of_materials,
 number_of_processes,
-order_total_quantity,
-order_total_weight_grams,
-order_total_bounding_box_volume_cm3,
-order_total_volume_cm3,
+total_quantity,
+total_weight_grams,
+total_bounding_box_volume_cm3,
+total_volume_cm3,
 number_of_expedited_shipping_line_items,
 has_customer_note,
 has_exceeded_standard_tolerances,
@@ -202,14 +209,13 @@ number_of_rejected_bids,
 number_of_design_counterbids,
 number_of_lead_time_counterbids,
 number_of_price_counterbids,
-order_has_winning_bid,
-order_has_accepted_winning_bid,
-order_has_winning_bid_countered_on_price,
-order_has_winning_bid_countered_on_design,
-order_is_rda_sourced,
+has_winning_bid,
+has_accepted_winning_bid,
+has_winning_bid_countered_on_price,
+has_winning_bid_countered_on_design,
+is_rda_sourced,
 
 -- Finance
-stripe_transaction_created_at,
 stripe_is_successful_payment,
 po_active_company_entity,
 is_auto_payment,
@@ -219,7 +225,7 @@ company_entity, -- From the order quote
 
 -- Logistics
 number_of_shipments,
-order_quote_is_cross_docking,
+is_cross_docking,
 number_of_packages,
 has_consistent_shipping_info,
 
@@ -233,8 +239,8 @@ shipping_by_supplier_delay_days,
 number_of_technical_reviews,
 in_review_reason,
 in_review_type,
-order_has_technical_review,
-order_has_rfq,
+has_technical_review,
+has_rfq,
 number_of_rfq_requests,
 number_of_rfq_responded,
 
@@ -254,23 +260,17 @@ dispute_resolution_time_hours,
 first_dispute_resolution_type,
 
 -- Interactions
-order_number_of_interactions,
-order_number_of_outgoing_emails,
-order_number_of_incoming_emails,
+number_of_interactions,
+number_of_outgoing_emails,
+number_of_incoming_emails,
 
 -- Freshdesk
 change_request_status,
-has_change_request,
-
--- Other Attributes
-order_is_underquoted,
-order_is_svp,
-order_data_source,
-order_is_legacy
+has_change_request
 
 from complete_orders as orders
 left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
 left join {{ ref('agg_orders_cm1') }} as agg_cm1 on agg_cm1.order_uuid = orders.order_uuid
 where true
 -- Let's try including carts and filtering them out in Looker
--- and (order_quote_status = 'cart') is not true
+and (order_quote_status = 'cart') is not true

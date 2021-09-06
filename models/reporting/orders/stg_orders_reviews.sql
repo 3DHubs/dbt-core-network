@@ -11,10 +11,10 @@
 
 with agg_supply_technical_review as (
        select orders.hubspot_deal_id,
-              true                  as order_has_technical_review,
+              true                  as has_technical_review,
               count(*)              as number_of_technical_reviews,
-              min(str.submitted_at) as supply_first_review_submitted_at,
-              max(str.completed_at) as supply_last_review_completed_at
+              min(str.submitted_at) as supply_first_technical_review_submitted_at,
+              max(str.completed_at) as supply_last_technical_review_completed_at
        from {{ ref('technical_reviews') }} as str
                 inner join {{ ref('cnc_order_quotes') }} as soq on str.quote_uuid = soq.uuid
                 left join {{ ref('cnc_orders') }} as orders on soq.order_uuid = orders.uuid
@@ -24,7 +24,7 @@ with agg_supply_technical_review as (
 
      window_agg_hubspot_technical_review as (
        select deal_id,
-              min(review_completed_date) as hubspot_first_review_completed_at
+              min(review_completed_date) as hubspot_first_technical_review_completed_at
        from {{ ref('fact_hubspot_deal_reviews') }}
        where review_outcome = 'completed'
        group by 1
@@ -32,8 +32,8 @@ with agg_supply_technical_review as (
 
      rfq_requests as (
        select order_uuid,
-              true as order_has_rfq,
-              bool_or(is_winning_bid) as order_is_rfq_sourced,
+              true as has_rfq,
+              bool_or(is_winning_bid) as is_rfq_sourced,
               count(*) number_of_rfq_requests,
               sum(case when supplier_rfq_responded_date is not null then 1 else 0 end) as number_of_rfq_responded
        from {{ ref('fact_supplier_rfqs') }} as rfq
@@ -43,13 +43,13 @@ with agg_supply_technical_review as (
 -- Final Query
 
 select orders.uuid as order_uuid,
-       coalesce(supply.order_has_technical_review, false) as order_has_technical_review,
+       coalesce(supply.has_technical_review, false) as has_technical_review,
        supply.number_of_technical_reviews,
-       supply.supply_first_review_submitted_at,
-       hubspot.hubspot_first_review_completed_at,
-       supply.supply_last_review_completed_at,
-       coalesce(rfq.order_has_rfq, false) as order_has_rfq,
-       rfq.order_is_rfq_sourced,
+       supply.supply_first_technical_review_submitted_at,
+       hubspot.hubspot_first_technical_review_completed_at,
+       supply.supply_last_technical_review_completed_at,
+       coalesce(rfq.has_rfq, false) as has_rfq,
+       rfq.is_rfq_sourced,
        rfq.number_of_rfq_requests,
        rfq.number_of_rfq_responded
 from {{ ref('cnc_orders') }} as orders

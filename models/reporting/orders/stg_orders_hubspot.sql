@@ -11,14 +11,12 @@ with stg as (
         hs.amount                                                                         as hubspot_amount_usd,
         hs.estimated_close_amount                                                         as hubspot_estimated_close_amount_usd,
         hs.deal_category                                                                  as hubspot_deal_category,
-        hs.strategic                                                                      as is_hubspot_strategic_deal,
         hs.high_risk                                                                      as is_hubspot_high_risk,
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields
         hs.hs_latest_associated_company_id                                                as hubspot_company_id,
         hcom.name                                                                         as hubspot_company_name,
-        hcom.strategic = 'true'                                                           as is_hubspot_strategic_company,
         hs.hs_latest_associated_contact_id                                                as hubspot_contact_id,
         hs.bdr_company_source                                                             as hubspot_company_source,
         htm.technology_id                                                                 as hubspot_technology_id,
@@ -54,11 +52,11 @@ with stg as (
         -- Owners
         hs.hubspot_owner_id,
         own2.first_name || ' ' || own2.last_name                                          as hubspot_owner_name,
-        own.primary_team_name                                                             as hubspot_owner_primary_team_name,
+        own.primary_team_name                                                             as hubspot_owner_primary_team,
         trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_at,
         hs.bdr_assigned                                                                   as bdr_owner_id,
         bdr2.first_name || ' ' || bdr2.last_name                                          as bdr_owner_name,
-        bdr.primary_team_name                                                             as bdr_owner_primary_team_name,
+        bdr.primary_team_name                                                             as bdr_owner_primary_team,
         csr.first_name || ' ' || csr.last_name                                            as customer_success_representative_name,
         psr.first_name || ' ' || psr.last_name                                            as partner_support_representative_name,
         hs.sales_engineer                                                                 as mechanical_engineer_id,

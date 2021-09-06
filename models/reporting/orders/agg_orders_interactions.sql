@@ -14,24 +14,24 @@
 
 select distinct
     fact_interactions.hubspot_deal_id,
-    count(fact_interactions.interaction_id) as order_number_of_interactions,
+    count(fact_interactions.interaction_id) as number_of_interactions,
     count(
         case
             when
                 fact_interactions.interaction_type_mapped = 'Outgoing Email' then interaction_id
         end
-    ) as order_number_of_outgoing_emails,
+    ) as number_of_outgoing_emails,
     count(
         case
             when
                 fact_interactions.interaction_type_mapped = 'Incoming Email' then interaction_id
         end
-    ) as order_number_of_incoming_emails,
+    ) as number_of_incoming_emails,
     bool_or(
         coalesce(lower(
              fact_hubspot_engagements.task_subject
         ) like ('%svp%'), false)
-    ) as order_has_svp_interaction,
+    ) as has_svp_interaction,
     bool_or(
         coalesce(lower(
             fact_hubspot_engagements.task_subject
@@ -41,7 +41,7 @@ select distinct
         or lower(fact_hubspot_engagements.task_subject) like ('%underquote%')
         or lower(fact_hubspot_engagements.note_body) like ('%underquote%'),
         false)
-    ) as order_has_underquote_interaction
+    ) as has_underquote_interaction
 
 from {{ ref('fact_interactions') }}
 left join {{ ref('fact_hubspot_engagements') }}

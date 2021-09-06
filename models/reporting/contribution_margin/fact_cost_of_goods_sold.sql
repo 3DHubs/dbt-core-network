@@ -1,24 +1,24 @@
 with tmp_cogs as (
     select poc.po_uuid,
            case
-               when orders.order_first_completed_at <= current_date and po_finalized_at <= current_date then date_trunc('day',
-                                                                                                             greatest(poc.po_finalized_at, orders.order_first_completed_at))
+               when orders.first_completed_at <= current_date and po_finalized_at <= current_date then date_trunc('day',
+                                                                                                             greatest(poc.po_finalized_at, orders.first_completed_at))
                else null end   as cost_recognized_date_sept_2020,
            case
                when cost_recognized_date_sept_2020 < '2020-10-01' then cost_recognized_date_sept_2020
-               when poc.po_finalized_at <= orders.order_recognized_at then case
-                                                                          when orders.order_recognized_at < '2020-10-01'
+               when poc.po_finalized_at <= orders.recognized_at then case
+                                                                          when orders.recognized_at < '2020-10-01'
                                                                               then '2020-10-01'
-                                                                          else orders.order_recognized_at end
-               when poc.po_finalized_at > orders.order_recognized_at then case
+                                                                          else orders.recognized_at end
+               when poc.po_finalized_at > orders.recognized_at then case
                                                                          when poc.po_finalized_at < '2020-10-01'
                                                                              then '2020-10-01'
                                                                          else poc.po_finalized_at end
                else null end   as cost_recognized_date,
            poc.po_finalized_at as po_date,
            poc.po_currency_code,
-           orders.order_technology_id,
-           orders.order_technology_name,
+           orders.technology_id,
+           orders.technology_name,
            poc.po_order_uuid,
            poc.po_document_number,
            poc.po_subtotal_price_amount,
@@ -32,7 +32,7 @@ with tmp_cogs as (
     from {{ ref('fact_purchase_orders') }} as poc
              left outer join {{ ref('stg_fact_orders') }} as orders on poc.po_order_uuid = orders.order_uuid
     where true
-      and orders.order_recognized_at <= current_date
+      and orders.recognized_at <= current_date
       and poc.po_finalized_at <= current_date -- Locked PO's only
       -- Order must have at least 1 active PO
       and exists(select 1
@@ -49,8 +49,8 @@ stg_lag as (
            cost_recognized_date,
            po_date,
            po_currency_code,
-           order_technology_id,
-           order_technology_name,
+           technology_id,
+           technology_name,
            po_subtotal_price_amount,
            lag(po_subtotal_price_amount, 1)
            over (partition by po_order_uuid order by po_date asc)                                      as previous_po_subtotal_price_amount,
@@ -85,8 +85,8 @@ select po_uuid,
         cost_recognized_date,
         po_date                                                                                                 as purchase_order_date,
         po_currency_code                                                                                        as source_currency,
-        order_technology_id,
-        order_technology_name,
+        technology_id,
+        technology_name,
         po_subtotal_price_amount_usd -
         (case when rn = 1 then 0 else previous_po_subtotal_price_amount_usd end)                                as cost_usd,
         order_parts_cost_usd -

@@ -43,19 +43,19 @@ with stg_line_items_netsuite as (
                 round(((nvl(sli.order_shipping_revenue, 0) / 100.00) / rates.rate),
                       2)                                                           as order_shipping_revenue_usd,
                 case
-                    when orders.order_recognized_at < current_date and invoices.finalized_at < current_date
+                    when orders.recognized_at < current_date and invoices.finalized_at < current_date
                         then true end                                              as invoice_is_recognized,
                 case
-                    when invoices.finalized_at <= orders.order_first_completed_at then orders.order_first_completed_at
-                    when invoices.finalized_at > orders.order_first_completed_at then invoices.finalized_at
+                    when invoices.finalized_at <= orders.first_completed_at then orders.first_completed_at
+                    when invoices.finalized_at > orders.first_completed_at then invoices.finalized_at
                     else null end                                                  as invoice_revenue_date_legacy,
                 case
                     when invoice_revenue_date_legacy < '2020-10-01' then invoice_revenue_date_legacy
-                    when invoices.finalized_at <= orders.order_recognized_at then case
-                                                                                      when orders.order_recognized_at < '2020-10-01'
+                    when invoices.finalized_at <= orders.recognized_at then case
+                                                                                      when orders.recognized_at < '2020-10-01'
                                                                                           then '2020-10-01'
-                                                                                      else orders.order_recognized_at end
-                    when invoices.finalized_at > orders.order_recognized_at then case
+                                                                                      else orders.recognized_at end
+                    when invoices.finalized_at > orders.recognized_at then case
                                                                                      when invoices.finalized_at < '2020-10-01'
                                                                                          then '2020-10-01'
                                                                                      else invoices.finalized_at end
@@ -97,22 +97,22 @@ with stg_line_items_netsuite as (
                 round((invoice_remaining_amount) * nvl(rates.exchangerate, 1.0000),
                       2)                                                            as invoice_remaining_amount_usd,
 
-                nvl(li.order_shipping_revenue * nvl(rates.exchangerate, 1.0000), 0) as order_shipping_revenue_usd,
+                nvl(li.order_shipping_revenue * nvl(rates.exchangerate, 1.0000), 0)       as order_shipping_revenue_usd,
                 case
-                    when orders.order_recognized_at < current_date and netsuite_trn.createddate < current_date
+                    when orders.recognized_at < current_date and netsuite_trn.createddate < current_date
                         then true end                                               as invoice_is_recognized,
                 case
-                    when netsuite_trn.createddate <= orders.order_first_completed_at
-                        then orders.order_first_completed_at
-                    when netsuite_trn.createddate > orders.order_first_completed_at then netsuite_trn.createddate
+                    when netsuite_trn.createddate <= orders.first_completed_at
+                        then orders.first_completed_at
+                    when netsuite_trn.createddate > orders.first_completed_at then netsuite_trn.createddate
                     else null end                                                   as invoice_revenue_date_legacy,
                 case
                     when invoice_revenue_date_legacy < '2020-10-01' then invoice_revenue_date_legacy
-                    when netsuite_trn.createddate <= orders.order_recognized_at then case
-                                                                                         when orders.order_recognized_at < '2020-10-01'
+                    when netsuite_trn.createddate <= orders.recognized_at then case
+                                                                                         when orders.recognized_at < '2020-10-01'
                                                                                              then '2020-10-01'
-                                                                                         else orders.order_recognized_at end
-                    when netsuite_trn.createddate > orders.order_recognized_at then case
+                                                                                         else orders.recognized_at end
+                    when netsuite_trn.createddate > orders.recognized_at then case
                                                                                         when netsuite_trn.createddate < '2020-10-01'
                                                                                             then '2020-10-01'
                                                                                         else netsuite_trn.createddate end

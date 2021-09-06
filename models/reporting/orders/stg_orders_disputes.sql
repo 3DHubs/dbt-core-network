@@ -116,7 +116,7 @@ with disputes as (
      select disputes.order_uuid,
             disputes.dispute_id,
             disputes.dispute_created_at,
-            true as is_disputed,
+            true as is_quality_disputed,
             disputes.dispute_requested_outcome,
             disputes.dispute_type,
             disputes.dispute_status,
