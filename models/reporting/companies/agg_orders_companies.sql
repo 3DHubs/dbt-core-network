@@ -3,6 +3,8 @@ hubspot_company_id,
 -- Lifecycle Fields
 min(became_opportunity_at_company)  as became_opportunity_at_company,
 min(became_customer_at_company)     as became_customer_at_company,
+min(second_order_created_at_company) as second_order_created_at_company,
+min(recent_order_created_at_company) as recent_order_created_at_company,
 min(second_order_closed_at_company) as second_order_closed_at_company,
 min(recent_closed_order_at_company) as recent_closed_order_at_company,
 -- Counts

@@ -29,11 +29,14 @@ select
 -- CONTACT FIELDS
 
     -- Lifecycle
+    case when hubspot_contact_id is not null then min(created_at) over (partition by hubspot_company_id) end                                           as became_created_at_contact,
     case when hubspot_contact_id is not null then min(submitted_at) over (partition by hubspot_contact_id) end                                         as became_opportunity_at_contact,
     case when hubspot_contact_id is not null then min(closed_at) over (partition by hubspot_contact_id) end                                            as became_customer_at_contact,
+    max(created_at) over (partition by hubspot_contact_id)                                                                                             as recent_order_created_at_contact,
     nth_value(case when is_closed then closed_at else null end, 2)
        over (partition by hubspot_contact_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)          as second_order_closed_at_contact,
     max(closed_at) over (partition by hubspot_contact_id)                                                                                              as recent_closed_order_at_contact,
+    coalesce(datediff('month', became_created_at_contact, created_at) = 0, false)                                                                      as created_order_is_from_new_contact,
     coalesce(datediff('month', became_opportunity_at_contact, closed_at) = 0, false)                                                                   as closed_order_is_from_new_customer_contact,
     
     -- Counts
@@ -65,11 +68,14 @@ select
 -- COMPANY FIELDS
 
     -- Lifecycle
+    case when hubspot_company_id is not null then min(created_at) over (partition by hubspot_company_id) end                                           as became_created_at_company,
     case when hubspot_company_id is not null then min(submitted_at) over (partition by hubspot_company_id) end                                         as became_opportunity_at_company,
     case when hubspot_company_id is not null then min(closed_at) over (partition by hubspot_company_id) end                                            as became_customer_at_company,
+    max(created_at) over (partition by hubspot_company_id)                                                                                             as recent_order_created_at_company,
     nth_value(case when is_closed then closed_at else null end, 2)
        over (partition by hubspot_company_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)          as second_order_closed_at_company,
     max(closed_at) over (partition by hubspot_company_id)                                                                                              as recent_closed_order_at_company,
+    coalesce(datediff('month', became_created_at_company, created_at) = 0, false)                                                                      as created_order_is_from_new_company,
     coalesce(datediff('month', became_customer_at_company, closed_at) = 0, false)                                                                      as closed_order_is_from_new_customer_company,
     
     -- Counts (Orders)
@@ -108,8 +114,12 @@ select orders.order_uuid,
         -- Lifecycle
        prep.became_opportunity_at_contact,
        prep.became_customer_at_contact,
-       prep.second_order_closed_at_contact,
+       case when created_at > became_customer_at_contact then created_at else null end                                                                 as first_created_at_after_first_order_contact,
+       min(first_created_at_after_first_order_contact) over (partition by hubspot_contact_id)                                                          as second_order_created_at_contact,
+       prep.recent_order_created_at_contact,
        prep.recent_closed_order_at_contact,
+       prep.second_order_closed_at_contact,
+       prep.created_order_is_from_new_contact,
        prep.closed_order_is_from_new_customer_contact,
        -- Counts
        prep.number_of_orders_contact,
@@ -136,8 +146,12 @@ select orders.order_uuid,
        -- Lifecycle
        prep.became_opportunity_at_company,
        prep.became_customer_at_company,
+       case when created_at > became_customer_at_company then created_at else null end                                                                 as first_created_at_after_first_order_company,
+       min(first_created_at_after_first_order_company) over (partition by hubspot_company_id)                                                          as second_order_created_at_company,
+       prep.recent_order_created_at_company,
        prep.second_order_closed_at_company,
        prep.recent_closed_order_at_company,
+       prep.created_order_is_from_new_company,
        prep.closed_order_is_from_new_customer_company,
        -- Counts
        prep.number_of_orders_company,

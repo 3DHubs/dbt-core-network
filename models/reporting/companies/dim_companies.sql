@@ -40,6 +40,8 @@ select hc.createdate                                                            
        -- Aggregates from Orders
        agg_orders.became_opportunity_at_company                                 as became_opportunity_at, -- New Field (1st Sept 2021)   as 
        agg_orders.became_customer_at_company                                    as became_customer_at,   
+       agg_orders.second_order_created_at_company                               as second_order_created_at,     
+       agg_orders.recent_order_created_at_company                               as recent_order_created_at,
        agg_orders.second_order_closed_at_company                                as second_order_closed_at,     
        agg_orders.recent_closed_order_at_company                                as recent_closed_order_at,
        agg_orders.number_of_submitted_orders_company                            as number_of_submitted_orders, -- New Field (1st Sept 2021)

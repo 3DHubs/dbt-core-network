@@ -13,7 +13,7 @@ with submit as (
                      group by 1
                      ),
          opportunity as (
-             select hubspot_contact_id, min(submitted_at) as became_opportunity_date
+             select hubspot_contact_id, min(created_at) as became_cart_date
              from {{ ref('fact_orders') }}
                          group by 1
                          )
@@ -23,7 +23,7 @@ with submit as (
                upload.mql_upload,
                frontend.mql_wall_event,
                hc.hs_lifecyclestage_marketingqualifiedlead_date,
-               became_opportunity_date) as mql_date
+               became_cart_date) as mql_date
     from {{ source('data_lake', 'hubspot_contacts') }} hc
             left join submit on submit.email = hc.email
             left join upload on upload.email = hc.email

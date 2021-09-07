@@ -56,6 +56,8 @@ select base.created_date,
        -- Order Aggregates
        agg_orders.became_opportunity_at_contact                 as became_opportunity_at,
        agg_orders.became_customer_at_contact                    as became_customer_at,
+       agg_orders.second_order_created_at_contact               as second_order_created_at,
+       agg_orders.recent_order_created_at_contact               as recent_order_created_at,
        agg_orders.second_order_closed_at_contact                as second_order_closed_at,
        agg_orders.recent_closed_order_at_contact                as recent_closed_order_at,
        agg_orders.number_of_submitted_orders_contact            as number_of_submitted_orders,
