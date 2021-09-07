@@ -7,7 +7,7 @@
 
 /*
  * This model aggregates data on `created`, `uuid`,
- * and `description` to guarantee uniquness on these
+ * and `description` to guarantee uniqueness on these
  * attributes as there are some duplicate delay
  * entries. Note that `uuid` is a random value in case
  * there are duplicate issues but that should not

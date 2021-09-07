@@ -117,7 +117,9 @@ select
 
     -- RDA: Interaction Aggregates
     rda.number_of_suppliers_assigned,
+    rda.number_of_auctions_seen,
     rda.number_of_bids,
+    rda.number_of_positive_bids,
     rda.number_of_counterbids,
     rda.number_of_rejected_bids,
     rda.number_of_design_counterbids,

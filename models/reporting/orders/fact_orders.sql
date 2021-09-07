@@ -241,6 +241,7 @@ in_review_reason,
 in_review_type,
 has_technical_review,
 has_rfq,
+is_rfq_sourced,
 number_of_rfq_requests,
 number_of_rfq_responded,
 
@@ -266,11 +267,16 @@ number_of_incoming_emails,
 
 -- Freshdesk
 change_request_status,
-has_change_request
+has_change_request, 
+
+-- Original Orders
+coalesce(is_reorder, false) as is_reorder,
+original_order_created_at,
+original_order_lead_time,
+original_order_amount_usd,
+original_order_quantity
 
 from complete_orders as orders
 left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
 left join {{ ref('agg_orders_cm1') }} as agg_cm1 on agg_cm1.order_uuid = orders.order_uuid
-where true
--- Let's try including carts and filtering them out in Looker
---and (order_quote_status = 'cart') is not true
+left join {{ ref('stg_fact_reorders') }} as original on original.reorder_order_uuid = orders.order_uuid

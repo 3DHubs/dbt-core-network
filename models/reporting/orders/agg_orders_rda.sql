@@ -23,15 +23,18 @@
 with rda_interactions as (
     select sai.auction_order_uuid as order_uuid,
            count(distinct sai.sa_supplier_id)                                                        as number_of_suppliers_assigned,
-           --General Bid Aggregates
+           -- Auctions Seen
+           count(distinct (case when sa_first_seen_at is not null then sa_supplier_id end))          as number_of_auctions_seen,
+           --General Bid Aggregates 
            count(distinct sai.bid_uuid)                                                              as number_of_bids,
+           count(distinct (case when sai.bid_supplier_response in ('accepted','countered')  
+                                then sai.bid_uuid end))                                              as number_of_positive_bids,
            count(distinct (case when sai.bid_supplier_response = 'countered' then sai.bid_uuid end)) as number_of_counterbids,
            count(distinct (case when sai.bid_supplier_response = 'rejected' then sai.bid_uuid end))  as number_of_rejected_bids,
            --Counter Bids Count by Type
            count(distinct (case when sai.bid_has_design_modifications then sai.bid_uuid end))        as number_of_design_counterbids,
-           --todo:replace data type at source
            count(distinct (case
-                               when sai.bid_has_changed_shipping_date = 'true'
+                               when sai.bid_has_changed_shipping_date = 'true' -- todo:replace data type at source
                                    then sai.bid_uuid end))                                           as number_of_lead_time_counterbids,
            count(distinct
                  (case when sai.bid_has_changed_prices then sai.bid_uuid end))                       as number_of_price_counterbids,
@@ -77,7 +80,9 @@ case when auctions.finished_at is not null then true else false end as is_rda_so
 
 -- SOURCE 1: Adds fields from the rda interactions CTE
 rdai.number_of_suppliers_assigned,
+rdai.number_of_auctions_seen,
 rdai.number_of_bids,
+rdai.number_of_positive_bids,
 rdai.number_of_counterbids,
 rdai.number_of_rejected_bids,
 rdai.number_of_design_counterbids,
