@@ -273,4 +273,4 @@ left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
 left join {{ ref('agg_orders_cm1') }} as agg_cm1 on agg_cm1.order_uuid = orders.order_uuid
 where true
 -- Let's try including carts and filtering them out in Looker
-and (order_quote_status = 'cart') is not true
+--and (order_quote_status = 'cart') is not true
