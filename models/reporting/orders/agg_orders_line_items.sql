@@ -77,7 +77,7 @@ with agg_line_items as (
 -- Combines Fields from the AGGREGATED and SEQUENCE Tables
 
 select agg.*,
-       round((agg.shipping_price_amount / rates.rate) , 2)::decimal(15,2) as shipping_amount_usd,
+       (round((agg.shipping_price_amount / rates.rate) , 2)/100)::decimal(15,2) as shipping_amount_usd,
        seq.line_item_technology_id,
        seq.line_item_technology_name,
        seq.line_item_process_id,
