@@ -36,7 +36,6 @@ select
     case
         when orders.promised_shipping_date > '2019-10-01'
             then orders.promised_shipping_date end                                         as promised_shipping_at_to_customer,
-    orders.expected_shipping_date                                                          as expected_shipping_at,
     orders.completed_at,
 
     -- Orders. Other Fields
@@ -74,11 +73,8 @@ select
     hs_deals.hubspot_closed_lost_reason,
     hs_deals.qc_inspection_result,
     hs_deals.delay_liability,
-    hs_deals.delay_reason,
     hs_deals.delay_status,
     hs_deals.dispute_liability,
-    hs_deals.dispute_outcome,
-    hs_deals.dispute_reason,
 
     -- TODO: create aggregate table for deal's employee/owners fields
     -- HS Deals: Owners
@@ -96,7 +92,7 @@ select
     hs_deals.hubspot_technical_review_owner,
     hs_deals.hubspot_sourcing_owner_id,
     hs_deals.hubspot_sourcing_owner_name,
-    hs_deals.hubspot_owner_assigned_at,
+    hs_deals.hubspot_owner_assigned_date,
 
 
     ---------- SOURCE: STG ORDERS RDA --------------
@@ -205,17 +201,15 @@ select
 
     -- Logistics: Shipping Dates
     logistics.shipped_at as order_shipped_at, -- Prefix to avoid ambiguous field
-    logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
 
     -- Logistics: Delivery Dates
     logistics.delivered_at,
-    logistics.full_delivered_at,
+    logistics.full_delivered_at, -- Used for a definition
     logistics.derived_delivered_at,
     logistics.estimated_delivery_to_cross_dock,
     logistics.estimated_delivery_to_customer,
     logistics.delivered_to_cross_dock_at,
-    logistics.derived_delivered_to_cross_dock_at,
 
     -------- SOURCE: STG OTR -----------
     -- Calculated based on cnc orders, and
@@ -288,7 +282,7 @@ select
     dealstage.cancelled_at,
 
     -- Completion
-    dealstage.first_completed_at,
+    dealstage.first_completed_at, -- Used for a definition
 
     -- Status
     dealstage.order_status,

@@ -40,20 +40,14 @@ with stg as (
         case
             when hs.closedate > '2020-01-01'
                 then nullif(regexp_replace(hs.delay_liability, 'liability_', ''), '') end as delay_liability,
-        case
-            when hs.closedate > '2020-01-01'
-                then nullif(hs.delay_reason, '') end                                      as delay_reason,
         hs.delay_status                                                                   as delay_status,
         nullif(replace(hs.dispute_liability, 'dl_', ''), '')                              as dispute_liability,
-        nullif(hs.dispute_outcome, '')                                                    as dispute_outcome,
-        nullif(replace(hs.dispute_liability, 'dl_', ''), '')                              as dispute_reason,
-
 
         -- Owners
         hs.hubspot_owner_id,
         own2.first_name || ' ' || own2.last_name                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
-        trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_at,
+        trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp
         hs.bdr_assigned                                                                   as bdr_owner_id,
         bdr2.first_name || ' ' || bdr2.last_name                                          as bdr_owner_name,
         bdr.primary_team_name                                                             as bdr_owner_primary_team,

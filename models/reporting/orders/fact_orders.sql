@@ -56,7 +56,7 @@ is_legacy,
 -- Lifecycle Dates
 created_at, -- Upload/cart
 submitted_at, -- Quote request
-hubspot_owner_assigned_at,
+hubspot_owner_assigned_date,
 first_time_quote_sent_at,
 first_time_response_at,
 hubspot_first_technical_review_completed_at,
@@ -76,10 +76,9 @@ shipped_from_cross_dock_at,
 estimated_delivery_to_customer,
 delivered_at,
 derived_delivered_at,
-full_delivered_at,
 recognized_at,
 completed_at,
-dispute_created_at,
+dispute_created_at
 dispute_resolution_at,
 
 -- Lifecycle
@@ -250,14 +249,11 @@ number_of_rfq_requests,
 number_of_rfq_responded,
 
 -- Delays
-delay_reason,
 delay_liability,
 delay_status,
 
 -- Disputes
 dispute_liability,
-dispute_outcome,
-dispute_reason,
 dispute_status,
 dispute_requested_outcome,
 dispute_type,
