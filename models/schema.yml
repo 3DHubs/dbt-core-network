@@ -167,6 +167,8 @@ sources:
       - name: order_change_requests
       - name: order_delays
       - name: order_history_events
+      - name: order_review_answers
+      - name: order_review_questions
       - name: packages
       - name: processes
       - name: purchase_orders
