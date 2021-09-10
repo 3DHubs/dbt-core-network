@@ -37,7 +37,7 @@ select
        over (partition by hubspot_contact_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)          as second_order_closed_at_contact,
     max(closed_at) over (partition by hubspot_contact_id)                                                                                              as recent_closed_order_at_contact,
     coalesce(datediff('month', became_created_at_contact, created_at) = 0, false)                                                                      as created_order_is_from_new_contact,
-    coalesce(datediff('month', became_opportunity_at_contact, closed_at) = 0, false)                                                                   as closed_order_is_from_new_customer_contact,
+    coalesce(datediff('month', became_customer_at_contact, closed_at) = 0, false)                                                                      as closed_order_is_from_new_customer_contact,
     
     -- Counts
     count(order_uuid) over (partition by hubspot_contact_id)                                                                                           as number_of_orders_contact,
@@ -104,8 +104,69 @@ select
 
 from complete_orders
 
+), 
+    --- Logic for new product KPIS 8 sept, measuring time between series of orders
+serie_two as (
+select orders.order_uuid,
+       orders.hubspot_contact_id,
+       orders.hubspot_company_id,
+       orders.created_at,
+       orders.closed_at,
+       case when created_at > dateadd(day, 7, became_customer_at_contact) then created_at else null end                                                as serie_two_created_at_after_first_order_contact,
+       min(serie_two_created_at_after_first_order_contact) over (partition by orders.hubspot_contact_id)                                               as serie_two_order_created_at_contact,
+       case when closed_at > serie_two_order_created_at_contact then closed_at else null end                                                           as p_serie_two_order_closed_at_contact,
+       case when created_at > dateadd(day, 7, became_customer_at_company) then created_at else null end                                                as serie_two_created_at_after_first_order_company,
+       min(serie_two_created_at_after_first_order_company) over (partition by orders.hubspot_company_id)                                               as serie_two_order_created_at_company,
+       case when closed_at > serie_two_order_created_at_company then closed_at else null end                                                           as p_serie_two_order_closed_at_company
+from complete_orders as orders
+left join agg_orders_prep as prep on orders.order_uuid = prep.order_uuid
+),
+serie_two_closed as (
+select order_uuid,
+       hubspot_contact_id,
+       hubspot_company_id,
+       created_at,
+       closed_at,
+       serie_two_order_created_at_contact,
+       min(p_serie_two_order_closed_at_contact) over (partition by hubspot_contact_id)                                                                 as serie_two_order_closed_at_contact,
+       case when created_at > dateadd(day, 7, serie_two_order_closed_at_contact) then created_at else null end                                         as serie_three_created_at_after_serie_two_first_order_contact,
+       serie_two_order_created_at_company,
+       min(p_serie_two_order_closed_at_company) over (partition by hubspot_company_id)                                                                 as serie_two_order_closed_at_company,
+       case when created_at > dateadd(day, 7, serie_two_order_closed_at_company) then created_at else null end                                         as serie_three_created_at_after_serie_two_first_order_company
+from serie_two
+),
+serie_three_created as (
+select order_uuid,
+       hubspot_contact_id,
+       hubspot_company_id,
+       created_at,
+       closed_at,
+       serie_two_order_created_at_contact,
+       serie_two_order_closed_at_contact,
+       min(serie_three_created_at_after_serie_two_first_order_contact) over (partition by hubspot_contact_id)                                          as serie_three_order_created_at_contact,
+       case when closed_at > serie_three_order_created_at_contact then closed_at else null end                                                         as p_serie_three_order_closed_at_contact,
+       serie_two_order_created_at_company,
+       serie_two_order_closed_at_company,
+       min(serie_three_created_at_after_serie_two_first_order_company) over (partition by hubspot_company_id)                                          as serie_three_order_created_at_company,
+       case when closed_at > serie_three_order_created_at_company then closed_at else null end                                                         as p_serie_three_order_closed_at_company
+from serie_two_closed
+),
+serie_three_closed as (
+select order_uuid,
+       hubspot_contact_id,
+       hubspot_company_id,
+       created_at,
+       closed_at,
+       serie_two_order_created_at_contact,
+       serie_two_order_closed_at_contact,
+       serie_three_order_created_at_contact,
+       min(p_serie_three_order_closed_at_contact) over (partition by hubspot_contact_id)                                                                 as serie_three_order_closed_at_contact,
+       serie_two_order_created_at_company,
+       serie_two_order_closed_at_company,
+       serie_three_order_created_at_company,
+       min(p_serie_three_order_closed_at_company) over (partition by hubspot_company_id)                                                                 as serie_three_order_closed_at_company
+from serie_three_created
 )
-
 select orders.order_uuid,
        orders.hubspot_contact_id,
        orders.hubspot_company_id,
@@ -114,8 +175,10 @@ select orders.order_uuid,
         -- Lifecycle
        prep.became_opportunity_at_contact,
        prep.became_customer_at_contact,
-       case when created_at > became_customer_at_contact then created_at else null end                                                                 as first_created_at_after_first_order_contact,
-       min(first_created_at_after_first_order_contact) over (partition by hubspot_contact_id)                                                          as second_order_created_at_contact,
+       serie.serie_two_order_created_at_contact,
+       serie.serie_two_order_closed_at_contact,
+       serie.serie_three_order_created_at_contact,
+       serie.serie_three_order_closed_at_contact,
        prep.recent_order_created_at_contact,
        prep.recent_closed_order_at_contact,
        prep.second_order_closed_at_contact,
@@ -127,10 +190,10 @@ select orders.order_uuid,
        prep.number_of_closed_orders_contact,
        -- Financial Totals
        prep.closed_sales_usd_contact,
-       sum(case when is_closed and closed_order_is_from_new_customer_contact then closed_amount_usd end) 
-            over ( partition by hubspot_contact_id)                                                                                              as closed_sales_usd_new_customer_contact,
-       sum(case when is_closed and closed_order_is_from_new_customer_contact then (sourced_amount_usd - sourced_cost_usd) end) 
-            over (partition by hubspot_contact_id)                                                                                               as total_precalc_margin_usd_new_customer_contact,
+       sum(case when is_closed and closed_order_is_from_new_customer_contact then closed_amount_usd end)
+            over ( partition by orders.hubspot_contact_id)                                                                                              as closed_sales_usd_new_customer_contact,
+       sum(case when is_closed and closed_order_is_from_new_customer_contact then (sourced_amount_usd - sourced_cost_usd) end)
+            over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_new_customer_contact,
        -- First Values
        prep.first_submitted_order_technology_contact,
        prep.first_closed_order_technology_contact,
@@ -146,8 +209,10 @@ select orders.order_uuid,
        -- Lifecycle
        prep.became_opportunity_at_company,
        prep.became_customer_at_company,
-       case when created_at > became_customer_at_company then created_at else null end                                                                 as first_created_at_after_first_order_company,
-       min(first_created_at_after_first_order_company) over (partition by hubspot_company_id)                                                          as second_order_created_at_company,
+       serie.serie_two_order_created_at_company,
+       serie.serie_two_order_closed_at_company,
+       serie.serie_three_order_created_at_company,
+       serie.serie_three_order_closed_at_company,
        prep.recent_order_created_at_company,
        prep.second_order_closed_at_company,
        prep.recent_closed_order_at_company,
@@ -159,10 +224,10 @@ select orders.order_uuid,
        prep.number_of_closed_orders_company,
        -- Financial
        prep.closed_sales_usd_company,
-       sum(case when is_closed and closed_order_is_from_new_customer_company then closed_amount_usd end) 
-            over ( partition by hubspot_company_id)                                                                                              as closed_sales_usd_new_customer_company,
-       sum(case when is_closed and closed_order_is_from_new_customer_company then (sourced_amount_usd - sourced_cost_usd) end) 
-            over (partition by hubspot_company_id)                                                                                               as total_precalc_margin_usd_new_customer_company,
+       sum(case when is_closed and closed_order_is_from_new_customer_company then closed_amount_usd end)
+            over ( partition by orders.hubspot_company_id)                                                                                              as closed_sales_usd_new_customer_company,
+       sum(case when is_closed and closed_order_is_from_new_customer_company then (sourced_amount_usd - sourced_cost_usd) end)
+            over (partition by orders.hubspot_company_id)                                                                                               as total_precalc_margin_usd_new_customer_company,
        -- First Values
        prep.first_submitted_order_technology_company,
        prep.first_closed_order_technology_company,
@@ -173,3 +238,4 @@ select orders.order_uuid,
 
 from complete_orders as orders
 left join agg_orders_prep as prep on orders.order_uuid = prep.order_uuid
+left join serie_three_closed as serie on orders.order_uuid = serie.order_uuid

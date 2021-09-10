@@ -1,3 +1,9 @@
+{{
+    config(
+        post_hook = "analyze {{ this }}"
+    )
+}}
+
 select a1.id,
        a1.created  as                   created_at,
        a1.order_uuid,

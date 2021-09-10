@@ -249,6 +249,8 @@ select
     reviews.hubspot_first_technical_review_completed_at,
     reviews.has_rfq,
     reviews.is_rfq_sourced,
+    reviews.number_of_suppliers_rfq_requests,
+    reviews.number_of_suppliers_rfq_responded, 
     reviews.number_of_rfq_requests,
     reviews.number_of_rfq_responded,
 

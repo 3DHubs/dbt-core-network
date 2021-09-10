@@ -34,6 +34,8 @@ with agg_supply_technical_review as (
        select order_uuid,
               true as has_rfq,
               bool_or(is_winning_bid) as is_rfq_sourced,
+              count(distinct supplier_id) number_of_suppliers_rfq_requests,
+              count(distinct case when supplier_rfq_responded_date is not null then supplier_id else null end) number_of_suppliers_rfq_responded,
               count(*) number_of_rfq_requests,
               sum(case when supplier_rfq_responded_date is not null then 1 else 0 end) as number_of_rfq_responded
        from {{ ref('fact_supplier_rfqs') }} as rfq
@@ -50,6 +52,8 @@ select orders.uuid as order_uuid,
        supply.supply_last_technical_review_completed_at,
        coalesce(rfq.has_rfq, false) as has_rfq,
        rfq.is_rfq_sourced,
+       rfq.number_of_suppliers_rfq_requests,
+       rfq.number_of_suppliers_rfq_responded, 
        rfq.number_of_rfq_requests,
        rfq.number_of_rfq_responded
 from {{ ref('cnc_orders') }} as orders

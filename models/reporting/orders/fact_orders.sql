@@ -245,6 +245,8 @@ in_review_type,
 has_technical_review,
 has_rfq,
 is_rfq_sourced,
+number_of_suppliers_rfq_requests,
+number_of_suppliers_rfq_responded, 
 number_of_rfq_requests,
 number_of_rfq_responded,
 

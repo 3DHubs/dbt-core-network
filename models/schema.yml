@@ -125,7 +125,7 @@ sources:
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
-        loaded_at_field: load_timestamp
+        loaded_at_field: date
 
       - name: supply_countries_markets_mapping
 
