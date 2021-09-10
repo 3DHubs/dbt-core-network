@@ -78,7 +78,7 @@ delivered_at,
 derived_delivered_at,
 recognized_at,
 completed_at,
-dispute_created_at
+dispute_created_at,
 dispute_resolution_at,
 
 -- Lifecycle
