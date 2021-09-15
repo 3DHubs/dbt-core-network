@@ -75,26 +75,24 @@ fst as ( select distinct
          partition by
              supplier_id
          order by
-        sourced_date asc
+        sourced_at asc
          rows between unbounded preceding and unbounded following
-    ) as first_technology
-    from {{ source('reporting', 'cube_deals') }} ),
+    ) as first_technology,
+    min(trunc(sourced_at)) over (partition by supplier_id) as first_sourced_order,
+    max(trunc(sourced_at)) over (partition by supplier_id) as last_sourced_order
 
-ord as ( select
-    supplier_id,
-    trunc(min(sourced_date)) as first_sourced_order,
-    trunc(max(sourced_date)) as last_sourced_order
-    from {{ source('reporting', 'cube_deals') }}
-    group by 1 ),
+    from {{ ref('fact_orders') }} ),
+
+
 
 stg_deals as (
     select
 
-        fst.supplier_id, fst.first_technology,
-        ord.first_sourced_order,
-        ord.last_sourced_order
+        fst.supplier_id, 
+        fst.first_technology,
+        fst.first_sourced_order,
+        fst.last_sourced_order
     from fst
-    left outer join ord on fst.supplier_id = ord.supplier_id
     where fst.supplier_id >= 1
 )
 

@@ -33,9 +33,10 @@ select hc.createdate                                                            
        hc.qualified                                                              as is_qualified,
        -- Company Dimensions (Defined from Contacts)
        adc.country_iso2,
-       adc.continent,
-       adc.market,
-       adc.region,
+       dc.name                                                                   as country_name,
+       lower(dc.continent)                                                       as continent,
+       dc.market,
+       dc.region,
        adc.channel_grouped,
        -- Aggregates from Orders
        agg_orders.became_opportunity_at_company                                 as became_opportunity_at, -- New Field (1st Sept 2021)   as 
@@ -63,6 +64,7 @@ from {{ source('data_lake', 'hubspot_companies') }} hc
     left join {{ ref('stg_companies_dimensions') }} as adc on hc.company_id = adc.hubspot_company_id
     left join {{ ref('agg_contacts_company') }}     as acc on hc.company_id = acc.hubspot_company_id
     left join {{ ref('agg_orders_companies') }}     as agg_orders on hc.company_id = agg_orders.hubspot_company_id
+    left join {{ ref('countries') }}                as dc on lower(adc.country_iso2) = lower(dc.alpha2_code)
     left join {{ source('data_lake', 'hubspot_owners') }} as own on own.is_current = true and own.owner_id::bigint = hc.hubspot_owner_id::bigint
     left join {{ source('data_lake', 'hubspot_owners') }} as ae on ae.is_current = true and ae.owner_id = hc.ae_assigned
 where hc.company_id >= 1
