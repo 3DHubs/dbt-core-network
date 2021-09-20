@@ -162,12 +162,13 @@ select distinct soq.order_uuid                                                  
                 case
                     when cdt.order_uuid is not null then coalesce(cdt.cdtd_delivered_at, o.delivered_at)
                     when has_shipment_delivered_to_customer_date_consecutive
-                        then coalesce(ss.shipment_delivered_to_customer_at, o.delivered_at) end as delivered_at,
+                        then coalesce(ss.shipment_delivered_to_customer_at, o.delivered_at) end as order_delivered_at,
+                        order_delivered_at as delivered_at, --added to avoid alias conflict in derived_delivered_at
 
                 coalesce(case
-                             when delivered_at is not null then delivered_at
+                             when order_delivered_at is not null then order_delivered_at
                              when shipped_to_customer_at + interval '7 days' < current_date and
-                                  delivered_at is null then shipped_to_customer_at + interval '7 days' end,
+                                  order_delivered_at is null then shipped_to_customer_at + interval '7 days' end,
                          o.completed_at)                                                        as derived_delivered_at,
 
                 case

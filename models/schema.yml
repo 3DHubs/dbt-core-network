@@ -114,7 +114,7 @@ sources:
         loaded_at_field: load_timestamp
       - name: hubspot_owners_teams
       - name: hubspot_email_wall_submissions_20210423
-      - name: hubspot_pages
+      - name: hubspot_pages_new
 
       - name: exchange_rate_spot_daily
         freshness:
