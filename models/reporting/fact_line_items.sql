@@ -4,7 +4,7 @@
         post_hook = "analyze {{ this }}"
     )
 }}
-
+ 
 with auction_tech as (
     select order_uuid, technology_id as auction_quotes_technology_id
         from (select order_quotes_uuid,

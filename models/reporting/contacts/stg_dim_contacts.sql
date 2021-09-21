@@ -1,5 +1,5 @@
 select con.createdate                                             as created_date,
-           md5(concat('contact', con.contact_id))                     as client_id,
+           coalesce(md5(concat('company', con.hs_company_id)),md5(concat('contact', con.contact_id))) as client_id,
            nvl(con.firstname || ' ' || con.lastname, con.email)       as name,
            con.country_iso2,
            con.hs_company_id                                          as hubspot_company_id,

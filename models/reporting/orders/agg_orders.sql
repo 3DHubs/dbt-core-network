@@ -101,7 +101,15 @@ select
         over (partition by hubspot_company_id order by closed_at asc))) / 1440, 1) end                                                                 as days_from_previous_closed_order_company,
     case when hubspot_company_id is not null then min(case when bdr_owner_name is not null then closed_at end) 
         over (partition by hubspot_company_id) end                                                                                                     as first_bdr_owner_at_company
+,
+-- CLIENT FIELDS
 
+    -- Lifecycle
+    case when hubspot_contact_id is not null then min(created_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end   as became_created_at_client,
+    case when hubspot_contact_id is not null then min(submitted_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end  as became_opportunity_at_client,
+    case when hubspot_contact_id is not null then min(closed_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end   as became_customer_at_client,
+    coalesce(datediff('month', became_created_at_client, created_at) = 0, false)                                                                             as created_order_is_from_new_client,
+    coalesce(datediff('month', became_customer_at_client, closed_at) = 0, false)                                                                             as closed_order_is_from_new_customer_client
 from complete_orders
 
 ), 
@@ -234,7 +242,14 @@ select orders.order_uuid,
        -- Rank Values
        prep.closed_order_number_company,
        prep.days_from_previous_closed_order_company,
-       prep.first_bdr_owner_at_company
+       prep.first_bdr_owner_at_company,
+           --- CLIENT BASED FIELDS ---
+       -- Lifecycle
+       became_created_at_client,
+       became_opportunity_at_client,
+       became_customer_at_client,
+       created_order_is_from_new_client,
+       closed_order_is_from_new_customer_client
 
 from complete_orders as orders
 left join agg_orders_prep as prep on orders.order_uuid = prep.order_uuid

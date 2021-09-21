@@ -32,6 +32,7 @@ process_id,
 technology_id,
 orders.hubspot_company_id,
 orders.hubspot_contact_id,
+coalesce(md5(concat('company', orders.hubspot_company_id)),md5(concat('contact', orders.hubspot_contact_id))) as client_id,
 supplier_id,
 po_active_uuid,
 auction_uuid,
@@ -125,6 +126,12 @@ agg.created_order_is_from_new_contact,
 agg.closed_order_is_from_new_customer_contact,
 agg.closed_order_number_contact,
 agg.days_from_previous_closed_order_contact,
+
+-- Client Attributes
+agg.became_opportunity_at_client,
+agg.became_customer_at_client,
+agg.created_order_is_from_new_client,
+agg.closed_order_is_from_new_customer_client,
 
 -- Supplier Attributes
 supplier_name,
