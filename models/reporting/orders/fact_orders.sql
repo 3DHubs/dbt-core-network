@@ -132,6 +132,8 @@ agg.became_opportunity_at_client,
 agg.became_customer_at_client,
 agg.created_order_is_from_new_client,
 agg.closed_order_is_from_new_customer_client,
+agg.closed_order_number_client,
+
 
 -- Supplier Attributes
 supplier_name,

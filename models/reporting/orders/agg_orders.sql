@@ -29,7 +29,7 @@ select
 -- CONTACT FIELDS
 
     -- Lifecycle
-    case when hubspot_contact_id is not null then min(created_at) over (partition by hubspot_company_id) end                                           as became_created_at_contact,
+    case when hubspot_contact_id is not null then min(created_at) over (partition by hubspot_contact_id) end                                           as became_created_at_contact,
     case when hubspot_contact_id is not null then min(submitted_at) over (partition by hubspot_contact_id) end                                         as became_opportunity_at_contact,
     case when hubspot_contact_id is not null then min(closed_at) over (partition by hubspot_contact_id) end                                            as became_customer_at_contact,
     max(created_at) over (partition by hubspot_contact_id)                                                                                             as recent_order_created_at_contact,
@@ -84,7 +84,7 @@ select
     count(case when is_closed then order_uuid end) over (partition by hubspot_company_id)                                                              as number_of_closed_orders_company,
 
     -- Financial Totals
-    nullif(sum(order_closed_amount_usd) over (partition by hubspot_company_id), 0)                                                                     as closed_sales_usd_company,
+    nullif(sum(closed_amount_usd) over (partition by hubspot_company_id), 0)                                                                           as closed_sales_usd_company,
 
     -- First Values
     first_value(technology_name) 
@@ -105,11 +105,16 @@ select
 -- CLIENT FIELDS
 
     -- Lifecycle
-    case when hubspot_contact_id is not null then min(created_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end   as became_created_at_client,
-    case when hubspot_contact_id is not null then min(submitted_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end  as became_opportunity_at_client,
-    case when hubspot_contact_id is not null then min(closed_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end   as became_customer_at_client,
-    coalesce(datediff('month', became_created_at_client, created_at) = 0, false)                                                                             as created_order_is_from_new_client,
-    coalesce(datediff('month', became_customer_at_client, closed_at) = 0, false)                                                                             as closed_order_is_from_new_customer_client
+
+    case when hubspot_contact_id is not null then min(created_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end              as became_created_at_client,
+    case when hubspot_contact_id is not null then min(submitted_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end            as became_opportunity_at_client,
+    case when hubspot_contact_id is not null then min(closed_at) over (partition by coalesce(hubspot_company_id,hubspot_contact_id)) end               as became_customer_at_client,
+    coalesce(datediff('month', became_created_at_client, created_at) = 0, false)                                                                       as created_order_is_from_new_client,
+    coalesce(datediff('month', became_customer_at_client, closed_at) = 0, false)                                                                       as closed_order_is_from_new_customer_client,
+
+        -- Rank Values
+    case when is_closed is true and hubspot_contact_id is not null then rank() over (partition by coalesce(hubspot_company_id,hubspot_contact_id) order by closed_at asc) end       as closed_order_number_client
+
 from complete_orders
 
 ), 
@@ -249,7 +254,9 @@ select orders.order_uuid,
        became_opportunity_at_client,
        became_customer_at_client,
        created_order_is_from_new_client,
-       closed_order_is_from_new_customer_client
+       closed_order_is_from_new_customer_client,
+       closed_order_number_client
+
 
 from complete_orders as orders
 left join agg_orders_prep as prep on orders.order_uuid = prep.order_uuid
