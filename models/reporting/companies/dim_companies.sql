@@ -37,34 +37,50 @@ select hc.createdate                                                            
        lower(dc.continent)                                                       as continent,
        dc.market,
        dc.region,
+       adc.channel_type,
+       adc.channel,
        adc.channel_grouped,
+       adc.channel_drilldown_1,
+       adc.channel_drilldown_2,
+       adc.advertising_gclid,
+       adc.advertising_msclkid,
+       adc.advertising_click_date,
+       adc.advertising_click_device,
+       adc.advertising_source,
+       adc.advertising_account_id,
+       adc.advertising_campaign_id,
+       adc.advertising_adgroup_id,
+       adc.advertising_keyword_id,
+       adc.advertising_campaign_group,
        -- Aggregates from Orders
-       agg_orders.became_opportunity_at_company                                 as became_opportunity_at, -- New Field (1st Sept 2021)   as 
-       agg_orders.became_customer_at_company                                    as became_customer_at,   
-       agg_orders.serie_two_order_created_at_company                            as serie_two_order_created_at,
-       agg_orders.serie_two_order_closed_at_company                             as serie_two_order_closed_at,
-       agg_orders.serie_three_order_created_at_company                          as serie_three_order_created_at,
-       agg_orders.serie_three_order_closed_at_company                           as serie_three_order_closed_at,    
-       agg_orders.recent_order_created_at_company                               as recent_order_created_at,
-       agg_orders.second_order_closed_at_company                                as second_order_closed_at,     
-       agg_orders.recent_closed_order_at_company                                as recent_closed_order_at,
-       agg_orders.number_of_submitted_orders_company                            as number_of_submitted_orders, -- New Field (1st Sept 2021)
-       agg_orders.number_of_closed_orders_company                               as number_of_closed_orders, -- New Field (1st Sept 2021)
-       agg_orders.closed_sales_usd_company                                      as closed_sales_usd, -- New Field (1st Sept 2021)
-       agg_orders.closed_sales_usd_new_customer_company                         as closed_sales_usd_new_customer, 
-       agg_orders.total_precalc_margin_usd_new_customer_company                 as precalc_margin_usd_new_customer,
-       agg_orders.first_submitted_order_technology_company                      as first_submitted_order_technology,
-       agg_orders.first_closed_order_technology_company                         as first_closed_order_technology,
+       agg_orders.became_mql_at_company                                          as became_mql_at, 
+       agg_orders.became_opportunity_at_company                                  as became_opportunity_at,      -- New Field (1st Sept 2021)   as 
+       agg_orders.became_customer_at_company                                     as became_customer_at,
+       agg_orders.serie_two_order_created_at_company                             as serie_two_order_created_at,
+       agg_orders.serie_two_order_closed_at_company                              as serie_two_order_closed_at,
+       agg_orders.serie_three_order_created_at_company                           as serie_three_order_created_at,
+       agg_orders.serie_three_order_closed_at_company                            as serie_three_order_closed_at,
+       agg_orders.recent_order_created_at_company                                as recent_order_created_at,
+       agg_orders.second_order_closed_at_company                                 as second_order_closed_at,
+       agg_orders.recent_closed_order_at_company                                 as recent_closed_order_at,
+       agg_orders.number_of_submitted_orders_company                             as number_of_submitted_orders, -- New Field (1st Sept 2021)
+       agg_orders.number_of_closed_orders_company                                as number_of_closed_orders,    -- New Field (1st Sept 2021)
+       agg_orders.closed_sales_usd_company                                       as closed_sales_usd,           -- New Field (1st Sept 2021)
+       agg_orders.closed_sales_usd_new_customer_company                          as closed_sales_usd_new_customer,
+       agg_orders.total_precalc_margin_usd_new_customer_company                  as precalc_margin_usd_new_customer,
+       agg_orders.first_submitted_order_technology_company                       as first_submitted_order_technology,
+       agg_orders.first_closed_order_technology_company                          as first_closed_order_technology,
        -- Aggregates from Contacts
        acc.number_of_inside_mqls,
        acc.number_of_inside_opportunities,
        acc.number_of_inside_customers
 from {{ source('data_lake', 'hubspot_companies') }} hc
-    left join {{ ref('industry_mapping') }} as indm on lower(hc.industry) = indm.industry 
+    left join {{ ref('industry_mapping') }} as indm
+on lower(hc.industry) = indm.industry
     left join {{ ref('stg_companies_dimensions') }} as adc on hc.company_id = adc.hubspot_company_id
-    left join {{ ref('agg_contacts_company') }}     as acc on hc.company_id = acc.hubspot_company_id
-    left join {{ ref('agg_orders_companies') }}     as agg_orders on hc.company_id = agg_orders.hubspot_company_id
-    left join {{ ref('countries') }}                as dc on lower(adc.country_iso2) = lower(dc.alpha2_code)
+    left join {{ ref('agg_contacts_company') }} as acc on hc.company_id = acc.hubspot_company_id
+    left join {{ ref('agg_orders_companies') }} as agg_orders on hc.company_id = agg_orders.hubspot_company_id
+    left join {{ ref('countries') }} as dc on lower(adc.country_iso2) = lower(dc.alpha2_code)
     left join {{ source('data_lake', 'hubspot_owners') }} as own on own.is_current = true and own.owner_id::bigint = hc.hubspot_owner_id::bigint
     left join {{ source('data_lake', 'hubspot_owners') }} as ae on ae.is_current = true and ae.owner_id = hc.ae_assigned
 where hc.company_id >= 1

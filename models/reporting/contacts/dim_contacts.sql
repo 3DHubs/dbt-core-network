@@ -75,6 +75,7 @@ select base.created_date,
        agg_orders.first_closed_order_process_name_contact       as first_closed_order_process_name,
        agg_orders.average_days_between_closed_orders_contact    as average_days_between_closed_orders,
        agg_orders.median_days_between_closed_orders_contact     as median_days_between_closed_orders,
+
        -- Company Aggregates
        agg_companies.inside_mql_number,
        agg_companies.inside_opportunity_number,
