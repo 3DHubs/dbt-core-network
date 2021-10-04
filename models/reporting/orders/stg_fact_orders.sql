@@ -149,6 +149,7 @@ select
     docs.order_quote_requires_local_sourcing,
 
     --Documents: All Quotes
+    docs.order_first_submitted_at,
     docs.number_of_quote_versions,
     docs.has_admin_created_quote,
     docs.has_manual_quote_review,
@@ -333,7 +334,7 @@ select
     order_hubspot_deal_id is not null                                                      as exists_in_hubspot,
     order_quote_status = 'cart'                                                            as is_cart,
     case when order_quote_status = 'cart' then null else -- In June 2021 some carts started being created in HS
-        coalesce(docs.order_quote_submitted_at, hs_deals.hubspot_created_at) end           as submitted_at,
+        coalesce(docs.order_first_submitted_at, hs_deals.hubspot_created_at) end           as submitted_at,
     submitted_at is not null                                                               as is_submitted,
     coalesce(cancellation_reasons.title, nullif(hs_deals.hubspot_cancellation_reason, '')) as cancellation_reason,
     coalesce(logistics.full_delivered_at, dealstage.first_completed_at) is not null        as is_recognized,

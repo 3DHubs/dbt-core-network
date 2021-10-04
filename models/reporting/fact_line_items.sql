@@ -1,3 +1,4 @@
+
 {{
     config(
         pre_hook = "lock table {{ source('int_service_supply', 'line_items') }}",

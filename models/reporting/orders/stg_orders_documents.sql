@@ -67,6 +67,7 @@ with first_quote as (
 
      agg_all_quotes as (
          select order_uuid                                        as                      order_uuid,
+                min(submitted_at)                                 as                      order_first_submitted_at,
                 max(revision)                                     as                      number_of_quote_versions,
                 bool_or(is_admin)                                 as                      has_admin_created_quote,
                 sum(case
@@ -204,6 +205,7 @@ select -- First Quote
        --    order_quote_cross_docking_added_lead_time,
 
        -- All Quotes
+       aaq.order_first_submitted_at,
        aaq.number_of_quote_versions,
        aaq.has_admin_created_quote,
        aaq.has_manual_quote_review,
