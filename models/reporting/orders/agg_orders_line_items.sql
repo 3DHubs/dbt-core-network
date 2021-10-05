@@ -78,6 +78,14 @@ with agg_line_items as (
                   left join {{ ref('processes') }} as spr
          on sqli.line_item_process_id = spr.process_id
          where seq = 1
+     ),
+
+     lists as (
+         select li.quote_uuid,
+                listagg(distinct title, ', ') within group (order by title) as parts_titles
+         from {{ ref('line_items') }} as li
+         where type = 'part'
+         group by 1
      )
 
 -- FINAL QUERY
@@ -88,11 +96,13 @@ select agg.*,
        seq.line_item_technology_id,
        seq.line_item_technology_name,
        seq.line_item_process_id,
-       seq.line_item_process_name
+       seq.line_item_process_name,
+       lists.parts_titles
 from agg_line_items as agg
          left join {{ ref('cnc_order_quotes') }} as quotes
 on agg.quote_uuid = quotes.uuid
     left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
     on quotes.currency_code = rates.currency_code_to
     and trunc(coalesce (quotes.finalized_at, quotes.created)) = trunc(rates.date)
-    left join sequence_line_items as seq using (quote_uuid)
+    left join sequence_line_items as seq on agg.quote_uuid = seq.quote_uuid
+    left join lists as lists on agg.quote_uuid = lists.quote_uuid

@@ -241,6 +241,7 @@ select
     li.line_item_technology_id,
     li.line_item_process_id as process_id,
     li.line_item_process_name as process_name,
+    li.parts_titles,
 
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews & RFQs
