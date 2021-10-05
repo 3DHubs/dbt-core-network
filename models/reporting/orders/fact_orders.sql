@@ -204,6 +204,7 @@ has_exceeded_standard_tolerances,
 has_technical_drawings,
 has_custom_material_subset,
 has_custom_finish,
+parts_titles,
 
 -- RDA (Reverse Dutch Auction)
 auction_document_number,
@@ -283,9 +284,12 @@ has_change_request,
 -- Original Orders
 coalesce(is_reorder, false) as is_reorder,
 original_order_created_at,
+original_order_closed_at,
 original_order_lead_time,
 original_order_amount_usd,
-original_order_quantity
+original_order_quantity,
+original_order_number_of_part_line_items,
+original_order_parts_titles
 
 from complete_orders as orders
 left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
