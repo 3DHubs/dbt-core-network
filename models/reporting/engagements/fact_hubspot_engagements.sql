@@ -50,9 +50,9 @@ select he.id::bigint                                                            
        he.source,
        he.owner_id as engagement_owner_id,
        concat(ho.first_name, concat(' ', ho.last_name)) as engagement_owner_name,
-       he_gather.contact_id,
-       he_gather.company_id,
-       he_gather.deal_id,
+       nullif(he_gather.contact_id, '') as contact_id,
+       nullif(he_gather.company_id, '') as company_id,
+       nullif(he_gather.deal_id, '') as deal_id,
        case when he.type = 'NOTE' then he.body_preview end as note_body,
        --Email fields
        case when he.type = 'EMAIL' then he.status end as email_status,
