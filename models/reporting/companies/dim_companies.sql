@@ -16,10 +16,6 @@ select hc.createdate                                                            
        nullif(hc.account_category, '')                                           as account_category,
        hc.added_as_ae                                                            as became_ae_account_date,
        hc.hs_lead_status                                                         as hs_lead_status,
-       case
-           when hc.sales_qualified = 'bdr_approved' then true
-           when hc.sales_qualified = 'bdr_denied'
-               then false end                                                    as is_sales_qualified,
        hc.founded_year::int                                                      as founded_year,
        case when hc.total_money_raised is not null then 'yes' else 'unknown' end as is_funded,
        hc.deactivated                                                            as is_deactivated,
