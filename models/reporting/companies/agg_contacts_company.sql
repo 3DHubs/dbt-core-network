@@ -9,6 +9,7 @@
 select hubspot_company_id,
        count(hubspot_contact_id)              as number_of_contacts,
        max(inside_mql_number)                 as number_of_inside_mqls,
+       min(became_mql_at_contact)             as became_mql_at_company,
        max(inside_opportunity_number)         as number_of_inside_opportunities,
        max(inside_customer_number)            as number_of_inside_customers
 

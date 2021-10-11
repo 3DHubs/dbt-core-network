@@ -91,6 +91,23 @@ seeds:
       is_in_eu: boolean
       has_payment_embargo: boolean
       is_in_efta: boolean
+  seed_employees:
+    +column_types:
+      id: int
+      category: varchar(512)
+      category_id: int
+      team: varchar(512)
+      name: varchar(512)
+      image: varchar(2048)
+      title: varchar(512)
+      firstname: varchar(512)
+      nickname: varchar(512)
+      postalcode: varchar(16)
+      lat: float
+      lon: float
+      drinks: int
+      links: varchar(512)
+      recommended_by: varchar(512)
   freshdesk_ticket_scope:
     +column_types:
       scope_id: int

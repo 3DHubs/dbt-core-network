@@ -1,17 +1,7 @@
 -- Adding MQL from contacts
-with mql as (
-    select hubspot_company_id, 
-               first_value(became_mql_at)
-           over ( 
-               partition by hubspot_company_id order by (became_mql_at is null)::int, became_mql_at asc rows between unbounded preceding and unbounded following) as became_mql_at
-    from {{ ref('dim_contacts') }}
-    where hubspot_company_id is not null
-)
-
 select
 agg.hubspot_company_id,
 -- Lifecycle Fields
-min(became_mql_at)                  as became_mql_at_company,
 min(became_opportunity_at_company)  as became_opportunity_at_company,
 min(became_customer_at_company)     as became_customer_at_company,
 min(serie_two_order_created_at_company) as serie_two_order_created_at_company,
@@ -33,5 +23,4 @@ min(first_submitted_order_technology_company)      as first_submitted_order_tech
 min(first_closed_order_technology_company)         as first_closed_order_technology_company
 
 from {{ ref('agg_orders') }} agg
-left join mql on mql.hubspot_company_id = agg.hubspot_company_id
 group by agg.hubspot_company_id
