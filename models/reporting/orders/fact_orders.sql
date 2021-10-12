@@ -158,6 +158,8 @@ contribution_margin_amount_usd,
 -- Geo/Location
 cross_dock_city,
 cross_dock_country,
+cross_dock_latitude,
+cross_dock_longitude,
 destination_city,
 destination_latitude,
 destination_longitude,

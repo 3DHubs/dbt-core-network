@@ -194,6 +194,8 @@ select
     logistics.number_of_packages,
     logistics.cross_dock_city,
     logistics.cross_dock_country,
+    logistics.cross_dock_latitude,
+    logistics.cross_dock_longitude,
 
     -- Logistics: Verification and Consistency Fields
     logistics.has_shipment_delivered_to_crossdock_date_consecutive,
