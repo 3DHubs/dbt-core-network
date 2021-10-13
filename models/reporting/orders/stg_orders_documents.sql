@@ -34,6 +34,16 @@ with first_quote as (
     where rn = 1
 ),
 
+-- PREPARING DISCOUNTS 
+-- To calculate sourcing margin we need the original quote value (quote value + discount)
+-- Discounts is coming from line item level and is being aggregated here.
+    discounts as (
+    select 
+       l.quote_uuid,
+       -l.auto_price_amount as discount_amount --local currency
+from {{ ref('line_items') }} l
+where l.type='discount'),
+
 -- ORDER QUOTE FIELDS
 -- In the Orders table a quote uuid is always listed, if the order (a.k.a deal) is closed then the closed/won
 -- quote will be used instead. So in many cases the order's quote will be the first quote as well but not always.
@@ -50,10 +60,12 @@ with first_quote as (
                 lt_tiers.name                                                    as order_quote_lead_time_tier,
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
                 quotes.requires_local_production                                 as order_quote_requires_local_sourcing,
-                round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd
+                round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
+                round((((quotes.subtotal_price_amount + d.discount_amount) / 100.00) / rates.rate), 2) as order_quote_amount_usd_excl_discount
          from {{ ref('cnc_orders') }} as orders
          left join {{ ref('cnc_order_quotes') }} as quotes
          on orders.quote_uuid = quotes.uuid
+         left join discounts d on d.quote_uuid = orders.quote_uuid
              left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
              on rates.currency_code_to = quotes.currency_code and
              trunc(coalesce (quotes.finalized_at, quotes.created)) = trunc(rates.date)
@@ -191,6 +203,7 @@ select -- First Quote
        oq.order_quote_is_cross_docking,
        oq.order_quote_requires_local_sourcing,
        oq.order_quote_amount_usd,
+       oq.order_quote_amount_usd_excl_discount,
 
        --    order_quote_shipping_address_id, -- Used for a join on addresses and states
        --    order_quote_type, -- Useless, type = quote

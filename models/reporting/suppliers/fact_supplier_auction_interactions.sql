@@ -28,6 +28,7 @@ with stg_bids as (
                                 on e.currency_code_to = q.currency_code and trunc(e.date) = trunc(q.created)
         ),
 
+
     stg_auction_technology as (
 
         select a.order_quotes_uuid, -- public.auctions.uuid in Supply db
@@ -101,12 +102,14 @@ with stg_bids as (
                 case when b.uuid = a.winner_bid_uuid then true else false end                     as is_winning_bid,
                 case when abs(sa.margin - a.base_margin) < 0.00001 then 'standard'
                     when abs(sa.margin - sa.max_country_margin) < 0.00001 then 'country cap'
-                    else 'engagement' end                                                        as margin_type
+                    else 'engagement' end                                                         as margin_type,
+                sod.order_quote_amount_usd_excl_discount                                          as auction_quote_amount_usd
         
         from sa
                     inner join {{ ref('auctions') }} a on a.order_quotes_uuid = sa.auction_uuid
                     left outer join b on b.supplier_auction_uuid = sa.supplier_auction_uuid
                     left outer join stg_auction_technology t on a.order_quotes_uuid = t.order_quotes_uuid
+                    left join {{ ref ('stg_orders_documents')}} sod on sod.order_uuid = a.order_uuid
         ),
 
     all_reasons as (
@@ -194,6 +197,7 @@ select  sai.supplier_auction_uuid,
         sai.bid_rejection_reasons,
         sai.bid_accepted_ship_by_date,
         sai.auction_amount_usd,
+        sai.auction_quote_amount_usd,
         sai.auction_base_margin,
         sai.bid_amount_usd,
         sai.sa_margin,
