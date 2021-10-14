@@ -38,16 +38,16 @@ with list_of_emails as (
      ),
 
      hubspot_engagements as (
-         select he.engagement_id                                                              as interaction_id,
-                'Hubspot'                                                                     as source,
-                he.created_at                                                                 as created_at,
-                initcap(he.type)                                                              as interaction_type,
+         select he.engagement_id                                            as interaction_id,
+                'Hubspot'                                                   as source,
+                he.created_at                                               as created_at,
+                initcap(he.type)                                            as interaction_type,
                 case
                     when initcap(he.type) = 'Email' then 'Outgoing Email'
-                    else initcap(he.type) end                                                 as interaction_type_mapped,
-                he.engagement_owner_id::varchar                                               as agent_id,
-                a.agent_name                                                                  as agent_name,
-                a.subteam_hs                                                                  as subteam,
+                    else initcap(he.type) end                               as interaction_type_mapped,
+                he.engagement_owner_id::varchar                             as agent_id,
+                a.agent_name                                                as agent_name,
+                a.subteam_hs                                                as subteam,
                 case
                     when subteam_hs like 'Account%' or subteam_hs like 'BDR%' or subteam_hs like '%AM%' or
                          subteam_hs like 'SDR%' or
@@ -58,11 +58,11 @@ with list_of_emails as (
                     when subteam_hs like 'Mech%' then 'Mechanical Engineering'
                     when subteam_hs = 'Logistics' then 'Logistics'
                     when subteam_hs = 'Finance' then 'Finance'
-                    else null end                                                             as team_mapped,
-                he.deal_id::varchar                                                           as hubspot_deal_id,
-                coalesce(he.contact_id::varchar, hd.hs_latest_associated_contact_id::varchar) as contact_id,
-                coalesce(he.company_id::varchar, hd.hs_latest_associated_company_id::varchar) as company_id,
-                null::float                                                                   as freshdesk_ticket_id
+                    else null end                                           as team_mapped,
+                he.deal_id                                                  as hubspot_deal_id,
+                coalesce(he.contact_id, hd.hs_latest_associated_contact_id) as contact_id,
+                coalesce(he.company_id, hd.hs_latest_associated_company_id) as company_id,
+                null::float                                                 as freshdesk_ticket_id
          from {{ ref('fact_hubspot_engagements') }} as he
             left join agents a
          on he.engagement_owner_id = a.hs_agent_id
@@ -70,7 +70,8 @@ with list_of_emails as (
 
              {% if is_incremental() %}
 
-                 where he.created_at > (select max (created_at) from {{ this }} where "source" = 'Hubspot')
+         where he.created_at
+             > (select max (created_at) from {{ this }} where "source" = 'Hubspot')
 
              {% endif %}
      ),
@@ -104,9 +105,9 @@ with list_of_emails as (
                     when fdt."group" in ('Broken tracking links', 'Logistics') then 'Logistics'
                     when fdt."group" in ('Finance') then 'Finance'
                     else null end                                      as team_mapped,
-                orders.hubspot_deal_id::varchar                        as hubspot_deal_id,
-                hd.hs_latest_associated_contact_id::varchar            as contact_id,
-                hd.hs_latest_associated_company_id::varchar            as company_id,
+                orders.hubspot_deal_id                                 as hubspot_deal_id,
+                hd.hs_latest_associated_contact_id                     as contact_id,
+                hd.hs_latest_associated_company_id                     as company_id,
                 fdi.ticket_id                                          as freshdesk_ticket_id
          from {{ ref('fact_freshdesk_interactions') }} as fdi
             left join {{ ref('fact_freshdesk_tickets') }} fdt
@@ -117,13 +118,13 @@ with list_of_emails as (
 
              {% if is_incremental() %}
 
-                 where fdi.created_date > (select max (created_at) from {{ this }} where "source" = 'Freshdesk')
+         where fdi.created_date
+             > (select max (created_at) from {{ this }} where "source" = 'Freshdesk')
 
              {% endif %}
      )
-
-select *
-from hubspot_engagements
-union all
-select *
-from freshdesk_engagements
+         select *
+         from hubspot_engagements
+         union all
+         select *
+         from freshdesk_engagements
