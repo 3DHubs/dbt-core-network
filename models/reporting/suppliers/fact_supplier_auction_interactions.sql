@@ -19,6 +19,7 @@ with stg_bids as (
                b.accepted_ship_by_date,
                q.description                                                                                            as design_modification_text,
                round(((q.subtotal_price_amount / 100.00) / e.rate), 2)                                                     bid_amount_usd,
+               b.margin_without_discount,
                row_number()
                over (partition by b.auction_uuid, b.supplier_id order by b.updated desc, b.placed_at desc)              as rn
         
@@ -95,6 +96,7 @@ with stg_bids as (
                 t.auction_amount_usd                                                              as auction_amount,
                 t.document_number                                                                 as auction_document_number,
                 b.bid_amount_usd                                                                  as bid_amount_usd,
+                b.margin_without_discount                                                         as bid_margin,
                 b.design_modification_text                                                        as design_modification_text,
                 sa.margin_without_discount                                                        as sa_margin,
                 sa.max_country_margin                                                             as sa_max_country_margin,
@@ -200,6 +202,7 @@ select  sai.supplier_auction_uuid,
         sai.auction_quote_amount_usd,
         sai.auction_base_margin,
         sai.bid_amount_usd,
+        sai.bid_margin,
         sai.sa_margin,
         sai.sa_max_country_margin,
         sai.margin_type,

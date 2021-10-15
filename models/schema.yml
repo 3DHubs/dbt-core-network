@@ -150,6 +150,11 @@ sources:
       - name: cnc_orders
       - name: cnc_order_quotes
       - name: company_entities
+      - name: complaint_reasons
+      - name: complaint_type_reasons
+      - name: complaint_type_reasons_association
+      - name: complaint_types
+      - name: complaints
       - name: countries
       - name: discount_codes
       - name: discounts

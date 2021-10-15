@@ -61,7 +61,8 @@ where l.type='discount'),
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
                 quotes.requires_local_production                                 as order_quote_requires_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
-                round((((quotes.subtotal_price_amount + d.discount_amount) / 100.00) / rates.rate), 2) as order_quote_amount_usd_excl_discount
+                round((((quotes.subtotal_price_amount + coalesce(d.discount_amount,0)) / 100.00) / rates.rate), 2) as order_quote_amount_usd_excl_discount
+
          from {{ ref('cnc_orders') }} as orders
          left join {{ ref('cnc_order_quotes') }} as quotes
          on orders.quote_uuid = quotes.uuid

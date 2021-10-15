@@ -120,6 +120,15 @@ select orders.uuid                                                              
            d.has_surface_finish_issue,
            d.has_incorrect_material_issue,
            d.has_parts_damaged_issue,
+           -- Complaints data
+           c.created_at as complaint_created_at,
+           c.created_at is not null as is_complaint,
+           c.is_valid as complaint_is_valid,
+           c.is_conformity_issue as complaint_is_conformity_issue,
+           c.outcome_customer as complaint_outcome_customer,
+           c.outcome_supplier as complaint_outcome_supplier,
+           c.resolution_at as complaint_resolution_at,
+           --c.number_of_parts as complaint_affected_parts_quantity, perhaps onboarded later.
            -- Part Dimensional Fields
            pdf.part_depth_cm,
            pdf.part_width_cm,
@@ -185,4 +194,5 @@ select orders.uuid                                                              
              left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
                              on rates.currency_code_to = soq.currency_code and trunc(soq.created) = trunc(rates.date)
              left outer join {{ ref('tolerances') }} t on t.id = sqli.tolerance_id
+             left outer join {{ ref ('complaints')}} c on c.line_item_uuid = sqli.uuid
     where sqli.legacy_id is null
