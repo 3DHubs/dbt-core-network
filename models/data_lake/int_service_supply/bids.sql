@@ -8,7 +8,6 @@ select oqs.created,
        {{ varchar_to_boolean('has_changed_prices') }}, -- From `bids`
        {{ varchar_to_boolean('has_design_modifications') }}, -- From `bids`
        bids.ship_by_date,
-       bids.rejection_text,
        {{ varchar_to_boolean('is_active') }}, -- From `bids`
        bids.supplier_id,
        bids.has_changed_shipping_date,
