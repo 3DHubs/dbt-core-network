@@ -173,6 +173,12 @@ seeds:
     +column_types:
       technology_id: int
       hubspot_technology: varchar(56)    
+  seed_supplier_business_classification:
+    +column_types:
+      supplier_id: int
+      name: varchar(256)    
+      business_classification: varchar(256)    
+      technology_name: varchar(256)    
 
 # Snapshot configuration
 snapshots:

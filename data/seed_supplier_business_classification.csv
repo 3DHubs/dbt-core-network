@@ -1,0 +1,154 @@
+supplier_id, name, business_classification, technology_name
+116,"ACT Enterprises, LLC",Challenger,CNC
+142,ATSE Goni Inc.,Challenger,CNC
+375,Apsis Latitude,Strategic,CNC
+264,Ashwin Precision Products Pvt Ltd,Challenger,CNC
+350,Automanufacturas de Queretaro SAPI de CV,Evaluating,CNC
+398,BeSol BV,Evaluating,CNC
+405,Beskar Steel,Evaluating,CNC
+400,Bohao Prototypes,Evaluating,CNC
+245,Boyi Prototypes,Strategic,CNC
+413,CBQ Technologies,Evaluating,CNC
+346,Cenhtal - Centro Herramental De Aguascalientes S.A. DE C.V.,Challenger,CNC
+415,Cohera Automations Pvt Ltd,Evaluating,CNC
+135,Cornertech Inc,Challenger,CNC
+388,DWD Precision,Evaluating,CNC
+151,Detroit3D,Challenger,CNC
+241,Distinct Productivity Solutions,Evaluating,CNC
+1,"Dongguan Bole RP&M Co., Ltd",Bottleneck,CNC
+424,"Dongguan Heng Wan Precision Machinery Manufacturing Co., Ltd",Evaluating,CNC
+404,Engineered Polymers India Pvt. ltd,Strategic,CNC
+397,Exonics Precision Pvt Ltd,Evaluating,CNC
+408,Filipe Ferreira,Evaluating,CNC
+401,G&T,Evaluating,CNC
+258,GPM,Strategic,CNC
+336,GRUPO MADIVER SA DE CV,Evaluating,CNC
+417,Garuda Aerotech,Evaluating,CNC
+360,HN ZZT,Challenger,CNC
+396,Halamanee Aerospace Private Limited,Evaluating,CNC
+304,Hampson Industries Private Limited,Challenger,CNC
+399,Haut Languedoc Précision,Evaluating,CNC
+412,Heromec,Evaluating,CNC
+316,IHP (INTEGRACION DE HERRAMIENTAS PRODUCTIVAS SA DE CV),Challenger,CNC
+252,Igniting Minds,Evaluating,CNC
+364,Imaginarium Rapid,Evaluating,CNC
+416,Inspire Automotive Manufacturing,Evaluating,CNC
+321,JF Manufactura,Challenger,CNC
+421,JLS Production,Evaluating,CNC
+378,K-MP,Evaluating,CNC
+146,Kemal Mfg,Challenger,CNC
+379,Kovdan,Strategic,CNC
+259,LEOKRISHTEK PRIVATE LIMITED,Strategic,CNC
+23,LTC Shenzen,Strategic,CNC
+382,Leshine,Strategic,CNC
+372,Levtech,Evaluating,CNC
+244,Longsheng,Strategic,CNC
+376,Makinovo,Evaluating,CNC
+369,Maquinados Y Tecnologia,Challenger,CNC
+361,MasterTec,Evaluating,CNC
+373,Mikrotek,Challenger,CNC
+418,Moldwelt,Evaluating,CNC
+380,Neepuna Manufacturing solutions,Strategic,CNC
+236,OuMeiSi Precision,Challenger,CNC
+249,P.R.K Ancillaries India Private Limited,Strategic,CNC
+394,Paricla,Challenger,CNC
+389,Pioneer Cuts,Challenger,CNC
+147,Prora,Evaluating,CNC
+265,Qualimount Engineering Pvt Ltd,Strategic,CNC
+403,Rapid Manufacturing LLC,Evaluating,CNC
+422,Regem,Evaluating,CNC
+153,Relic EDC LLC,Challenger,CNC
+102,S&G Tech Group,Challenger,CNC
+363,SC FIPA SRL,Evaluating,CNC
+302,Spacenex Aero Pvt Ltd,Challenger,CNC
+414,Stanform,Evaluating,CNC
+331,Stengmac,Evaluating,CNC
+343,Succinnova,Strategic,CNC
+139,SunPe,Bottleneck,CNC
+242,Team D Technologies,Challenger,CNC
+411,Tigma Precision,Evaluating,CNC
+402,Toolmakers Precisie Specials,Evaluating,CNC
+395,Trimborn GmbH,Evaluating,CNC
+240,VAP Precision,Challenger,CNC
+426,Vibrant Engineering Solutions,Evaluating,CNC
+407,WIBE,Evaluating,CNC
+3,Xintianjian Technology,Strategic,CNC
+381,Zenoz LTD,Evaluating,CNC
+409,Zevimetal Lda,Evaluating,CNC
+322,3D BG Print,Challenger,3DP
+191,3D Builders,Evaluating,3DP
+286,3D Creative,Strategic,3DP
+170,3D Folkes Ltd,Evaluating,3DP
+158,3D People Limited,Challenger,3DP
+44,3D Prototyping Studio,Challenger,3DP
+82,"3D Solutions, Inc.",Evaluating,3DP
+215,3D-Druck & Design,Challenger,3DP
+91,3DPX,Challenger,3DP
+184,3DTomorrow,Strategic,3DP
+205,3Dees Industries s.r.o.,Inactive,3DP
+320,3T AMP,Challenger,3DP
+276,3iD,Evaluating,3DP
+310,AME Group,Challenger,3DP
+342,Alphacam,Challenger,3DP
+187,Andrea Marini,Evaluating,3DP
+224,Any-Shape,Bottleneck,3DP
+177,Atelier Creatif,Evaluating,3DP
+238,Attenborough Direct LTD,Evaluating,3DP
+86,Automatic MFG LLC,Challenger,3DP
+101,Autotiv Manufacturing,Strategic,3DP
+60,Baked Industries,Evaluating,3DP
+183,Bare Feet AB,Evaluating,3DP
+43,"Black Dog Form, LLC",Evaluating,3DP
+88,Brandon's 3D Printing and Design,Evaluating,3DP
+312,Buildparts,Evaluating,3DP
+325,CA Models,Bottleneck,3DP
+59,CL Machine Works,Evaluating,3DP
+159,Creabis GmbH,Strategic,3DP
+93,DI Labs,Challenger,3DP
+64,DiCAD Consulting Corp,Challenger,3DP
+202,Edumaker Limited,Challenger,3DP
+103,Engman-Taylor,Evaluating,3DP
+129,"Flux Design, LLC",Evaluating,3DP
+324,GU 3D Print,Evaluating,3DP
+223,Genprofit Szolgáltató Kft.,Evaluating,3DP
+203,Gierl DCP GmbH,Challenger,3DP
+182,Gramm GmbH,Challenger,3DP
+213,HenleyPrint3D,Evaluating,3DP
+62,"Hydra Research, LLC",Evaluating,3DP
+50,Incept 3D,Challenger,3DP
+58,Inspired Craftwork,Evaluating,3DP
+32,"JMO Technology, LLC",Challenger,3DP
+85,Jaws Tec LLC,Challenger,3DP
+166,Julien Dodokal,Evaluating,3DP
+299,K3D B.V.,Evaluating,3DP
+217,Kinamico s.r.o.,Challenger,3DP
+78,Knight Engineering Solutions LLC,Strategic,3DP
+162,Korneel's 3D Services,Challenger,3DP
+366,Lostboyslab AB,Evaluating,3DP
+169,MOMKA Design,Challenger,3DP
+74,MWM Technology,Evaluating,3DP
+65,"Makelab, Inc",Challenger,3DP
+35,"MakerTree 3D, LLC",Challenger,3DP
+186,Maz3D,Evaluating,3DP
+167,Midlands 3D Printing Ltd,Challenger,3DP
+204,Midwest Prototyping,Strategic,3DP
+209,Oceanz B.V.,Challenger,3DP
+196,Only3D Ltd,Evaluating,3DP
+55,Onset Engineering,Evaluating,3DP
+68,"Pingring Enterprises, LLC",Evaluating,3DP
+161,PlastiPrint3D Ltd,Challenger,3DP
+198,Printing Portal,Strategic,3DP
+147,Prora,Strategic,3DP
+178,RENND Ltd,Challenger,3DP
+315,RPM - Rapid Product Manufacturing GmbH,Evaluating,3DP
+89,Re3dTech,Challenger,3DP
+108,Ryan Plummer,Evaluating,3DP
+102,S&G Tech Group,Strategic,3DP
+81,STS Technical Services,Challenger,3DP
+148,SiMT,Challenger,3DP
+339,Solidfill,Evaluating,3DP
+38,"Storme Technologies, LLC",Evaluating,3DP
+29,Tyler's 3D Hub LCC,Evaluating,3DP
+77,ZhumeisterLabs LLC,Challenger,3DP
+309,Zigg Zagg NV,Challenger,3DP
+49,iFuzion LLC,Evaluating,3DP

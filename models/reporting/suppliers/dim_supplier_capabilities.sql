@@ -11,12 +11,14 @@ with supplier_tech as (
            st.num_parts_min, 
            st.num_parts_max, 
            st.num_units_min, 
-           st.num_units_max
+           st.num_units_max,
+           cl.business_classification
     from {{ ref('suppliers') }} s
              left join {{ ref('supplier_technologies') }} st on st.supplier_id = s.id
              left outer join {{ ref('technologies') }} as tec on st.technology_id = tec.technology_id
              left outer join {{ ref('supplier_users') }} as ssu on s.id = ssu.supplier_id
              left outer join {{ ref('users') }} as su on ssu.user_id = su.user_id
+             left join {{ ref('seed_supplier_business_classification')}} cl on cl.supplier_id =  s.id and cl.technology_name = tec.name
     where su.mail !~ '@(3d)?hubs.com'
 ),
      finishes_prep as (

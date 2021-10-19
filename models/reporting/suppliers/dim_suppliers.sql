@@ -108,6 +108,7 @@ select
     stg_dim_suppliers.is_eligible_for_rfq,
     stg_dim_suppliers.currency_code,
     stg_dim_suppliers.unit_preference,
+    stg_dim_suppliers.monthly_order_value_target,
     stg_dim_suppliers.country_id,
     initcap(stg_dim_suppliers.country_name) as country_name,
     stg_dim_suppliers.country_code as country_code,

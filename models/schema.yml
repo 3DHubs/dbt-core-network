@@ -124,8 +124,8 @@ sources:
 
       - name: google_search_console
         freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+          warn_after: {count: 5, period: day}
+          error_after: {count: 6, period: day}
         loaded_at_field: date
 
       - name: supply_countries_markets_mapping
@@ -225,6 +225,12 @@ models:
           - not_null
 
   - name: fact_disputes
+    columns:
+      - name: order_uuid
+        tests:
+          - unique
+
+  - name: fact_orders
     columns:
       - name: order_uuid
         tests:
