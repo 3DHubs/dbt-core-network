@@ -238,6 +238,9 @@ is_auto_payment,
 is_instant_payment,
 payment_method,
 company_entity, -- From the order quote
+payment_label,
+order_remaining_amount,
+order_remaining_amount_usd,
 
 -- Logistics
 number_of_shipments,

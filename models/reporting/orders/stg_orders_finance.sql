@@ -5,8 +5,8 @@
 -- Sources:
 -- 1. Stripe Transactions, from Supply.
 -- 2. Refunds, from Supply.
--- 3. Docusign Requests
--- 4. Netsuite, from Netsuite integration (Coming Soon)
+-- 3. Docusign Requests.
+-- 4. Netsuite, payments.
 
 with stripe_transactions as (
     select t.quote_uuid,
@@ -25,6 +25,75 @@ with stripe_transactions as (
     from {{ ref('transactions') }} as t
     where status != 'new' -- 'Pending' transactions discarded
     group by 1
+), invoice_aggregates as (
+
+select
+orders.uuid as order_uuid,
+orders.created as order_created_at,
+quotes.subtotal_price_amount/100.00 as order_subtotal,
+coalesce(count(case  when invoices.custbody_downpayment > 0 then order_uuid end),0) as downpayment_invoice_count,
+coalesce(sum(case when invoices._type = 'Invoice' then coalesce(invoices.amountremaining,0) end),0) as invoice_remaining_amount,
+coalesce(sum(case when invoices._type = 'CreditMemo' then coalesce(invoices.unapplied,0) end),0) as credit_remaining_amount,
+coalesce(sum(case when invoices._type = 'Invoice' then coalesce(invoices.amountremaining,0) end),0)
+    + coalesce(sum(case when invoices._type = 'CreditMemo' then coalesce(-invoices.unapplied,0) end),0) as order_remaining_amount,
+coalesce(sum(case when invoices._type = 'Invoice' then coalesce(invoices.invoice_remaining_amount_usd,0) end)
+    + sum(case when invoices._type = 'CreditMemo' then coalesce(-invoices.invoice_remaining_amount_usd,0) end),0) as order_remaining_amount_usd,
+coalesce(sum(case when invoices._type = 'Invoice' then coalesce(coalesce(invoices.subtotal,0),0) end),0) as total_invoiced,
+coalesce(sum(case when invoices._type = 'CreditMemo' then coalesce(coalesce(-invoices.subtotal,0),0) end),0) as total_credited
+from {{ ref('cnc_orders') }} as orders
+left join {{ ref('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
+left join {{ ref('netsuite_invoices') }} as invoices on invoices.custbodyquotenumber = quotes.document_number
+where true
+group by 1,2,3
+
+), payment_labels as (
+
+    select
+
+invoice_agg.order_uuid,
+invoice_agg.order_subtotal,
+invoice_agg.downpayment_invoice_count,
+invoice_agg.total_invoiced,
+invoice_agg.total_credited,
+invoice_agg.order_remaining_amount,
+invoice_agg.invoice_remaining_amount,
+invoice_agg.credit_remaining_amount,
+invoice_agg.order_remaining_amount_usd,
+
+case
+    when order_created_at  < '2021-03-01' then 'Not Available'
+    when coalesce(invoice_agg.total_invoiced,0) = 0 then 'Not yet invoiced'
+    
+    -- univerisal rules for both downpayment/batch orders
+    when invoice_agg.order_remaining_amount = 0 and invoice_agg.total_invoiced = abs(invoice_agg.total_credited)  then 'Fully Refunded'
+    when invoice_agg.order_remaining_amount = 0 and (invoice_agg.total_invoiced + invoice_agg.total_credited) >= invoice_agg.order_subtotal then 'Fully Paid'
+    
+    -- rules for order with a remaining amount is negative
+    when invoice_agg.order_remaining_amount < 0 then 'Credit on Account / Awaiting Refund'
+    
+    --- downpayment specific rules
+    when invoice_agg.downpayment_invoice_count > 0 then
+      case
+        when invoice_agg.order_remaining_amount = 0 and (invoice_agg.total_invoiced + invoice_agg.total_credited) > 0 and invoice_agg.downpayment_invoice_count = 1 then 'First Downpayment Paid'
+        when invoice_agg.order_remaining_amount = 0 and (invoice_agg.total_invoiced + invoice_agg.total_credited) < invoice_agg.order_subtotal then 'Issued invoices have been paid'
+        when invoice_agg.order_remaining_amount > 0 and invoice_agg.downpayment_invoice_count = 1 then 'First Dowpayment Invoice Awaiting Payment'
+        when invoice_agg.order_remaining_amount > 0 then 'Awaiting Payment'
+        else 'other'
+      end
+    
+    -- rules for orders that have no remaining amount on account
+    when invoice_agg.order_remaining_amount = 0 and (invoice_agg.total_invoiced + invoice_agg.total_credited) < invoice_agg.order_subtotal then 'Paid and Partially Refunded/Credit Applied'
+    -- rules for orders with a positive remaining amount on account
+    when invoice_agg.order_remaining_amount > 0 and (invoice_agg.total_invoiced + invoice_agg.total_credited) > invoice_agg.order_remaining_amount then 'Partial Amount Outstanding'
+    when invoice_agg.order_remaining_amount > 0 and (invoice_agg.total_invoiced + invoice_agg.total_credited) < invoice_agg.order_subtotal then 'Awaiting Payment and Partially Credited'
+    when invoice_agg.order_remaining_amount > 0 and (invoice_agg.total_invoiced + invoice_agg.total_credited) >= invoice_agg.order_subtotal  then 'Awaiting Payment'
+    else 'other' 
+
+end as payment_label
+
+
+from invoice_aggregates as invoice_agg
+
 )
 
 select o.uuid                         as order_uuid,
@@ -45,11 +114,10 @@ select o.uuid                         as order_uuid,
            when q.customer_purchase_order_uuid is not null then '3. Purchase order upload'
            when q.signed_quote_uuid is not null then '4. Signed quote upload'
            when t.stripe_payment_method is not null then '1. Stripe payment'
-           else '5. Manual Net30' end as payment_method
-
-       -- Note: field "is_instant_payment" is defined in core orders (a.k.a cube deals)
-       --       as it requires of the "is_closed_won" field coming from other sources.
-
+           else '5. Manual Net30' end as payment_method,
+        pl.payment_label,
+        pl.order_remaining_amount,
+        pl.order_remaining_amount_usd
 from {{ ref('cnc_orders') }} as o
     left join {{ ref('cnc_order_quotes') }} as q
     on o.quote_uuid = q.uuid
@@ -58,3 +126,4 @@ from {{ ref('cnc_orders') }} as o
     left join {{ ref ('quote_docusign_requests') }} as d
     on o.quote_uuid = d.quote_uuid
     left join {{ ref('stg_orders_dealstage') }} as dealstage on o.uuid = dealstage.order_uuid
+    left join payment_labels as pl on o.uuid = pl.order_uuid

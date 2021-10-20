@@ -180,6 +180,9 @@ select
     finance.stripe_is_successful_payment,
 
     -- Finance: Netsuite Fields
+    finance.payment_label,
+    finance.order_remaining_amount,
+    finance.order_remaining_amount_usd,
 
     -- Finance: Fields from Combined Sources
     finance.is_auto_payment,
