@@ -49,7 +49,7 @@ process_name,
 technology_name,
 lead_time,
 lead_time_tier,
-is_underquoted, -- Still needs testing
+has_significant_amount_gap, 
 is_svp,
 data_source,
 is_legacy, 

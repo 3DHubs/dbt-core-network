@@ -356,11 +356,8 @@ select
 
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as amount_usd,
-    case
-        when is_closed then amount_usd
-        else 0 end                                                                         as closed_amount_usd,
+    case when is_closed then amount_usd else 0 end                                         as closed_amount_usd,
     case when is_sourced then amount_usd else 0 end                                        as sourced_amount_usd,
-
 
     -- Suppliers:
     coalesce(docs.po_active_supplier_id, rda.auction_supplier_id)                          as supplier_id,
@@ -373,10 +370,9 @@ select
              hubspot_technology_name)                                                      as technology_name,
 
     -- Commission Related:
-    case
-        when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd > 10 -- Threshold
-            and interactions.has_underquote_interaction is true then true
-        else false end                                                                     as is_underquoted, -- This still needs to be checked (Sep 2, 2021)
+    case when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - shipping_amount_usd > 50 -- Threshold
+            and interactions.has_svp_interaction is not true and is_closed is true 
+            then true when is_closed is not true then null else false end                  as has_significant_amount_gap, 
     coalesce(interactions.has_svp_interaction or li.has_svp_line_item,false)               as is_svp
 
 from {{ ref('cnc_orders') }} as orders

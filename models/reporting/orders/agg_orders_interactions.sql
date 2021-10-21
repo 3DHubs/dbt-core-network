@@ -31,18 +31,7 @@ select distinct
         coalesce(lower(
              engagements.task_subject
         ) like ('%svp%'), false)
-    ) as has_svp_interaction,
-    bool_or(
-        coalesce(lower(
-            engagements.task_subject
-        ) like ('%invoice extra%')
-        or lower(engagements.task_subject) like ('%extra charge%')
-        or lower(engagements.task_subject) like ('%extra cost%')
-        or lower(engagements.task_subject) like ('%underquote%')
-        or lower(engagements.note_body) like ('%underquote%'),
-        false)
-    ) as has_underquote_interaction
-
+    ) as has_svp_interaction
 from {{ ref('fact_interactions') }} as interactions
 left join {{ ref('fact_hubspot_engagements') }} as engagements
     on interactions.interaction_id = engagements.engagement_id
