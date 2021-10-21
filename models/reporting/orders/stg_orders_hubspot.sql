@@ -88,8 +88,8 @@ with stg as (
             on hs.technologies = htm.hubspot_technology
         left join {{ ref ('technologies') }} as technologies
             on htm.technology_id = technologies.technology_id
-        left join {{ source('data_lake', 'hubspot_companies') }} as hcom 
-            on hs.hs_latest_associated_company_id = hcom.company_id
+        left join {{ source('data_lake', 'hubspot_companies_stitch') }} as hcom 
+            on hs.hs_latest_associated_company_id = hcom.hubspot_company_id
 )
 select *
 from stg

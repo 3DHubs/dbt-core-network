@@ -102,11 +102,11 @@ sources:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
         loaded_at_field: load_timestamp
-      - name: hubspot_companies
+      - name: hubspot_companies_stitch
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
-        loaded_at_field: load_timestamp
+        loaded_at_field: load_timestamp   
       - name: hubspot_owners
         freshness:
           warn_after: {count: 24, period: hour}
