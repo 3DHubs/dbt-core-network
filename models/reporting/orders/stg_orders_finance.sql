@@ -32,14 +32,15 @@ orders.uuid as order_uuid,
 orders.created as order_created_at,
 quotes.subtotal_price_amount/100.00 as order_subtotal,
 coalesce(count(case  when invoices.custbody_downpayment > 0 then order_uuid end),0) as downpayment_invoice_count,
-coalesce(sum(case when invoices._type = 'Invoice' then coalesce(invoices.amountremaining,0) end),0) as invoice_remaining_amount,
-coalesce(sum(case when invoices._type = 'CreditMemo' then coalesce(invoices.unapplied,0) end),0) as credit_remaining_amount,
-coalesce(sum(case when invoices._type = 'Invoice' then coalesce(invoices.amountremaining,0) end),0)
-    + coalesce(sum(case when invoices._type = 'CreditMemo' then coalesce(-invoices.unapplied,0) end),0) as order_remaining_amount,
-coalesce(sum(case when invoices._type = 'Invoice' then coalesce(invoices.invoice_remaining_amount_usd,0) end)
-    + sum(case when invoices._type = 'CreditMemo' then coalesce(-invoices.invoice_remaining_amount_usd,0) end),0) as order_remaining_amount_usd,
-coalesce(sum(case when invoices._type = 'Invoice' then coalesce(coalesce(invoices.subtotal,0),0) end),0) as total_invoiced,
-coalesce(sum(case when invoices._type = 'CreditMemo' then coalesce(coalesce(-invoices.subtotal,0),0) end),0) as total_credited
+coalesce(sum(case when invoices._type = 'Invoice' then invoices.amountremaining end),0) as invoice_remaining_amount,
+coalesce(sum(case when invoices._type = 'CreditMemo' then invoices.unapplied end),0) as credit_remaining_amount,
+coalesce(sum(case when invoices._type = 'Invoice' then invoices.amountremaining end),0)
+    + coalesce(sum(case when invoices._type = 'CreditMemo' then -invoices.unapplied end),0) as order_remaining_amount,
+
+coalesce(sum(case when invoices._type = 'Invoice' then invoices.invoice_remaining_amount_usd end),0)
+    + coalesce(sum(case when invoices._type = 'CreditMemo' then -invoices.invoice_remaining_amount_usd end),0) as order_remaining_amount_usd,
+coalesce(sum(case when invoices._type = 'Invoice' then invoices.subtotal end),0) as total_invoiced,
+coalesce(sum(case when invoices._type = 'CreditMemo' then -invoices.subtotal end),0) as total_credited
 from {{ ref('cnc_orders') }} as orders
 left join {{ ref('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
 left join {{ ref('netsuite_invoices') }} as invoices on invoices.custbodyquotenumber = quotes.document_number

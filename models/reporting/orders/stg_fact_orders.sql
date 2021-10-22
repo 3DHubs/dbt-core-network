@@ -181,8 +181,8 @@ select
 
     -- Finance: Netsuite Fields
     finance.payment_label,
-    finance.order_remaining_amount,
-    finance.order_remaining_amount_usd,
+    finance.order_remaining_amount as remaining_amount,
+    finance.order_remaining_amount_usd as remaining_amount_usd,
 
     -- Finance: Fields from Combined Sources
     finance.is_auto_payment,
@@ -404,3 +404,4 @@ where true
   and li.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
   and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth in a later stage
   and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately
+
