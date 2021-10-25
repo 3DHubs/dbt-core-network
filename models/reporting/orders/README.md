@@ -17,7 +17,7 @@ The new orders table is created in a flow that can be divided into three section
 
 ### Staging
 
-Most tables in the staging stage have either an '<stg_>' or '<agg_>' prefix. Table with the STG first prefix collect data from one ore more upstream sources and compile it into a new model, this STG models also serve to limit the number of relevant columns, do name changes, data type transformations and some pre-processing (e.g. currency conversion). The AGG prefix stands for aggregation and collects data from an upstream table that has a many-to-one relationship with the orders table, as an example the model '<agg_orders_line_items>' creates a field '<number_of_line_items>' per order.
+Most tables in the staging stage have either an `stg_` or `agg_` prefix. Table with the STG first prefix collect data from one ore more upstream sources and compile it into a new model, this STG models also serve to limit the number of relevant columns, do name changes, data type transformations and some pre-processing (e.g. currency conversion). The AGG prefix stands for aggregation and collects data from an upstream table that has a many-to-one relationship with the orders table, as an example the model '<agg_orders_line_items>' creates a field '<number_of_line_items>' per order.
 
 Table | Description
 ------------ | -------------
