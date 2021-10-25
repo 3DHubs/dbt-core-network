@@ -10,4 +10,18 @@ The table was reduced from 300 columns to 150, ~2300 lines of code to ~1300 spli
 
 ## New Structure
 
-![Screenshot 2021-10-25 at 10 10 41](https://user-images.githubusercontent.com/61149777/138658725-816018f6-42cb-40fc-b2a9-f9ee0ea809d1.png)
+The new orders table is created in a flow that can be divided into three sections as shown in the figure below. On the first stage we have a collection of staging and aggregate models that query from different sources and cluster data in a logical way based on the source of the data (e.g. agg_order_line_items) or the business application (e.g. stg_orders_finance), these models would be explained in more detail below.
+
+![Screenshot 2021-10-25 at 10 19 57](https://user-images.githubusercontent.com/61149777/138660555-553125f9-43b7-40b0-8317-205a9b7daa87.png)
+
+
+### Staging
+
+Table | Description
+------------ | -------------
+agg_orders_line_items | Content from cell 2
+stg_orders_documents | Content in the second column
+stg_orders_logistics | Content in the second column
+stg_orders_otr | Content in the second column
+stg_orders_dealstage | Content in the second column
+stg_orders_finance | Content in the second column
