@@ -217,19 +217,27 @@ sources:
 #########
 
 models:
+  - name: dim_companies
+    columns:
+      - name: hubspot_company_id
+        tests:
+          - unique
+  - name: dim_contacts
+    columns:
+      - name: hubspot_contact_id
+        tests:
+          - unique
   - name: fact_supplier_auction_interactions
     columns:
       - name: supplier_auction_uuid
         tests:
           - unique
           - not_null
-
-  - name: fact_disputes
+  - name: fact_line_items
     columns:
-      - name: order_uuid
+      - name: line_item_uuid
         tests:
           - unique
-
   - name: fact_orders
     columns:
       - name: order_uuid

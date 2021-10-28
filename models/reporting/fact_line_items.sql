@@ -128,8 +128,8 @@ select orders.uuid                                                              
            c.outcome_customer as complaint_outcome_customer,
            c.outcome_supplier as complaint_outcome_supplier,
            c.resolution_at as complaint_resolution_at,
-           c.created_by as complaint_created_by,
-           c.reviewed_by as complaint_reviewed_by,
+           u.first_name + ' ' + u.last_name as complaint_created_by,
+           ur.first_name + ' ' + ur.last_name as complaint_reviewed_by,
            c.comment as complaint_comment,
            --c.number_of_parts as complaint_affected_parts_quantity, perhaps onboarded later.
            -- Part Dimensional Fields
@@ -197,5 +197,7 @@ select orders.uuid                                                              
              left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
                              on rates.currency_code_to = soq.currency_code and trunc(soq.created) = trunc(rates.date)
              left outer join {{ ref('tolerances') }} t on t.id = sqli.tolerance_id
-             left outer join {{ ref ('fact_complaints')}} c on c.line_item_uuid = sqli.uuid
+             left outer join {{ ref ('complaints')}} c on c.line_item_uuid = sqli.uuid
+             left join {{ ref('users') }} u on u.user_id = c.created_by_user_id
+             left join {{ ref('users') }} ur on ur.user_id = c.reviewed_by_user_id
     where sqli.legacy_id is null
