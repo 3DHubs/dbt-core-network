@@ -26,7 +26,6 @@ with auctions as (select oqs.created,
                          decode(auctions.china_throttled, 'true', True, 'false', False)      as is_china_throttled,
                          auctions.base_margin,                  -- For debugging purposes only, do not use for reporting
                          auctions.base_margin_without_discount, -- This field will be used in auctions
-                         auctions.next_allocate_at,
                          decode(auctions.is_accepted_manually, 'true', True, 'false', False) as is_accepted_manually,
                          decode(auctions.is_resourcing, 'true', True, 'false', False)        as is_resourcing,
                          row_number() over (partition by oqs.order_uuid order by auctions.started_at desc nulls last)

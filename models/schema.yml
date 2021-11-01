@@ -201,6 +201,8 @@ sources:
       - name: supplier_users
       - name: suppliers
       - name: suppliers_material_subsets
+      - name: teams
+      - name: team_users
       - name: technical_reviews
       - name: technologies
       - name: tolerances

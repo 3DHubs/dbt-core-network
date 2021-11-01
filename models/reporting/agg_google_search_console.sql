@@ -31,7 +31,7 @@ stg_join_w_country as (
     select gsc.date,
            gsc.tld,
            gsc.keys_clean,
-           gsc.url,
+           case when len({{ dbt_utils.get_url_path(field='gsc.url') }})  < 2 then '/' else replace(('/' + {{ dbt_utils.get_url_path(field='gsc.url') }} + '/'),'//','/') end url,
            case when len(split_part(url, '/', 2)) = 2 then split_part(url, '/', 2) else 'en' end as language,
            gsc.country_iso3                      as country_code,
            gsc.keywords,

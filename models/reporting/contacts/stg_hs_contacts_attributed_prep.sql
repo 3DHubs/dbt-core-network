@@ -61,7 +61,7 @@ select hc.contact_id,
            over ( partition by nvl(nullif(hc.hubspot_user_token, ''), hc.contact_id::varchar)
                order by least(hc.hs_analytics_first_visit_timestamp::timestamp, hc.createdate) asc
                rows between unbounded preceding and unbounded following)                   as hutk_analytics_first_url,
-           urlsplit(hutk_analytics_first_url, 'path')                                      as hutk_analytics_first_page,
+               case when len({{ dbt_utils.get_url_path(field='hutk_analytics_first_url') }})  < 2 then '/' else replace(('/' + {{ dbt_utils.get_url_path(field='hutk_analytics_first_url') }} + '/'),'//','/') end as hutk_analytics_first_page,
            first_value(hc.hs_analytics_first_visit_timestamp)
            over ( partition by nvl(nullif(hc.hubspot_user_token, ''), hc.contact_id::varchar)
                order by least(hc.hs_analytics_first_visit_timestamp::timestamp, hc.createdate) asc

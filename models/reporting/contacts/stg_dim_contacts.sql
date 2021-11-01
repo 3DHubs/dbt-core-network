@@ -1,3 +1,14 @@
+with teams as (
+    select distinct t.name as team_name,
+                    t.created as team_created_at,
+                    u.hubspot_contact_id
+    from {{ source('int_service_supply', 'teams') }} t
+inner join {{ source('int_service_supply', 'team_users') }} tu
+    on tu.team_id = t.id
+        inner join {{ ref('users') }} u on u.user_id = tu.user_id
+)
+
+
 select con.createdate                                             as created_date,
            coalesce(md5(concat('company', con.hs_company_id)),md5(concat('contact', con.contact_id))) as client_id,
            nvl(con.firstname || ' ' || con.lastname, con.email)       as name,
@@ -53,10 +64,14 @@ select con.createdate                                             as created_dat
            dc.name                                                    as country_name,
            dc.market,
            dc.region,
-           lower(dc.continent)                                        as continent
+           lower(dc.continent)                                        as continent,
+           teams.team_created_at                                      as team_created_at,
+           teams.team_name                                            as team_name,
+           case when teams.team_name is not null then true else false end as is_team_member
     from {{ ref('stg_hs_contacts_attributed') }} as con
              left join {{ ref('stg_contacts_mqls') }} as mql on  con.contact_id = mql.contact_id
              left join {{ ref('countries') }} dc on lower(con.country_iso2) = lower(dc.alpha2_code)
              left join {{ source('data_lake', 'hubspot_owners') }} own
                              on own.is_current = true and own.owner_id::bigint = con.hubspot_owner_id::bigint
              left join {{ source('data_lake', 'hubspot_owners') }} bdr on bdr.is_current = true and bdr.owner_id = con.bdr_owner_id
+             left join teams on teams.hubspot_contact_id = con.contact_id

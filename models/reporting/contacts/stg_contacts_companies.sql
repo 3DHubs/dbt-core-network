@@ -22,6 +22,7 @@ select contacts.hubspot_contact_id,
                then rank() over (partition by contacts.hubspot_company_id order by agg_orders.became_customer_at_contact asc)
            when contacts.hubspot_company_id is null
                then 1
-           else null end as inside_customer_number
+           else null end as inside_customer_number,
+       contacts.is_team_member
 from {{ ref('stg_dim_contacts') }} as contacts
             left join {{ ref('agg_orders_contacts') }} as agg_orders on  contacts.hubspot_contact_id = agg_orders.hubspot_contact_id

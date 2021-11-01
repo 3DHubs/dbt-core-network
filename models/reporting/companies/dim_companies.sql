@@ -76,6 +76,7 @@ select
        acc.number_of_inside_mqls,
        acc.number_of_inside_opportunities,
        acc.number_of_inside_customers,
+       acc.has_team,
 
        -- Other Fields
        indm.industry_mapped::varchar                                             as industry_mapped

@@ -24,7 +24,6 @@ with stg as (
               auctions.internal_support_ticket_id,
               auctions.base_margin,                  -- For debugging purposes only, do not use for reporting
               auctions.base_margin_without_discount, -- This field will be used in auctions
-              auctions.next_allocate_at,
               {% for boolean_field in boolean_fields %}
                      {{ varchar_to_boolean(boolean_field) }}
                      {% if not loop.last %},{% endif %}
