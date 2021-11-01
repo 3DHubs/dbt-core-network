@@ -144,8 +144,8 @@ seeds:
     +tags:     
   seo_page_groups:
     +column_types:
-      page: varchar(2056)
-      page_group: varchar(2056)
+      page: varchar(4056)
+      page_group: varchar(4056)
     +tags: ["search", "marketing"]
   order_status:
     +column_types:
