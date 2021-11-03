@@ -44,7 +44,7 @@ stg_join_w_country as (
            gsc.url || gsc.keywords               as target_id
     from stg_gsc_data as gsc
              left join {{ref('countries_mapping')}} as scmm on scmm.country_iso3 = gsc.country_iso3
-             left join {{ref('seo_page_groups')}} as spg on spg.page = gsc.url
+             left join {{ref('seo_page_groups')}} as spg on spg.page = lower(gsc.url)
 ),
 stg_join_w_seo_targets as (
     select gsc_country.*,

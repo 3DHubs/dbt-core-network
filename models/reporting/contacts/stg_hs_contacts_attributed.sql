@@ -54,4 +54,4 @@ select coalesce(page_group, 'Ungrouped')                                  as tmp
        contacts.*
 
 from {{ ref('stg_hs_contacts_attributed_prep') }} as contacts
-            left outer join {{ ref('seo_page_groups') }} pg on pg.page = contacts.hutk_analytics_first_page
+            left outer join {{ ref('seo_page_groups') }} pg on pg.page = lower(contacts.hutk_analytics_first_page)

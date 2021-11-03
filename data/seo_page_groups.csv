@@ -1,19 +1,19 @@
 page,page_group
 /,Homepage
-/#:~:text=High%20quality%20parts%20every%20time/,Homepage
-/#:~:text=How%203D%20Hubs%20works/,Homepage
-/#:~:text=Manufactured%20through%203D%20Hubs/,Homepage
-/#:~:text=Our%20manufacturing%20capabilities/,Homepage
-/#:~:text=Powerful%20automation%20that%20makes%20sourcing%20easy/,Homepage
-/#:~:text=Trusted%20by%20over%20145%2C000%20engineers%20worldwide/,Homepage
-/#:~:text=Why%20choose%203D%20Hubs/,Homepage
+/#:~:text=high%20quality%20parts%20every%20time/,Homepage
+/#:~:text=how%203d%20hubs%20works/,Homepage
+/#:~:text=manufactured%20through%203d%20hubs/,Homepage
+/#:~:text=our%20manufacturing%20capabilities/,Homepage
+/#:~:text=powerful%20automation%20that%20makes%20sourcing%20easy/,Homepage
+/#:~:text=trusted%20by%20over%20145%2c000%20engineers%20worldwide/,Homepage
+/#:~:text=why%20choose%203d%20hubs/,Homepage
 /%20./,Other
 /%20a/,Other
-/%20Marvin/,Other
+/%20marvin/,Other
 /3-dprinting/,Service - 3DP
-/3D-Druck/polyjet/,Service - 3DP
-/3d-Druck/sla/,Service - 3DP
-/3D-printable-content/,Other
+/3d-druck/polyjet/,Service - 3DP
+/3d-druck/sla/,Service - 3DP
+/3d-printable-content/,Other
 /3d-printers/,Other
 /3d-printers/3d-gence-one/,Other
 /3d-printers/3d-modular-systems-scalar-l/,Other
@@ -916,19 +916,19 @@ page,page_group
 /3d-printers/zyyx/,Other
 /3d-printers/zyyx-plus/,Other
 /3d-printin/processes/fmd/,Service - 3DP
-/3D-printing/,Service - 3DP
+/3d-printing/,Service - 3DP
 /3d-printing-designs/thingiverse/,Other
 /3d-printing-handbook/,Knowledge Base - 3DP
 /3d-printing-service/,Service - 3DP
 /3d-printing-software/rhino/,Other
 /3d-printing-software/tinkerplay/,Other
 /3d-printing./,Service - 3DP
-/3d-printing/#:~:text=Comparison%20of%20our%203D%20printing%20services/,Service - 3DP
-/3d-printing/#:~:text=Custom%203D%20printing%20projects%20made%20with%203D%20Hubs/,Service - 3DP
-/3d-printing/#:~:text=How%20much%20does%20your%203D%20printing%20service%20cost%3F/,Service - 3DP
-/3d-printing/#:~:text=How%20we%20ensure%20high%20quality%203D%20prints/,Service - 3DP
-/3d-printing/#:~:text=Our%20online%203D%20printing%20services/,Service - 3DP
-/3d-printing/#:~:text=We%20use%20powerful%20automation%20to%20make%20custom%203D%20printing%20easy/,Service - 3DP
+/3d-printing/#:~:text=comparison%20of%20our%203d%20printing%20services/,Service - 3DP
+/3d-printing/#:~:text=custom%203d%20printing%20projects%20made%20with%203d%20hubs/,Service - 3DP
+/3d-printing/#:~:text=how%20much%20does%20your%203d%20printing%20service%20cost%3f/,Service - 3DP
+/3d-printing/#:~:text=how%20we%20ensure%20high%20quality%203d%20prints/,Service - 3DP
+/3d-printing/#:~:text=our%20online%203d%20printing%20services/,Service - 3DP
+/3d-printing/#:~:text=we%20use%20powerful%20automation%20to%20make%20custom%203d%20printing%20easy/,Service - 3DP
 /3d-printing/alabama/,Service - 3DP Geo
 /3d-printing/alabama/auburn/,Service - 3DP Geo
 /3d-printing/alabama/birmingham/,Service - 3DP Geo
@@ -1467,7 +1467,7 @@ page,page_group
 /3d-printing/location/bismarck-nd/,Service - 3DP Geo
 /3d-printing/location/blackburn-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/blackpool-united-kingdom/,Service - 3DP Geo
-/3d-printing/location/bogot%C3%A1-colombia/,Service - 3DP Geo
+/3d-printing/location/bogot%c3%a1-colombia/,Service - 3DP Geo
 /3d-printing/location/boise-id/,Service - 3DP Geo
 /3d-printing/location/bolivia/,Service - 3DP Geo
 /3d-printing/location/bologna-italy/,Service - 3DP Geo
@@ -1536,7 +1536,7 @@ page,page_group
 /3d-printing/location/centurion-south-africa/,Service - 3DP Geo
 /3d-printing/location/cergy-pontoise-france/,Service - 3DP Geo
 /3d-printing/location/chad/,Service - 3DP Geo
-/3d-printing/location/chamart%C3%ADn-madrid/,Service - 3DP Geo
+/3d-printing/location/chamart%c3%adn-madrid/,Service - 3DP Geo
 /3d-printing/location/chamber%c3%ad-madrid/,Service - 3DP Geo
 /3d-printing/location/chandler-az/,Service - 3DP Geo
 /3d-printing/location/charleroi-belgium/,Service - 3DP Geo
@@ -1552,9 +1552,9 @@ page,page_group
 /3d-printing/location/chesapeake-va/,Service - 3DP Geo
 /3d-printing/location/chester-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/chicago-il/,Service - 3DP Geo
-/3d-printing/location/chicago-il/#:~:text=3D%20printing%20materials/,Service - 3DP Geo
-/3d-printing/location/chicago-il/#:~:text=3D%20printing%20processes/,Service - 3DP Geo
-/3d-printing/location/chicago-il/#:~:text=Why%20engineers%20choose%203D%20Hubs%20for%203D%20printing%20in%20Chicago/,Service - 3DP Geo
+/3d-printing/location/chicago-il/#:~:text=3d%20printing%20materials/,Service - 3DP Geo
+/3d-printing/location/chicago-il/#:~:text=3d%20printing%20processes/,Service - 3DP Geo
+/3d-printing/location/chicago-il/#:~:text=why%20engineers%20choose%203d%20hubs%20for%203d%20printing%20in%20chicago/,Service - 3DP Geo
 /3d-printing/location/chico-ca/,Service - 3DP Geo
 /3d-printing/location/chihuahua-mexico/,Service - 3DP Geo
 /3d-printing/location/chile/,Service - 3DP Geo
@@ -1581,7 +1581,7 @@ page,page_group
 /3d-printing/location/columbus-oh/,Service - 3DP Geo
 /3d-printing/location/concord-ca/,Service - 3DP Geo
 /3d-printing/location/connecticut-ct/,Service - 3DP Geo
-/3d-printing/location/constan%C5%A3a-romania/,Service - 3DP Geo
+/3d-printing/location/constan%c5%a3a-romania/,Service - 3DP Geo
 /3d-printing/location/copenhagen-denmark/,Service - 3DP Geo
 /3d-printing/location/coquitlam-canada/,Service - 3DP Geo
 /3d-printing/location/coral-springs-fl/,Service - 3DP Geo
@@ -1595,7 +1595,7 @@ page,page_group
 /3d-printing/location/crawley-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/croydon-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/czechia/,Service - 3DP Geo
-/3d-printing/location/d%C3%BAn-laoghaire-ireland/,Service - 3DP Geo
+/3d-printing/location/d%c3%ban-laoghaire-ireland/,Service - 3DP Geo
 /3d-printing/location/dagenham-london/,Service - 3DP Geo
 /3d-printing/location/dallas-tx/,Service - 3DP Geo
 /3d-printing/location/daly-city-ca/,Service - 3DP Geo
@@ -1629,9 +1629,9 @@ page,page_group
 /3d-printing/location/dunedin-new-zealand/,Service - 3DP Geo
 /3d-printing/location/durban-south-africa/,Service - 3DP Geo
 /3d-printing/location/durham-nc/,Service - 3DP Geo
-/3d-printing/location/durham-nc/#:~:text=3D%20printing%20materials/,Service - 3DP Geo
-/3d-printing/location/durham-nc/#:~:text=3D%20printing%20processes/,Service - 3DP Geo
-/3d-printing/location/durham-nc/#:~:text=Why%20engineers%20choose%203D%20Hubs%20for%203D%20printing%20in%20Durham/,Service - 3DP Geo
+/3d-printing/location/durham-nc/#:~:text=3d%20printing%20materials/,Service - 3DP Geo
+/3d-printing/location/durham-nc/#:~:text=3d%20printing%20processes/,Service - 3DP Geo
+/3d-printing/location/durham-nc/#:~:text=why%20engineers%20choose%203d%20hubs%20for%203d%20printing%20in%20durham/,Service - 3DP Geo
 /3d-printing/location/dusseldorf-germany/,Service - 3DP Geo
 /3d-printing/location/east-chattanooga-tn/,Service - 3DP Geo
 /3d-printing/location/eastbourne-united-kingdom/,Service - 3DP Geo
@@ -1663,7 +1663,7 @@ page,page_group
 /3d-printing/location/evansville-in/,Service - 3DP Geo
 /3d-printing/location/everett-wa/,Service - 3DP Geo
 /3d-printing/location/exeter-united-kingdom/,Service - 3DP Geo
-/3d-printing/location/f%C3%BCrth-germany/,Service - 3DP Geo
+/3d-printing/location/f%c3%bcrth-germany/,Service - 3DP Geo
 /3d-printing/location/fairbanks-ak/,Service - 3DP Geo
 /3d-printing/location/fairfield-ca/,Service - 3DP Geo
 /3d-printing/location/fargo-nd/,Service - 3DP Geo
@@ -1671,7 +1671,7 @@ page,page_group
 /3d-printing/location/finland/,Service - 3DP Geo
 /3d-printing/location/flint-mi/,Service - 3DP Geo
 /3d-printing/location/florence-italy/,Service - 3DP Geo
-/3d-printing/location/florian%C3%B3polis-brazil/,Service - 3DP Geo
+/3d-printing/location/florian%c3%b3polis-brazil/,Service - 3DP Geo
 /3d-printing/location/florida-fl/,Service - 3DP Geo
 /3d-printing/location/fontana-ca/,Service - 3DP Geo
 /3d-printing/location/fort-collins-co/,Service - 3DP Geo
@@ -1688,7 +1688,7 @@ page,page_group
 /3d-printing/location/friedrichshain-berlin/,Service - 3DP Geo
 /3d-printing/location/frisco-tx/,Service - 3DP Geo
 /3d-printing/location/fullerton-ca/,Service - 3DP Geo
-/3d-printing/location/g%C3%B6ttingen-germany/,Service - 3DP Geo
+/3d-printing/location/g%c3%b6ttingen-germany/,Service - 3DP Geo
 /3d-printing/location/gainesville-fl/,Service - 3DP Geo
 /3d-printing/location/garden-grove-ca/,Service - 3DP Geo
 /3d-printing/location/garland-tx/,Service - 3DP Geo
@@ -1762,12 +1762,12 @@ page,page_group
 /3d-printing/location/honolulu-hi/,Service - 3DP Geo
 /3d-printing/location/hoofddorp-netherlands/,Service - 3DP Geo
 /3d-printing/location/houston-tx/,Service - 3DP Geo
-/3d-printing/location/houston-tx/#:~:text=3D%20printing%20materials/,Service - 3DP Geo
-/3d-printing/location/houston-tx/#:~:text=3D%20printing%20processes/,Service - 3DP Geo
-/3d-printing/location/houston-tx/#:~:text=Explore%203D%20printing%20materials%20in%20Houston/,Service - 3DP Geo
-/3d-printing/location/houston-tx/#:~:text=Other%20technologies%20available%20on%203D%20Hubs/,Service - 3DP Geo
-/3d-printing/location/houston-tx/#:~:text=Upload%20a%20CAD%20file%20to%20get%20a%20free%2C%20instant%203D%20Printing%20quote%20in%20Houston.%20Order%20prototyping%20%26%20production%20prints%20in%20less%20than%202%20minutes.%20Receive%20parts%20in%202%20days./,Service - 3DP Geo
-/3d-printing/location/houston-tx/#:~:text=Why%20engineers%20choose%203D%20Hubs%20for%203D%20printing%20in%20Houston/,Service - 3DP Geo
+/3d-printing/location/houston-tx/#:~:text=3d%20printing%20materials/,Service - 3DP Geo
+/3d-printing/location/houston-tx/#:~:text=3d%20printing%20processes/,Service - 3DP Geo
+/3d-printing/location/houston-tx/#:~:text=explore%203d%20printing%20materials%20in%20houston/,Service - 3DP Geo
+/3d-printing/location/houston-tx/#:~:text=other%20technologies%20available%20on%203d%20hubs/,Service - 3DP Geo
+/3d-printing/location/houston-tx/#:~:text=upload%20a%20cad%20file%20to%20get%20a%20free%2c%20instant%203d%20printing%20quote%20in%20houston.%20order%20prototyping%20%26%20production%20prints%20in%20less%20than%202%20minutes.%20receive%20parts%20in%202%20days./,Service - 3DP Geo
+/3d-printing/location/houston-tx/#:~:text=why%20engineers%20choose%203d%20hubs%20for%203d%20printing%20in%20houston/,Service - 3DP Geo
 /3d-printing/location/huddersfield-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/hull-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/hungary/,Service - 3DP Geo
@@ -1775,7 +1775,7 @@ page,page_group
 /3d-printing/location/huntington-wv/,Service - 3DP Geo
 /3d-printing/location/huntsville-al/,Service - 3DP Geo
 /3d-printing/location/hyderabad-india/,Service - 3DP Geo
-/3d-printing/location/ia%C5%9Fi-romania/,Service - 3DP Geo
+/3d-printing/location/ia%c5%9fi-romania/,Service - 3DP Geo
 /3d-printing/location/iceland/,Service - 3DP Geo
 /3d-printing/location/idaho-id/,Service - 3DP Geo
 /3d-printing/location/illinois-il/,Service - 3DP Geo
@@ -1812,7 +1812,7 @@ page,page_group
 /3d-printing/location/johannesburg-south-africa/,Service - 3DP Geo
 /3d-printing/location/joliet-il/,Service - 3DP Geo
 /3d-printing/location/jordan/,Service - 3DP Geo
-/3d-printing/location/jyv%C3%A4skyl%C3%A4-finland/,Service - 3DP Geo
+/3d-printing/location/jyv%c3%a4skyl%c3%a4-finland/,Service - 3DP Geo
 /3d-printing/location/kampala-uganda/,Service - 3DP Geo
 /3d-printing/location/kansas-city-ks/,Service - 3DP Geo
 /3d-printing/location/kansas-city-mo/,Service - 3DP Geo
@@ -1836,12 +1836,12 @@ page,page_group
 /3d-printing/location/koblenz-germany/,Service - 3DP Geo
 /3d-printing/location/kolkata-india/,Service - 3DP Geo
 /3d-printing/location/kortrijk-belgium/,Service - 3DP Geo
-/3d-printing/location/krak%C3%B3w-poland/,Service - 3DP Geo
+/3d-printing/location/krak%c3%b3w-poland/,Service - 3DP Geo
 /3d-printing/location/krefeld-germany/,Service - 3DP Geo
 /3d-printing/location/kreuzberg-berlin/,Service - 3DP Geo
 /3d-printing/location/kuala-lumpur-malaysia/,Service - 3DP Geo
 /3d-printing/location/kuwait/,Service - 3DP Geo
-/3d-printing/location/l%C3%BCbeck-germany/,Service - 3DP Geo
+/3d-printing/location/l%c3%bcbeck-germany/,Service - 3DP Geo
 /3d-printing/location/la-laguna-spain/,Service - 3DP Geo
 /3d-printing/location/la-plata-argentina/,Service - 3DP Geo
 /3d-printing/location/ladner-canada/,Service - 3DP Geo
@@ -1863,11 +1863,11 @@ page,page_group
 /3d-printing/location/laval-canada/,Service - 3DP Geo
 /3d-printing/location/le-havre-france/,Service - 3DP Geo
 /3d-printing/location/le-mans-france/,Service - 3DP Geo
-/3d-printing/location/le%C3%B3n-spain/,Service - 3DP Geo
+/3d-printing/location/le%c3%b3n-spain/,Service - 3DP Geo
 /3d-printing/location/lebanon/,Service - 3DP Geo
 /3d-printing/location/leeds-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/leeuwarden-netherlands/,Service - 3DP Geo
-/3d-printing/location/legan%C3%A9s-spain/,Service - 3DP Geo
+/3d-printing/location/legan%c3%a9s-spain/,Service - 3DP Geo
 /3d-printing/location/lehigh-valley-pa/,Service - 3DP Geo
 /3d-printing/location/leicester-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/leiden-netherlands/,Service - 3DP Geo
@@ -1875,7 +1875,7 @@ page,page_group
 /3d-printing/location/lethbridge-canada/,Service - 3DP Geo
 /3d-printing/location/leverkusen-germany/,Service - 3DP Geo
 /3d-printing/location/lexington-ky/,Service - 3DP Geo
-/3d-printing/location/li%C3%A8ge-belgium/,Service - 3DP Geo
+/3d-printing/location/li%c3%a8ge-belgium/,Service - 3DP Geo
 /3d-printing/location/liberia/,Service - 3DP Geo
 /3d-printing/location/lima-peru/,Service - 3DP Geo
 /3d-printing/location/limassol-cyprus/,Service - 3DP Geo
@@ -1892,9 +1892,9 @@ page,page_group
 /3d-printing/location/long-beach-ca/,Service - 3DP Geo
 /3d-printing/location/longueuil-canada/,Service - 3DP Geo
 /3d-printing/location/los-angeles-ca/,Service - 3DP Geo
-/3d-printing/location/los-angeles-ca/#:~:text=3D%20printing%20materials/,Service - 3DP Geo
-/3d-printing/location/los-angeles-ca/#:~:text=3D%20printing%20processes/,Service - 3DP Geo
-/3d-printing/location/los-angeles-ca/#:~:text=Why%20engineers%20choose%203D%20Hubs%20for%203D%20printing%20in%20Los%20Angeles/,Service - 3DP Geo
+/3d-printing/location/los-angeles-ca/#:~:text=3d%20printing%20materials/,Service - 3DP Geo
+/3d-printing/location/los-angeles-ca/#:~:text=3d%20printing%20processes/,Service - 3DP Geo
+/3d-printing/location/los-angeles-ca/#:~:text=why%20engineers%20choose%203d%20hubs%20for%203d%20printing%20in%20los%20angeles/,Service - 3DP Geo
 /3d-printing/location/louisiana-la/,Service - 3DP Geo
 /3d-printing/location/louisville-ky/,Service - 3DP Geo
 /3d-printing/location/loveland-co/,Service - 3DP Geo
@@ -1908,8 +1908,8 @@ page,page_group
 /3d-printing/location/luxembourg-luxembourg/,Service - 3DP Geo
 /3d-printing/location/luxembourg/,Service - 3DP Geo
 /3d-printing/location/lyon-france/,Service - 3DP Geo
-/3d-printing/location/m%C3%A1laga-spain/,Service - 3DP Geo
-/3d-printing/location/m%C3%B6nchengladbach-germany/,Service - 3DP Geo
+/3d-printing/location/m%c3%a1laga-spain/,Service - 3DP Geo
+/3d-printing/location/m%c3%b6nchengladbach-germany/,Service - 3DP Geo
 /3d-printing/location/maastricht-netherlands/,Service - 3DP Geo
 /3d-printing/location/macedonia/,Service - 3DP Geo
 /3d-printing/location/mackay-australia/,Service - 3DP Geo
@@ -1920,7 +1920,7 @@ page,page_group
 /3d-printing/location/mainz-germany/,Service - 3DP Geo
 /3d-printing/location/malaysia/,Service - 3DP Geo
 /3d-printing/location/mali/,Service - 3DP Geo
-/3d-printing/location/malm%C3%B6-sweden/,Service - 3DP Geo
+/3d-printing/location/malm%c3%b6-sweden/,Service - 3DP Geo
 /3d-printing/location/manama-bahrain/,Service - 3DP Geo
 /3d-printing/location/manchester-nh/,Service - 3DP Geo
 /3d-printing/location/manchester-united-kingdom/,Service - 3DP Geo
@@ -1937,10 +1937,10 @@ page,page_group
 /3d-printing/location/marseille-france/,Service - 3DP Geo
 /3d-printing/location/maryland-md/,Service - 3DP Geo
 /3d-printing/location/massachusetts-ma/,Service - 3DP Geo
-/3d-printing/location/matar%C3%B3-spain/,Service - 3DP Geo
+/3d-printing/location/matar%c3%b3-spain/,Service - 3DP Geo
 /3d-printing/location/mcallen-tx/,Service - 3DP Geo
 /3d-printing/location/mckinney-tx/,Service - 3DP Geo
-/3d-printing/location/medell%C3%ADn-colombia/,Service - 3DP Geo
+/3d-printing/location/medell%c3%adn-colombia/,Service - 3DP Geo
 /3d-printing/location/medicine-hat-canada/,Service - 3DP Geo
 /3d-printing/location/melbourne-australia/,Service - 3DP Geo
 /3d-printing/location/melbourne-fl/,Service - 3DP Geo
@@ -1991,7 +1991,7 @@ page,page_group
 /3d-printing/location/murrieta-ca/,Service - 3DP Geo
 /3d-printing/location/muscat-oman/,Service - 3DP Geo
 /3d-printing/location/myanmar/,Service - 3DP Geo
-/3d-printing/location/n%C3%BCrnberg-germany/,Service - 3DP Geo
+/3d-printing/location/n%c3%bcrnberg-germany/,Service - 3DP Geo
 /3d-printing/location/nairobi-kenya/,Service - 3DP Geo
 /3d-printing/location/namur-belgium/,Service - 3DP Geo
 /3d-printing/location/nancy-france/,Service - 3DP Geo
@@ -2025,9 +2025,9 @@ page,page_group
 /3d-printing/location/norfolk-va/,Service - 3DP Geo
 /3d-printing/location/norman-ok/,Service - 3DP Geo
 /3d-printing/location/north-carolina-nc/,Service - 3DP Geo
-/3d-printing/location/north-carolina-nc/#:~:text=3D%20printing%20materials/,Service - 3DP Geo
-/3d-printing/location/north-carolina-nc/#:~:text=3D%20printing%20processes/,Service - 3DP Geo
-/3d-printing/location/north-carolina-nc/#:~:text=Why%20engineers%20choose%203D%20Hubs%20for%203D%20printing%20in%20North%20Carolina/,Service - 3DP Geo
+/3d-printing/location/north-carolina-nc/#:~:text=3d%20printing%20materials/,Service - 3DP Geo
+/3d-printing/location/north-carolina-nc/#:~:text=3d%20printing%20processes/,Service - 3DP Geo
+/3d-printing/location/north-carolina-nc/#:~:text=why%20engineers%20choose%203d%20hubs%20for%203d%20printing%20in%20north%20carolina/,Service - 3DP Geo
 /3d-printing/location/north-dakota-nd/,Service - 3DP Geo
 /3d-printing/location/north-shore-new-zealand/,Service - 3DP Geo
 /3d-printing/location/north-york-toronto/,Service - 3DP Geo
@@ -2037,7 +2037,7 @@ page,page_group
 /3d-printing/location/norwich-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/nottingham-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/nou-barris-barcelona/,Service - 3DP Geo
-/3d-printing/location/noum%C3%A9a-new-caledonia/,Service - 3DP Geo
+/3d-printing/location/noum%c3%a9a-new-caledonia/,Service - 3DP Geo
 /3d-printing/location/nova-scotia-canada/,Service - 3DP Geo
 /3d-printing/location/oakland-ca/,Service - 3DP Geo
 /3d-printing/location/oakville-canada/,Service - 3DP Geo
@@ -2054,11 +2054,11 @@ page,page_group
 /3d-printing/location/ontario-ca/,Service - 3DP Geo
 /3d-printing/location/ontario-canada/,Service - 3DP Geo
 /3d-printing/location/orange-county-ca/,Service - 3DP Geo
-/3d-printing/location/orl%C3%A9ans-france/,Service - 3DP Geo
+/3d-printing/location/orl%c3%a9ans-france/,Service - 3DP Geo
 /3d-printing/location/orlando-fl/,Service - 3DP Geo
 /3d-printing/location/oshawa-canada/,Service - 3DP Geo
 /3d-printing/location/oslo-norway/,Service - 3DP Geo
-/3d-printing/location/osnabr%C3%BCck-germany/,Service - 3DP Geo
+/3d-printing/location/osnabr%c3%bcck-germany/,Service - 3DP Geo
 /3d-printing/location/ottawa-canada/,Service - 3DP Geo
 /3d-printing/location/oulu-finland/,Service - 3DP Geo
 /3d-printing/location/ourense-spain/,Service - 3DP Geo
@@ -2066,7 +2066,7 @@ page,page_group
 /3d-printing/location/oviedo-spain/,Service - 3DP Geo
 /3d-printing/location/oxford-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/oxnard-ca/,Service - 3DP Geo
-/3d-printing/location/p%C3%A1tra-greece/,Service - 3DP Geo
+/3d-printing/location/p%c3%a1tra-greece/,Service - 3DP Geo
 /3d-printing/location/paderborn-germany/,Service - 3DP Geo
 /3d-printing/location/padova-italy/,Service - 3DP Geo
 /3d-printing/location/pakistan/,Service - 3DP Geo
@@ -2109,15 +2109,15 @@ page,page_group
 /3d-printing/location/port-of-spain-trinidad-and-tobago/,Service - 3DP Geo
 /3d-printing/location/port-st-lucie-fl/,Service - 3DP Geo
 /3d-printing/location/portland-or/,Service - 3DP Geo
-/3d-printing/location/portland-or/#:~:text=3D%20printing%20materials/,Service - 3DP Geo
-/3d-printing/location/portland-or/#:~:text=3D%20printing%20processes/,Service - 3DP Geo
-/3d-printing/location/portland-or/#:~:text=Why%20engineers%20choose%203D%20Hubs%20for%203D%20printing%20in%20Portland/,Service - 3DP Geo
+/3d-printing/location/portland-or/#:~:text=3d%20printing%20materials/,Service - 3DP Geo
+/3d-printing/location/portland-or/#:~:text=3d%20printing%20processes/,Service - 3DP Geo
+/3d-printing/location/portland-or/#:~:text=why%20engineers%20choose%203d%20hubs%20for%203d%20printing%20in%20portland/,Service - 3DP Geo
 /3d-printing/location/porto-alegre-brazil/,Service - 3DP Geo
 /3d-printing/location/porto-portugal/,Service - 3DP Geo
 /3d-printing/location/portsmouth-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/portugal/,Service - 3DP Geo
 /3d-printing/location/potsdam-germany/,Service - 3DP Geo
-/3d-printing/location/pozna%C5%84-poland/,Service - 3DP Geo
+/3d-printing/location/pozna%c5%84-poland/,Service - 3DP Geo
 /3d-printing/location/prague-czechia/,Service - 3DP Geo
 /3d-printing/location/prenzlauer-berg-berlin/,Service - 3DP Geo
 /3d-printing/location/preston-australia/,Service - 3DP Geo
@@ -2127,10 +2127,10 @@ page,page_group
 /3d-printing/location/provo-ut/,Service - 3DP Geo
 /3d-printing/location/puebla-mexico/,Service - 3DP Geo
 /3d-printing/location/pueblo-co/,Service - 3DP Geo
-/3d-printing/location/pueblo-co/%20Try%202nd%20link%203dhubs'for%20FDM%20Let%20we%20see/,Service - 3DP Geo
+/3d-printing/location/pueblo-co/%20try%202nd%20link%203dhubs'for%20fdm%20let%20we%20see/,Service - 3DP Geo
 /3d-printing/location/puente-de-vallecas-madrid/,Service - 3DP Geo
 /3d-printing/location/puerto-rico/,Service - 3DP Geo
-/3d-printing/location/qu%C3%A9bec-canada/,Service - 3DP Geo
+/3d-printing/location/qu%c3%a9bec-canada/,Service - 3DP Geo
 /3d-printing/location/quebec-city-canada/,Service - 3DP Geo
 /3d-printing/location/queens-new-york-city/,Service - 3DP Geo
 /3d-printing/location/queensland-australia/,Service - 3DP Geo
@@ -2138,9 +2138,9 @@ page,page_group
 /3d-printing/location/quito-ecuador/,Service - 3DP Geo
 /3d-printing/location/rabat-morocco/,Service - 3DP Geo
 /3d-printing/location/raleigh-nc/,Service - 3DP Geo
-/3d-printing/location/raleigh-nc/#:~:text=3D%20printing%20materials/,Service - 3DP Geo
-/3d-printing/location/raleigh-nc/#:~:text=3D%20printing%20processes/,Service - 3DP Geo
-/3d-printing/location/raleigh-nc/#:~:text=Why%20engineers%20choose%203D%20Hubs%20for%203D%20printing%20in%20Raleigh/,Service - 3DP Geo
+/3d-printing/location/raleigh-nc/#:~:text=3d%20printing%20materials/,Service - 3DP Geo
+/3d-printing/location/raleigh-nc/#:~:text=3d%20printing%20processes/,Service - 3DP Geo
+/3d-printing/location/raleigh-nc/#:~:text=why%20engineers%20choose%203d%20hubs%20for%203d%20printing%20in%20raleigh/,Service - 3DP Geo
 /3d-printing/location/rancho-cucamonga-ca/,Service - 3DP Geo
 /3d-printing/location/rapid-city-sd/,Service - 3DP Geo
 /3d-printing/location/reading-united-kingdom/,Service - 3DP Geo
@@ -2153,7 +2153,7 @@ page,page_group
 /3d-printing/location/reno-nv/,Service - 3DP Geo
 /3d-printing/location/reus-spain/,Service - 3DP Geo
 /3d-printing/location/reutlingen-germany/,Service - 3DP Geo
-/3d-printing/location/reykjav%C3%ADk-iceland/,Service - 3DP Geo
+/3d-printing/location/reykjav%c3%adk-iceland/,Service - 3DP Geo
 /3d-printing/location/rhode-island-ri/,Service - 3DP Geo
 /3d-printing/location/richmond-ca/,Service - 3DP Geo
 /3d-printing/location/richmond-canada/,Service - 3DP Geo
@@ -2179,13 +2179,13 @@ page,page_group
 /3d-printing/location/round-rock-tx/,Service - 3DP Geo
 /3d-printing/location/russia/,Service - 3DP Geo
 /3d-printing/location/rwanda/,Service - 3DP Geo
-/3d-printing/location/s%C3%A3o-paulo-brazil/,Service - 3DP Geo
-/3d-printing/location/s%C3%B6dermalm-stockholm/,Service - 3DP Geo
+/3d-printing/location/s%c3%a3o-paulo-brazil/,Service - 3DP Geo
+/3d-printing/location/s%c3%b6dermalm-stockholm/,Service - 3DP Geo
 /3d-printing/location/saanich-canada/,Service - 3DP Geo
 /3d-printing/location/sabadell-spain/,Service - 3DP Geo
 /3d-printing/location/sacramento-ca/,Service - 3DP Geo
 /3d-printing/location/saguenay-canada/,Service - 3DP Geo
-/3d-printing/location/saint-%C3%A9tienne-france/,Service - 3DP Geo
+/3d-printing/location/saint-%c3%a9tienne-france/,Service - 3DP Geo
 /3d-printing/location/saint-paul-mn/,Service - 3DP Geo
 /3d-printing/location/saint-petersburg-russia/,Service - 3DP Geo
 /3d-printing/location/saint-quentin-en-yvelines-france/,Service - 3DP Geo
@@ -2200,11 +2200,11 @@ page,page_group
 /3d-printing/location/san-bernardino-ca/,Service - 3DP Geo
 /3d-printing/location/san-diego-ca/,Service - 3DP Geo
 /3d-printing/location/san-francisco-ca/,Service - 3DP Geo
-/3d-printing/location/san-jos%C3%A9-costa-rica/,Service - 3DP Geo
+/3d-printing/location/san-jos%c3%a9-costa-rica/,Service - 3DP Geo
 /3d-printing/location/san-jose-ca/,Service - 3DP Geo
 /3d-printing/location/san-juan-argentina/,Service - 3DP Geo
 /3d-printing/location/san-luis-obispo-ca/,Service - 3DP Geo
-/3d-printing/location/san-luis-potos%C3%AD-mexico/,Service - 3DP Geo
+/3d-printing/location/san-luis-potos%c3%ad-mexico/,Service - 3DP Geo
 /3d-printing/location/san-salvador-el-salvador/,Service - 3DP Geo
 /3d-printing/location/san-sebasti%c3%a1n-spain/,Service - 3DP Geo
 /3d-printing/location/sant-andreu-de-palomar-barcelona/,Service - 3DP Geo
@@ -2216,20 +2216,20 @@ page,page_group
 /3d-printing/location/santa-monica-ca/,Service - 3DP Geo
 /3d-printing/location/santa-rosa-ca/,Service - 3DP Geo
 /3d-printing/location/santiago-chile/,Service - 3DP Geo
-/3d-printing/location/santiago-de-quer%C3%A9taro-mexico/,Service - 3DP Geo
+/3d-printing/location/santiago-de-quer%c3%a9taro-mexico/,Service - 3DP Geo
 /3d-printing/location/sants-montju%c3%afc-barcelona/,Service - 3DP Geo
 /3d-printing/location/saskatchewan-canada/,Service - 3DP Geo
 /3d-printing/location/saskatoon-canada/,Service - 3DP Geo
 /3d-printing/location/saudi-arabia/,Service - 3DP Geo
 /3d-printing/location/savannah-ga/,Service - 3DP Geo
 /3d-printing/location/scarborough-canada/,Service - 3DP Geo
-/3d-printing/location/sch%C3%B6neberg-berlin/,Service - 3DP Geo
+/3d-printing/location/sch%c3%b6neberg-berlin/,Service - 3DP Geo
 /3d-printing/location/scottsdale-az/,Service - 3DP Geo
 /3d-printing/location/seattle-wa/,Service - 3DP Geo
 /3d-printing/location/senegal/,Service - 3DP Geo
 /3d-printing/location/seoul-south-korea/,Service - 3DP Geo
 /3d-printing/location/serbia/,Service - 3DP Geo
-/3d-printing/location/set%C3%BAbal-portugal/,Service - 3DP Geo
+/3d-printing/location/set%c3%babal-portugal/,Service - 3DP Geo
 /3d-printing/location/sevilla-spain/,Service - 3DP Geo
 /3d-printing/location/shanghai-china/,Service - 3DP Geo
 /3d-printing/location/sheffield-united-kingdom/,Service - 3DP Geo
@@ -2320,7 +2320,7 @@ page,page_group
 /3d-printing/location/thunder-bay-canada/,Service - 3DP Geo
 /3d-printing/location/tiel-netherlands/,Service - 3DP Geo
 /3d-printing/location/tilburg-netherlands/,Service - 3DP Geo
-/3d-printing/location/timi%C5%9Foara-romania/,Service - 3DP Geo
+/3d-printing/location/timi%c5%9foara-romania/,Service - 3DP Geo
 /3d-printing/location/tirana-albania/,Service - 3DP Geo
 /3d-printing/location/tokyo-japan/,Service - 3DP Geo
 /3d-printing/location/toledo-oh/,Service - 3DP Geo
@@ -2353,7 +2353,7 @@ page,page_group
 /3d-printing/location/uruguay/,Service - 3DP Geo
 /3d-printing/location/utah-ut/,Service - 3DP Geo
 /3d-printing/location/utrecht-netherlands/,Service - 3DP Geo
-/3d-printing/location/v%C3%A4ster%C3%A5s-sweden/,Service - 3DP Geo
+/3d-printing/location/v%c3%a4ster%c3%a5s-sweden/,Service - 3DP Geo
 /3d-printing/location/valencia-spain/,Service - 3DP Geo
 /3d-printing/location/valladolid-spain/,Service - 3DP Geo
 /3d-printing/location/vallejo-ca/,Service - 3DP Geo
@@ -2378,7 +2378,7 @@ page,page_group
 /3d-printing/location/virginia-beach-va/,Service - 3DP Geo
 /3d-printing/location/virginia-va/,Service - 3DP Geo
 /3d-printing/location/visalia-ca/,Service - 3DP Geo
-/3d-printing/location/w%C3%BCrzburg-germany/,Service - 3DP Geo
+/3d-printing/location/w%c3%bcrzburg-germany/,Service - 3DP Geo
 /3d-printing/location/waco-tx/,Service - 3DP Geo
 /3d-printing/location/wagga-wagga-australia/,Service - 3DP Geo
 /3d-printing/location/waitakere-new-zealand/,Service - 3DP Geo
@@ -2417,7 +2417,7 @@ page,page_group
 /3d-printing/location/wolverhampton-united-kingdom/,Service - 3DP Geo
 /3d-printing/location/worcester-ma/,Service - 3DP Geo
 /3d-printing/location/worcester-united-kingdom/,Service - 3DP Geo
-/3d-printing/location/wroc%C5%82aw-poland/,Service - 3DP Geo
+/3d-printing/location/wroc%c5%82aw-poland/,Service - 3DP Geo
 /3d-printing/location/wuerzburg-germany/,Service - 3DP Geo
 /3d-printing/location/wuppertal-germany/,Service - 3DP Geo
 /3d-printing/location/wyoming-wy/,Service - 3DP Geo
@@ -2481,18 +2481,18 @@ page,page_group
 /3d-printing/massachusetts/worcester/,Service - 3DP Geo
 /3d-printing/metal/,Materials - 3DP
 /3d-printing/metal/aluminum/,Materials - 3DP
-/3d-printing/metal/aluminum/#:~:text=Characteristics/,Materials - 3DP
-/3d-printing/metal/aluminum/#:~:text=Description/,Materials - 3DP
-/3d-printing/metal/aluminum/#:~:text=DMLS%20Aluminum%20Materials/,Materials - 3DP
+/3d-printing/metal/aluminum/#:~:text=characteristics/,Materials - 3DP
+/3d-printing/metal/aluminum/#:~:text=description/,Materials - 3DP
+/3d-printing/metal/aluminum/#:~:text=dmls%20aluminum%20materials/,Materials - 3DP
 /3d-printing/metal/cobalt-chrome/,Materials - 3DP
 /3d-printing/metal/cobalt-chrome/?__hstc=194886834.2d3fcf2f99a265337744294b740e0787.1570406400055.1570406400056.1570406400057.1&__hssc=194886834.1.1570406400058&__hsfp=1817143912/,Materials - 3DP
 /3d-printing/metal/nickel-alloy/,Materials - 3DP
 /3d-printing/metal/nickel-alloy/?__hstc=194886834.2d3fcf2f99a265337744294b740e0787.1579046400061.1579046400062.1579046400063.1&__hssc=194886834.1.1579046400064&__hsfp=2060552874/,Materials - 3DP
 /3d-printing/metal/stainless-steel/,Materials - 3DP
-/3d-printing/metal/stainless-steel/#:~:text=Characteristics/,Materials - 3DP
-/3d-printing/metal/stainless-steel/#:~:text=Description/,Materials - 3DP
-/3d-printing/metal/stainless-steel/#:~:text=DMLS%20Stainless%20steel%20Materials/,Materials - 3DP
-/3d-printing/metal/stainless-steel/#:~:text=Stainless%20steel%20316/,Materials - 3DP
+/3d-printing/metal/stainless-steel/#:~:text=characteristics/,Materials - 3DP
+/3d-printing/metal/stainless-steel/#:~:text=description/,Materials - 3DP
+/3d-printing/metal/stainless-steel/#:~:text=dmls%20stainless%20steel%20materials/,Materials - 3DP
+/3d-printing/metal/stainless-steel/#:~:text=stainless%20steel%20316/,Materials - 3DP
 /3d-printing/metal/titanium/,Materials - 3DP
 /3d-printing/mexico/,Service - 3DP Geo
 /3d-printing/michigan/,Service - 3DP Geo
@@ -2708,9 +2708,9 @@ page,page_group
 /3d-printing/plastic/abs/absplus-stratasys/,Materials - 3DP
 /3d-printing/plastic/asa/,Materials - 3DP
 /3d-printing/plastic/nylon/,Materials - 3DP
-/3d-printing/plastic/nylon/#:~:text=FDM%20Nylon%20Materials/,Materials - 3DP
-/3d-printing/plastic/nylon/#:~:text=MJF%20Nylon%20Materials/,Materials - 3DP
-/3d-printing/plastic/nylon/#:~:text=SLS%20Nylon%20Materials/,Materials - 3DP
+/3d-printing/plastic/nylon/#:~:text=fdm%20nylon%20materials/,Materials - 3DP
+/3d-printing/plastic/nylon/#:~:text=mjf%20nylon%20materials/,Materials - 3DP
+/3d-printing/plastic/nylon/#:~:text=sls%20nylon%20materials/,Materials - 3DP
 /3d-printing/plastic/nylon/glass-filled-hp-pa-12/,Materials - 3DP
 /3d-printing/plastic/nylon/glass-filled-nylon/,Materials - 3DP
 /3d-printing/plastic/nylon/hp-pa-12/,Materials - 3DP
@@ -2723,9 +2723,9 @@ page,page_group
 /3d-printing/plastic/pei/ultem-9085/,Materials - 3DP
 /3d-printing/plastic/petg/,Materials - 3DP
 /3d-printing/plastic/pla/,Materials - 3DP
-/3d-printing/plastic/pla/#:~:text=Characteristics/,Materials - 3DP
-/3d-printing/plastic/pla/#:~:text=Description/,Materials - 3DP
-/3d-printing/plastic/pla/#:~:text=FDM%20PLA%20Materials/,Materials - 3DP
+/3d-printing/plastic/pla/#:~:text=characteristics/,Materials - 3DP
+/3d-printing/plastic/pla/#:~:text=description/,Materials - 3DP
+/3d-printing/plastic/pla/#:~:text=fdm%20pla%20materials/,Materials - 3DP
 /3d-printing/plastic/resin/,Materials - 3DP
 /3d-printing/plastic/resin/accura-25/,Materials - 3DP
 /3d-printing/plastic/resin/accura-60/,Materials - 3DP
@@ -2740,7 +2740,7 @@ page,page_group
 /3d-printing/plastic/resin/formlabs-tough-resin/,Materials - 3DP
 /3d-printing/plastic/resin/vero-stratasys/,Materials - 3DP
 /3d-printing/plastic/tpu/,Materials - 3DP
-/3d-printing/plastic/tpu/#:~:text=Prototyping%20TPU/,Materials - 3DP
+/3d-printing/plastic/tpu/#:~:text=prototyping%20tpu/,Materials - 3DP
 /3d-printing/portugal/,Service - 3DP Geo
 /3d-printing/portugal/aveiro/,Service - 3DP Geo
 /3d-printing/portugal/braga/,Service - 3DP Geo
@@ -2755,9 +2755,9 @@ page,page_group
 /3d-printing/processes/mjf/,Service - 3DP
 /3d-printing/processes/polyjet/,Service - 3DP
 /3d-printing/processes/sla-dlp/,Service - 3DP
-/3d-printing/processes/sla-dlp/#:~:text=Available%20materials%20for%20SLA/,Service - 3DP
-/3d-printing/processes/sla-dlp/#:~:text=Design%20guidelines%20for%20SLA/,Service - 3DP
-/3d-printing/processes/sla-dlp/#:~:text=Upload%20your%20CAD%20files%2C%20receive%20an%20instant%20SLA%203D%20printing%20quote%20and%20get%20your%20parts%20into%20production%20in%20less%20than%205%20minutes./,Service - 3DP
+/3d-printing/processes/sla-dlp/#:~:text=available%20materials%20for%20sla/,Service - 3DP
+/3d-printing/processes/sla-dlp/#:~:text=design%20guidelines%20for%20sla/,Service - 3DP
+/3d-printing/processes/sla-dlp/#:~:text=upload%20your%20cad%20files%2c%20receive%20an%20instant%20sla%203d%20printing%20quote%20and%20get%20your%20parts%20into%20production%20in%20less%20than%205%20minutes./,Service - 3DP
 /3d-printing/processes/sls/,Service - 3DP
 /3d-printing/properties/,Materials - 3DP
 /3d-printing/properties/bio-compatible/,Materials - 3DP
@@ -2765,9 +2765,9 @@ page,page_group
 /3d-printing/properties/chemical-resistant/,Materials - 3DP
 /3d-printing/properties/esd-safe/,Materials - 3DP
 /3d-printing/properties/fiber-reinforced/,Materials - 3DP
-/3d-printing/properties/fiber-reinforced/#:~:text=FDM%20Fiber%20reinforced%20Materials/,Materials - 3DP
-/3d-printing/properties/fiber-reinforced/#:~:text=MJF%20Fiber%20reinforced%20Materials/,Materials - 3DP
-/3d-printing/properties/fiber-reinforced/#:~:text=SLS%20Fiber%20reinforced%20Materials/,Materials - 3DP
+/3d-printing/properties/fiber-reinforced/#:~:text=fdm%20fiber%20reinforced%20materials/,Materials - 3DP
+/3d-printing/properties/fiber-reinforced/#:~:text=mjf%20fiber%20reinforced%20materials/,Materials - 3DP
+/3d-printing/properties/fiber-reinforced/#:~:text=sls%20fiber%20reinforced%20materials/,Materials - 3DP
 /3d-printing/properties/flame-retardant/,Materials - 3DP
 /3d-printing/properties/food-safe/,Materials - 3DP
 /3d-printing/properties/full-color/,Materials - 3DP
@@ -2778,7 +2778,7 @@ page,page_group
 /3d-printing/properties/high-strength/,Materials - 3DP
 /3d-printing/properties/impact-resistant/,Materials - 3DP
 /3d-printing/properties/rubber-like/,Materials - 3DP
-/3d-printing/properties/rubber-like/#:~:text=FDM%20Rubber%2Dlike%20Materials/,Materials - 3DP
+/3d-printing/properties/rubber-like/#:~:text=fdm%20rubber%2dlike%20materials/,Materials - 3DP
 /3d-printing/properties/smooth-surface/,Materials - 3DP
 /3d-printing/properties/transparent/,Materials - 3DP
 /3d-printing/rhode-island/,Service - 3DP Geo
@@ -3026,64 +3026,64 @@ page,page_group
 /3d-printing/wisconsin/waukesha/,Service - 3DP Geo
 /3d-printing/wisconsin/wausau/,Service - 3DP Geo
 /3d-printing/wyoming/,Service - 3DP Geo
-/3d-printing%C2%A0/,Service - 3DP
+/3d-printing%c2%a0/,Service - 3DP
 /3dp-poster/,Knowledge Base - 3DP
 /3dprint/,Service - 3DP
-/3dprint/Aachen--Germany/,Service - 3DP Geo
-/3dprint/Albany--OR/,Service - 3DP Geo
-/3dprint/Australia/,Service - 3DP Geo
-/3dprint/Bangalore--India/,Service - 3DP Geo
-/3dprint/Barcelona--Spain/,Service - 3DP Geo
-/3dprint/Belfast--United-Kingdom/,Service - 3DP Geo
-/3dprint/Boston--MA/,Service - 3DP Geo
-/3dprint/Brisbane--Australia/,Service - 3DP Geo
-/3dprint/Brussels--Belgium/,Service - 3DP Geo
-/3dprint/Bundaberg--Australia/,Service - 3DP Geo
-/3dprint/Cambridge--MA/,Service - 3DP Geo
-/3dprint/Canada/,Service - 3DP Geo
-/3dprint/Cardiff--United-Kingdom/,Service - 3DP Geo
+/3dprint/aachen--germany/,Service - 3DP Geo
+/3dprint/albany--or/,Service - 3DP Geo
+/3dprint/australia/,Service - 3DP Geo
+/3dprint/bangalore--india/,Service - 3DP Geo
+/3dprint/barcelona--spain/,Service - 3DP Geo
+/3dprint/belfast--united-kingdom/,Service - 3DP Geo
+/3dprint/boston--ma/,Service - 3DP Geo
+/3dprint/brisbane--australia/,Service - 3DP Geo
+/3dprint/brussels--belgium/,Service - 3DP Geo
+/3dprint/bundaberg--australia/,Service - 3DP Geo
+/3dprint/cambridge--ma/,Service - 3DP Geo
+/3dprint/canada/,Service - 3DP Geo
+/3dprint/cardiff--united-kingdom/,Service - 3DP Geo
 /3dprint/checkout/,Service - 3DP Geo
-/3dprint/Copenhagen--Denmark/,Service - 3DP Geo
-/3dprint/Costa-Rica/,Service - 3DP Geo
-/3dprint/Dallas--TX/,Service - 3DP Geo
-/3dprint/Dubai--United-Arab-Emirates/,Service - 3DP Geo
-/3dprint/Edmonton--Canada/,Service - 3DP Geo
-/3dprint/France/,Service - 3DP Geo
-/3dprint/Germany/,Service - 3DP Geo
-/3dprint/Gujarat--India/,Service - 3DP Geo
-/3dprint/Hamburg--Germany/,Service - 3DP Geo
-/3dprint/India/,Service - 3DP Geo
-/3dprint/Kingston--Canada/,Service - 3DP Geo
-/3dprint/London--United-Kingdom/,Service - 3DP Geo
-/3dprint/Madrid--Spain/,Service - 3DP Geo
-/3dprint/Melbourne--Australia/,Service - 3DP Geo
-/3dprint/New-Delhi--India/,Service - 3DP Geo
-/3dprint/New-York-City--NY/,Service - 3DP Geo
-/3dprint/New-Zealand/,Service - 3DP Geo
-/3dprint/Newcastle--Australia/,Service - 3DP Geo
-/3dprint/Nigeria/,Service - 3DP Geo
-/3dprint/Ottawa--Canada/,Service - 3DP Geo
-/3dprint/Perth--Australia/,Service - 3DP Geo
-/3dprint/Portland--OR/,Service - 3DP Geo
-/3dprint/Puerto-Rico/,Service - 3DP Geo
-/3dprint/Rotterdam--Netherlands/,Service - 3DP Geo
-/3dprint/Sacramento--CA/,Service - 3DP Geo
-/3dprint/San-Francisco--CA/,Service - 3DP Geo
-/3dprint/Shanghai--China/,Service - 3DP Geo
-/3dprint/Skopje--Macedonia/,Service - 3DP Geo
-/3dprint/Stavanger--Norway/,Service - 3DP Geo
-/3dprint/Stockholm--Sweden/,Service - 3DP Geo
-/3dprint/Toronto--Canada/,Service - 3DP Geo
-/3dprint/Torrance--CA/,Service - 3DP Geo
-/3dprint/United-Kingdom/,Service - 3DP Geo
-/3dprint%20(3D%20Printing%20Trends%20Q3/2017)/,Knowledge Base - 3DP
+/3dprint/copenhagen--denmark/,Service - 3DP Geo
+/3dprint/costa-rica/,Service - 3DP Geo
+/3dprint/dallas--tx/,Service - 3DP Geo
+/3dprint/dubai--united-arab-emirates/,Service - 3DP Geo
+/3dprint/edmonton--canada/,Service - 3DP Geo
+/3dprint/france/,Service - 3DP Geo
+/3dprint/germany/,Service - 3DP Geo
+/3dprint/gujarat--india/,Service - 3DP Geo
+/3dprint/hamburg--germany/,Service - 3DP Geo
+/3dprint/india/,Service - 3DP Geo
+/3dprint/kingston--canada/,Service - 3DP Geo
+/3dprint/london--united-kingdom/,Service - 3DP Geo
+/3dprint/madrid--spain/,Service - 3DP Geo
+/3dprint/melbourne--australia/,Service - 3DP Geo
+/3dprint/new-delhi--india/,Service - 3DP Geo
+/3dprint/new-york-city--ny/,Service - 3DP Geo
+/3dprint/new-zealand/,Service - 3DP Geo
+/3dprint/newcastle--australia/,Service - 3DP Geo
+/3dprint/nigeria/,Service - 3DP Geo
+/3dprint/ottawa--canada/,Service - 3DP Geo
+/3dprint/perth--australia/,Service - 3DP Geo
+/3dprint/portland--or/,Service - 3DP Geo
+/3dprint/puerto-rico/,Service - 3DP Geo
+/3dprint/rotterdam--netherlands/,Service - 3DP Geo
+/3dprint/sacramento--ca/,Service - 3DP Geo
+/3dprint/san-francisco--ca/,Service - 3DP Geo
+/3dprint/shanghai--china/,Service - 3DP Geo
+/3dprint/skopje--macedonia/,Service - 3DP Geo
+/3dprint/stavanger--norway/,Service - 3DP Geo
+/3dprint/stockholm--sweden/,Service - 3DP Geo
+/3dprint/toronto--canada/,Service - 3DP Geo
+/3dprint/torrance--ca/,Service - 3DP Geo
+/3dprint/united-kingdom/,Service - 3DP Geo
+/3dprint%20(3d%20printing%20trends%20q3/2017)/,Knowledge Base - 3DP
 /about/,About
-/about/#:~:text=3D%20Hubs%20Founded/,About
-/about/#:~:text=3D%20Printing%20Handbook%20Published/,About
-/about/#:~:text=On%20the%203D%20Hubs%20platform%2C%20engineers%20can%20easily%20upload%20their%20design%2C%20instantly%20receive%20a%20quote%2C%20and%20start%20production%20at%20the%20click%20of%20a%20button/,About
-/about/#:~:text=Our%20customers/,About
-/about/#:~:text=Our%20network/,About
-/about/#:~:text=Our%20platform/,About
+/about/#:~:text=3d%20hubs%20founded/,About
+/about/#:~:text=3d%20printing%20handbook%20published/,About
+/about/#:~:text=on%20the%203d%20hubs%20platform%2c%20engineers%20can%20easily%20upload%20their%20design%2c%20instantly%20receive%20a%20quote%2c%20and%20start%20production%20at%20the%20click%20of%20a%20button/,About
+/about/#:~:text=our%20customers/,About
+/about/#:~:text=our%20network/,About
+/about/#:~:text=our%20platform/,About
 /abuja/,Service - 3DP Geo
 /algeciras/hubs/gibprint/,Service - 3DP Geo
 /amsterdam/hubs/wdengineering/,Service - 3DP Geo
@@ -3104,15 +3104,15 @@ page,page_group
 /baku/,Service - 3DP Geo
 /bari/hubs/rf-design/,Service - 3DP Geo
 /become-a-manufacturing-partner/,Other
-/become-a-manufacturing-partner/#:~:text=Requirements/,Other
-/become-a-manufacturing-partner/#:~:text=What%20is%20a%20Manufacturing%20Partner%3F/,Other
+/become-a-manufacturing-partner/#:~:text=requirements/,Other
+/become-a-manufacturing-partner/#:~:text=what%20is%20a%20manufacturing%20partner%3f/,Other
 /berlin/hubs/customx/,Service - 3DP Geo
-/best-3D-printer-guide/,Knowledge Base - 3DP
-/best-3d-printer-guide/#:~:text=Choosing%20the%20right%203D%20printer%20for%20your%20business/,Knowledge Base - 3DP
-/best-3d-printer-guide/#:~:text=Combine%20this%20with%20the/,Knowledge Base - 3DP
-/best-3d-printer-guide/#:~:text=Should%20you%20buy%20a%203D%20printer%3F/,Knowledge Base - 3DP
-/best-3d-printer-guide/#:~:text=What%20is%203D%20printing%3F/,Knowledge Base - 3DP
-/best-3d-printer-guide/#:~:text=With%20a%20massive%20build/,Knowledge Base - 3DP
+/best-3d-printer-guide/,Knowledge Base - 3DP
+/best-3d-printer-guide/#:~:text=choosing%20the%20right%203d%20printer%20for%20your%20business/,Knowledge Base - 3DP
+/best-3d-printer-guide/#:~:text=combine%20this%20with%20the/,Knowledge Base - 3DP
+/best-3d-printer-guide/#:~:text=should%20you%20buy%20a%203d%20printer%3f/,Knowledge Base - 3DP
+/best-3d-printer-guide/#:~:text=what%20is%203d%20printing%3f/,Knowledge Base - 3DP
+/best-3d-printer-guide/#:~:text=with%20a%20massive%20build/,Knowledge Base - 3DP
 /best-3d-printer-guide/2015/,Knowledge Base - 3DP
 /best-3d-printer-guide/2016/,Knowledge Base - 3DP
 /best-3d-printer-guide/2017/,Knowledge Base - 3DP
@@ -3139,9 +3139,9 @@ page,page_group
 /blog/3d-hubs-places-eighth-in-deloitte-technology-fast-50/,Blog
 /blog/3d-hubs-presents-the-online-engineering-summit/,Blog
 /blog/3d-hubs-protolabs-join-forces/,Blog
-/blog/3d-hubs-protolabs-join-forces/#:~:text=A%20note%20from%20the%20founders/,Blog
-/blog/3d-hubs-protolabs-join-forces/#:~:text=The%20largest%20transaction%20ever%20in%20digital%20manufacturing/,Blog
-/blog/3d-hubs-protolabs-join-forces/#:~:text=Why%20did%203D%20Hubs%20get%20acquired%20by%20Protolabs%3F/,Blog
+/blog/3d-hubs-protolabs-join-forces/#:~:text=a%20note%20from%20the%20founders/,Blog
+/blog/3d-hubs-protolabs-join-forces/#:~:text=the%20largest%20transaction%20ever%20in%20digital%20manufacturing/,Blog
+/blog/3d-hubs-protolabs-join-forces/#:~:text=why%20did%203d%20hubs%20get%20acquired%20by%20protolabs%3f/,Blog
 /blog/3d-hubs-raises-4-5m-to-bring-local-3d-printing-to-your-doorstep/,Blog
 /blog/3d-hubs-raises-7m-in-series-b-round-to-expand-global-3d-printing-marketplace/,Blog
 /blog/3d-hubs-rapid-tooling/,Knowledge Base - 3DP
@@ -3181,8 +3181,8 @@ page,page_group
 /blog/cad-modeling-1-enclosures/,Knowledge Base - 3DP
 /blog/cad-modeling-2-living-hinges/,Knowledge Base - 3DP
 /blog/cad-modeling-3-snap-fits/,Knowledge Base - 3DP
-/blog/cad-modeling-3-snap-fits/#:~:text=Diagram%20of%202%20part%20snap-fit%20joint./,Knowledge Base - 3DP
-/blog/cad-modeling-3-snap-fits/#:~:text=Section%20view%20of%20the%20completed%20snap%20fit%20features./,Knowledge Base - 3DP
+/blog/cad-modeling-3-snap-fits/#:~:text=diagram%20of%202%20part%20snap-fit%20joint./,Knowledge Base - 3DP
+/blog/cad-modeling-3-snap-fits/#:~:text=section%20view%20of%20the%20completed%20snap%20fit%20features./,Knowledge Base - 3DP
 /blog/cad-modeling-4-jigs-fixtures/,Knowledge Base - 3DP
 /blog/chinese-new-year-global-production-capacity/,Blog
 /blog/cnc-machined-parts-for-aerospace/,Blog
@@ -3212,8 +3212,8 @@ page,page_group
 /blog/german-launch/,Blog
 /blog/gravity-industries-at-the-online-engineering-summit/,Blog
 /blog/high-precision-cnc-machining-formula-sae-race-car/,Blog
-/blog/high-precision-cnc-machining-formula-sae-race-car/#:~:text=Formula%20SAE%20is%20an%20annual%20engineering%20student%20competition%20taking%20place/,Blog
-/blog/high-precision-cnc-machining-formula-sae-race-car/#:~:text=The%20engineers%20of%20SUFST%20are%20currently%20working%20on%20finalizing%20the/,Blog
+/blog/high-precision-cnc-machining-formula-sae-race-car/#:~:text=formula%20sae%20is%20an%20annual%20engineering%20student%20competition%20taking%20place/,Blog
+/blog/high-precision-cnc-machining-formula-sae-race-car/#:~:text=the%20engineers%20of%20sufst%20are%20currently%20working%20on%20finalizing%20the/,Blog
 /blog/how-3d-printing-is-creating-lifelike-newborns-with-functioning-organs-to-help-doctors-save-lives/,Blog
 /blog/how-artificial-intelligence-is-helping-us-build-the-future-of-digital-manufacturing/,Blog
 /blog/how-its-made-cake-kalk-electric-motorbike/,Blog
@@ -3306,13 +3306,13 @@ page,page_group
 /clippings/33268-here-are-the-3d-hubs-student-grant-2017-award-winners-all3dp/,Blog
 /cnc-frezen-draaien/,Service - CNC
 /cnc-machining/,Service - CNC
-/cnc-machining/#:~:text=Custom%20CNC%20machined%20parts%20made%20with%203D%20Hubs/,Service - CNC
-/cnc-machining/#:~:text=How%20much%20does%20your%20CNC%20machining%20service%20cost%3F/,Service - CNC
-/cnc-machining/#:~:text=How%20we%20ensure%20high%20quality%20machined%20parts/,Service - CNC
-/cnc-machining/#:~:text=Online%20order%20management/,Service - CNC
-/cnc-machining/#:~:text=Our%20distributed%20network%20of/,Service - CNC
-/cnc-machining/#:~:text=Our%20online%20CNC%20machining%20services/,Service - CNC
-/cnc-machining/#:~:text=Standard%20tolerances%20for%20CNC%20machining/,Service - CNC
+/cnc-machining/#:~:text=custom%20cnc%20machined%20parts%20made%20with%203d%20hubs/,Service - CNC
+/cnc-machining/#:~:text=how%20much%20does%20your%20cnc%20machining%20service%20cost%3f/,Service - CNC
+/cnc-machining/#:~:text=how%20we%20ensure%20high%20quality%20machined%20parts/,Service - CNC
+/cnc-machining/#:~:text=online%20order%20management/,Service - CNC
+/cnc-machining/#:~:text=our%20distributed%20network%20of/,Service - CNC
+/cnc-machining/#:~:text=our%20online%20cnc%20machining%20services/,Service - CNC
+/cnc-machining/#:~:text=standard%20tolerances%20for%20cnc%20machining/,Service - CNC
 /cnc-machining/5-axis-milling/,Service - CNC
 /cnc-machining/alabama/huntsville/,Service - CNC Geo
 /cnc-machining/california/los-angeles/,Service - CNC Geo
@@ -3407,7 +3407,7 @@ page,page_group
 /cnc-machining/location/birmingham-united-kingdom/,Service - CNC Geo
 /cnc-machining/location/blackburn-united-kingdom/,Service - CNC Geo
 /cnc-machining/location/blackpool-united-kingdom/,Service - CNC Geo
-/cnc-machining/location/bogot%C3%A1-colombia/,Service - CNC Geo
+/cnc-machining/location/bogot%c3%a1-colombia/,Service - CNC Geo
 /cnc-machining/location/bolivia/,Service - CNC Geo
 /cnc-machining/location/bologna-italy/,Service - CNC Geo
 /cnc-machining/location/bonn-germany/,Service - CNC Geo
@@ -3488,7 +3488,7 @@ page,page_group
 /cnc-machining/location/coventry-united-kingdom/,Service - CNC Geo
 /cnc-machining/location/crawley-united-kingdom/,Service - CNC Geo
 /cnc-machining/location/croydon-united-kingdom/,Service - CNC Geo
-/cnc-machining/location/d%C3%BAn-laoghaire-ireland/,Service - CNC Geo
+/cnc-machining/location/d%c3%ban-laoghaire-ireland/,Service - CNC Geo
 /cnc-machining/location/dallas-tx/,Service - CNC Geo
 /cnc-machining/location/dar-es-salaam-tanzania/,Service - CNC Geo
 /cnc-machining/location/darmstadt-germany/,Service - CNC Geo
@@ -3595,7 +3595,7 @@ page,page_group
 /cnc-machining/location/hull-united-kingdom/,Service - CNC Geo
 /cnc-machining/location/huntington-beach-ca/,Service - CNC Geo
 /cnc-machining/location/huntsville-al/,Service - CNC Geo
-/cnc-machining/location/ia%C5%9Fi-romania/,Service - CNC Geo
+/cnc-machining/location/ia%c5%9fi-romania/,Service - CNC Geo
 /cnc-machining/location/iceland/,Service - CNC Geo
 /cnc-machining/location/illinois-il/,Service - CNC Geo
 /cnc-machining/location/india/,Service - CNC Geo
@@ -3632,7 +3632,7 @@ page,page_group
 /cnc-machining/location/kingston-canada/,Service - CNC Geo
 /cnc-machining/location/kitchener-canada/,Service - CNC Geo
 /cnc-machining/location/knoxville-tn/,Service - CNC Geo
-/cnc-machining/location/krak%C3%B3w-poland/,Service - CNC Geo
+/cnc-machining/location/krak%c3%b3w-poland/,Service - CNC Geo
 /cnc-machining/location/krefeld-germany/,Service - CNC Geo
 /cnc-machining/location/kuala-lumpur-malaysia/,Service - CNC Geo
 /cnc-machining/location/kuwait/,Service - CNC Geo
@@ -3667,7 +3667,7 @@ page,page_group
 /cnc-machining/location/luxembourg-luxembourg/,Service - CNC Geo
 /cnc-machining/location/luxembourg/,Service - CNC Geo
 /cnc-machining/location/lyon-france/,Service - CNC Geo
-/cnc-machining/location/m%C3%A1laga-spain/,Service - CNC Geo
+/cnc-machining/location/m%c3%a1laga-spain/,Service - CNC Geo
 /cnc-machining/location/macedonia/,Service - CNC Geo
 /cnc-machining/location/mackay-australia/,Service - CNC Geo
 /cnc-machining/location/madagascar/,Service - CNC Geo
@@ -3677,7 +3677,7 @@ page,page_group
 /cnc-machining/location/mainz-germany/,Service - CNC Geo
 /cnc-machining/location/malawi/,Service - CNC Geo
 /cnc-machining/location/malaysia/,Service - CNC Geo
-/cnc-machining/location/malm%C3%B6-sweden/,Service - CNC Geo
+/cnc-machining/location/malm%c3%b6-sweden/,Service - CNC Geo
 /cnc-machining/location/manama-bahrain/,Service - CNC Geo
 /cnc-machining/location/manchester-nh/,Service - CNC Geo
 /cnc-machining/location/manchester-united-kingdom/,Service - CNC Geo
@@ -3691,7 +3691,7 @@ page,page_group
 /cnc-machining/location/marseille-france/,Service - CNC Geo
 /cnc-machining/location/maryland-md/,Service - CNC Geo
 /cnc-machining/location/massachusetts-ma/,Service - CNC Geo
-/cnc-machining/location/medell%C3%ADn-colombia/,Service - CNC Geo
+/cnc-machining/location/medell%c3%adn-colombia/,Service - CNC Geo
 /cnc-machining/location/medicine-hat-canada/,Service - CNC Geo
 /cnc-machining/location/melbourne-australia/,Service - CNC Geo
 /cnc-machining/location/melbourne-fl/,Service - CNC Geo
@@ -3797,14 +3797,14 @@ page,page_group
 /cnc-machining/location/porto-portugal/,Service - CNC Geo
 /cnc-machining/location/portsmouth-united-kingdom/,Service - CNC Geo
 /cnc-machining/location/portugal/,Service - CNC Geo
-/cnc-machining/location/pozna%C5%84-poland/,Service - CNC Geo
+/cnc-machining/location/pozna%c5%84-poland/,Service - CNC Geo
 /cnc-machining/location/prague-czechia/,Service - CNC Geo
 /cnc-machining/location/preston-australia/,Service - CNC Geo
 /cnc-machining/location/pretoria-south-africa/,Service - CNC Geo
 /cnc-machining/location/providence-ri/,Service - CNC Geo
 /cnc-machining/location/provo-ut/,Service - CNC Geo
 /cnc-machining/location/puerto-rico/,Service - CNC Geo
-/cnc-machining/location/qu%C3%A9bec-canada/,Service - CNC Geo
+/cnc-machining/location/qu%c3%a9bec-canada/,Service - CNC Geo
 /cnc-machining/location/quebec-city-canada/,Service - CNC Geo
 /cnc-machining/location/queens-new-york-city/,Service - CNC Geo
 /cnc-machining/location/queensland-australia/,Service - CNC Geo
@@ -3815,7 +3815,7 @@ page,page_group
 /cnc-machining/location/regensburg-germany/,Service - CNC Geo
 /cnc-machining/location/regina-canada/,Service - CNC Geo
 /cnc-machining/location/reno-nv/,Service - CNC Geo
-/cnc-machining/location/reykjav%C3%ADk-iceland/,Service - CNC Geo
+/cnc-machining/location/reykjav%c3%adk-iceland/,Service - CNC Geo
 /cnc-machining/location/richmond-va/,Service - CNC Geo
 /cnc-machining/location/riga-latvia/,Service - CNC Geo
 /cnc-machining/location/rijeka-croatia/,Service - CNC Geo
@@ -3832,8 +3832,8 @@ page,page_group
 /cnc-machining/location/round-rock-tx/,Service - CNC Geo
 /cnc-machining/location/russia/,Service - CNC Geo
 /cnc-machining/location/rwanda/,Service - CNC Geo
-/cnc-machining/location/s%C3%A3o-paulo-brazil/,Service - CNC Geo
-/cnc-machining/location/s%C3%B6dermalm-stockholm/,Service - CNC Geo
+/cnc-machining/location/s%c3%a3o-paulo-brazil/,Service - CNC Geo
+/cnc-machining/location/s%c3%b6dermalm-stockholm/,Service - CNC Geo
 /cnc-machining/location/sacramento-ca/,Service - CNC Geo
 /cnc-machining/location/saguenay-canada/,Service - CNC Geo
 /cnc-machining/location/saint-paul-mn/,Service - CNC Geo
@@ -3845,17 +3845,17 @@ page,page_group
 /cnc-machining/location/san-bernardino-ca/,Service - CNC Geo
 /cnc-machining/location/san-diego-ca/,Service - CNC Geo
 /cnc-machining/location/san-francisco-ca/,Service - CNC Geo
-/cnc-machining/location/san-jos%C3%A9-costa-rica/,Service - CNC Geo
+/cnc-machining/location/san-jos%c3%a9-costa-rica/,Service - CNC Geo
 /cnc-machining/location/san-jose-ca/,Service - CNC Geo
 /cnc-machining/location/san-luis-obispo-ca/,Service - CNC Geo
-/cnc-machining/location/san-luis-potos%C3%AD-mexico/,Service - CNC Geo
+/cnc-machining/location/san-luis-potos%c3%ad-mexico/,Service - CNC Geo
 /cnc-machining/location/san-salvador-el-salvador/,Service - CNC Geo
 /cnc-machining/location/santa-barbara-ca/,Service - CNC Geo
 /cnc-machining/location/santa-clara-ca/,Service - CNC Geo
 /cnc-machining/location/santa-cruz-ca/,Service - CNC Geo
 /cnc-machining/location/santa-rosa-ca/,Service - CNC Geo
 /cnc-machining/location/santiago-chile/,Service - CNC Geo
-/cnc-machining/location/santiago-de-quer%C3%A9taro-mexico/,Service - CNC Geo
+/cnc-machining/location/santiago-de-quer%c3%a9taro-mexico/,Service - CNC Geo
 /cnc-machining/location/saskatoon-canada/,Service - CNC Geo
 /cnc-machining/location/saudi-arabia/,Service - CNC Geo
 /cnc-machining/location/savannah-ga/,Service - CNC Geo
@@ -3923,7 +3923,7 @@ page,page_group
 /cnc-machining/location/the-bronx-new-york-city/,Service - CNC Geo
 /cnc-machining/location/thousand-oaks-ca/,Service - CNC Geo
 /cnc-machining/location/thunder-bay-canada/,Service - CNC Geo
-/cnc-machining/location/timi%C5%9Foara-romania/,Service - CNC Geo
+/cnc-machining/location/timi%c5%9foara-romania/,Service - CNC Geo
 /cnc-machining/location/tirana-albania/,Service - CNC Geo
 /cnc-machining/location/tokyo-japan/,Service - CNC Geo
 /cnc-machining/location/toledo-oh/,Service - CNC Geo
@@ -4014,9 +4014,9 @@ page,page_group
 /cnc-machining/metal/nickel/,Materials - CNC
 /cnc-machining/metal/nickel/inconel-718/,Materials - CNC
 /cnc-machining/metal/stainless-steel/,Materials - CNC
-/cnc-machining/metal/stainless-steel/#:~:text=Characteristics/,Materials - CNC
-/cnc-machining/metal/stainless-steel/#:~:text=CNC%20machining%20Stainless%20steel%20Materials/,Materials - CNC
-/cnc-machining/metal/stainless-steel/#:~:text=Description/,Materials - CNC
+/cnc-machining/metal/stainless-steel/#:~:text=characteristics/,Materials - CNC
+/cnc-machining/metal/stainless-steel/#:~:text=cnc%20machining%20stainless%20steel%20materials/,Materials - CNC
+/cnc-machining/metal/stainless-steel/#:~:text=description/,Materials - CNC
 /cnc-machining/metal/stainless-steel/stainless-steel-17-4/,Materials - CNC
 /cnc-machining/metal/stainless-steel/stainless-steel-2205-duplex/,Materials - CNC
 /cnc-machining/metal/stainless-steel/stainless-steel-301/,Materials - CNC
@@ -4282,7 +4282,7 @@ page,page_group
 /de/3d-druck/standort/ingolstadt-germany/,Service - 3DP Geo
 /de/3d-druck/standort/innsbruck-austria/,Service - 3DP Geo
 /de/3d-druck/standort/innsbruck/,Service - 3DP Geo
-/de/3d-druck/standort/innsbruck/3D%20Druck%20Materialien/,Service - 3DP Geo
+/de/3d-druck/standort/innsbruck/3d%20druck%20materialien/,Service - 3DP Geo
 /de/3d-druck/standort/israel/,Service - 3DP Geo
 /de/3d-druck/standort/jakarta-indonesia/,Service - 3DP Geo
 /de/3d-druck/standort/jordan/,Service - 3DP Geo
@@ -4309,7 +4309,7 @@ page,page_group
 /de/3d-druck/standort/lyon-france/,Service - 3DP Geo
 /de/3d-druck/standort/madrid-spain/,Service - 3DP Geo
 /de/3d-druck/standort/mainz-germany/,Service - 3DP Geo
-/de/3d-druck/standort/malm%C3%B6-sweden/,Service - 3DP Geo
+/de/3d-druck/standort/malm%c3%b6-sweden/,Service - 3DP Geo
 /de/3d-druck/standort/manhattan-new-york-city/,Service - 3DP Geo
 /de/3d-druck/standort/manila-philippines/,Service - 3DP Geo
 /de/3d-druck/standort/mannheim-germany/,Service - 3DP Geo
@@ -4320,7 +4320,7 @@ page,page_group
 /de/3d-druck/standort/mountain-view-ca/,Service - 3DP Geo
 /de/3d-druck/standort/muenchen-germany/,Service - 3DP Geo
 /de/3d-druck/standort/munich-germany/,Service - 3DP Geo
-/de/3d-druck/standort/n%C3%BCrnberg-germany/,Service - 3DP Geo
+/de/3d-druck/standort/n%c3%bcrnberg-germany/,Service - 3DP Geo
 /de/3d-druck/standort/netherlands/,Service - 3DP Geo
 /de/3d-druck/standort/new-orleans-la/,Service - 3DP Geo
 /de/3d-druck/standort/new-york-city-ny/,Service - 3DP Geo
@@ -4332,7 +4332,7 @@ page,page_group
 /de/3d-druck/standort/oberhausen-germany/,Service - 3DP Geo
 /de/3d-druck/standort/offenbach-germany/,Service - 3DP Geo
 /de/3d-druck/standort/oklahoma-city-ok/,Service - 3DP Geo
-/de/3d-druck/standort/orl%C3%A9ans-france/,Service - 3DP Geo
+/de/3d-druck/standort/orl%c3%a9ans-france/,Service - 3DP Geo
 /de/3d-druck/standort/oslo-norway/,Service - 3DP Geo
 /de/3d-druck/standort/oxnard-ca/,Service - 3DP Geo
 /de/3d-druck/standort/palma-de-mallorca-spain/,Service - 3DP Geo
@@ -4409,7 +4409,7 @@ page,page_group
 /de/cnc-bearbeitung/,Service - CNC
 /de/cnc-bearbeitung/angebot-vergleichen/,Service - CNC
 /de/cnc-bearbeitung/cnc-drehen/,Service - CNC
-/de/cnc-bearbeitung/cnc-fr%C3%A4sen/,Service - CNC Geo
+/de/cnc-bearbeitung/cnc-fr%c3%a4sen/,Service - CNC Geo
 /de/cnc-bearbeitung/cnc-fraesen/,Service - CNC
 /de/cnc-bearbeitung/deutschland/,Service - CNC Geo
 /de/cnc-bearbeitung/deutschland/berlin/,Service - CNC Geo
@@ -4420,7 +4420,7 @@ page,page_group
 /de/cnc-bearbeitung/deutschland/ingolstadt/,Service - CNC Geo
 /de/cnc-bearbeitung/deutschland/muenchen/,Service - CNC Geo
 /de/cnc-bearbeitung/deutschland/stuttgart/,Service - CNC Geo
-/de/cnc-bearbeitung/oberfl%C3%A4chenbehandlungs-service/,Service - CNC Geo
+/de/cnc-bearbeitung/oberfl%c3%a4chenbehandlungs-service/,Service - CNC Geo
 /de/cnc-bearbeitung/oberflaechenbehandlung/,Service - CNC
 /de/cnc-bearbeitung/oesterreich/graz/,Service - CNC Geo
 /de/cnc-bearbeitung/oesterreich/wien/,Service - CNC Geo
@@ -4520,7 +4520,7 @@ page,page_group
 /de/cnc-bearbeitung/standort/manitoba-canada/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/mannheim-germany/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/maryland-md/,Service - CNC Geo
-/de/cnc-bearbeitung/standort/medell%C3%ADn-colombia/,Service - CNC Geo
+/de/cnc-bearbeitung/standort/medell%c3%adn-colombia/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/mexico/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/montana-mt/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/montreal-canada/,Service - CNC Geo
@@ -4533,7 +4533,7 @@ page,page_group
 /de/cnc-bearbeitung/standort/oberhausen-germany/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/oklahoma-ok/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/oregon-or/,Service - CNC Geo
-/de/cnc-bearbeitung/standort/orl%C3%A9ans-france/,Service - CNC Geo
+/de/cnc-bearbeitung/standort/orl%c3%a9ans-france/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/oxford-united-kingdom/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/palma-de-mallorca-spain/,Service - CNC Geo
 /de/cnc-bearbeitung/standort/paris-france/,Service - CNC Geo
@@ -4609,12 +4609,12 @@ page,page_group
 /de/wissensbasis/3d-druck-vs-cnc-bearbeitung/#intro/,Knowledge Base - 3DP
 /de/wissensbasis/3d-druck-vs-cnc-bearbeitung/#process/,Knowledge Base - 3DP
 /de/wissensbasis/3d-druck-vs-cnc-bearbeitung/#selecting/,Knowledge Base - 3DP
-/de/wissensbasis/abst%C3%BCtzung-3d-druck-technologie-uebersicht/,Knowledge Base - 3DP
-/de/wissensbasis/abst%C3%BCtzung-3d-druck-technologie-uebersicht/#fdm/,Knowledge Base - 3DP
-/de/wissensbasis/abst%C3%BCtzung-3d-druck-technologie-uebersicht/#introduction/,Knowledge Base - 3DP
-/de/wissensbasis/abst%C3%BCtzung-3d-druck-technologie-uebersicht/#material-jetting/,Knowledge Base - 3DP
-/de/wissensbasis/abst%C3%BCtzung-3d-druck-technologie-uebersicht/#sla-and-dlp/,Knowledge Base - 3DP
-/de/wissensbasis/abst%C3%BCtzung-3d-druck-technologie-uebersicht/#sls/,Knowledge Base - 3DP
+/de/wissensbasis/abst%c3%bctzung-3d-druck-technologie-uebersicht/,Knowledge Base - 3DP
+/de/wissensbasis/abst%c3%bctzung-3d-druck-technologie-uebersicht/#fdm/,Knowledge Base - 3DP
+/de/wissensbasis/abst%c3%bctzung-3d-druck-technologie-uebersicht/#introduction/,Knowledge Base - 3DP
+/de/wissensbasis/abst%c3%bctzung-3d-druck-technologie-uebersicht/#material-jetting/,Knowledge Base - 3DP
+/de/wissensbasis/abst%c3%bctzung-3d-druck-technologie-uebersicht/#sla-and-dlp/,Knowledge Base - 3DP
+/de/wissensbasis/abst%c3%bctzung-3d-druck-technologie-uebersicht/#sls/,Knowledge Base - 3DP
 /de/wissensbasis/additive-fertigung-prozesse/,Knowledge Base - 3DP
 /de/wissensbasis/additive-fertigung-technologien-uebersicht/,Knowledge Base - 3DP
 /de/wissensbasis/additive-fertigung-technologien-uebersicht/#introduction/,Knowledge Base - 3DP
@@ -4637,10 +4637,10 @@ page,page_group
 /de/wissensbasis/dimensionale-genauigkeit-3d-druckteile/#introduction/,Knowledge Base - 3DP
 /de/wissensbasis/dimensionale-genauigkeit-3d-druckteile/#sla/,Knowledge Base - 3DP
 /de/wissensbasis/dimensionale-genauigkeit-3d-druckteile/#sls/,Knowledge Base - 3DP
-/de/wissensbasis/einfluss-schichth%C3%B6he-3d-druck/,Knowledge Base - 3DP
-/de/wissensbasis/einfluss-schichth%C3%B6he-3d-druck/#intro/,Knowledge Base - 3DP
-/de/wissensbasis/einfluss-schichth%C3%B6he-3d-druck/#what/,Knowledge Base - 3DP
-/de/wissensbasis/einfluss-schichth%C3%B6he-3d-druck/#why/,Knowledge Base - 3DP
+/de/wissensbasis/einfluss-schichth%c3%b6he-3d-druck/,Knowledge Base - 3DP
+/de/wissensbasis/einfluss-schichth%c3%b6he-3d-druck/#intro/,Knowledge Base - 3DP
+/de/wissensbasis/einfluss-schichth%c3%b6he-3d-druck/#what/,Knowledge Base - 3DP
+/de/wissensbasis/einfluss-schichth%c3%b6he-3d-druck/#why/,Knowledge Base - 3DP
 /de/wissensbasis/einfuehrung-3d-druck/,Knowledge Base
 /de/wissensbasis/einfuehrung-fertigungsverfahren/,Knowledge Base
 /de/wissensbasis/kosten-reduzieren-3d-druck/,Knowledge Base - 3DP
@@ -4648,7 +4648,7 @@ page,page_group
 /de/wissensbasis/nachbearbeitung-und-veredelung/,Knowledge Base
 /de/wissensbasis/nachbearbeitung/,Knowledge Base - 3DP
 /de/wissensbasis/vorteile-3d-druck/,Knowledge Base - 3DP
-/de/wissensbasis/vorteile-3d-druck/#Herstellung-in-einem-Schritt/,Knowledge Base - 3DP
+/de/wissensbasis/vorteile-3d-druck/#herstellung-in-einem-schritt/,Knowledge Base - 3DP
 /de/wissensbasis/vorteile-3d-druck/#introduction/,Knowledge Base - 3DP
 /de/wissensbasis/vorteile-3d-druck/#kosten/,Knowledge Base - 3DP
 /decnc-bearbeitung/standort/hamburg-germany/,Service - CNC
@@ -4671,7 +4671,7 @@ page,page_group
 /favicon.ico/,Other
 /florence/hubs/francyr3d/,Service - 3DP Geo
 /florence/hubs/mc0676-prusa-i3-evo/,Other
-/fonts/Graphik-Medium-Web.woff/,Other
+/fonts/graphik-medium-web.woff/,Other
 /fr/,Homepage
 /fr/3d-printing/luxembourg/,Service - 3DP Geo
 /fr/base-de-connaissances/,Knowledge Base
@@ -4690,7 +4690,7 @@ page,page_group
 /fr/base-de-connaissances/impression-3d-fichiers-stl-guide-etape-par-etape/#step-1/,Knowledge Base - 3DP
 /fr/base-de-connaissances/impression-3d-fichiers-stl-guide-etape-par-etape/#step-3/,Knowledge Base - 3DP
 /fr/base-de-connaissances/impression-3d-vs-usinage-cnc/,Knowledge Base - 3DP
-/fr/base-de-connaissances/impression-3d-vs-usinage-cnc/#:~:text=arrow_forward%20Introduction%20arrow_forward%20Choisir%20la%20bonne%20technologie%20arrow_forward%20Catact%C3%A9ristiques%20du/,Knowledge Base - 3DP
+/fr/base-de-connaissances/impression-3d-vs-usinage-cnc/#:~:text=arrow_forward%20introduction%20arrow_forward%20choisir%20la%20bonne%20technologie%20arrow_forward%20catact%c3%a9ristiques%20du/,Knowledge Base - 3DP
 /fr/base-de-connaissances/impression-3d-vs-usinage-cnc/#case-study-plastic/,Knowledge Base - 3DP
 /fr/base-de-connaissances/impression-3d-vs-usinage-cnc/#intro/,Knowledge Base - 3DP
 /fr/base-de-connaissances/impression-3d-vs-usinage-cnc/#process/,Knowledge Base - 3DP
@@ -4842,7 +4842,7 @@ page,page_group
 /fr/impression-3d/emplacement/kitchener-canada/,Service - 3DP Geo
 /fr/impression-3d/emplacement/kuala-lumpur-malaysia/,Service - 3DP Geo
 /fr/impression-3d/emplacement/kuwait/,Service - 3DP Geo
-/fr/impression-3d/emplacement/l%C3%A9vis-canada/,Service - 3DP Geo
+/fr/impression-3d/emplacement/l%c3%a9vis-canada/,Service - 3DP Geo
 /fr/impression-3d/emplacement/ladner-canada/,Service - 3DP Geo
 /fr/impression-3d/emplacement/lausanne-suisse/,Service - 3DP Geo
 /fr/impression-3d/emplacement/lausanne-switzerland/,Service - 3DP Geo
@@ -4883,7 +4883,7 @@ page,page_group
 /fr/impression-3d/emplacement/nice-france/,Service - 3DP Geo
 /fr/impression-3d/emplacement/nottingham-united-kingdom/,Service - 3DP Geo
 /fr/impression-3d/emplacement/ontario-canada/,Service - 3DP Geo
-/fr/impression-3d/emplacement/orl%C3%A9ans-france/,Service - 3DP Geo
+/fr/impression-3d/emplacement/orl%c3%a9ans-france/,Service - 3DP Geo
 /fr/impression-3d/emplacement/oshawa-canada/,Service - 3DP Geo
 /fr/impression-3d/emplacement/ottawa-canada/,Service - 3DP Geo
 /fr/impression-3d/emplacement/palma-de-mallorca-spain/,Service - 3DP Geo
@@ -4896,7 +4896,7 @@ page,page_group
 /fr/impression-3d/emplacement/portugal/,Service - 3DP Geo
 /fr/impression-3d/emplacement/prague-czechia/,Service - 3DP Geo
 /fr/impression-3d/emplacement/pretoria-south-africa/,Service - 3DP Geo
-/fr/impression-3d/emplacement/qu%C3%A9bec-canada/,Service - 3DP Geo
+/fr/impression-3d/emplacement/qu%c3%a9bec-canada/,Service - 3DP Geo
 /fr/impression-3d/emplacement/quebec-city-canada/,Service - 3DP Geo
 /fr/impression-3d/emplacement/rabat-morocco/,Service - 3DP Geo
 /fr/impression-3d/emplacement/raleigh-nc/,Service - 3DP Geo
@@ -5096,7 +5096,7 @@ page,page_group
 /fr/usinage-cnc/emplacement/manitoba-canada/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/marseille-france/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/maryland-md/,Service - CNC Geo
-/fr/usinage-cnc/emplacement/medell%C3%ADn-colombia/,Service - CNC Geo
+/fr/usinage-cnc/emplacement/medell%c3%adn-colombia/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/melbourne-australia/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/mexico/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/mississauga-canada/,Service - CNC Geo
@@ -5110,7 +5110,7 @@ page,page_group
 /fr/usinage-cnc/emplacement/nicaragua/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/nice-france/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/oklahoma-ok/,Service - CNC Geo
-/fr/usinage-cnc/emplacement/orl%C3%A9ans-france/,Service - CNC Geo
+/fr/usinage-cnc/emplacement/orl%c3%a9ans-france/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/oshawa-canada/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/oslo-norway/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/ottawa-canada/,Service - CNC Geo
@@ -5123,7 +5123,7 @@ page,page_group
 /fr/usinage-cnc/emplacement/portland-or/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/porto-portugal/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/portugal/,Service - CNC Geo
-/fr/usinage-cnc/emplacement/qu%C3%A9bec-canada/,Service - CNC Geo
+/fr/usinage-cnc/emplacement/qu%c3%a9bec-canada/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/quebec-city-canada/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/regina-canada/,Service - CNC Geo
 /fr/usinage-cnc/emplacement/rennes-france/,Service - CNC Geo
@@ -5166,7 +5166,7 @@ page,page_group
 /fr/usinage-cnc/luxembourg/,Service - CNC Geo
 /fr/usinage-cnc/marquage-de-piece/,Service - CNC
 /fr/usinage-cnc/tournage-cnc/,Service - CNC
-/frankfurt/hubs/Schichtwerkstatt/,Service - 3DP Geo
+/frankfurt/hubs/schichtwerkstatt/,Service - 3DP Geo
 /frconstruire-les-voiliers-les-plus-rapides-au-monde/,Blog
 /frusinage-cnc/emplacement/hamburg-germany/,Service - CNC Geo
 /genoa/hubs/tree-d-lab/,Service - 3DP Geo
@@ -5182,50 +5182,50 @@ page,page_group
 /get/sample-3d-printing-handbook/,Knowledge Base - 3DP
 /get/supply-chain-resilience-report/,Knowledge Base
 /get/thank-you/,Other
-/GET/TRENDS/,Knowledge Base - 3DP
+/get/trends/,Knowledge Base - 3DP
 /get/trends/)./,Knowledge Base - 3DP
-/get/trends/#:~:text=Key%20findings%3A/,Knowledge Base - 3DP
-/get/trends/#:~:text=Stay%20up%2Dto%2Ddate%20with%20the%20latest%203D%20printing%20trends/,Knowledge Base - 3DP
+/get/trends/#:~:text=key%20findings%3a/,Knowledge Base - 3DP
+/get/trends/#:~:text=stay%20up%2dto%2ddate%20with%20the%20latest%203d%20printing%20trends/,Knowledge Base - 3DP
 /get/trends/past-reports/,Knowledge Base
 /gold-coast/hubs/wacl3/,Service - 3DP Geo
 /gothenburg/hubs/knape/,Service - 3DP Geo
 /guides/,Knowledge Base
 /guides/3d-printing/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=3D%20printing:%20beyond%20the%20hype/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=3D%20printing%20vs.%20Traditional%20Manufacturing/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=Benefits%20of%203D%20printing/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=Direct%20Metal%20Laser%20Sintering%20%26%20Selective%20Laser%20Melting%20%28DMLS%20%26%20SLM%29/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=Fused%20Deposition%20Modelling%20%28FDM%29/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=Limitations%20of%203D%20printing/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=Material%20Jetting%20%28PolyJet%29/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=Selective%20Laser%20Sintering%20%28SLS%29/,Knowledge Base - 3DP
-/guides/3d-printing/#:~:text=Stereolithography%20%26%20Digital%20Light%20Processing%20%28SLA%20%26%20DLP%29/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=3d%20printing:%20beyond%20the%20hype/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=3d%20printing%20vs.%20traditional%20manufacturing/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=benefits%20of%203d%20printing/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=direct%20metal%20laser%20sintering%20%26%20selective%20laser%20melting%20%28dmls%20%26%20slm%29/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=fused%20deposition%20modelling%20%28fdm%29/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=limitations%20of%203d%20printing/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=material%20jetting%20%28polyjet%29/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=selective%20laser%20sintering%20%28sls%29/,Knowledge Base - 3DP
+/guides/3d-printing/#:~:text=stereolithography%20%26%20digital%20light%20processing%20%28sla%20%26%20dlp%29/,Knowledge Base - 3DP
 /guides/3d-printing/#3d-printing-materials/,Knowledge Base - 3DP
 /guides/3d-printing/#basics/,Knowledge Base - 3DP
 /guides/3d-printing/#design-for-3d-printing/,Knowledge Base - 3DP
 /guides/cnc-/,Knowledge Base - CNC
 /guides/cnc-machining/,Knowledge Base - CNC
-/guides/cnc-machining/#:~:text=CNC%20milling/,Knowledge Base - CNC
-/guides/cnc-machining/#:~:text=CNC%20turning%20%28lathes%29/,Knowledge Base - CNC
-/guides/cnc-machining/#:~:text=What%20is%20CNC%20machining%3F/,Knowledge Base - CNC
+/guides/cnc-machining/#:~:text=cnc%20milling/,Knowledge Base - CNC
+/guides/cnc-machining/#:~:text=cnc%20turning%20%28lathes%29/,Knowledge Base - CNC
+/guides/cnc-machining/#:~:text=what%20is%20cnc%20machining%3f/,Knowledge Base - CNC
 /guides/cnc-machining/#cost-reduction-tips/,Knowledge Base - CNC
 /guides/cnc-machining/#materials-for-cnc-machining/,Knowledge Base - CNC
 /guides/injection-molding/,Knowledge Base - IM
-/guides/injection-molding/#:~:text=Add%20a%20minimum%20interference%20of%200.25%20mm%20between%20the%20crush/,Knowledge Base - IM
-/guides/injection-molding/#:~:text=Add%20draft%20angles/,Knowledge Base - IM
+/guides/injection-molding/#:~:text=add%20a%20minimum%20interference%20of%200.25%20mm%20between%20the%20crush/,Knowledge Base - IM
+/guides/injection-molding/#:~:text=add%20draft%20angles/,Knowledge Base - IM
 /guides/injection-molding/#:~:text=disabled%20in%20your%20browser.-/,Knowledge Base - IM
-/guides/injection-molding/#:~:text=for%20ribs.%20Be%20aware%20though%20that%20adding%20an%20angle%20will/,Knowledge Base - IM
-/guides/injection-molding/#:~:text=Hollow%20thick%20sections%20and%20add%20ribs%20to%20improve%20stiffness/,Knowledge Base - IM
-/guides/injection-molding/#:~:text=Injecting%20material%20into%20the%20mold%3A%20The%20runner%20system/,Knowledge Base - IM
+/guides/injection-molding/#:~:text=for%20ribs.%20be%20aware%20though%20that%20adding%20an%20angle%20will/,Knowledge Base - IM
+/guides/injection-molding/#:~:text=hollow%20thick%20sections%20and%20add%20ribs%20to%20improve%20stiffness/,Knowledge Base - IM
+/guides/injection-molding/#:~:text=injecting%20material%20into%20the%20mold%3a%20the%20runner%20system/,Knowledge Base - IM
 /guides/injection-molding/#:~:text=is%20recommended%20to%20avoid%20stripping%20undercuts%20in%20parts%20made%20from/,Knowledge Base - IM
 /guides/injection-molding/#:~:text=least%204%20weeks%29.-/,Knowledge Base - IM
-/guides/injection-molding/#:~:text=Surface%20finishes%20and%20SPI%20standards/,Knowledge Base - IM
-/guides/injection-molding/#:~:text=Use%20a%20constant%20wall%20thickness/,Knowledge Base - IM
+/guides/injection-molding/#:~:text=surface%20finishes%20and%20spi%20standards/,Knowledge Base - IM
+/guides/injection-molding/#:~:text=use%20a%20constant%20wall%20thickness/,Knowledge Base - IM
 /guides/injection-molding/#injection-molding-materials/,Knowledge Base - IM
 /guides/metal-3d-printing/,Knowledge Base - 3DP
-/guides/metal-3d-printing/#:~:text=How%20does%20Metal%20Binder%20Jetting%20work%3F/,Knowledge Base - 3DP
-/guides/metal-3d-printing/#:~:text=Metal%203D%20printing%20vs%20traditional%20manufacturing/,Knowledge Base - 3DP
-/guides/metal-3d-printing/#:~:text=The%20cost%20of%20metal%203D%20printing/,Knowledge Base - 3DP
+/guides/metal-3d-printing/#:~:text=how%20does%20metal%20binder%20jetting%20work%3f/,Knowledge Base - 3DP
+/guides/metal-3d-printing/#:~:text=metal%203d%20printing%20vs%20traditional%20manufacturing/,Knowledge Base - 3DP
+/guides/metal-3d-printing/#:~:text=the%20cost%20of%20metal%203d%20printing/,Knowledge Base - 3DP
 /guides/sheet-metal-fabrication/,Knowledge Base - SM
 /hamburg/hubs/v3-engineering/,Service - 3DP Geo
 /hanover/hubs/bs-3d-printing/,Service - 3DP Geo
@@ -5273,9 +5273,9 @@ page,page_group
 /indianapolis/hubs/drake/,Service - 3DP Geo
 /industries/architecture/,Other
 /injection-molding/,Service - IM
-/injection-molding/#:~:text=Available%20surface%20finishes%20for%20injection%20molding/,Service - IM
-/injection-molding/#:~:text=Injection%20molding%20design%20guidelines/,Service - IM
-/injection-molding/#:~:text=Why%20engineers%20use%203D%20Hubs%20for%20injection%20molding/,Service - IM
+/injection-molding/#:~:text=available%20surface%20finishes%20for%20injection%20molding/,Service - IM
+/injection-molding/#:~:text=injection%20molding%20design%20guidelines/,Service - IM
+/injection-molding/#:~:text=why%20engineers%20use%203d%20hubs%20for%20injection%20molding/,Service - IM
 /injection-molding/plastic/,Materials - IM
 /injection-molding/plastic/abs/,Materials - IM
 /injection-molding/plastic/hdpe/,Materials - IM
@@ -5318,21 +5318,21 @@ page,page_group
 /it/stampaggio-a-iniezione/,Service - IM
 /jennifer94/,Other
 /jobs/,About
-/jobs/#:~:text=Awesome%20perks/,About
-/jobs/#:~:text=The%20story%20of%203D%20Hubs/,About
-/jobs/#:~:text=We%27re%20pragmatic%20makers%20at%20our%20core/,About
+/jobs/#:~:text=awesome%20perks/,About
+/jobs/#:~:text=the%20story%20of%203d%20hubs/,About
+/jobs/#:~:text=we%27re%20pragmatic%20makers%20at%20our%20core/,About
 /joe181/,Other
 /joe181/injection-molding-project-intro/,Other
 /julius24/,Other
 /kansas-city/hubs/abtu/,Service - 3DP Geo
 /knoledge-base/supports-3d-printing-technology-overview/,Knowledge Base - 3DP
-/KNOWLDEGE-BASE/,Knowledge Base
+/knowldege-base/,Knowledge Base
 /knowledge-bas/,Knowledge Base
 /knowledge-base/,Knowledge Base
 /knowledge-base/3d-modeling-cad-software/,Knowledge Base - 3DP
-/knowledge-base/3d-modeling-cad-software/#:~:text=Industry%20Data/,Knowledge Base - 3DP
-/knowledge-base/3d-modeling-cad-software/#:~:text=Solid%20Modeling/,Knowledge Base - 3DP
-/knowledge-base/3d-modeling-cad-software/#:~:text=Surface%20Modeling/,Knowledge Base - 3DP
+/knowledge-base/3d-modeling-cad-software/#:~:text=industry%20data/,Knowledge Base - 3DP
+/knowledge-base/3d-modeling-cad-software/#:~:text=solid%20modeling/,Knowledge Base - 3DP
+/knowledge-base/3d-modeling-cad-software/#:~:text=surface%20modeling/,Knowledge Base - 3DP
 /knowledge-base/3d-modeling-cad-software/#cad/,Knowledge Base - 3DP
 /knowledge-base/3d-modeling-cad-software/#data/,Knowledge Base - 3DP
 /knowledge-base/3d-modeling-cad-software/#introduction/,Knowledge Base - 3DP
@@ -5360,7 +5360,7 @@ page,page_group
 /knowledge-base/3d-printing-geometry-restrictions/#watertightness/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-geometry-restrictions#curved-surfaces/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-grips-jigs-and-fixtures/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-grips-jigs-and-fixtures/#:~:text=An%20assembly%20jig%20(white)%20printed%20on%20an%20FDM%20printer%20holding/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-grips-jigs-and-fixtures/#:~:text=an%20assembly%20jig%20(white)%20printed%20on%20an%20fdm%20printer%20holding/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-grips-jigs-and-fixtures/#advantages/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-grips-jigs-and-fixtures/#benefits/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-grips-jigs-and-fixtures/#common-applications/,Knowledge Base - 3DP
@@ -5372,13 +5372,13 @@ page,page_group
 /knowledge-base/3d-printing-grips-jigs-and-fixtures#introduction/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-grips-jigs-and-fixtures#what-are-grips-jigs-and-fixtures/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-low-run-injection-molds/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=3D%20printed%20mold%20configurations/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=A%203D%20printed%20injection%20mold%20made%20from%20Digital%20ABS/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=Case%20study%3A%20a%20plastic%20motor%20fitting/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=Materials/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=Mold%20Design/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=What%20is%20injection%20molding%3F/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=Why%20use%203D%20printing%3F/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=3d%20printed%20mold%20configurations/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=a%203d%20printed%20injection%20mold%20made%20from%20digital%20abs/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=case%20study%3a%20a%20plastic%20motor%20fitting/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=materials/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=mold%20design/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=what%20is%20injection%20molding%3f/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-low-run-injection-molds/#:~:text=why%20use%203d%20printing%3f/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-low-run-injection-molds/#case-study/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-low-run-injection-molds/#configurations/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-low-run-injection-molds/#design/,Knowledge Base - 3DP
@@ -5394,11 +5394,11 @@ page,page_group
 /knowledge-base/3d-printing-low-run-injection-molds#what/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-low-run-injection-molds#why/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-stl-files-step-step-guide/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=A%20sphere%20rendered%20in%20three%20different%20resolutions%20in%20MeshMixer/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=Introduction/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=Step%201.%20Understand%20the%20STL%20resolution/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=Step%202.%20Choose%20the%20right%20exporting%20parameters/,Knowledge Base - 3DP
-/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=Step%203.%20Export%20STL%20files%20from%20your%20CAD%20software/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=a%20sphere%20rendered%20in%20three%20different%20resolutions%20in%20meshmixer/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=introduction/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=step%201.%20understand%20the%20stl%20resolution/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=step%202.%20choose%20the%20right%20exporting%20parameters/,Knowledge Base - 3DP
+/knowledge-base/3d-printing-stl-files-step-step-guide/#:~:text=step%203.%20export%20stl%20files%20from%20your%20cad%20software/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-stl-files-step-step-guide/#intro/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-stl-files-step-step-guide/#rules/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-stl-files-step-step-guide/#step-1/,Knowledge Base - 3DP
@@ -5409,11 +5409,11 @@ page,page_group
 /knowledge-base/3d-printing-stl-files-step-step-guide#step-2/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-stl-files-step-step-guide#step-3/,Knowledge Base - 3DP
 /knowledge-base/3d-printing-vs-cnc-machining/,Knowledge Base
-/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=Case%20study%3A%20manufacturing%20metal%20brackets%20and%20components/,Knowledge Base
-/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=Case%20study%3A%20prototyping%20a%20plastic%20enclosure/,Knowledge Base
-/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=Dimensional%20accuracy/,Knowledge Base
-/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=Introduction/,Knowledge Base
-/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=Share/,Knowledge Base
+/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=case%20study%3a%20manufacturing%20metal%20brackets%20and%20components/,Knowledge Base
+/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=case%20study%3a%20prototyping%20a%20plastic%20enclosure/,Knowledge Base
+/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=dimensional%20accuracy/,Knowledge Base
+/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=introduction/,Knowledge Base
+/knowledge-base/3d-printing-vs-cnc-machining/#:~:text=share/,Knowledge Base
 /knowledge-base/3d-printing-vs-cnc-machining/#case-study-metal/,Knowledge Base
 /knowledge-base/3d-printing-vs-cnc-machining/#case-study-plastic/,Knowledge Base
 /knowledge-base/3d-printing-vs-cnc-machining/#intro/,Knowledge Base
@@ -5425,15 +5425,15 @@ page,page_group
 /knowledge-base/3d-printing-vs-cnc-machining#process/,Knowledge Base
 /knowledge-base/3d-printing-vs-cnc-machining#selecting/,Knowledge Base
 /knowledge-base/additive-manufacturing-process/,Knowledge Base - 3DP
-/knowledge-base/additive-manufacturing-process/#:~:text=1.%20CAD/,Knowledge Base - 3DP
-/knowledge-base/additive-manufacturing-process/#:~:text=2.%20STL%20conversion%20and%20file%20manipulation/,Knowledge Base - 3DP
-/knowledge-base/additive-manufacturing-process/#:~:text=3.%20Printing/,Knowledge Base - 3DP
+/knowledge-base/additive-manufacturing-process/#:~:text=1.%20cad/,Knowledge Base - 3DP
+/knowledge-base/additive-manufacturing-process/#:~:text=2.%20stl%20conversion%20and%20file%20manipulation/,Knowledge Base - 3DP
+/knowledge-base/additive-manufacturing-process/#:~:text=3.%20printing/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technolgies-overviwe/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologies-overvies/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologies-overview/,Knowledge Base - 3DP
-/knowledge-base/additive-manufacturing-technologies-overview/#:~:text=Introduction/,Knowledge Base - 3DP
-/knowledge-base/additive-manufacturing-technologies-overview/#:~:text=Powder%20Bed%20Fusion/,Knowledge Base - 3DP
-/knowledge-base/additive-manufacturing-technologies-overview/#:~:text=Vat%20Photopolymerization/,Knowledge Base - 3DP
+/knowledge-base/additive-manufacturing-technologies-overview/#:~:text=introduction/,Knowledge Base - 3DP
+/knowledge-base/additive-manufacturing-technologies-overview/#:~:text=powder%20bed%20fusion/,Knowledge Base - 3DP
+/knowledge-base/additive-manufacturing-technologies-overview/#:~:text=vat%20photopolymerization/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologies-overview/#binder-jetting/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologies-overview/#direct-energy-deposition/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologies-overview/#introduction/,Knowledge Base - 3DP
@@ -5447,13 +5447,13 @@ page,page_group
 /knowledge-base/additive-manufacturing-technologies-overview#material-jetting/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologies-overview#powder-bed-fusion/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologies-overview#vat-photopolymerization/,Knowledge Base - 3DP
-/knowledge-base/additive-manufacturing-technologies-overview%22%3E(you/,Knowledge Base - 3DP
+/knowledge-base/additive-manufacturing-technologies-overview%22%3e(you/,Knowledge Base - 3DP
 /knowledge-base/additive-manufacturing-technologiesoverview/,Knowledge Base - 3DP
 /knowledge-base/additivemanufacturing-technologies-overview/,Knowledge Base - 3DP
 /knowledge-base/advantages-3d-printing/,Knowledge Base - 3DP
-/knowledge-base/advantages-3d-printing/#:~:text=Cost/,Knowledge Base - 3DP
-/knowledge-base/advantages-3d-printing/#:~:text=Single%20step%20manufacture/,Knowledge Base - 3DP
-/knowledge-base/advantages-3d-printing/#:~:text=Sustainability/,Knowledge Base - 3DP
+/knowledge-base/advantages-3d-printing/#:~:text=cost/,Knowledge Base - 3DP
+/knowledge-base/advantages-3d-printing/#:~:text=single%20step%20manufacture/,Knowledge Base - 3DP
+/knowledge-base/advantages-3d-printing/#:~:text=sustainability/,Knowledge Base - 3DP
 /knowledge-base/advantages-3d-printing/#complexity-and-design-freedom/,Knowledge Base - 3DP
 /knowledge-base/advantages-3d-printing/#cost/,Knowledge Base - 3DP
 /knowledge-base/advantages-3d-printing/#customization/,Knowledge Base - 3DP
@@ -5468,9 +5468,9 @@ page,page_group
 /knowledge-base/advantages-3d-printing#single-step-manufacture/,Knowledge Base - 3DP
 /knowledge-base/advantages-3d-printing#speed/,Knowledge Base - 3DP
 /knowledge-base/aerospace-3d-printing-applications/,Knowledge Base - 3DP
-/knowledge-base/aerospace-3d-printing-applications/#:~:text=3D%20Printing%20Materials%20for%20aerospace%20applications/,Knowledge Base - 3DP
-/knowledge-base/aerospace-3d-printing-applications/#:~:text=Introduction/,Knowledge Base - 3DP
-/knowledge-base/aerospace-3d-printing-applications/#:~:text=Transparent%20Resin-/,Knowledge Base - 3DP
+/knowledge-base/aerospace-3d-printing-applications/#:~:text=3d%20printing%20materials%20for%20aerospace%20applications/,Knowledge Base - 3DP
+/knowledge-base/aerospace-3d-printing-applications/#:~:text=introduction/,Knowledge Base - 3DP
+/knowledge-base/aerospace-3d-printing-applications/#:~:text=transparent%20resin-/,Knowledge Base - 3DP
 /knowledge-base/aerospace-3d-printing-applications/#case-study/,Knowledge Base - 3DP
 /knowledge-base/aerospace-3d-printing-applications/#considerations/,Knowledge Base - 3DP
 /knowledge-base/aerospace-3d-printing-applications/#integrating/,Knowledge Base - 3DP
@@ -5485,9 +5485,9 @@ page,page_group
 /knowledge-base/appendix/,Knowledge Base
 /knowledge-base/applications/,Knowledge Base
 /knowledge-base/automotive-3d-printing-applications/,Knowledge Base - 3DP
-/knowledge-base/automotive-3d-printing-applications/#:~:text=AM%20in%20the%20automotive%20industry/,Knowledge Base - 3DP
-/knowledge-base/automotive-3d-printing-applications/#:~:text=AM%20materials%20suited%20for%20automotive%20applications/,Knowledge Base - 3DP
-/knowledge-base/automotive-3d-printing-applications/#:~:text=Case%20study%202%20%2D%20Moto2%20motorcycle%20racing/,Knowledge Base - 3DP
+/knowledge-base/automotive-3d-printing-applications/#:~:text=am%20in%20the%20automotive%20industry/,Knowledge Base - 3DP
+/knowledge-base/automotive-3d-printing-applications/#:~:text=am%20materials%20suited%20for%20automotive%20applications/,Knowledge Base - 3DP
+/knowledge-base/automotive-3d-printing-applications/#:~:text=case%20study%202%20%2d%20moto2%20motorcycle%20racing/,Knowledge Base - 3DP
 /knowledge-base/automotive-3d-printing-applications/#case1/,Knowledge Base - 3DP
 /knowledge-base/automotive-3d-printing-applications/#case2/,Knowledge Base - 3DP
 /knowledge-base/automotive-3d-printing-applications/#industry/,Knowledge Base - 3DP
@@ -5691,7 +5691,7 @@ page,page_group
 /knowledge-base/pla-vs-abs-whats-difference/#part-accuracy/,Knowledge Base - 3DP
 /knowledge-base/pla-vs-abs-whats-difference/#strength/,Knowledge Base - 3DP
 /knowledge-base/pla-vs-abs-whats-difference/#surface-finish-and-post-processing/,Knowledge Base - 3DP
-/knowledge-base/pla-vs-abs-whats-difference/%0a%0a%0a%0a%0a%20%20%20%20%0a%20%20%20%20%0a%20%20%20%20%20%20%20%20%3cspan%20h3d-component-name=%22%22%20h3d-component-id=%22knowledge-base-bottom-url%22%20h3d-component-type=%22Interface%20String%22%3e/manufacture/%3c/span%3e%0a%0a/,Knowledge Base - 3DP
+/knowledge-base/pla-vs-abs-whats-difference/%0a%0a%0a%0a%0a%20%20%20%20%0a%20%20%20%20%0a%20%20%20%20%20%20%20%20%3cspan%20h3d-component-name=%22%22%20h3d-component-id=%22knowledge-base-bottom-url%22%20h3d-component-type=%22interface%20string%22%3e/manufacture/%3c/span%3e%0a%0a/,Knowledge Base - 3DP
 /knowledge-base/pla-vs-abs-whats-difference#biodegradability/,Knowledge Base - 3DP
 /knowledge-base/pla-vs-abs-whats-difference#heat-resistance/,Knowledge Base - 3DP
 /knowledge-base/pla-vs-abs-whats-difference#strength/,Knowledge Base - 3DP
@@ -5762,7 +5762,7 @@ page,page_group
 /knowledge-base/supports-3d-printing-technology-overview#fdm/,Knowledge Base - 3DP
 /knowledge-base/supports-3d-printing-technology-overview#sla-and-dlp/,Knowledge Base - 3DP
 /knowledge-base/supports-3d-printing-technology-overview#sls/,Knowledge Base - 3DP
-/knowledge-base/supports-3d-printing-technology-Panoramica/,Knowledge Base - 3DP
+/knowledge-base/supports-3d-printing-technology-panoramica/,Knowledge Base - 3DP
 /knowledge-base/supports-3d-printingtechnology-overview/,Knowledge Base - 3DP
 /knowledge-base/surface-finishes-cnc-machinining/,Knowledge Base - CNC
 /knowledge-base/surface-finishes-cnc-machinining/#as-machined/,Knowledge Base - CNC
@@ -5774,7 +5774,7 @@ page,page_group
 /knowledge-based/,Knowledge Base
 /knowledge-hub/,Knowledge Base
 /knowledge%20base/hp%20mjf%20vs%20sls%203d%20printing%20technology%20comparison/,Knowledge Base - 3DP
-/knowledgebase/%20Post%20lavorazione-fdm-printed-parts/,Knowledge Base - 3DP
+/knowledgebase/%20post%20lavorazione-fdm-printed-parts/,Knowledge Base - 3DP
 /knowledgebase/introduction-metal-3d-printing/,Knowledge Base - 3DP
 /landingpage/7/,Other
 /landingpage/89/metal/,Other
@@ -5786,8 +5786,8 @@ page,page_group
 /manage/3daddiction/,Other
 /manage/3dbro/,Other
 /manage/flandaluce/,Other
-/manage/Maketechnics/,Other
-/manage/Mcintosh2312/,Other
+/manage/maketechnics/,Other
+/manage/mcintosh2312/,Other
 /manage/youlittle/,Other
 /managed-services/bulk-3d-printing/,Other
 /manuacture/,Other
@@ -6453,7 +6453,7 @@ page,page_group
 /material-group/sls-nylon/feed/,Materials - 3DP
 /material-group/transparent-plastic/feed/,Materials - 3DP
 /material-index/,Materials - 3DP
-/material-index?s=adwords_g&k=3d%20printing%20metal&c=265013584&a=26398237504&m=g&gclid=CjwKEAiA8qG1BRDz0tmK0pufw3QSJACfn6oluUzX34p5FlPzA5AIlALCdbOL1D6XjTJPW25PM5XHMxoCdDHw_wcB&action/,Materials - 3DP
+/material-index?s=adwords_g&k=3d%20printing%20metal&c=265013584&a=26398237504&m=g&gclid=cjwkeaia8qg1brdz0tmk0pufw3qsjacfn6oluuzx34p5flpza5ailalcdbol1d6xjtjpw25pm5xhmxocddhw_wcb&action/,Materials - 3DP
 /material-index?source=post_page---------------------------/,Materials - 3DP
 /material/3d-systems-duraform-flex/,Materials - 3DP
 /material/3d-systems-duraform-pa/,Materials - 3DP
@@ -6501,7 +6501,7 @@ page,page_group
 /new-quote-request/,Other
 /new-york/hubs/sylvia/,Other
 /nicolas77/,Other
-/NL/,Homepage
+/nl/,Homepage
 /nl/3d-print-service/,Service - 3DP
 /nl/3d-print-service/belgie/,Service - 3DP Geo
 /nl/3d-print-service/belgie/antwerpen/,Service - 3DP Geo
@@ -6652,15 +6652,15 @@ page,page_group
 /robots.txt/,Other
 /roi/,Other
 /s3/files/styles/x-large/public/knowledge_base/dsc01041.jpg/,Other
-/s3fs-public/talk/attachments/2%20-%2017TvIER.jpg/,Talk
-/s3fs-public/talk/attachments/Bonus%20Code.pdf/,Talk
-/s3fs-public/talk/attachments/Cleaning%20Small-Galvo%20Mirrors.pdf/,Talk
+/s3fs-public/talk/attachments/2%20-%2017tvier.jpg/,Talk
+/s3fs-public/talk/attachments/bonus%20code.pdf/,Talk
+/s3fs-public/talk/attachments/cleaning%20small-galvo%20mirrors.pdf/,Talk
 /s3fs-public/talk/attachments/co-polyester%20workshop_amsterdam.pdf/,Talk
-/s3fs-public/talk/attachments/Configadv_h.pdf/,Talk
+/s3fs-public/talk/attachments/configadv_h.pdf/,Talk
 /s3fs-public/talk/attachments/configuration_adv.pdf/,Talk
-/s3fs-public/talk/attachments/FDM%20Design%20Guide.pdf/,Talk
+/s3fs-public/talk/attachments/fdm%20design%20guide.pdf/,Talk
 /s3fs-public/talk/attachments/flashforge_after-sales_service_manual.pdf/,Talk
-/s3fs-public/talk/attachments/Galvo%20Mirror%20Cleaning.pdf/,Talk
+/s3fs-public/talk/attachments/galvo%20mirror%20cleaning.pdf/,Talk
 /s3fs-public/talk/attachments/hatchbox_petg_3d_printer_filament_sds.pdf/,Talk
 /s3fs-public/talk/attachments/how_to_upload_firmware_to_bibo_3d_printer_with_cura.pdf/,Talk
 /s3fs-public/talk/attachments/howtousehotbedonkossel_0.pdf/,Talk
@@ -6668,7 +6668,7 @@ page,page_group
 /s3fs-public/talk/attachments/projet_x60_series_user_guide.pdf/,Talk
 /s3fs-public/talk/attachments/slicer-vergelijk-d-1.pdf/,Talk
 /s3fs-public/talk/attachments/swapping_the_clay_extruder_motor_wires.pdf/,Talk
-/s3fs-public/talk/attachments/The%20Code.pdf/,Talk
+/s3fs-public/talk/attachments/the%20code.pdf/,Talk
 /s3fs-public/talk/attachments/user_manual.pdf/,Talk
 /san-jose/hubs/charlie-1/,Service - 3DP Geo
 /san-jose/hubs/fremont-3d-printing/,Service - 3DP Geo
@@ -6691,7 +6691,7 @@ page,page_group
 /service/74296/,Other
 /service/76924/,Other
 /service/glab/,Service - 3DP
-/service/HewlettThomas'%3EThomas%20Hewlett's%20Hub%3C/a%3E%20on%203D%20Hubs/,Other
+/service/hewlettthomas'%3ethomas%20hewlett's%20hub%3c/a%3e%20on%203d%20hubs/,Other
 /service/siegam/,Other
 /service/valles/,Other
 /services/fast-3d-printing/,Other
@@ -6709,7 +6709,7 @@ page,page_group
 /students/grant/,Other
 /talk/,Talk
 /talk-with-an-expert/,About
-/talk/3D-Industries/,Talk
+/talk/3d-industries/,Talk
 /talk/c/3d-printing/,Talk
 /talk/c/3d-printing/5/,Talk
 /talk/c/cnc-machining/,Talk
@@ -6721,18 +6721,18 @@ page,page_group
 /talk/c/maker-projects/netherlands/,Talk
 /talk/c/maker-projects/singapore/,Talk
 /talk/c/maker-projects/southeast-asia/,Talk
-/talk/Castable-Resin/,Talk
+/talk/castable-resin/,Talk
 /talk/categories/,Talk
-/talk/Flexible-Resin/,Talk
+/talk/flexible-resin/,Talk
 /talk/kickstarter/,Talk
 /talk/login/,Talk
-/talk/Mass-Portal/,Talk
+/talk/mass-portal/,Talk
 /talk/message-bus/0514fb41a9874ecfbee3856ec5c32a19/poll/,Talk
 /talk/message-bus/08a5c8eac45f454bb8acae5029d1b38c/poll/,Talk
 /talk/message-bus/4f3c4445c6454b8fbc0aff9c08a5f7c7/poll/,Talk
-/talk/Nexai/,Talk
+/talk/nexai/,Talk
 /talk/sitemap_2.xml/,Talk
-/talk/Slic3r/,Talk
+/talk/slic3r/,Talk
 /talk/t/1-75-mm-vs-3-00-mm/5706/,Talk
 /talk/t/1-800-370-0823-how-to-fix-the-issue-of-forgot-optimum-id-forum/17965/,Talk
 /talk/t/10-discount-on-formfutura-filaments/1747/,Talk
@@ -10966,7 +10966,7 @@ page,page_group
 /talk/thread/qiditech-dual-extruder-temperatures/,Talk
 /talk/thread/raft-adhering-print/,Talk
 /talk/thread/reducing-polygon-count-tips-and-tricks/,Talk
-/talk/thread/sale-projet%C2%AE-cjp-660pro/,Talk
+/talk/thread/sale-projet%c2%ae-cjp-660pro/,Talk
 /talk/thread/sandstone-3d-printing/,Talk
 /talk/thread/select-mini-retraction-issues/,Talk
 /talk/thread/setting-up-cura-deltawasp-4070/,Talk
@@ -11017,18 +11017,18 @@ page,page_group
 /talk/thread/zortrax-m200-alternative-filaments/,Talk
 /talk/thread/zortrax-m200-support-removal-issue/,Talk
 /talk/u/begoluxrl/,Talk
-/talk/u/BKL3D/,Talk
+/talk/u/bkl3d/,Talk
 /talk/u/essayhelp/,Talk
 /talk/u/hpcustomersuppo/,Talk
 /talk/u/instantuae/,Talk
 /talk/u/ipl2017/,Talk
 /talk/u/jnsbanman/,Talk
 /talk/u/kintanles365/,Talk
-/talk/u/Mirth/,Talk
+/talk/u/mirth/,Talk
 /talk/u/mitchell38789/,Talk
 /talk/u/nikhilatri22/,Talk
 /talk/u/omwati6229/,Talk
-/talk/u/Optimumcontactn/summary/,Talk
+/talk/u/optimumcontactn/summary/,Talk
 /talk/u/plastiprint3d/,Talk
 /talk/u/prestigesteelbu/,Talk
 /talk/u/raviraju/,Talk
@@ -11040,22 +11040,22 @@ page,page_group
 /talk/uploads/db5060/630c157669a3e4a13bf458dfbe4f3338b79d5fb6/,Talk
 /talk/uploads/db5060/d59834c69ee9dc9671748b502ea428fcaaf9dc43/,Talk
 /talk/uploads/db5060/e3519e7e92ea90e2add13ad76392833c6926ee8c/,Talk
-/talk/uploads/db5060/original/2X/1/1818b1f591a58200a9dc32b186c174eee98bc494.pdf/,Talk
-/talk/uploads/db5060/original/2X/3/35c785018b203246e7d2d503d5acce2c693b3ae6.jpg/,Talk
-/talk/uploads/db5060/original/2X/7/72c57c949306bf8f2a3772b974a01a9069bf7f55.pdf/,Talk
-/talk/uploads/db5060/original/2X/c/cc23e6224863452a980b6886378aded958bc2ab1.jpg/,Talk
-/talk/uploads/db5060/original/2X/f/f3893f7515a66e24dc8aa6feba185e91195bc7a3.jpg/,Talk
-/talk/uploads/db5060/original/3X/0/1/011a9aa654106c5db4d49e3448dab2f62eb1b288.pdf/,Talk
-/talk/uploads/db5060/original/3X/0/f/0f1697f58373abd724c661668900bce021e18974.pdf/,Talk
-/talk/uploads/db5060/original/3X/4/7/477d1818b7f2947406a746aa93978976c4dc978e.pdf/,Talk
-/talk/uploads/db5060/original/3X/5/b/5be3ac97e1f736af337f830105e86f90f582adb2.pdf/,Talk
-/talk/uploads/db5060/original/3X/5/c/5c6892309a864fc95c2afa43272e91e2bb2cd66f.pdf/,Talk
-/talk/uploads/db5060/original/3X/7/9/793bab905cd27c2ac7a4d513dfab5d60fcece20e.pdf/,Talk
-/talk/uploads/db5060/original/3X/8/d/8d11bc8845daef7ea6db92ea92934a3c4bcb65da.jpg/,Talk
-/talk/uploads/db5060/original/3X/9/2/92646f7a26fe27e46f3c43b7854cf13c404a5527.pdf/,Talk
-/talk/uploads/db5060/original/3X/d/0/d0206c4ea12378469d0261c606f752659e51aef6.pdf/,Talk
-/talk/uploads/db5060/original/3X/e/c/ec5a4cdf622000d30b8a1ecb502d668cb8f772d0.pdf/,Talk
-/Tartu/,Service - 3DP Geo
+/talk/uploads/db5060/original/2x/1/1818b1f591a58200a9dc32b186c174eee98bc494.pdf/,Talk
+/talk/uploads/db5060/original/2x/3/35c785018b203246e7d2d503d5acce2c693b3ae6.jpg/,Talk
+/talk/uploads/db5060/original/2x/7/72c57c949306bf8f2a3772b974a01a9069bf7f55.pdf/,Talk
+/talk/uploads/db5060/original/2x/c/cc23e6224863452a980b6886378aded958bc2ab1.jpg/,Talk
+/talk/uploads/db5060/original/2x/f/f3893f7515a66e24dc8aa6feba185e91195bc7a3.jpg/,Talk
+/talk/uploads/db5060/original/3x/0/1/011a9aa654106c5db4d49e3448dab2f62eb1b288.pdf/,Talk
+/talk/uploads/db5060/original/3x/0/f/0f1697f58373abd724c661668900bce021e18974.pdf/,Talk
+/talk/uploads/db5060/original/3x/4/7/477d1818b7f2947406a746aa93978976c4dc978e.pdf/,Talk
+/talk/uploads/db5060/original/3x/5/b/5be3ac97e1f736af337f830105e86f90f582adb2.pdf/,Talk
+/talk/uploads/db5060/original/3x/5/c/5c6892309a864fc95c2afa43272e91e2bb2cd66f.pdf/,Talk
+/talk/uploads/db5060/original/3x/7/9/793bab905cd27c2ac7a4d513dfab5d60fcece20e.pdf/,Talk
+/talk/uploads/db5060/original/3x/8/d/8d11bc8845daef7ea6db92ea92934a3c4bcb65da.jpg/,Talk
+/talk/uploads/db5060/original/3x/9/2/92646f7a26fe27e46f3c43b7854cf13c404a5527.pdf/,Talk
+/talk/uploads/db5060/original/3x/d/0/d0206c4ea12378469d0261c606f752659e51aef6.pdf/,Talk
+/talk/uploads/db5060/original/3x/e/c/ec5a4cdf622000d30b8a1ecb502d668cb8f772d0.pdf/,Talk
+/tartu/,Service - 3DP Geo
 /team/,About
 /terms-of-use/,About
 /tiago62/,Other
@@ -11073,8 +11073,8 @@ page,page_group
 /user/login/,Other
 /user/logout/,Other
 /user/register/,Other
-/user/reset/195990/1562502425/-Y38YqnfZgBxrIOqiV2mOP-FqNoiGRnSDqr1JswS4oo/,Other
-/user/reset/243169/1565283535/Z8at_VvncqR1o4JF-3plbOUUJf5lYyeEHQeIWRkBLGc/,Other
+/user/reset/195990/1562502425/-y38yqnfzgbxrioqiv2mop-fqnoigrnsdqr1jsws4oo/,Other
+/user/reset/243169/1565283535/z8at_vvncqr1o4jf-3plbouujf5lyyeehqeiwrkblgc/,Other
 /users/amavriq/dashboard/list-my-printer/,Other
 /users/avastantivirus/,Other
 /users/dianadiazmodel1/,Other
@@ -11091,7 +11091,7 @@ page,page_group
 /users/sattamatka/,Other
 /utrecht/hubs/korneel/,Service - 3DP Geo
 /valletta/hubs/malta-3d-printing/,Service - 3DP Geo
-/Venice/,Service - 3DP Geo
+/venice/,Service - 3DP Geo
 /videos/3d-printing-technologies-binder-jetting/,Knowledge Base - 3DP
 /videos/3d-printing-technologies-material-jetting/,Knowledge Base - 3DP
 /videos/aluminum-6061-cnc-machined-parts/,Knowledge Base - CNC
@@ -11104,7 +11104,7 @@ page,page_group
 /videos/printing-highly-detailed-parts-sla/,Other
 /videos/reducing-cnc-costs/,Other
 /videos/selective-laser-sintering-3d-printing-strong-functional-parts/,Knowledge Base - 3DP
-/w%C3%BCrzburg/hubs/startcad/,Service - 3DP Geo
+/w%c3%bcrzburg/hubs/startcad/,Service - 3DP Geo
 /webinars/,Blog
 /webinars/3dp-for-production/,Blog
 /webinars/autodesk/,Blog
@@ -11117,16 +11117,16 @@ page,page_group
 /webinars/supply-chain-resilience/,Blog
 /what-is-3-printing/,Knowledge Base - 3DP
 /what-is-3d-priinting/,Knowledge Base - 3DP
-/WHAT-IS-3D-PRINTING/,Knowledge Base - 3DP
+/what-is-3d-printing/,Knowledge Base - 3DP
 /what-is-3d-printing-printing/,Knowledge Base - 3DP
 /what-is-3d-printing%23technologies/,Knowledge Base - 3DP
-/what-is-3d-printing%5D/,Knowledge Base - 3DP
+/what-is-3d-printing%5d/,Knowledge Base - 3DP
 /what-is-e3-printing/,Knowledge Base - 3DP
 /what-is3d-printing/,Knowledge Base - 3DP
-/what%E2%80%90is%E2%80%903d%E2%80%90printing/,Knowledge Base - 3DP
+/what%e2%80%90is%e2%80%903d%e2%80%90printing/,Knowledge Base - 3DP
 /whatis3d/,Knowledge Base - 3DP
 /whatis3dprint/,Knowledge Base - 3DP
-/whatis3Dprinting/,Knowledge Base - 3DP
+/whatis3dprinting/,Knowledge Base - 3DP
 /widgets/v2/button/,Other
 /widgets/v2/order/,Other
 /zagreb/hubs/luka/,Service - 3DP Geo
