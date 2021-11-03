@@ -63,7 +63,7 @@ with stg as (
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn
 
-    from {{ source('data_lake', 'hubspot_deals') }} as hs
+    from {{ source('data_lake', 'hubspot_deals_stitch') }} as hs
             left join {{ ref('hubspot_dealstages') }} as dealstage
     on hs.dealstage = dealstage.dealstage_internal_label
         left join {{ ref('order_status') }} as status

@@ -108,7 +108,7 @@ with time_in_hubspot_stage as (
            so.first_name || ' ' || so.last_name                                      as sourcing_owner_name,
            review_iteration
     from first_review_dates rfd
-            left join {{ source('data_lake', 'hubspot_deals') }} hd using (deal_id)
+            left join {{ source('data_lake', 'hubspot_deals_stitch') }} hd using (deal_id)
             left join {{ source('data_lake', 'hubspot_owners') }} so
                     on so.owner_id = hd.sourcing_owner and so.is_current is true
     order by review_id

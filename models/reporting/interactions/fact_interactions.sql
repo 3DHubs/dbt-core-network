@@ -66,7 +66,7 @@ with list_of_emails as (
          from {{ ref('fact_hubspot_engagements') }} as he
             left join agents a
          on he.engagement_owner_id = a.hs_agent_id
-             left join {{ source('data_lake', 'hubspot_deals') }} as hd on he.deal_id = hd.deal_id
+             left join {{ source('data_lake', 'hubspot_deals_stitch') }} as hd on he.deal_id = hd.deal_id
 
              {% if is_incremental() %}
 
@@ -113,7 +113,7 @@ with list_of_emails as (
             left join {{ ref('fact_freshdesk_tickets') }} fdt
          on fdi.ticket_id = fdt.ticket_id
              left join {{ ref('cnc_orders') }} as orders on fdt.order_uuid = orders.uuid
-             left join {{ source('data_lake', 'hubspot_deals') }} as hd on orders.hubspot_deal_id = hd.deal_id
+             left join {{ source('data_lake', 'hubspot_deals_stitch') }} as hd on orders.hubspot_deal_id = hd.deal_id
              left join agents a on fdi.agent_id = a.fd_agent_id
 
              {% if is_incremental() %}
