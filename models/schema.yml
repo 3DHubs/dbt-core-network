@@ -96,7 +96,7 @@ sources:
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
-        loaded_at_field: load_timestamp
+        loaded_at_field: createdate
       - name: hubspot_contacts
         freshness:
           warn_after: {count: 24, period: hour}
@@ -114,7 +114,7 @@ sources:
         loaded_at_field: load_timestamp
       - name: hubspot_owners_teams
       - name: hubspot_email_wall_submissions_20210423
-      - name: hubspot_pages_new
+      - name: hubspot_pages_staging
 
       - name: exchange_rate_spot_daily
         freshness:
@@ -137,6 +137,7 @@ sources:
       - name: supply_cross_docking_tracking_details_20200911
       - name: legacy_orders
       - name: freshdesk_groups_legacy_20200401
+      - name: dim_dates
 
   - name: int_service_supply
     tables:
@@ -148,6 +149,10 @@ sources:
       - name: cnc_order_parts_inspection_attachments
       - name: cnc_order_quote_attachments
       - name: cnc_orders
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: created
       - name: cnc_order_quotes
       - name: company_entities
       - name: complaint_reasons
