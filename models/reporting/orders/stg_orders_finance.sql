@@ -31,7 +31,7 @@ select
 orders.uuid as order_uuid,
 orders.created as order_created_at,
 quotes.subtotal_price_amount/100.00 as order_subtotal,
-coalesce(count(case  when invoices.custbody_downpayment > 0 then order_uuid end),0) as downpayment_invoice_count,
+coalesce(count(case  when coalesce(invoices.custbody_downpayment_boolean, false) then order_uuid end),0) as downpayment_invoice_count,
 coalesce(sum(case when invoices._type = 'Invoice' then invoices.amountremaining end),0) as invoice_remaining_amount,
 coalesce(sum(case when invoices._type = 'CreditMemo' then invoices.unapplied end),0) as credit_remaining_amount,
 coalesce(sum(case when invoices._type = 'Invoice' then invoices.amountremaining end),0)
