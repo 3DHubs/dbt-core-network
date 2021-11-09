@@ -91,6 +91,7 @@ rdai.number_of_price_counterbids,
 rdai.has_winning_bid,
 rdai.has_accepted_winning_bid,
 rdai.has_winning_bid_countered_on_price,
+rdai.has_winning_bid_countered_on_lead_time,
 rdai.has_winning_bid_countered_on_design,
 
 -- SOURCE 2: Auctions Manually Cancelled

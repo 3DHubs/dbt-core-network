@@ -228,6 +228,7 @@ number_of_price_counterbids,
 has_winning_bid,
 has_accepted_winning_bid,
 has_winning_bid_countered_on_price,
+has_winning_bid_countered_on_lead_time,
 has_winning_bid_countered_on_design,
 is_rda_sourced,
 

@@ -127,6 +127,7 @@ select
     rda.has_winning_bid,
     rda.has_accepted_winning_bid,
     rda.has_winning_bid_countered_on_price,
+    rda.has_winning_bid_countered_on_lead_time,
     rda.has_winning_bid_countered_on_design,
 
 
