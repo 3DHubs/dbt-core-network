@@ -166,6 +166,7 @@ select
     docs.po_active_amount_usd,
     docs.po_active_document_number,
     docs.po_active_company_entity,
+    docs.po_active_support_ticket_id,
     docs.promised_shipping_at_by_supplier,
     docs.po_active_shipping_usd,
 

@@ -286,7 +286,8 @@ number_of_incoming_emails,
 
 -- Freshdesk
 change_request_status,
-has_change_request, 
+has_change_request,
+po_active_support_ticket_id,
 
 -- Original Orders
 coalesce(is_reorder, false) as is_reorder,

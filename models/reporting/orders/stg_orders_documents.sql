@@ -105,6 +105,7 @@ where l.type='discount'),
          with rn as (select order_uuid,
                             finalized_at                                                           as sourced_at,
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
+                            supplier_support_ticket_id                                             as po_first_support_ticket_id,
                             round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as sourced_cost_usd,
                             sum(case
                                     when sqli.type = 'shipping'
@@ -119,9 +120,10 @@ where l.type='discount'),
                      where true
                        and soq.type like 'purchase_order'
                        and soq.finalized_at is not null
-                     group by 1, 2, 3, 4)
+                     group by 1, 2, 3, 4, 5)
          select order_uuid,
                 po_first_supplier_id, -- Used to define is_resourced
+                po_first_support_ticket_id,
                 sourced_at,  -- Used to define sourced_date
                 sourced_cost_usd,  -- Used to defined sourced_cost_usd
                 po_first_shipping_usd
@@ -139,6 +141,7 @@ where l.type='discount'),
                 round(((subtotal_price_amount / 100.00) / rates.rate), 2)                    as po_active_amount_usd,
                 document_number                                                              as po_active_document_number,
                 purchase_orders.supplier_id::int                                             as po_active_supplier_id, -- Used to define is_resourced field
+                purchase_orders.supplier_support_ticket_id                                   as po_active_support_ticket_id,
                 suppliers.name                                                               as po_active_supplier_name,
                 suppliers.address_id                                                         as po_active_supplier_address_id,
                 countries.name                                                               as po_active_company_entity,
@@ -161,7 +164,7 @@ where l.type='discount'),
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
          where quotes.type = 'purchase_order'
            and purchase_orders.status = 'active'
-         {{ dbt_utils.group_by(n=10) }}
+         {{ dbt_utils.group_by(n=11) }}
      ),
 
      -- ALL PURCHASE ORDER FIELDS
@@ -231,6 +234,7 @@ select -- First Quote
        fpo.sourced_cost_usd,
        fpo.po_first_shipping_usd,
        fpo.po_first_supplier_id,
+       fpo.po_first_support_ticket_id,
 
        --    fpo.po_first_amount_source_currency,
        --    fpo.po_first_source_currency,
@@ -246,6 +250,7 @@ select -- First Quote
        apo.po_active_supplier_id,
        apo.po_active_supplier_name,
        apo.po_active_supplier_address_id,
+       apo.po_active_support_ticket_id,
 
 
        --    apo.order_active_po_quote_uuid,
