@@ -8,7 +8,7 @@ with fat as ( select distinct
              sa_assigned_at asc
          rows between unbounded preceding and unbounded following
     ) as first_assigned_technology
-    from {{ ref('fact_supplier_auction_interactions') }}
+    from {{ ref('fact_rda_behaviour') }}
     where sa_supplier_id is not null
 ),
 
@@ -63,7 +63,7 @@ agg as ( select
             end
     )
     ) as last_accepted_at
-    from {{ ref('fact_supplier_auction_interactions') }}
+    from {{ ref('fact_rda_behaviour') }}
     where sa_supplier_id is not null
     group by 1),
 

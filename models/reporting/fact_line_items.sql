@@ -14,7 +14,7 @@ with auction_tech as (
                     a_quotes.order_uuid,
                     row_number()
                     over (partition by a_quotes.order_uuid order by auctions.status, auctions.created desc) as seq
-            from {{ ref('auctions') }} as auctions
+            from {{ ref('auctions_rda') }} as auctions
                     inner join {{ ref('cnc_order_quotes') }} as a_quotes
                                 on a_quotes.uuid = auctions.order_quotes_uuid
             where auctions.is_latest_order_auction) aq

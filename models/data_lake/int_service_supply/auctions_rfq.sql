@@ -1,5 +1,9 @@
-/* This is a solution intended to be temporary. There's a data model `supplier_rfqs` that holds similar data. We 
-   need to figure out what the differences/similarities are. To be continued... */
+-- CONTAINS ONLY RFQ AUCTIONS 
+
+/* 
+The Auctions data coming from Int Service Supply can hold rows from both "Real RDA Auctions" and 
+RFQ Auctions (Request for Quotation). We decided to split the Auctions data into both categories for simplicity.  
+ */
 
 {% set boolean_fields = [
        "is_internal_support_ticket_opened",
@@ -14,6 +18,7 @@ with stg as (
               oqs.updated,
               oqs.deleted,
               oqs.order_uuid                                                 as order_uuid,
+              oqs.document_number                                            as auction_document_number,
               auctions.uuid                                                  as order_quotes_uuid,
               auctions.winner_bid_uuid,
               auctions.status,                       -- If auction gets status 'resourced' it means it has been brought back to the auction

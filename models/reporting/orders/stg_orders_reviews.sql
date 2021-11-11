@@ -24,7 +24,9 @@ with agg_supply_technical_review as (
 
      window_agg_hubspot_technical_review as (
        select deal_id,
-              min(review_completed_date) as hubspot_first_technical_review_completed_at
+              true                             as has_technical_review,
+              min(first_review_ongoing_date)   as hubspot_first_technical_review_ongoing_at,
+              min(review_completed_date)       as hubspot_first_technical_review_completed_at
        from {{ ref('fact_hubspot_deal_reviews') }}
        where review_outcome = 'completed'
        group by 1
@@ -38,16 +40,17 @@ with agg_supply_technical_review as (
               count(distinct case when supplier_rfq_responded_date is not null then supplier_id else null end) number_of_suppliers_rfq_responded,
               count(*) number_of_rfq_requests,
               sum(case when supplier_rfq_responded_date is not null then 1 else 0 end) as number_of_rfq_responded
-       from {{ ref('fact_supplier_rfqs') }} as rfq
+       from {{ ref('fact_rfq_behaviour') }} as rfq
        group by 1  
      )
 
 -- Final Query
 
 select orders.uuid as order_uuid,
-       coalesce(supply.has_technical_review, false) as has_technical_review,
+       coalesce(hubspot.has_technical_review, supply.has_technical_review) as has_technical_review,
        supply.number_of_technical_reviews,
        supply.supply_first_technical_review_submitted_at,
+       hubspot_first_technical_review_ongoing_at,
        hubspot.hubspot_first_technical_review_completed_at,
        supply.supply_last_technical_review_completed_at,
        coalesce(rfq.has_rfq, false) as has_rfq,

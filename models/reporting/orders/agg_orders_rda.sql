@@ -20,7 +20,7 @@
 
 -- Parent Sources: Auctions, Bids, Supplier Auctions, Order Quotes & Technologies
 
-with rda_interactions as (
+with rda_interactions as ( 
     select sai.auction_order_uuid as order_uuid,
            count(distinct sai.sa_supplier_id)                                                        as number_of_suppliers_assigned,
            -- Auctions Seen
@@ -45,7 +45,7 @@ with rda_interactions as (
            bool_or(sai.bid_has_changed_shipping_date = 'true' and sai.is_winning_bid)                as has_winning_bid_countered_on_lead_time,
            bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
 
-    from {{ ref('fact_supplier_auction_interactions') }} as sai
+    from {{ ref('fact_rda_behaviour') }} as sai
     group by 1
 
     -- SOURCE 2: Auctions Cancelled Manually
@@ -66,7 +66,7 @@ cancelled_auctions as (
     select distinct a.order_uuid,
         true as auction_is_cancelled_manually,
         c.min_created as auction_cancelled_manually_at
-    from {{ ref('auctions') }} a
+    from {{ ref('auctions_rda') }} a
             left join canceled c on c.order_uuid = a.order_uuid
     where a.status = 'canceled'
     and a.order_uuid not in (select order_uuid from rejected)   
@@ -128,7 +128,7 @@ technologies.name as auction_technology_name
     -- started_at,
     -- last_processed_at, 
 
-from {{ ref('auctions') }} as auctions
+from {{ ref('auctions_rda') }} as auctions
     inner join {{ ref('cnc_order_quotes') }} as a_quotes on auctions.order_quotes_uuid = a_quotes.uuid
     left join {{ ref('bids') }} as bids on auctions.winner_bid_uuid = bids.uuid
     left join {{ ref('suppliers') }} as suppliers on bids.supplier_id = suppliers.id

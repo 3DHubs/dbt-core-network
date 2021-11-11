@@ -255,6 +255,7 @@ select
 
     reviews.has_technical_review,
     reviews.number_of_technical_reviews,
+    reviews.hubspot_first_technical_review_ongoing_at,
     reviews.hubspot_first_technical_review_completed_at,
     reviews.has_rfq,
     reviews.is_rfq_sourced,

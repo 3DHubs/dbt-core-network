@@ -9,6 +9,7 @@
    Another update in Q1 2021: a new feature was added to the RDA where parts can be resourced for whatever reason. We
    leverage the quotes table to get a sequence of auctions for a given order. If an order goes onto the RDA multiple
    times, it will yield a `recency_idx` >= 2. */
+   
 with auctions as (select oqs.created,
                          oqs.updated,
                          oqs.deleted,

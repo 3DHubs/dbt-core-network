@@ -38,7 +38,7 @@ with stg_bids as (
                round((oq.subtotal_price_amount / 100.00), 2) as auction_amount_usd,
                oq.document_number
         
-        from {{ ref('auctions') }} as a
+        from {{ ref('auctions_rda') }} as a
                 left join {{ ref('cnc_order_quotes') }} as oq on oq.uuid = a.order_quotes_uuid
                 inner join {{ ref('technologies') }} as dt on oq.technology_id = dt.technology_id       
         ),
@@ -108,7 +108,7 @@ with stg_bids as (
                 sod.order_quote_amount_usd_excl_discount                                          as auction_quote_amount_usd
         
         from sa
-                    inner join {{ ref('auctions') }} a on a.order_quotes_uuid = sa.auction_uuid
+                    inner join {{ ref('auctions_rda') }} a on a.order_quotes_uuid = sa.auction_uuid
                     left outer join b on b.supplier_auction_uuid = sa.supplier_auction_uuid
                     left outer join stg_auction_technology t on a.order_quotes_uuid = t.order_quotes_uuid
                     left join {{ ref ('stg_orders_documents')}} sod on sod.order_uuid = a.order_uuid

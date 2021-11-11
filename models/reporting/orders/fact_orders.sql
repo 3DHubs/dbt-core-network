@@ -60,6 +60,7 @@ submitted_at, -- Quote request
 hubspot_owner_assigned_date,
 first_time_quote_sent_at,
 first_time_response_at,
+hubspot_first_technical_review_ongoing_at,
 hubspot_first_technical_review_completed_at,
 closed_at, -- When clients pays, also known as won
 hubspot_closed_at,
