@@ -60,6 +60,31 @@ with stg as (
         hs.sourcing_owner                                                                 as hubspot_sourcing_owner_id,
         so.first_name || ' ' || so.last_name                                              as hubspot_sourcing_owner_name,
 
+        -- TEAM FIELDS
+        -- Properties added by the different teams
+        
+            -- Fulfillment Fields
+            rfq_type,
+            target_price as is_target_price_met,
+            match_lead_time as is_target_lead_time_met,
+            review_outcome,
+
+            -- Project Operation Fields
+            approved_by_services as custom_approval,
+            rejected_reason,
+            im_deal_type,
+            original_im_deal_s_order_number as original_im_order_document_number,
+            critical_to_quality_check_complete as ctq_check,
+
+            -- Sales Fields
+            is_strategic,
+            bdr_company_source as bdr_campaign,
+            closing_probability,
+
+            -- Supply Fields
+            latest_qc_result,
+            in_country_qc_status,
+
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn
 

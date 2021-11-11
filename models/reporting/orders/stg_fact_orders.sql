@@ -94,6 +94,22 @@ select
     hs_deals.hubspot_sourcing_owner_name,
     hs_deals.hubspot_owner_assigned_date,
 
+    -- HS Deals: Properties Requested by Teams
+    -- Check upstream model for details on the team
+    hs_deals.rfq_type,
+    hs_deals.is_target_price_met,
+    hs_deals.is_target_lead_time_met,
+    hs_deals.review_outcome,
+    hs_deals.custom_approval,
+    hs_deals.rejected_reason,
+    hs_deals.im_deal_type,
+    hs_deals.original_im_order_document_number,
+    hs_deals.ctq_check,
+    hs_deals.is_strategic,
+    hs_deals.bdr_campaign,
+    hs_deals.closing_probability,
+    hs_deals.latest_qc_result,
+    hs_deals.in_country_qc_status,
 
     ---------- SOURCE: STG ORDERS RDA --------------
 

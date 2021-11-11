@@ -135,7 +135,6 @@ agg.created_order_is_from_new_client,
 agg.closed_order_is_from_new_customer_client,
 agg.closed_order_number_client,
 
-
 -- Supplier Attributes
 supplier_name,
 
@@ -180,6 +179,20 @@ is_hubspot_high_risk,
 hubspot_dealstage_mapped,
 hubspot_dealstage_mapped_sort_index,
 hubspot_closed_lost_reason,
+rfq_type,
+is_target_price_met,
+is_target_lead_time_met,
+review_outcome,
+custom_approval,
+rejected_reason,
+im_deal_type,
+original_im_order_document_number,
+ctq_check,
+is_strategic,
+bdr_campaign,
+closing_probability,
+latest_qc_result,
+in_country_qc_status,
 
 -- Hubspot Owners
 hubspot_owner_name,
