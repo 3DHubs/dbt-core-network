@@ -11,7 +11,7 @@ with stg as (
         hs.amount                                                                         as hubspot_amount_usd,
         hs.estimated_close_amount                                                         as hubspot_estimated_close_amount_usd,
         hs.deal_category                                                                  as hubspot_deal_category,
-        hs.high_risk                                                                      as is_hubspot_high_risk,
+        hs.high_risk                                                                      as is_high_risk,
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields
@@ -82,7 +82,7 @@ with stg as (
             closing_probability,
 
             -- Supply Fields
-            latest_qc_result,
+            latest_qc_result as qc_inspection_result_latest,
             in_country_qc_status,
 
         -- Window Functions

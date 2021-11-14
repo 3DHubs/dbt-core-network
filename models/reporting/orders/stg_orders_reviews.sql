@@ -35,7 +35,7 @@ with agg_supply_technical_review as (
      rfq_requests as (
        select order_uuid,
               true as has_rfq,
-              bool_or(is_winning_bid) as is_rfq_sourced,
+              bool_or(is_winning_bid) as is_rfq_automatically_sourced, -- An quote can be duplicated manually and not show as a winning bid
               count(distinct supplier_id) number_of_suppliers_rfq_requests,
               count(distinct case when supplier_rfq_responded_date is not null then supplier_id else null end) number_of_suppliers_rfq_responded,
               count(*) number_of_rfq_requests,
@@ -54,7 +54,7 @@ select orders.uuid as order_uuid,
        hubspot.hubspot_first_technical_review_completed_at,
        supply.supply_last_technical_review_completed_at,
        coalesce(rfq.has_rfq, false) as has_rfq,
-       rfq.is_rfq_sourced,
+       rfq.is_rfq_automatically_sourced,
        rfq.number_of_suppliers_rfq_requests,
        rfq.number_of_suppliers_rfq_responded, 
        rfq.number_of_rfq_requests,

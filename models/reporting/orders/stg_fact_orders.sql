@@ -48,7 +48,7 @@ select
     hs_deals.hubspot_amount_usd,
     hs_deals.hubspot_estimated_close_amount_usd,
     hs_deals.hubspot_deal_category,
-    hs_deals.is_hubspot_high_risk,
+    hs_deals.is_high_risk,
     hs_deals.hubspot_pipeline,
 
     -- HS Deals: Foreign Fields
@@ -71,7 +71,6 @@ select
     hs_deals.in_review_reason,
     hs_deals.in_review_type,
     hs_deals.hubspot_closed_lost_reason,
-    hs_deals.qc_inspection_result,
     hs_deals.delay_liability,
     hs_deals.delay_status,
     hs_deals.dispute_liability,
@@ -97,9 +96,9 @@ select
     -- HS Deals: Properties Requested by Teams
     -- Check upstream model for details on the team
     hs_deals.rfq_type,
+    hs_deals.review_outcome,
     hs_deals.is_target_price_met,
     hs_deals.is_target_lead_time_met,
-    hs_deals.review_outcome,
     hs_deals.custom_approval,
     hs_deals.rejected_reason,
     hs_deals.im_deal_type,
@@ -108,7 +107,8 @@ select
     hs_deals.is_strategic,
     hs_deals.bdr_campaign,
     hs_deals.closing_probability,
-    hs_deals.latest_qc_result,
+    hs_deals.qc_inspection_result,
+    hs_deals.qc_inspection_result_latest,
     hs_deals.in_country_qc_status,
 
     ---------- SOURCE: STG ORDERS RDA --------------
@@ -274,7 +274,7 @@ select
     reviews.hubspot_first_technical_review_ongoing_at,
     reviews.hubspot_first_technical_review_completed_at,
     reviews.has_rfq,
-    reviews.is_rfq_sourced,
+    reviews.is_rfq_automatically_sourced,
     reviews.number_of_suppliers_rfq_requests,
     reviews.number_of_suppliers_rfq_responded, 
     reviews.number_of_rfq_requests,
