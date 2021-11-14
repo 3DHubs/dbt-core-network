@@ -78,7 +78,7 @@ with stg as (
 
             -- Sales Fields
             is_strategic,
-            bdr_company_source as bdr_campaign,
+            bdr_source as bdr_campaign,
             closing_probability,
 
             -- Supply Fields
