@@ -28,7 +28,6 @@ with agg_supply_technical_review as (
               min(first_review_ongoing_date)   as hubspot_first_technical_review_ongoing_at,
               min(review_completed_date)       as hubspot_first_technical_review_completed_at
        from {{ ref('fact_hubspot_deal_reviews') }}
-       where review_outcome = 'completed'
        group by 1
      ),
 
