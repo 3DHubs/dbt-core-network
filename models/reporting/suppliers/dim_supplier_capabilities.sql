@@ -45,11 +45,14 @@ with supplier_tech as (
          from finishes_prep
          group by 1, 2, 3, 4, 5
      ),
-     material_subssets as (
+     material_subsets as (
          select s.id,
                 s.name  as supplier_name,
                 ms.name as material_subset_name,
                 ms.material_subset_id,
+                ms.is_available_in_auctions,
+                ms.material_excluded_in_eu,
+                ms.material_excluded_in_us,
                 m.technology_id,
                 m.material_id,
                 ms.process_id
@@ -80,6 +83,9 @@ select st.*,
        f.surface_finish_name,
        ms.material_subset_name,
        ms.material_subset_id,
+       ms.is_available_in_auctions,
+       ms.material_excluded_in_eu,
+       ms.material_excluded_in_us,
        coalesce(p.process_name, p1.process_name) as process_name,
        coalesce(p.process_id, p1.process_id)     as process_id,
        p.depth_min, --cnc only
@@ -90,7 +96,7 @@ select st.*,
        p.height_max
 from supplier_tech st
          left join finishes f on f.supplier_id = st.supplier_id and f.technology_id = st.technology_id
-         left join material_subssets ms on ms.id = st.supplier_id and ms.technology_id = st.technology_id
+         left join material_subsets ms on ms.id = st.supplier_id and ms.technology_id = st.technology_id
          left join processes p on p.supplier_id = st.supplier_id and st.technology_id = p.technology_id and
                                   st.technology_id <> 2 -- processes independent for non-3DP orders
          left join processes p1 on p1.supplier_id = st.supplier_id and ms.process_id = p1.process_id and

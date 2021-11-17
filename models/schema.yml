@@ -172,6 +172,7 @@ sources:
       - name: material_colors
       - name: material_finishes
       - name: material_subsets
+      - name: material_subsets_region_settings
       - name: materials
       - name: materials_material_finishes
       - name: netsuite_customer_addresses
