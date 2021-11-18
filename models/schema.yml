@@ -88,10 +88,6 @@ sources:
   - name: data_lake
     tables:
       - name: hubspot_engagements
-        freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
-        loaded_at_field: load_timestamp
       - name: hubspot_deals_stitch
         freshness:
           warn_after: {count: 24, period: hour}
