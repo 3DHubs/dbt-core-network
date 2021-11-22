@@ -1,14 +1,21 @@
-"order_status_id","hubspot_status_value","supply_status_value","mapped_value"
-"2","Won - Customer invoiced",,"completed"
-"7","Won - Received by customer (review)","delivered","delivered"
-"5","Won - In shipment","shipped","shipped"
-"9","Closed - Lost",,"lost"
-"3","Won - Disputed by customer","disputed","disputed"
-"10",,"parts_inspected","parts_inspected"
-"11","Submitted self service orders (Self service orders)",,"canceled"
-"12","Lost self service orders (Self service orders)",,"lost"
-"13","Paid self service orders (Self service orders)",,"completed"
-"4","Won - In production","in_production","in_production"
-"6","Won - Needs sourcing","accepted","accepted"
-"8","Closed - Canceled","canceled","canceled"
-"1","Won - Accepted by customer","completed","completed"
+order_status_id,hubspot_status_value,supply_status_value,mapped_value
+1,Won - Accepted by customer,completed,completed
+2,Won - Customer invoiced,,completed
+3,Won - Disputed by customer,disputed,disputed
+4,Won - In production,in_production,in_production
+5,Won - In shipment,shipped,shipped
+6,Won - Needs sourcing,accepted,accepted
+7,Won - Received by customer (review),delivered,delivered
+8,Closed - Canceled,canceled,canceled
+9,Closed - Lost,,lost
+10,,parts_inspected,parts_inspected
+11,Submitted self service orders (Self service orders),,canceled
+12,Lost self service orders (Self service orders),,lost
+13,Paid self service orders (Self service orders),,completed
+14,In review - Completed,,submitted
+15,In review - New,,submitted
+16,In review - Ongoing,,submitted
+17,In review - Rejected,,submitted
+18,New,,submitted
+19,Ongoing - No quote sent,,submitted
+20,Ongoing - Quote sent,,submitted

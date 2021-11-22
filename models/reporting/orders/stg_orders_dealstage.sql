@@ -41,9 +41,7 @@ select orders.uuid                                                              
        soe.last_completed_at,
 
        -- Status
-       case
-           when is_closed is false then 'lost'
-           else coalesce(order_status.mapped_value, stg_hubspot.hubspot_status_mapped) end as order_status
+       coalesce(order_status.mapped_value, stg_hubspot.hubspot_status_mapped) as order_status
 
 from {{ ref ('cnc_orders') }} as orders
          left join {{ ref ('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid

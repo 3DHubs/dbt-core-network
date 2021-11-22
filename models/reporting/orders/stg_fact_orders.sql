@@ -67,7 +67,6 @@ select
     -- HS Deals: Lifecycle
     hs_deals.hubspot_dealstage_mapped,
     hs_deals.hubspot_dealstage_mapped_sort_index,
-    hs_deals.hubspot_status_mapped,
     hs_deals.in_review_reason,
     hs_deals.in_review_type,
     hs_deals.hubspot_closed_lost_reason,
@@ -300,7 +299,7 @@ select
 
     ------ SOURCE: STG DEALSTAGE ---------
     -- Combines data from order history events (supply),
-    -- hubspot dealstage history (hubspot) and order status.
+    -- hubspot dealstage history (hubspot).
 
     -- Closing
     coalesce(dealstage.is_closed, false) as is_closed,
