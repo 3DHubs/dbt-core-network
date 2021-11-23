@@ -10,7 +10,7 @@ inner join {{ source('int_service_supply', 'team_users') }} tu
 )
 
 
-select con.createdate                                             as created_date,
+select con.created_at                                             as created_at,
            coalesce(md5(concat('company', con.hs_company_id)),md5(concat('contact', con.contact_id))) as client_id,
            nvl(con.firstname || ' ' || con.lastname, con.email)       as name,
            con.country_iso2,
@@ -37,7 +37,7 @@ select con.createdate                                             as created_dat
            con.hubspot_owner_id                                       as hubspot_owner_id,
            con.bdr_owner_id                                           as bdr_owner_id,
            bdr.first_name || ' ' || bdr.last_name                     as bdr_owner_name,
-           con.hubspot_owner_assigned_date                            as hubspot_owner_assigned_date,
+           con.hubspot_owner_assigned_at,
            own.first_name || ' ' || own.last_name                     as hubspot_owner_name,
            own.primary_team_name                                      as hubspot_owner_primary_team_name,
            con.account_category                                       as contact_category,
@@ -47,10 +47,8 @@ select con.createdate                                             as created_dat
            mql.mql_date                                               as became_mql_at_contact,
            con.hs_lifecyclestage_salesqualifiedlead_date              as became_sql_at_contact,
            con.hs_lead_status                                         as hs_lead_status,
-           con.is_sales_qualified                                     as is_sales_qualified,
            con.contact_source                                         as contact_source,
            jobtitle                                                   as job_title,
-           con.lead_score                                             as lead_score,
            case
                when lower(job_title) ~ 'college|faculty|fellow|graduate|lecturer|learning|student|teacher'
                    then 'University'

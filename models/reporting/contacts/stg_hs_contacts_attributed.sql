@@ -9,16 +9,16 @@
 select coalesce(page_group, 'Ungrouped')                                  as tmp_first_page_seen_grouped,
        case
            when channel_type = 'outbound' then 'outbound'
-           when (ip_country_code <> ('us') or ip_country_code is null) and createdate < '2019-07-01'
+           when (ip_country_code <> ('us') or ip_country_code is null) and created_at < '2019-07-01'
                then 'unknown_channel_old_row'
-           when ip_country_code = 'us' and createdate < '2019-05-01' then 'unknown_channel_old_us'
+           when ip_country_code = 'us' and created_at < '2019-05-01' then 'unknown_channel_old_us'
            -- This detects contacts without a web visit before first party tracking went live
-           when datediff(second, hutk_analytics_first_visit_timestamp::timestamp, createdate::timestamp) < 10 and
-                createdate < '2021-01-05'
+           when datediff(second, hutk_analytics_first_visit_timestamp::timestamp, created_at::timestamp) < 10 and
+                created_at < '2021-01-05'
                then 'unknown_channel_no_web_session'
-           -- After first party tracking went life contacts with a equal first_visit_timestamp and createdate are expected for contacts with adblockers.
-           when datediff(second, hutk_analytics_first_visit_timestamp::timestamp, createdate::timestamp) < 0 and
-                createdate >= '2021-01-05'
+           -- After first party tracking went life contacts with a equal first_visit_timestamp and created_at are expected for contacts with adblockers.
+           when datediff(second, hutk_analytics_first_visit_timestamp::timestamp, created_at::timestamp) < 0 and
+                created_at >= '2021-01-05'
                then 'unknown_channel_no_web_session'
            when hutk_analytics_source = 'offline' and
                 lower(hutk_analytics_source_data_1) in ('analytics', 'api', 'conversations')
@@ -29,7 +29,7 @@ select coalesce(page_group, 'Ungrouped')                                  as tmp
                then 'branded_organic_search'
            when hutk_analytics_source = 'direct_traffic' and
                 hutk_analytics_first_url = 'https://www.3dhubs.com/manufacture%' and
-                createdate <= '2021-03-25' -- after implementing 1st party tracking on /manufacturing on 2021-03-25 this is not needed anymore
+                created_at <= '2021-03-25' -- after implementing 1st party tracking on /manufacturing on 2021-03-25 this is not needed anymore
                then 'unknown_channel'
            when hutk_analytics_source is null then 'unknown_channel'
             else hutk_analytics_source end                                                as channel, 

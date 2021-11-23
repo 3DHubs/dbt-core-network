@@ -24,7 +24,7 @@ with submit as (
                frontend.mql_wall_event,
                hc.hs_lifecyclestage_marketingqualifiedlead_date,
                became_cart_date) as mql_date
-    from {{ source('data_lake', 'hubspot_contacts') }} hc
+    from {{ ref('stg_hs_contacts_union_legacy') }} hc
             left join submit on submit.email = hc.email
             left join upload on upload.email = hc.email
             left join frontend on frontend.email = hc.email

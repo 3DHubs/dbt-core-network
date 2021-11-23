@@ -59,6 +59,8 @@ models:
       +materialized: table
       orders:
         +tags: ["orders"]
+      contacts:
+        +tags: ["contacts"]
 
 # Seeds
 seeds:

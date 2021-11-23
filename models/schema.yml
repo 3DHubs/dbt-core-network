@@ -84,7 +84,6 @@ sources:
       - name: transaction
       - name: transaction__itemlist__item
 
-
   - name: data_lake
     tables:
       - name: hubspot_engagements
@@ -93,11 +92,12 @@ sources:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
         loaded_at_field: createdate
-      - name: hubspot_contacts
+      - name: legacy_contacts
+      - name: hubspot_contacts_stitch
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
-        loaded_at_field: load_timestamp
+        loaded_at_field: createdate
       - name: hubspot_companies_stitch
         freshness:
           warn_after: {count: 24, period: hour}
