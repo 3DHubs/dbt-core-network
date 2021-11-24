@@ -1,3 +1,15 @@
+with distinct_material_subset_region_settings as (
+    select
+        distinct
+        material_subset_id,
+        order_in_eu,
+        order_in_us,
+        excluded_in_us,
+        excluded_in_eu
+    from {{ source('int_service_supply', 'material_subsets_region_settings') }}
+)
+
+
 {% set boolean_fields = [
         "is_available_in_auctions",
         "is_available_to_suppliers",
@@ -53,4 +65,4 @@ select
     coalesce(decode(msrs.excluded_in_us, 'true', True, 'false', False), False) as material_excluded_in_us
 
 from {{ source('int_service_supply', 'material_subsets') }} as ms
-left join {{ source('int_service_supply', 'material_subsets_region_settings') }} as msrs on ms.material_subset_id = msrs.material_subset_id
+left join distinct_material_subset_region_settings as msrs on ms.material_subset_id = msrs.material_subset_id
