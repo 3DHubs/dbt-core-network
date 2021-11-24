@@ -11,7 +11,6 @@ select oqs.created,
        {{ varchar_to_boolean('is_active') }}, -- From `bids`
        bids.supplier_id,
        bids.has_changed_shipping_date,
-       bids.rejection_reasons,
        bids.accepted_ship_by_date,
        bids.author_id,
        bids.margin, -- For debugging purposes only, do not use for reporting

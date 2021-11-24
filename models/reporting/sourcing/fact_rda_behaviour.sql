@@ -14,7 +14,6 @@ with stg_bids as (
                b.ship_by_date,
                b.is_active,
                b.supplier_id,
-               b.rejection_reasons,
                b.accepted_ship_by_date,
                q.description                                                                                            as design_modification_text,
                round(((q.subtotal_price_amount / 100.00) / e.rate), 2)                                                     bid_amount_usd,
@@ -88,7 +87,6 @@ with stg_bids as (
                 b.has_changed_shipping_date                                                       as bid_has_changed_shipping_date,
                 b.ship_by_date                                                                    as bid_adjusted_ship_by_date,
                 b.is_active                                                                       as bid_is_active,
-                b.rejection_reasons                                                               as bid_rejection_reasons,
                 b.accepted_ship_by_date                                                           as bid_accepted_ship_by_date,
                 t.technology_id                                                                   as order_technology_id,
                 t.technology_name                                                                 as order_technology_name,
@@ -112,53 +110,6 @@ with stg_bids as (
                     left outer join b on b.supplier_auction_uuid = sa.supplier_auction_uuid
                     left outer join stg_auction_technology t on a.order_quotes_uuid = t.order_quotes_uuid
                     left join {{ ref ('stg_orders_documents')}} sod on sod.order_uuid = a.order_uuid
-        ),
-
-    all_reasons as (
-
-        with ns as (
-        {% for i in range(1,11) %}
-
-        select {{ i }} as n {% if not loop.last %} union all {% endif %}
-
-        {% endfor %} ),
-                rej as ( select supplier_auction_uuid,
-                                case when is_valid_json_array(bid_rejection_reasons) is false
-                                        then trim('[]' from translate(bid_rejection_reasons, '\'', '"'))
-                                else trim('[]', bid_rejection_reasons) end rejection_reasons_fixed
-                        from stg_supplier_auction_interactions )
-        select supplier_auction_uuid,
-                ns.n,
-                translate(trim('"' from trim(split_part(rejection_reasons_fixed, ',', ns.n))), '"', '\'') as reason
-        from ns
-                inner join rej on ns.n <= regexp_count(rejection_reasons_fixed, ',') + 1
-        where trim(reason) != ''
-        ),
-
-    all_reasons_flattened as (
-
-        select supplier_auction_uuid,
-                min(case when reason in ('Other', '') then 1 else 0 end) as                             has_rejected_other,
-                min(case when reason in ('One (or more) files are unprintable with the selected technology') then 1
-                        else 0 end) as                                                                 has_rejected_unprintable,
-                min(case when reason in ('Unable to machine design') then 1 else 0 end) as              has_rejected_design,
-                min(case when reason in ('The dimensions of the part(s) are too large',
-                                        'Part dimensions too large') then 1
-                        else 0 end) as                                                                 has_rejected_dimensions,
-                min(case when reason like 'Unable to machine at requested tolerance' then 1
-                        else 0 end) as                                                                 has_rejected_tolerance,
-                min(case when reason like 'Unable to make the requested deadline' then 1
-                        else 0 end) as                                                                 has_rejected_deadline,
-                min(case when reason in ('Do not have requested material',
-                                        'I dont have the requested material') then 1
-                        else 0 end) as                                                                 has_rejected_no_material,
-                min(case when reason in ('In violation of Restricted Content policy in MP Agreement (e.g. weapon parts)',
-                                        'In violation of Restricted Content policy in MP Agreement (e.g. gun parts)') then 1
-                        else 0 end) as                                                                 has_rejected_violated_policy
-        
-        from all_reasons
-        
-        group by 1
         )
 
 select  sai.supplier_auction_uuid,
@@ -196,7 +147,6 @@ select  sai.supplier_auction_uuid,
         sai.bid_has_changed_shipping_date,
         sai.bid_adjusted_ship_by_date,
         sai.bid_is_active,
-        sai.bid_rejection_reasons,
         sai.bid_accepted_ship_by_date,
         sai.auction_amount_usd,
         sai.auction_quote_amount_usd,
@@ -207,16 +157,6 @@ select  sai.supplier_auction_uuid,
         sai.sa_max_country_margin,
         sai.margin_type,
         sai.design_modification_text,
-        r.has_rejected_other,
-        r.has_rejected_unprintable,
-        r.has_rejected_design,
-        r.has_rejected_dimensions,
-        r.has_rejected_tolerance,
-        r.has_rejected_deadline,
-        r.has_rejected_no_material,
-        r.has_rejected_violated_policy,
         order_technology_id,
         order_technology_name
-
 from stg_supplier_auction_interactions sai
-            left outer join all_reasons_flattened r on r.supplier_auction_uuid = sai.supplier_auction_uuid

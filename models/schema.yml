@@ -231,7 +231,7 @@ models:
       - name: hubspot_contact_id
         tests:
           - unique
-  - name: fact_supplier_auction_interactions
+  - name: fact_rda_behaviour
     columns:
       - name: supplier_auction_uuid
         tests:
