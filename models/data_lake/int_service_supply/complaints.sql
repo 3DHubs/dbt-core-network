@@ -1,6 +1,5 @@
 select created created_at,
        updated,
-       deleted,
        line_item_uuid,
        created_by_user_id,
        reviewed_by_user_id,

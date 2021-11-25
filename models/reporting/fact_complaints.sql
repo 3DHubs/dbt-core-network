@@ -26,4 +26,3 @@ left join {{ source('int_service_supply', 'complaint_type_reasons_association') 
 left join {{ source('int_service_supply', 'complaint_reasons') }}  cr on cr.id = ctra.complaint_reason_id
 left join {{ ref('users') }} u on u.user_id = c.created_by_user_id
 left join {{ ref('users') }} ur on ur.user_id = c.reviewed_by_user_id
-    where c.deleted is null
