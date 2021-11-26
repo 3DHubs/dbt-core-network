@@ -173,8 +173,8 @@ origin_longitude,
 
 -- Hubspot Attributes
 hubspot_pipeline,
-hubspot_deal_category,
 is_high_risk,
+hubspot_priority,
 hubspot_dealstage_mapped,
 hubspot_dealstage_mapped_sort_index,
 hubspot_closed_lost_reason,

@@ -32,5 +32,8 @@ select
        bdr_assigned,
        associatedcompanyid,
        account_category,
+       strategic,
+       bdr_campaign,
+       notes_last_contacted,
        is_legacy
 from union_contacts

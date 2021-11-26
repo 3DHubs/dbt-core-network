@@ -155,11 +155,12 @@ select distinct soq.order_uuid                                                  
                     when is_cross_docking_ind = false then ss.shipment_shipped_to_customer_at
                     when is_cross_docking_ind then ss.shipment_shipped_to_crossdock_at end         as shipped_at_raw,
                 case
-                    when date_trunc('day', shipped_at_raw) >= '2019-10-01' then shipped_at_raw end as shipped_at,
+                    when date_trunc('day', shipped_at_raw) >= '2019-10-01' then shipped_at_raw end as shipped_date,
+                shipped_date as shipped_at, --added to avoid alias conflict in queries below
                 case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_from_cross_dock_at
                     when is_cross_docking_ind then ss.shipment_shipped_to_customer_at
-                    else shipped_at end                                                            as shipped_to_customer_at,
+                    else shipped_date end                                                            as shipped_to_customer_at,
                 case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_from_cross_dock_at
                     when is_cross_docking_ind
@@ -186,9 +187,9 @@ select distinct soq.order_uuid                                                  
 
                 case
                     when delivered_to_cross_dock_at is not null then delivered_to_cross_dock_at
-                    when is_cross_docking_ind and shipped_at + interval '7 days' < current_date and
+                    when is_cross_docking_ind and shipped_date + interval '7 days' < current_date and
                          delivered_to_cross_dock_at is null
-                        then shipped_at + interval '7 days' end                                    as derived_delivered_to_cross_dock_at
+                        then shipped_date + interval '7 days' end                                    as derived_delivered_to_cross_dock_at
 
 from {{ ref('cnc_order_quotes') }} as soq
     inner join {{ ref('purchase_orders') }} as pos

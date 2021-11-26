@@ -10,12 +10,13 @@ with stg as (
         hs.deal_id                                                                        as hubspot_deal_id,
         hs.amount                                                                         as hubspot_amount_usd,
         hs.estimated_close_amount                                                         as hubspot_estimated_close_amount_usd,
-        hs.deal_category                                                                  as hubspot_deal_category,
         hs.high_risk                                                                      as is_high_risk,
+        hs.hs_priority                                                                    as hubspot_priority,
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields
-        hs.hs_latest_associated_company_id                                                as hubspot_company_id,
+        hcon.associatedcompanyid                                                          as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
+        hs.hs_latest_associated_company_id                                                as original_hubspot_company_id, --JG: Kept for reference
         hcom.name                                                                         as hubspot_company_name,
         hs.hs_latest_associated_contact_id                                                as hubspot_contact_id,
         hs.bdr_company_source                                                             as hubspot_company_source,
@@ -113,8 +114,10 @@ with stg as (
             on hs.technologies = htm.hubspot_technology
         left join {{ ref ('technologies') }} as technologies
             on htm.technology_id = technologies.technology_id
+        left join {{ source('data_lake', 'hubspot_contacts_stitch') }} as hcon
+            on hs.hs_latest_associated_contact_id = hcon.contact_id
         left join {{ source('data_lake', 'hubspot_companies_stitch') }} as hcom 
-            on hs.hs_latest_associated_company_id = hcom.hubspot_company_id
+            on hcon.associatedcompanyid = hcom.hubspot_company_id
 )
 select *
 from stg
