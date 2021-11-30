@@ -12,7 +12,7 @@ select hubspot_company_id,
        min(became_mql_at_contact)             as became_mql_at_company,
        max(inside_opportunity_number)         as number_of_inside_opportunities,
        max(inside_customer_number)            as number_of_inside_customers,
-       max(is_team_member::int)                    as has_team
+       max(is_team_member::int)               as has_team
 
 from {{ ref('stg_contacts_companies') }}
 

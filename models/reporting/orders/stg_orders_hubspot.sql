@@ -11,7 +11,7 @@ with stg as (
         hs.amount                                                                         as hubspot_amount_usd,
         hs.estimated_close_amount                                                         as hubspot_estimated_close_amount_usd,
         hs.high_risk                                                                      as is_high_risk,
-        hs.hs_priority                                                                    as hubspot_priority,
+        hs.hs_priority                                                                    as rfq_priority,
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields

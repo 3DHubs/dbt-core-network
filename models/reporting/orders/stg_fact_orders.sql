@@ -48,7 +48,7 @@ select
     hs_deals.hubspot_amount_usd,
     hs_deals.hubspot_estimated_close_amount_usd,
     hs_deals.is_high_risk,
-    hs_deals.hubspot_priority,
+    hs_deals.rfq_priority,
     hs_deals.hubspot_pipeline,
 
     -- HS Deals: Foreign Fields
