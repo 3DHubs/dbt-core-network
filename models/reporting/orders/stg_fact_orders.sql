@@ -120,25 +120,27 @@ select
     rda.auction_finished_at,
     rda.auction_is_accepted_manually,
     rda.auction_is_reviewed_manually,
-    rda.auction_support_ticket_created_at,
+    rda.auction_support_ticket_opened_at,
     rda.auction_technology_id,
     rda.auction_document_number,
     rda.auction_is_cancelled_manually,
     rda.auction_cancelled_manually_at,
 
     -- RDA: Interaction Aggregates
-    rda.number_of_suppliers_assigned,
-    rda.number_of_auctions_seen,
-    rda.number_of_bids,
-    rda.number_of_positive_bids,
-    rda.number_of_counterbids,
-    rda.number_of_rejected_bids,
+    rda.number_of_supplier_auctions_assigned,
+    rda.number_of_supplier_auctions_seen,
+    rda.number_of_responses,
+    rda.number_of_positive_responses,
+    rda.number_of_countered_responses,
+    rda.number_of_rejected_responses,
     rda.number_of_design_counterbids,
     rda.number_of_lead_time_counterbids,
     rda.number_of_price_counterbids,
 
     --RDA: Winning Bid Fields
     rda.winning_bid_uuid,
+    rda.winning_bid_margin,
+    rda.winning_bid_margin_usd,
     rda.has_winning_bid,
     rda.has_accepted_winning_bid,
     rda.has_winning_bid_countered_on_price,
@@ -413,9 +415,9 @@ from {{ ref('cnc_orders') }} as orders
 
     -- Data Lake
     left join {{ ref ('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
-    left join {{ ref ('order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
 
     -- Service Supply
+    left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
 
 where true

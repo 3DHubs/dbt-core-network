@@ -63,7 +63,7 @@ select oqsl.created                                                             
 from {{ ref('cnc_order_quotes') }} as oqsl
             left outer join {{ ref('cnc_orders') }} as osl on oqsl.order_uuid = osl.uuid
             left outer join {{ ref('cnc_order_quotes') }} as oqslb on oqsl.parent_uuid = oqslb.uuid and oqslb.type = 'bid'
-            left outer join {{ ref('auctions_rda') }} as al on al.order_quotes_uuid = oqslb.parent_uuid and al.is_latest_order_auction = True
+            left outer join {{ ref('auctions_rda') }} as al on al.auction_uuid = oqslb.parent_uuid and al.is_latest_order_auction = True
             left outer join {{ ref('stg_fact_orders') }} as orders on oqsl.order_uuid = orders.order_uuid
             left outer join stg_line_items as li on li.quote_uuid = oqsl.uuid
             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates

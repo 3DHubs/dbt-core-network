@@ -8,15 +8,13 @@
  
 with auction_tech as (
     select order_uuid, technology_id as auction_quotes_technology_id
-        from (select order_quotes_uuid,
-                    winner_bid_uuid,
-                    a_quotes.technology_id,
-                    a_quotes.order_uuid,
-                    row_number()
-                    over (partition by a_quotes.order_uuid order by auctions.status, auctions.created desc) as seq
+        from (select auction_uuid,
+                     winning_bid_uuid,
+                     a_quotes.technology_id,
+                     a_quotes.order_uuid,
+                     row_number() over (partition by a_quotes.order_uuid order by auctions.status, auctions.auction_created_at desc) as seq
             from {{ ref('auctions_rda') }} as auctions
-                    inner join {{ ref('cnc_order_quotes') }} as a_quotes
-                                on a_quotes.uuid = auctions.order_quotes_uuid
+                    inner join {{ ref('cnc_order_quotes') }} as a_quotes on a_quotes.uuid = auctions.auction_uuid
             where auctions.is_latest_order_auction) aq
         where seq = 1
     ),
@@ -90,12 +88,12 @@ select orders.uuid                                                              
            msub.density                                                                 as material_density_g_cm3,
            mc.name                                                                      as material_color_name,
            sqli.custom_material_subset_name                                             as custom_material_subset_name,
-           (nullif(sqli.custom_material_subset_name, '') is not null)                      has_custom_material_subset,
+           (nullif(sqli.custom_material_subset_name, '') is not null)                   as has_custom_material_subset,
            prc.name                                                                     as process_name,
            bmat.name                                                                    as branded_material_name,
            mf.name                                                                      as surface_finish_name,
            sqli.custom_finish_name                                                      as custom_surface_finish_name,
-           (nullif(sqli.custom_finish_name, '') is not null)                               has_custom_finish,
+           (nullif(sqli.custom_finish_name, '') is not null)                            as has_custom_finish,
            sqli.description                                                             as line_item_description, -- comment from customer
            (nullif(sqli.description, '') is not null)                                   as has_customer_note,
            sqli.admin_description,

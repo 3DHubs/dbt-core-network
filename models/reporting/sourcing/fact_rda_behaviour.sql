@@ -1,6 +1,15 @@
-with stg_bids as (
+with stg_supplier_auctions as (
+
+        select md5(supplier_id || auction_uuid) as sa_uuid, *
+
+        from {{ ref('supplier_auctions') }}
         
-        select md5(b.supplier_id || b.auction_uuid)                                                                     as supplier_auction_uuid,
+
+        ),
+
+    bids as (
+    
+        select md5(b.supplier_id || b.auction_uuid)                                                                     as sa_uuid,
                b.has_changed_prices,
                b.has_changed_shipping_date,
                b.has_design_modifications,
@@ -16,8 +25,10 @@ with stg_bids as (
                b.supplier_id,
                b.accepted_ship_by_date,
                q.description                                                                                            as design_modification_text,
-               round(((q.subtotal_price_amount / 100.00) / e.rate), 2)                                                     bid_amount_usd,
-               b.margin_without_discount,
+               case when response_type = 'rejected' then null 
+                   else round(((q.subtotal_price_amount / 100.00) / e.rate), 2) end                                     as bid_amount_usd,
+               case when response_type = 'rejected' then null
+                   else b.margin_without_discount end                                                                   as margin_without_discount,
                row_number()
                over (partition by b.auction_uuid, b.supplier_id order by b.updated desc, b.placed_at desc)              as rn
         
@@ -25,138 +36,49 @@ with stg_bids as (
                 left outer join {{ ref('cnc_order_quotes') }} q on b.uuid = q.uuid
                 left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} e
                                 on e.currency_code_to = q.currency_code and trunc(e.date) = trunc(q.created)
-        ),
+        )
 
-
-    stg_auction_technology as (
-
-        select a.order_quotes_uuid, -- public.auctions.uuid in Supply db
-               a.status                                      as auction_status,
-               oq.technology_id,
-               dt.name                                       as technology_name,
-               round((oq.subtotal_price_amount / 100.00), 2) as auction_amount_usd,
-               oq.document_number
-        
-        from {{ ref('auctions_rda') }} as a
-                left join {{ ref('cnc_order_quotes') }} as oq on oq.uuid = a.order_quotes_uuid
-                inner join {{ ref('technologies') }} as dt on oq.technology_id = dt.technology_id       
-        ),
-
-    sa as (
-    
-        select md5(supplier_id || auction_uuid) as supplier_auction_uuid, *
-
-        from {{ ref('supplier_auctions') }}
-        ),
-
-    b as (select * from stg_bids where rn = 1),
-
-    stg_supplier_auction_interactions as (
-
-        select sa.supplier_auction_uuid                                                          as supplier_auction_uuid,
+        select  
+                -- Supplier Auction Fields
+                sa.sa_uuid                                                                        as sa_uuid,
                 sa.supplier_id                                                                    as sa_supplier_id,
-                sa.auction_uuid                                                                   as sa_auction_uuid,
                 sa.assigned_at                                                                    as sa_assigned_at,
                 row_number()
                 over (partition by sa.auction_uuid order by sa_assigned_at)                       as sa_auction_rank,
                 sa.first_seen_at                                                                  as sa_first_seen_at,
                 sa.last_seen_at                                                                   as sa_last_seen_at,
-                sa.is_dismissed                                                                   as sa_has_dismissed_notification,
-                sa.is_automated_shipping_available                                                as sa_is_automated_shipping_available,
                 sa.is_preferred_auction                                                           as sa_is_preferred_auction,
-                a.created                                                                         as auction_created_at,
-                a.updated                                                                         as auction_updated_at,
-                a.deleted                                                                         as auction_deleted_at,
-                a.order_uuid                                                                      as auction_order_uuid,
-                a.order_quotes_uuid                                                               as auction_order_quotes_uuid,
-                a.winner_bid_uuid                                                                 as auction_winner_bid_uuid,
-                a.status                                                                          as auction_status,
-                a.started_at                                                                      as auction_started_at,
-                a.finished_at                                                                     as auction_finished_at,
-                a.ship_by_date                                                                    as auction_ship_by_at,
-                a.internal_support_ticket_id                                                      as auction_support_ticket_id,
-                a.last_processed_at                                                               as auction_last_processed_at,
-                b.created                                                                         as bid_created_at,
-                b.updated                                                                         as bid_updated_at,
-                b.deleted                                                                         as bid_deleted_at,
+                coalesce(round((sa.subtotal_price_amount_usd / 100.00), 2), a.auction_amount_usd) as sa_amount_usd, -- Primarily at Supplier Auction Level
+                sa.margin_without_discount                                                        as sa_margin,
+
+                -- Bid Fields
                 b.uuid                                                                            as bid_uuid,
-                b.response_type                                                                   as bid_supplier_response,
-                b.placed_at                                                                       as bid_placed_at,
+                b.response_type                                                                   as response_type,
+                b.placed_at                                                                       as response_placed_at,
                 b.has_changed_prices                                                              as bid_has_changed_prices,
                 b.has_design_modifications                                                        as bid_has_design_modifications,
                 b.has_changed_shipping_date                                                       as bid_has_changed_shipping_date,
-                b.ship_by_date                                                                    as bid_adjusted_ship_by_date,
-                b.is_active                                                                       as bid_is_active,
-                b.accepted_ship_by_date                                                           as bid_accepted_ship_by_date,
-                t.technology_id                                                                   as order_technology_id,
-                t.technology_name                                                                 as order_technology_name,
-                coalesce(round((sa.subtotal_price_amount_usd / 100.00), 2), t.auction_amount_usd) as auction_amount_usd,
-                t.auction_amount_usd                                                              as auction_amount,
-                t.document_number                                                                 as auction_document_number,
                 b.bid_amount_usd                                                                  as bid_amount_usd,
                 b.margin_without_discount                                                         as bid_margin,
+                sod.order_quote_amount_usd_excl_discount*b.margin_without_discount                as bid_margin_usd,
                 b.design_modification_text                                                        as design_modification_text,
-                sa.margin_without_discount                                                        as sa_margin,
-                sa.max_country_margin                                                             as sa_max_country_margin,
+                case when b.uuid = a.winning_bid_uuid then true else false end                    as is_winning_bid,
+                
+                -- Auction Fields
+                sa.auction_uuid                                                                   as auction_uuid,
+                a.auction_created_at                                                              as auction_created_at,
+                a.order_uuid                                                                      as order_uuid,
+                a.winning_bid_uuid                                                                as auction_winning_bid_uuid,
+                a.status                                                                          as auction_status,
+                a.finished_at                                                                     as auction_finished_at,
+                a.ship_by_date                                                                    as auction_ship_by_at,
+                a.auction_document_number                                                         as auction_document_number,
                 a.base_margin_without_discount                                                    as auction_base_margin,
-                case when b.uuid = a.winner_bid_uuid then true else false end                     as is_winning_bid,
-                case when abs(sa.margin - a.base_margin) < 0.00001 then 'standard'
-                    when abs(sa.margin - sa.max_country_margin) < 0.00001 then 'country cap'
-                    else 'engagement' end                                                         as margin_type,
+
+                -- Order Level Fields
                 sod.order_quote_amount_usd_excl_discount                                          as auction_quote_amount_usd
         
-        from sa
-                    inner join {{ ref('auctions_rda') }} a on a.order_quotes_uuid = sa.auction_uuid
-                    left outer join b on b.supplier_auction_uuid = sa.supplier_auction_uuid
-                    left outer join stg_auction_technology t on a.order_quotes_uuid = t.order_quotes_uuid
-                    left join {{ ref ('stg_orders_documents')}} sod on sod.order_uuid = a.order_uuid
-        )
-
-select  sai.supplier_auction_uuid,
-        sai.sa_supplier_id,
-        sai.sa_auction_uuid,
-        sai.sa_assigned_at,
-        sai.sa_auction_rank,
-        sai.sa_first_seen_at,
-        sai.sa_last_seen_at,
-        sai.sa_has_dismissed_notification,
-        sai.sa_is_automated_shipping_available,
-        sai.sa_is_preferred_auction,
-        sai.auction_document_number,
-        sai.auction_created_at,
-        sai.auction_updated_at,
-        sai.auction_deleted_at,
-        sai.auction_order_uuid,
-        sai.auction_order_quotes_uuid,
-        sai.auction_winner_bid_uuid,
-        sai.auction_status,
-        sai.auction_started_at,
-        sai.auction_finished_at,
-        sai.auction_ship_by_at,
-        sai.auction_support_ticket_id,
-        sai.auction_last_processed_at,
-        sai.bid_created_at,
-        sai.bid_updated_at,
-        sai.bid_deleted_at,
-        sai.bid_uuid,
-        sai.is_winning_bid,
-        sai.bid_supplier_response,
-        sai.bid_placed_at,
-        sai.bid_has_changed_prices,
-        sai.bid_has_design_modifications,
-        sai.bid_has_changed_shipping_date,
-        sai.bid_adjusted_ship_by_date,
-        sai.bid_is_active,
-        sai.bid_accepted_ship_by_date,
-        sai.auction_amount_usd,
-        sai.auction_quote_amount_usd,
-        sai.auction_base_margin,
-        sai.bid_amount_usd,
-        sai.bid_margin,
-        sai.sa_margin,
-        sai.sa_max_country_margin,
-        sai.margin_type,
-        sai.design_modification_text,
-        order_technology_id,
-        order_technology_name
-from stg_supplier_auction_interactions sai
+        from stg_supplier_auctions as sa
+                    inner join {{ ref('auctions_rda') }} as a on a.auction_uuid = sa.auction_uuid
+                    left join (select * from bids where rn=1) as b on b.sa_uuid = sa.sa_uuid
+                    left join {{ ref ('stg_orders_documents')}} as sod on sod.order_uuid = a.order_uuid

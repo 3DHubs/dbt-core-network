@@ -233,7 +233,7 @@ models:
           - unique
   - name: fact_rda_behaviour
     columns:
-      - name: supplier_auction_uuid
+      - name: sa_uuid
         tests:
           - unique
           - not_null

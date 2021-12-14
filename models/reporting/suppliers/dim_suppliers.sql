@@ -1,18 +1,4 @@
-with fat as ( select distinct
-    sa_supplier_id,
-    first_value(order_technology_name)
-    over (
-         partition by
-             sa_supplier_id
-         order by
-             sa_assigned_at asc
-         rows between unbounded preceding and unbounded following
-    ) as first_assigned_technology
-    from {{ ref('fact_rda_behaviour') }}
-    where sa_supplier_id is not null
-),
-
-agg as ( select
+with agg as ( select
     sa_supplier_id,
     trunc(
          min(sa_last_seen_at)
@@ -36,7 +22,7 @@ agg as ( select
     coalesce(sum(
              case
                  when
-                     sa_assigned_at >= current_date - 7 and bid_supplier_response = 'accepted'
+                     sa_assigned_at >= current_date - 7 and response_type = 'accepted'
                      then 1 end),
          0
     ) as number_accepted_l7d,
@@ -52,14 +38,14 @@ agg as ( select
     trunc(
          min(
              case
-                when bid_supplier_response = 'accepted' then sa_assigned_at
+                when response_type = 'accepted' then sa_assigned_at
             end
     )
     ) as first_accepted_at,
     trunc(
          max(
              case
-                when bid_supplier_response = 'accepted' then sa_assigned_at
+                when response_type = 'accepted' then sa_assigned_at
             end
     )
     ) as last_accepted_at
@@ -128,11 +114,9 @@ select
     agg.first_assigned_at,
     agg.first_accepted_at,
     agg.last_accepted_at,
-    fat.first_assigned_technology,
     stg_deals.first_technology,
     stg_deals.first_sourced_order,
     stg_deals.last_sourced_order
 from {{ ref('stg_dim_suppliers') }}
 left join agg on agg.sa_supplier_id = stg_dim_suppliers.supplier_id
 left join stg_deals on stg_deals.supplier_id = stg_dim_suppliers.supplier_id
-left join fat on fat.sa_supplier_id = stg_dim_suppliers.supplier_id

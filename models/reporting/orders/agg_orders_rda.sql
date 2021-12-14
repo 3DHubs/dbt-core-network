@@ -5,10 +5,7 @@
 -- Sources:
 -- 1. RDA Interactions Aggregates (a.k.a supplier auction interactions)
 -- 2. Cancelled Auctions Query (Derived from supply_order_history_events and supply_order_change_requests)
--- 3. Data Lake Supply Auctions (coming from supply auctions table)
--- 4. Data Lake Bids (used for a join)
--- 5. Suppliers (used to bring supplier id)
-
+-- 3. Data Lake Auctions RDA (filtered from supply auctions table)
 
 -------------------- Step 1 --------------------------
 ---------- Create RDA Interactions Aggregates --------
@@ -21,16 +18,16 @@
 -- Parent Sources: Auctions, Bids, Supplier Auctions, Order Quotes & Technologies
 
 with rda_interactions as ( 
-    select sai.auction_order_uuid as order_uuid,
-           count(distinct sai.sa_supplier_id)                                                        as number_of_suppliers_assigned,
+    select sai.order_uuid,
+           count(*)                                                                                  as number_of_supplier_auctions_assigned,
            -- Auctions Seen
-           count(distinct (case when sa_first_seen_at is not null then sa_supplier_id end))          as number_of_auctions_seen,
+           count(distinct (case when sa_first_seen_at is not null then sa_uuid end))                 as number_of_supplier_auctions_seen,
            --General Bid Aggregates 
-           count(distinct sai.bid_uuid)                                                              as number_of_bids,
-           count(distinct (case when sai.bid_supplier_response in ('accepted','countered')  
-                                then sai.bid_uuid end))                                              as number_of_positive_bids,
-           count(distinct (case when sai.bid_supplier_response = 'countered' then sai.bid_uuid end)) as number_of_counterbids,
-           count(distinct (case when sai.bid_supplier_response = 'rejected' then sai.bid_uuid end))  as number_of_rejected_bids,
+           count(distinct sai.bid_uuid)                                                              as number_of_responses,
+           count(distinct (case when sai.response_type in ('accepted','countered')  
+                                then sai.bid_uuid end))                                              as number_of_positive_responses,
+           count(distinct (case when sai.response_type = 'countered' then sai.bid_uuid end))         as number_of_countered_responses,
+           count(distinct (case when sai.response_type = 'rejected' then sai.bid_uuid end))          as number_of_rejected_responses,
            --Counter Bids Count by Type
            count(distinct (case when sai.bid_has_design_modifications then sai.bid_uuid end))        as number_of_design_counterbids,
            count(distinct (case
@@ -40,9 +37,11 @@ with rda_interactions as (
                  (case when sai.bid_has_changed_prices then sai.bid_uuid end))                       as number_of_price_counterbids,
            --Winning Bid Results
            bool_or(sai.is_winning_bid)                                                               as has_winning_bid,
-           bool_or(sai.is_winning_bid and sai.bid_supplier_response = 'accepted')                    as has_accepted_winning_bid,
+           bool_or(sai.is_winning_bid and sai.response_type = 'accepted')                            as has_accepted_winning_bid,
+           max(case when sai.is_winning_bid then sai.bid_margin end)                                 as winning_bid_margin,
+           max(case when sai.is_winning_bid then sai.bid_margin_usd end)                             as winning_bid_margin_usd,
            bool_or(sai.bid_has_changed_prices and sai.is_winning_bid)                                as has_winning_bid_countered_on_price,
-           bool_or(sai.bid_has_changed_shipping_date = 'true' and sai.is_winning_bid)                as has_winning_bid_countered_on_lead_time,
+           bool_or(sai.bid_has_changed_shipping_date and sai.is_winning_bid)                         as has_winning_bid_countered_on_lead_time,
            bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
 
     from {{ ref('fact_rda_behaviour') }} as sai
@@ -58,7 +57,7 @@ canceled as (
 ),
 rejected as (
     select order_uuid
-    from {{ ref('order_change_requests') }}
+    from {{ source('int_service_supply', 'order_change_requests') }}
     where order_uuid in (select order_uuid from canceled)
     and status = 'rejected'
 ),
@@ -79,16 +78,18 @@ select
 case when auctions.finished_at is not null then true else false end as is_rda_sourced,
 
 -- SOURCE 1: Adds fields from the rda interactions CTE
-rdai.number_of_suppliers_assigned,
-rdai.number_of_auctions_seen,
-rdai.number_of_bids,
-rdai.number_of_positive_bids,
-rdai.number_of_counterbids,
-rdai.number_of_rejected_bids,
+rdai.number_of_supplier_auctions_assigned,
+rdai.number_of_supplier_auctions_seen,
+rdai.number_of_responses,
+rdai.number_of_positive_responses,
+rdai.number_of_countered_responses,
+rdai.number_of_rejected_responses,
 rdai.number_of_design_counterbids,
 rdai.number_of_lead_time_counterbids,
 rdai.number_of_price_counterbids,
 rdai.has_winning_bid,
+rdai.winning_bid_margin,
+rdai.winning_bid_margin_usd,
 rdai.has_accepted_winning_bid,
 rdai.has_winning_bid_countered_on_price,
 rdai.has_winning_bid_countered_on_lead_time,
@@ -102,38 +103,24 @@ can.auction_cancelled_manually_at,
 -- Data comes from the auctions table and it is enriched with data from
 -- the quotes table (with type = auction).
 auctions.order_uuid,
-auctions.order_quotes_uuid                 as auction_uuid,
+auctions.auction_uuid,
 auctions.status                            as auction_status,
-auctions.created                           as auction_created_at,
+auctions.auction_created_at,
 auctions.finished_at                       as auction_finished_at,
+auctions.technology_id                     as auction_technology_id,
+auctions.document_number                   as auction_document_number,
 auctions.is_accepted_manually              as auction_is_accepted_manually,
 auctions.is_internal_support_ticket_opened as auction_is_reviewed_manually,
-auctions.internal_support_ticket_opened_at as auction_support_ticket_created_at,
-auctions.winner_bid_uuid                   as winning_bid_uuid,
-
--- SOURCE 3B: Enriches Auctions with data from quotes table
-a_quotes.technology_id                     as auction_technology_id,
-a_quotes.document_number                   as auction_document_number,
-
--- SOURCE 3C: Enriches Auctions with supplier data
-
-suppliers.id as auction_supplier_id,
-suppliers.name as auction_supplier_name,
-suppliers.address_id as auction_supplier_address_id,
-
--- SURCE 3D: Enriches Auctions with technology data
-technologies.name as auction_technology_name
-
-    -- TODO: if agreed, remove fields below
-    -- started_at,
-    -- last_processed_at, 
+auctions.internal_support_ticket_opened_at as auction_support_ticket_opened_at,
+auctions.winning_bid_uuid,
+auctions.auction_supplier_id,
+auctions.auction_supplier_name,
+auctions.auction_supplier_address_id,
+auctions.auction_technology_name
 
 from {{ ref('auctions_rda') }} as auctions
-    inner join {{ ref('cnc_order_quotes') }} as a_quotes on auctions.order_quotes_uuid = a_quotes.uuid
-    left join {{ ref('bids') }} as bids on auctions.winner_bid_uuid = bids.uuid
-    left join {{ ref('suppliers') }} as suppliers on bids.supplier_id = suppliers.id
+    inner join {{ ref('cnc_order_quotes') }} as a_quotes on auctions.auction_uuid = a_quotes.uuid
     left join rda_interactions as rdai on a_quotes.order_uuid = rdai.order_uuid
     left join cancelled_auctions as can on a_quotes.order_uuid = can.order_uuid
-    left join {{ ref ('technologies') }} as technologies on a_quotes.technology_id = technologies.technology_id
 
 where auctions.is_latest_order_auction
