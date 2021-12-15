@@ -9,5 +9,9 @@ select created created_at,
        outcome_customer,
        outcome_supplier,
        resolution_datetime resolution_at,
-       number_of_parts
+       number_of_parts,
+       claim_type,
+       liability
+
+
 from {{ source('int_service_supply', 'complaints') }}
