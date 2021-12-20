@@ -123,6 +123,12 @@ sources:
           warn_after: {count: 5, period: day}
           error_after: {count: 6, period: day}
         loaded_at_field: date
+        
+      - name: btyd
+        freshness:
+          warn_after: {count: 7, period: day}
+          error_after: {count: 14, period: day}
+        loaded_at_field: snapshot_date
 
       - name: supply_countries_markets_mapping
 
@@ -134,6 +140,7 @@ sources:
       - name: legacy_orders
       - name: freshdesk_groups_legacy_20200401
       - name: dim_dates
+
 
   - name: int_service_supply
     tables:

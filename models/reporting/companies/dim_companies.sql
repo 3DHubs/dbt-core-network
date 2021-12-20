@@ -6,6 +6,14 @@ select distinct country_id,
 from {{ ref('addresses') }}
 where locality is not null and lat is not null
 group by 1,2
+),
+companies_btyd as (
+select distinct id as company_id,
+    first_value(btyd.alive_probability)
+           over (
+               partition by id order by btyd.btyd_date desc rows between unbounded preceding and unbounded following) as alive_probability
+from {{ source('data_lake', 'btyd') }}
+where date_trunc('week', snapshot_date) = date_trunc('week', getdate())
 )
 select 
        -- Fields from HS Contacts (Stitch)
@@ -38,7 +46,7 @@ select
        -- Source: Hubspot Owners
        own.first_name || ' ' || own.last_name                                    as hubspot_owner_name,
        own.primary_team_name                                                     as hubspot_owner_primary_team_name,
-       own_inside.first_name || ' ' || own.last_name                             as hubspot_inside_owner_name,
+       own_inside.first_name || ' ' || own_inside.last_name                      as hubspot_inside_owner_name,
        own_inside.primary_team_name                                              as hubspot_inside_owner_primary_team_name,
 
        -- Source: Location
@@ -95,7 +103,9 @@ select
        case when acc.has_team = 1 then true else false end as has_team,
 
        -- Other Fields
-       indm.industry_mapped::varchar                                             as industry_mapped
+       indm.industry_mapped::varchar                                             as industry_mapped,
+       btyd.alive_probability
+       
        
 from {{ source('data_lake', 'hubspot_companies_stitch') }} hc
     left join {{ ref('industry_mapping') }} as indm
@@ -107,4 +117,5 @@ on lower(hc.industry) = indm.industry
     left join city_coordinates as cc on cc.city = lower(hc.city) and cc.country_id = dc.country_id 
     left join {{ source('data_lake', 'hubspot_owners') }} as own on own.is_current = true and own.owner_id::bigint = hc.hubspot_owner_id::bigint
     left join {{ source('data_lake', 'hubspot_owners') }} as own_inside on own_inside.is_current = true and own_inside.owner_id::bigint = hc.inside_sales_owner::bigint
+    left join companies_btyd as btyd on btyd.company_id = hc.hubspot_company_id
 where hc.hubspot_company_id >= 1
