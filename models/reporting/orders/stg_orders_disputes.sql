@@ -12,7 +12,7 @@
 
 with disputes as (
 
-    with hubspot_events as (
+    with supply_order_history_events as (
         select order_uuid,
                'new'                         as dispute_status, -- Regard all events as 'new'
                min(created)                  as dispute_created_at,
@@ -70,8 +70,8 @@ with disputes as (
            null as dispute_type,
            dispute_status,
            _data_source
-    from hubspot_events
-    where not exists(select 1 from disputes where disputes.order_uuid = hubspot_events.order_uuid)
+    from supply_order_history_events
+    where not exists(select 1 from disputes where disputes.order_uuid = supply_order_history_events.order_uuid)
 ),
 
      dispute_resolution as (

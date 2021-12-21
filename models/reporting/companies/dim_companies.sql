@@ -16,7 +16,7 @@ from {{ source('data_lake', 'btyd') }}
 where date_trunc('week', snapshot_date) = date_trunc('week', getdate())
 )
 select 
-       -- Fields from HS Contacts (Stitch)
+       -- Fields from HS Companies (Stitch)
        hc.created_at,
        hc.name,
        hc.number_of_employees,
