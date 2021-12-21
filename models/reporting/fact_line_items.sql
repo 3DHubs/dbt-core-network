@@ -69,7 +69,10 @@ select orders.uuid                                                              
            sqli.created                                                                 as created_date,
            sqli.updated                                                                 as updated_date,
            sqli.id                                                                      as line_item_id,
-           row_number() over (partition by sqli.quote_uuid order by sqli.id asc)        as line_item_number,
+           case when sqli.type = 'part' then
+           row_number() over (partition by sqli.quote_uuid, sqli.type order by sqli.id asc)
+           else null
+           end                                                                          as line_item_number,
            sqli.uuid                                                                    as line_item_uuid,
            sqli.quote_uuid,
            sqli.upload_id,
