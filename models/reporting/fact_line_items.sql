@@ -133,8 +133,8 @@ select orders.uuid                                                              
            u.first_name + ' ' + u.last_name as complaint_created_by,
            ur.first_name + ' ' + ur.last_name as complaint_reviewed_by,
            c.comment as complaint_comment,
-           c.claim_type,
-           c.liability,
+           c.claim_type as complaint_type,
+           c.liability as complaint_liability,
            --c.number_of_parts as complaint_affected_parts_quantity, perhaps onboarded later.
            -- Part Dimensional Fields
            pdf.part_depth_cm,
