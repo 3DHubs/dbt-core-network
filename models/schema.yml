@@ -15,6 +15,10 @@ sources:
     tables:
       - name: data
 
+  - name: int_greenhubs
+    tables:
+      - name: co2_emissions
+
   - name: landing
     freshness:
       warn_after: {count: 24, period: hour}

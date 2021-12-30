@@ -313,7 +313,11 @@ original_order_lead_time,
 original_order_amount_usd,
 original_order_quantity,
 original_order_number_of_part_line_items,
-original_order_parts_titles
+original_order_parts_titles,
+
+-- Special Projects
+logistics_co2_emissions_g,
+travel_distance_km
 
 from complete_orders as orders
 left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
