@@ -136,6 +136,17 @@ seeds:
       description: varchar(56)
       created_by: varchar(56)
     +tags: freshdesk
+  greenhubs_electricity:
+    +column_types:
+      country: varchar(56)
+      emissions: int
+  greenhubs_material:
+    +column_types:
+      country: varchar(56)
+      material: varchar(56)
+      material_category: varchar(56)
+      region: varchar(56)
+      emissions: int      
   macro_factors:
     +column_types:
       location: varchar(56)
