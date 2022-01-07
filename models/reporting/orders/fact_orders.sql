@@ -317,9 +317,12 @@ original_order_parts_titles,
 
 -- Special Projects
 logistics_co2_emissions_g,
-travel_distance_km
+travel_distance_km,
+manufacturing_co2_emissions_g,
+procurement_co2_emissions_g
 
 from complete_orders as orders
 left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
 left join {{ ref('agg_orders_cm1') }} as agg_cm1 on agg_cm1.order_uuid = orders.order_uuid
 left join {{ ref('stg_fact_reorders') }} as original on original.reorder_order_uuid = orders.order_uuid
+left join {{ ref('greenhubs') }} as gh on orders.order_uuid = gh.order_uuid

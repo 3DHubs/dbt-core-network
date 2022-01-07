@@ -348,8 +348,6 @@ select
     change_requests.freshdesk_ticket_id                                                    as change_request_freshdesk_ticket_id,
     change_requests.status                                                                 as change_request_status,
     case when change_requests.status is not null then true else false end                  as has_change_request,
-    gh.logistics_co2_emissions_g,
-    gh.travel_distance_km,
 
     ---------- SOURCE: COMBINED FIELDS --------------
     -- Fields that are defined from two or more sources
@@ -423,8 +421,6 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
 
     -- Special Projects
-    left join {{ source('int_greenhubs', 'co2_emissions') }} as gh on orders.uuid = gh.order_uuid
-
 
 where true
   and li.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
