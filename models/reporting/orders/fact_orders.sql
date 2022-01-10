@@ -315,6 +315,11 @@ original_order_quantity,
 original_order_number_of_part_line_items,
 original_order_parts_titles,
 
+-- Splitted Orders (Competitiveness Feature) 
+quote_first_splitted_from_quote_uuid,
+is_splitted_from_order,
+is_splitted_order,
+
 -- Special Projects
 logistics_co2_emissions_g,
 travel_distance_km,

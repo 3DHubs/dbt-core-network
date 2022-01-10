@@ -49,5 +49,6 @@ select created,
        cross_docking_added_lead_time,
        name,
        customer_edited_at,
-       technical_drawing_anonymization_started_at
+       technical_drawing_anonymization_started_at,
+       split_off_from_quote_uuid
 from {{ source('int_service_supply', 'cnc_order_quotes') }}

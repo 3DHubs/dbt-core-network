@@ -12,11 +12,16 @@
 -- FIRST QUOTE FIELDS
 
 with first_quote as (
-    with rn as (select order_uuid,
-                       uuid                                                                        as quote_uuid,
-                       is_admin                                                                    as quote_first_is_admin,
+    with rn as (select soq.order_uuid,
+                       soq.uuid                                                                        as quote_uuid,
+                       soq.is_admin                                                                    as quote_first_is_admin,
+                       soq.split_off_from_quote_uuid is not null                                       as is_splitted_from_order,
+                       sp.split_off_from_quote_uuid is not null                                        as is_splitted_order,
+                       soq.split_off_from_quote_uuid                                                   as quote_first_splitted_from_quote_uuid,
                        row_number() over (partition by order_uuid order by created asc nulls last) as rn
                 from {{ ref('cnc_order_quotes') }} soq
+                -- Competitiveness Feature that allows orders to be split to facilitate some suppliers to take some orders (Diego Jan, 2022)
+                left join (select distinct split_off_from_quote_uuid from {{ ref('cnc_order_quotes') }}) as sp on soq.uuid = sp.split_off_from_quote_uuid 
                 where type = 'quote'),
          agg_quote_li as (select quote_uuid,
                                  sum(((type = 'part' and upload_id is not null and
@@ -27,6 +32,9 @@ with first_quote as (
                           where rn = 1
                           group by 1)
     select rn.order_uuid,
+           rn.is_splitted_from_order,
+           rn.is_splitted_order,
+           rn.quote_first_splitted_from_quote_uuid,
            agg_quote_li.has_part_without_automatic_pricing as quote_first_has_part_without_automatic_pricing,
            quote_first_is_admin                            as quote_first_created_by_admin
     from rn
@@ -191,10 +199,9 @@ select -- First Quote
        fq.order_uuid,
        fq.quote_first_created_by_admin,
        fq.quote_first_has_part_without_automatic_pricing,
-
-       --    fq.quote_first_created_at, -- Not leveraged
-       --    fq.quote_first_submitted_at, -- Not leveraged
-       --    fq.quote_first_finalized_at, -- Not leveraged
+       fq.is_splitted_from_order,
+       fq.is_splitted_order,
+       fq.quote_first_splitted_from_quote_uuid,
 
        -- Order Quote
        oq.order_quote_document_number,
@@ -208,18 +215,6 @@ select -- First Quote
        oq.order_quote_requires_local_sourcing,
        oq.order_quote_amount_usd,
        oq.order_quote_amount_usd_excl_discount,
-
-       --    order_quote_shipping_address_id, -- Used for a join on addresses and states
-       --    order_quote_type, -- Useless, type = quote
-       --    order_currency_code_sold, -- Not leveraged
-       --    order_quote_price_multiplier, -- Not leveraged
-       --    order_quote_price_sold_amount, -- Only USD leveraged
-       --    order_quote_tax_amount, -- Not leveraged
-       --    order_quote_tax_amount_usd, -- Not leveraged
-       --    order_quote_signed_quote_uuid, -- Used in financial fields, can be used in an appending table
-       --    order_quote_tax_category_id, -- Not leveraged
-       --    order_quote_shipping_speed, -- Not leveraged
-       --    order_quote_cross_docking_added_lead_time,
 
        -- All Quotes
        aaq.order_first_submitted_at,
@@ -236,10 +231,6 @@ select -- First Quote
        fpo.po_first_supplier_id,
        fpo.po_first_support_ticket_id,
 
-       --    fpo.po_first_amount_source_currency,
-       --    fpo.po_first_source_currency,
-       --    fpo.po_first_is_created_manually, -- Previously used for is manually sourced def
-
        -- Active PO
        apo.po_active_uuid,
        apo.po_active_amount_usd,
@@ -252,19 +243,8 @@ select -- First Quote
        apo.po_active_supplier_address_id,
        apo.po_active_support_ticket_id,
 
-
-       --    apo.order_active_po_quote_uuid,
-       --    apo.order_active_po_amount_source_currency,
-       --    apo.order_active_po_source_currency,
-
        -- All POs
        aapo.number_of_purchase_orders,
-
-       -- pos.po_sum_of_tax_amount,
-       -- pos.po_status_descriptions,
-       -- pos.po_create_dates,
-       -- pos.po_first_issue_date,
-       -- pos.po_last_issue_date,
 
        -- Combined Fields
 

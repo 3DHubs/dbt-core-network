@@ -153,6 +153,9 @@ select
     --Documents: First Quote
     docs.quote_first_created_by_admin,
     docs.quote_first_has_part_without_automatic_pricing,
+    docs.quote_first_splitted_from_quote_uuid,
+    docs.is_splitted_from_order,
+    docs.is_splitted_order,
 
     --Documents: Order Quote
     -- Active/Won Quote if submitted, else First
