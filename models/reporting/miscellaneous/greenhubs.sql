@@ -8,6 +8,8 @@ with base_query as (
            coalesce(li.material_name, 'Other')                                  as material,
            coalesce(c.name, 'Other')                                            as country,
            line_item_weight_g,
+           line_item_total_bounding_box_volume_cm3,
+           material_density_g_cm3,
            line_item_total_bounding_box_volume_cm3 - line_item_total_volume_cm3 as li_total_removed_volume_cm3
     from {{ ref ('fact_line_items') }} as li
              left join {{ ref ('stg_fact_orders') }} as orders on li.order_uuid = orders.order_uuid
@@ -24,7 +26,7 @@ with base_query as (
                 -- The 0.33 constant has units of kwh/cm3, the emissions factor units of g-CO2/kwh
                 round(li_total_removed_volume_cm3 * 0.33 * kwh.emissions, 0) as li_manufacturing_co2_emissions_g,
                 -- The procurement emissions factor is units of g-CO2/kg of material.
-                line_item_weight_g * mat.emissions * 0.001                   as li_procurement_co2_emissions_g
+                material_density_g_cm3 * line_item_total_bounding_box_volume_cm3 * mat.emissions * 0.001 as li_procurement_co2_emissions_g
          from base_query as li
                   left join dbt_prod_seed_data.greenhubs_electricity as kwh on li.country = kwh.country
                   left join dbt_prod_seed_data.greenhubs_material as mat
