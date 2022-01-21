@@ -1,7 +1,8 @@
 {{
     config(
         materialized='incremental',
-        unique_key='uuid'
+        unique_key='uuid',
+        post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ source('int_service_supply', 'line_items') }} )"]
     )
 }}
 

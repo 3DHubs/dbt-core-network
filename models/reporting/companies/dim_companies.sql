@@ -13,7 +13,7 @@ select distinct id as company_id,
            over (
                partition by id order by btyd.btyd_date desc rows between unbounded preceding and unbounded following) as alive_probability
 from {{ source('data_lake', 'btyd') }}
-where date_trunc('week', snapshot_date) = date_trunc('week', getdate())
+where date_trunc('week', snapshot_date) = (select date_trunc('week', max(snapshot_date)) from {{ source('data_lake', 'btyd') }})
 )
 select 
        -- Fields from HS Companies (Stitch)

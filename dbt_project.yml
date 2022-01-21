@@ -48,6 +48,7 @@ models:
       +tags: ["hubspot", "crm"]
     mapping:
       +schema: data_lake
+      +tags: ["adhoc"]
     netsuite:
       +schema: data_lake
       +tags: ["netsuite", "finance"]
@@ -61,10 +62,13 @@ models:
         +tags: ["orders"]
       contacts:
         +tags: ["contacts"]
+      miscellaneous:
+        +tags: ["adhoc"]
 
 # Seeds
 seeds:
   +schema: seed_data
+  +tags: ["adhoc"]
   states:
     +column_types:
       state: varchar(128)

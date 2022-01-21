@@ -31,7 +31,6 @@ select
        contact_id,
        bdr_assigned,
        associatedcompanyid,
-       account_category,
        strategic,
        bdr_campaign,
        notes_last_contacted,
