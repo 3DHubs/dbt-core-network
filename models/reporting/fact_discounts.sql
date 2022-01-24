@@ -4,7 +4,15 @@
     )
 }}
 
+-- Created by: Jurien
+-- Edited by: Diego
+-- Last edit: Jan 2022
+
+-- Description: This table contains visible discounts data, 
+-- these exists as a single line item in the quote.
+
 with supply_orders as (
+    -- Reduce the number of orders to improve query time
     select distinct so.uuid, quote_uuid
     from {{ ref('cnc_orders') }} as so
     where exists(
@@ -15,18 +23,25 @@ with supply_orders as (
               )
 )
 select so.uuid                                                  as order_uuid,
-       l.quote_uuid,
+
+        -- Explanation: discounts are created by admins (e.g. 10% discount) but applicable
+        -- through discount codes e.g. (CODE: YOURFIRSTDISCOUNT). 
+
+        -- Discount Attributes
+        l.discount_id,
+        d.title as discount_title,
+        true as has_discount,
+        d.discount_factor,
+        coalesce(trunc(-l.auto_price_amount *1.0 / 100.00,2), 0) as discount_amount_local_currency,
+        trunc((discount_amount_local_currency / rates.rate), 2)  as discount_amount_usd,
+
+        -- Discount Codes Attributes
        discount_code_id,
-       l.discount_id,
-       d.discount_factor,
-       coalesce(trunc(-l.auto_price_amount *1.0 / 100.00,2), 0) as discount_amount_local_currency,
-       trunc((discount_amount_local_currency / rates.rate), 2)   as discount_amount_usd,
-       d.title,
-       dc.description,
-       dc.code,
-       u.first_name + ' ' + u.last_name created_by,
-       d.currency_code,
-       is_hidden
+       discount_code_id is not null as has_discount_code,
+       dc.code as discount_code,
+       dc.description as discount_code_description,
+       u.first_name + ' ' + u.last_name as discount_code_created_by
+
 from {{ ref('line_items') }} l
          inner join {{ ref('cnc_order_quotes') }} coq on coq.uuid = l.quote_uuid
          inner join supply_orders so on so.quote_uuid = l.quote_uuid

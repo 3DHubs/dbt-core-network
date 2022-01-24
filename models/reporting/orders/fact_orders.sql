@@ -140,9 +140,10 @@ supplier_name,
 -- Amounts (USD)
 amount_usd,
 closed_amount_usd,
+discount_cost_usd, -- From Fact Discounts, discount line item 
 sourced_amount_usd,
 sourced_cost_usd, -- From First PO
-shipping_amount_usd, -- From Line Items
+shipping_amount_usd, -- Value in the quote, derived from line items
 po_first_shipping_usd,
 po_active_amount_usd,
 po_active_shipping_usd,

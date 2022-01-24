@@ -328,7 +328,7 @@ select
     interactions.number_of_outgoing_emails,
     interactions.number_of_incoming_emails,
 
-    ------ SOURCE: FACT DISPUTES ---------
+    ------ SOURCE: STG ORDER DISPUTES ---------
     -- Data from Disputes and Dispute Resolution
 
     -- Fields from Disputes Tables
@@ -344,7 +344,14 @@ select
     disputes.dispute_resolution_time_hours,
     disputes.first_dispute_resolution_type,
 
-    ---------- SOURCE: SECONDARY JOINS --------------
+    ---------- SOURCE: FACT DISCOUNTS ------------------
+    -- Discounts have a 1-1 relationship with orders (Jan 2022)
+    -- thus can be joined directly without need for an stg table.
+    -- Discounts is also used directly on Looker hence the fact prefix.
+
+    discounts.discount_amount_usd as discount_cost_usd,
+
+    ---------- SOURCE: INT SERVICE SUPPLY --------------
     -- Joins that are used to bring a few fields
     -- , they do not aggregate or compile data
 
@@ -411,6 +418,9 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
     left join {{ ref ('stg_orders_disputes') }} as disputes on orders.uuid = disputes.order_uuid
 
+    -- Reporting
+    left join {{ ref ('fact_discounts')}} as discounts on orders.uuid = discounts.order_uuid
+
     -- Aggregates
     left join {{ ref ('agg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
     left join {{ ref ('agg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
@@ -422,8 +432,6 @@ from {{ ref('cnc_orders') }} as orders
     -- Service Supply
     left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
-
-    -- Special Projects
 
 where true
   and li.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
