@@ -33,8 +33,8 @@ with base_query as (
                             on li.country = mat.country and li.material = mat.material
      )
 select supply.order_uuid,
-       sum(logistics.logistics_co2_emissions_g) as logistics_co2_emissions_g, -- Already aggregated before
-       sum(logistics.travel_distance_km) as travel_distance_km, -- Already aggregated before
+       min(logistics.logistics_co2_emissions_g) as logistics_co2_emissions_g, -- Already aggregated before
+       min(logistics.travel_distance_km) as travel_distance_km, -- Already aggregated before
        sum(li_manufacturing_co2_emissions_g) as manufacturing_co2_emissions_g,
        sum(li_procurement_co2_emissions_g)   as procurement_co2_emissions_g
 from line_item_level_emissions as supply
