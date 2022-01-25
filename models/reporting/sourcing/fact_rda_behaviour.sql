@@ -1,3 +1,11 @@
+-- Table Maintained by: Diego
+-- Last Edited: Jan 2022
+
+-- Description: the base of this table is the supplier-auctions table which contains one row for each
+-- combination of supplier-auction, an auction has typically several suppliers assigned. This table is
+-- then enriched using the auctions table for auction fields (e.g. auction doc number) and the bids table
+-- where responses from the suppliers are stored.
+
 with stg_supplier_auctions as (
 
         select md5(supplier_id || auction_uuid) as sa_uuid, *
@@ -48,6 +56,7 @@ with stg_supplier_auctions as (
                 sa.first_seen_at                                                                  as sa_first_seen_at,
                 sa.last_seen_at                                                                   as sa_last_seen_at,
                 sa.is_preferred_auction                                                           as sa_is_preferred_auction,
+                sa.is_restricted_auction                                                          as sa_is_restricted_auction,
                 coalesce(round((sa.subtotal_price_amount_usd / 100.00), 2), a.auction_amount_usd) as sa_amount_usd, -- Primarily at Supplier Auction Level
                 sa.margin_without_discount                                                        as sa_margin,
 
