@@ -15,7 +15,7 @@ with stg as (
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields
-        hcon.associatedcompanyid                                                          as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
+        coalesce(hcon.associatedcompanyid,hcon_fix.hubspot_company_id)                    as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
         hs.hs_latest_associated_company_id                                                as original_hubspot_company_id, --JG: Kept for reference
         hcom.name                                                                         as hubspot_company_name,
         coalesce(hs.hs_latest_associated_contact_id,hcon_fix.hubspot_contact_id)          as hubspot_contact_id, --JG: Fix 2022-01-28 to have a contact id for all orders where company is not null and contact id is null

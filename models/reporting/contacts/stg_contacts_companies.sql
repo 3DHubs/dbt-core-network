@@ -6,7 +6,7 @@ select contacts.hubspot_contact_id,
        contacts.hubspot_company_id,
        case
            when contacts.became_mql_at_contact is not null and contacts.hubspot_company_id is not null
-               then rank() over (partition by contacts.hubspot_company_id order by contacts.became_mql_at_contact asc)
+               then rank() over (partition by contacts.hubspot_company_id order by contacts.became_mql_at_contact, contacts.created_at asc)
            when contacts.hubspot_company_id is null
                then 1
            else null end as inside_mql_number,
