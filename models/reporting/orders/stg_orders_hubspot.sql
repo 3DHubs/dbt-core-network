@@ -49,6 +49,8 @@ with stg as (
         own2.first_name || ' ' || own2.last_name                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
         trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp
+        fst.sales_lead_id                                                                 as sales_lead_id,
+        fst.sales_lead                                                                    as sales_lead_name,
         hs.bdr_assigned                                                                   as bdr_owner_id,
         bdr2.first_name || ' ' || bdr2.last_name                                          as bdr_owner_name,
         bdr.primary_team_name                                                             as bdr_owner_primary_team,
@@ -110,6 +112,8 @@ with stg as (
             on psr.owner_id = hs.supply_owner and psr.is_current is true
         left join {{ source('data_lake', 'hubspot_owners') }} as so
             on so.owner_id = hs.sourcing_owner and so.is_current is true
+        left join {{ref('fact_sales_target') }} as fst
+                on fst.hubspot_id = hs.hubspot_owner_id and fst.target_date::date = coalesce(date_trunc('month',hs.closedate),'2022-01-01') 
         left join {{ ref('hubspot_technology_mapping') }} as htm
             on hs.technologies = htm.hubspot_technology
         left join {{ ref ('technologies') }} as technologies

@@ -91,6 +91,8 @@ select
     hs_deals.hubspot_sourcing_owner_id,
     hs_deals.hubspot_sourcing_owner_name,
     hs_deals.hubspot_owner_assigned_date,
+    hs_deals.sales_lead_id,
+    hs_deals.sales_lead_name,
 
     -- HS Deals: Properties Requested by Teams
     -- Check upstream model for details on the team
