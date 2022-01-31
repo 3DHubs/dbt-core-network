@@ -39,16 +39,6 @@ with supply_cdt as (
                         case when shipping_leg = 'cross_docking:warehouse' then shp.created end)  as shipment_shipped_to_crossdock_at,
                 min(
                         case when shipping_leg = 'cross_docking:warehouse' then delivered_at end) as shipment_delivered_to_crossdock_at,
-                min(case when shipping_leg = 'cross_docking:warehouse' then locality end)         as cross_dock_city,
-                min(case
-                        when shipping_leg = 'cross_docking:warehouse'
-                            then ship_c.alpha2_code end)                                          as cross_dock_country,
-                min(case
-                        when shipping_leg = 'cross_docking:warehouse'
-                            then ship_a.lat end)                                                  as cross_dock_latitude,
-                min(case
-                        when shipping_leg = 'cross_docking:warehouse'
-                            then ship_a.lon end)                                                  as cross_dock_longitude,
                 min(case
                         when shipping_leg = 'cross_docking:warehouse'
                             then estimated_delivery end)                                          as estimated_delivery_to_cross_dock,
@@ -57,9 +47,6 @@ with supply_cdt as (
                         when shipping_leg = 'drop_shipping:customer'
                             then estimated_delivery end)                                          as estimated_delivery_to_customer
          from {{ ref('shipments') }} shp
-             left join {{ ref('addresses') }} ship_a
-         on shp.shipping_address_id = ship_a.address_id
-             left join {{ ref('countries') }} ship_c on ship_a.country_id = ship_c.country_id
              left join {{ ref('shipping_carriers') }} car on car.id = shp.tracking_carrier_id
          where order_uuid not in
              (select order_uuid from {{ source('data_lake'
@@ -94,18 +81,20 @@ select distinct soq.order_uuid                                                  
 
                 coalesce(ss.no_of_shipments, 1)                                                    as number_of_shipments,
                 sp.no_of_packages                                                                  as number_of_packages,
-                ss.cross_dock_city,
-                ss.cross_dock_country,
-                ss.cross_dock_latitude,
-                ss.cross_dock_longitude,
+
+                ---- cross docking fields ----
+                case when oq.is_cross_docking is true then true else false end                     as is_cross_docking_ind,
+                case when is_cross_docking_ind then po_ship_addr.locality else null end            as cross_dock_city,
+                case when is_cross_docking_ind then po_ship_coun.alpha2_code else null end         as cross_dock_country,
+                case when is_cross_docking_ind then po_ship_addr.lat else null end                 as cross_dock_latitude,
+                case when is_cross_docking_ind then po_ship_addr.lon else null end                 as cross_dock_longitude,
+
                 ss.estimated_delivery_to_cross_dock,
                 ss.estimated_delivery_to_customer,
                 sp.full_delivered_at,
 
                 ---- Verification and Consistency Fields ----
                 ---------------------------------------------
-
-                case when oq.is_cross_docking is true then true else false end                     as is_cross_docking_ind,
 
                 -- Check consecutive delivery dates in shipments
                 case
@@ -192,12 +181,14 @@ select distinct soq.order_uuid                                                  
                         then shipped_date + interval '7 days' end                                    as derived_delivered_to_cross_dock_at
 
 from {{ ref('cnc_order_quotes') }} as soq
-    inner join {{ ref('purchase_orders') }} as pos
-on soq.uuid = pos.uuid
+    inner join {{ ref('purchase_orders') }} as pos on soq.uuid = pos.uuid
+    left join {{ ref('cnc_order_quotes') }} as cnc_po on pos.uuid = cnc_po.uuid
+    left join {{ ref('addresses') }} as po_ship_addr on cnc_po.shipping_address_id = po_ship_addr.address_id
+    left join  {{ ref('countries') }} po_ship_coun on po_ship_addr.country_id = po_ship_coun.country_id
     left join supply_packages as sp on soq.order_uuid = sp.order_uuid
     left join supply_shipments as ss on sp.order_uuid = ss.order_uuid
     left join supply_cdt as cdt on cdt.order_uuid = sp.order_uuid
-    left join {{ ref('cnc_orders') }} as o on o.uuid = sp.order_uuid
+    left join {{ ref('cnc_orders') }} as o on o.uuid = cnc_po.order_uuid
     --todo: is this join necessary?
     left join {{ ref('cnc_order_quotes') }} as oq on oq.uuid = o.quote_uuid
 where soq.type = 'purchase_order'
