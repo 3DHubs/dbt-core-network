@@ -7,6 +7,8 @@ inner join {{ source('int_service_supply', 'team_users') }} tu
     on tu.team_id = t.id
         inner join {{ ref('users') }} u on u.user_id = tu.user_id
         where t.id not in (4,10)
+               and u.is_internal = false
+
 )
 
 

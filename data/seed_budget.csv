@@ -335,3 +335,75 @@ month,kpi,market,technology_name,value
 2022-10-01,sales_employees,NULL,NULL,48
 2022-11-01,sales_employees,NULL,NULL,48
 2022-12-01,sales_employees,NULL,NULL,48
+2022-01-01,closed_sales_region,us/ca,NULL,1803000
+2022-02-01,closed_sales_region,us/ca,NULL,1915000
+2022-03-01,closed_sales_region,us/ca,NULL,2027000
+2022-04-01,closed_sales_region,us/ca,NULL,2123000
+2022-05-01,closed_sales_region,us/ca,NULL,2259000
+2022-06-01,closed_sales_region,us/ca,NULL,2395000
+2022-07-01,closed_sales_region,us/ca,NULL,2503000
+2022-08-01,closed_sales_region,us/ca,NULL,2651000
+2022-09-01,closed_sales_region,us/ca,NULL,2799000
+2022-10-01,closed_sales_region,us/ca,NULL,2957000
+2022-11-01,closed_sales_region,us/ca,NULL,3065000
+2022-12-01,closed_sales_region,us/ca,NULL,3155000
+2022-01-01,closed_sales_region,dach,NULL,285000
+2022-02-01,closed_sales_region,dach,NULL,365000
+2022-03-01,closed_sales_region,dach,NULL,455000
+2022-04-01,closed_sales_region,dach,NULL,545000
+2022-05-01,closed_sales_region,dach,NULL,615000
+2022-06-01,closed_sales_region,dach,NULL,685000
+2022-07-01,closed_sales_region,dach,NULL,765000
+2022-08-01,closed_sales_region,dach,NULL,845000
+2022-09-01,closed_sales_region,dach,NULL,895000
+2022-10-01,closed_sales_region,dach,NULL,915000
+2022-11-01,closed_sales_region,dach,NULL,940000
+2022-12-01,closed_sales_region,dach,NULL,960000
+2022-01-01,closed_sales_region,uki,NULL,410000
+2022-02-01,closed_sales_region,uki,NULL,410000
+2022-03-01,closed_sales_region,uki,NULL,430000
+2022-04-01,closed_sales_region,uki,NULL,305000
+2022-05-01,closed_sales_region,uki,NULL,345000
+2022-06-01,closed_sales_region,uki,NULL,385000
+2022-07-01,closed_sales_region,uki,NULL,425000
+2022-08-01,closed_sales_region,uki,NULL,465000
+2022-09-01,closed_sales_region,uki,NULL,505000
+2022-10-01,closed_sales_region,uki,NULL,545000
+2022-11-01,closed_sales_region,uki,NULL,565000
+2022-12-01,closed_sales_region,uki,NULL,575000
+2022-01-01,closed_sales_region,benelux and nordics,NULL,450000
+2022-02-01,closed_sales_region,benelux and nordics,NULL,470000
+2022-03-01,closed_sales_region,benelux and nordics,NULL,490000
+2022-04-01,closed_sales_region,benelux and nordics,NULL,530000
+2022-05-01,closed_sales_region,benelux and nordics,NULL,570000
+2022-06-01,closed_sales_region,benelux and nordics,NULL,595000
+2022-07-01,closed_sales_region,benelux and nordics,NULL,615000
+2022-08-01,closed_sales_region,benelux and nordics,NULL,635000
+2022-09-01,closed_sales_region,benelux and nordics,NULL,655000
+2022-10-01,closed_sales_region,benelux and nordics,NULL,675000
+2022-11-01,closed_sales_region,benelux and nordics,NULL,695000
+2022-12-01,closed_sales_region,benelux and nordics,NULL,700000
+2022-01-01,closed_sales_region,other,NULL,180000
+2022-02-01,closed_sales_region,other,NULL,180000
+2022-03-01,closed_sales_region,other,NULL,180000
+2022-04-01,closed_sales_region,other,NULL,200000
+2022-05-01,closed_sales_region,other,NULL,220000
+2022-06-01,closed_sales_region,other,NULL,240000
+2022-07-01,closed_sales_region,other,NULL,280000
+2022-08-01,closed_sales_region,other,NULL,320000
+2022-09-01,closed_sales_region,other,NULL,360000
+2022-10-01,closed_sales_region,other,NULL,400000
+2022-11-01,closed_sales_region,other,NULL,440000
+2022-12-01,closed_sales_region,other,NULL,465000
+2022-01-01,closed_sales_region,france,NULL,245000
+2022-02-01,closed_sales_region,france,NULL,245000
+2022-03-01,closed_sales_region,france,NULL,265000
+2022-04-01,closed_sales_region,france,NULL,305000
+2022-05-01,closed_sales_region,france,NULL,345000
+2022-06-01,closed_sales_region,france,NULL,385000
+2022-07-01,closed_sales_region,france,NULL,425000
+2022-08-01,closed_sales_region,france,NULL,465000
+2022-09-01,closed_sales_region,france,NULL,505000
+2022-10-01,closed_sales_region,france,NULL,545000
+2022-11-01,closed_sales_region,france,NULL,570000
+2022-12-01,closed_sales_region,france,NULL,570000
