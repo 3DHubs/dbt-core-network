@@ -4,7 +4,8 @@
     "is_detected_similar",
     "is_customer_requested_reorder",
     "is_preferred_auction",
-    "is_restricted_auction"
+    "is_restricted_auction",
+    "is_automatic_rfq"
     ]
 %}
 

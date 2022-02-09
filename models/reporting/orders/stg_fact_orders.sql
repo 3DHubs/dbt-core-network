@@ -38,7 +38,7 @@ select
             then orders.promised_shipping_date end                                         as promised_shipping_at_to_customer,
     orders.completed_at,
 
-    -- Orders. Other Fields
+    -- Orders: Other Fields
     'supply'                                                                               as data_source,
     case when orders.legacy_order_id is not null then true else false end                  as is_legacy,
 
@@ -119,6 +119,7 @@ select
     rda.auction_uuid,
     rda.auction_status,
     rda.auction_created_at,
+    rda.auction_started_at,
     rda.auction_finished_at,
     rda.auction_is_accepted_manually,
     rda.auction_is_reviewed_manually,
@@ -126,9 +127,12 @@ select
     rda.auction_technology_id,
     rda.auction_document_number,
     rda.auction_is_cancelled_manually,
+    rda.is_eligible_for_restriction,
+    rda.has_restricted_suppliers,
     rda.auction_cancelled_manually_at,
 
     -- RDA: Interaction Aggregates
+    rda.number_of_rda_auctions,
     rda.number_of_supplier_auctions_assigned,
     rda.number_of_supplier_auctions_seen,
     rda.number_of_responses,
@@ -145,10 +149,25 @@ select
     rda.winning_bid_margin_usd,
     rda.has_winning_bid,
     rda.has_accepted_winning_bid,
+    rda.has_restricted_winning_bid,
     rda.has_winning_bid_countered_on_price,
     rda.has_winning_bid_countered_on_lead_time,
     rda.has_winning_bid_countered_on_design,
 
+    --RDA: Eligibility Sample (Product Feature a.k.a matching score)
+    rda.number_of_eligible_suppliers,
+    rda.number_of_eligible_preferred_suppliers,
+    rda.number_of_eligible_local_suppliers,
+
+    ---------- SOURCE: STG ORDERS RFQ --------------
+    rfq.has_rfq,
+    rfq.has_automatically_allocated_rfq,
+    rfq.is_rfq_automatically_sourced,
+    rfq.number_of_rfqs,
+    rfq.number_of_suppliers_rfq_requests,
+    rfq.number_of_suppliers_rfq_responded, 
+    rfq.number_of_rfq_requests,
+    rfq.number_of_rfq_responded,
 
     --------- SOURCE: STG ORDERS DOCUMENTS ---------
 
@@ -273,18 +292,11 @@ select
     li.parts_titles,
 
     ------ SOURCE: STG REVIEWS ---------
-    -- Data from Technical Reviews & RFQs
+    -- Data from Technical Reviews
 
     reviews.has_technical_review,
-    reviews.number_of_technical_reviews,
     reviews.hubspot_first_technical_review_ongoing_at,
     reviews.hubspot_first_technical_review_completed_at,
-    reviews.has_rfq,
-    reviews.is_rfq_automatically_sourced,
-    reviews.number_of_suppliers_rfq_requests,
-    reviews.number_of_suppliers_rfq_responded, 
-    reviews.number_of_rfq_requests,
-    reviews.number_of_rfq_responded,
 
     ------ SOURCE: STG GEO ------------
     -- Location data from customers,
@@ -415,7 +427,6 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ ref ('stg_orders_finance') }} as finance on orders.uuid = finance.order_uuid
     left join {{ ref ('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
     left join {{ ref ('stg_orders_otr') }} as otr on orders.uuid = otr.order_uuid
-    left join {{ ref ('stg_orders_reviews') }} as reviews on orders.uuid = reviews.order_uuid
     left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
     left join {{ ref ('stg_orders_disputes') }} as disputes on orders.uuid = disputes.order_uuid
@@ -425,6 +436,8 @@ from {{ ref('cnc_orders') }} as orders
 
     -- Aggregates
     left join {{ ref ('agg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
+    left join {{ ref ('agg_orders_rfq') }} as rfq on orders.uuid = rfq.order_uuid
+    left join {{ ref ('agg_orders_technical_reviews') }} as reviews on orders.uuid = reviews.order_uuid
     left join {{ ref ('agg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
     left join {{ ref ('agg_orders_line_items') }} as li on orders.quote_uuid = li.quote_uuid
 
@@ -439,4 +452,3 @@ where true
   and li.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
   and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth in a later stage
   and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately
-

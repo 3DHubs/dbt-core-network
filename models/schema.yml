@@ -154,6 +154,8 @@ sources:
       - name: addresses
       - name: auctions
       - name: bids
+      - name: bids_bid_reasons
+      - name: bid_reasons
       - name: branded_materials
       - name: cancellation_reasons
       - name: cnc_order_parts_inspection_attachments
@@ -179,6 +181,7 @@ sources:
       - name: disputes
       - name: lead_time_tiers
       - name: line_items
+      - name: matching_scores
       - name: material_colors
       - name: material_finishes
       - name: material_subsets
@@ -219,7 +222,6 @@ sources:
       - name: suppliers_material_subsets
       - name: teams
       - name: team_users
-      - name: technical_reviews
       - name: technologies
       - name: tolerances
       - name: transactions
