@@ -65,8 +65,8 @@ select
     b.uuid                                                                            as bid_uuid,
     b.response_type                                                                   as response_type,
     b.placed_at                                                                       as response_placed_at,
-    b.title                                                                           as negative_response_reason, -- Reason for counterbid and rejections
-    b.explanation                                                                     as bid_explanation,
+    b.title                                                                           as response_reason, -- Reason for counterbid and rejections
+    b.explanation                                                                     as response_explanation,
     b.bid_loss_reason                                                                 as bid_loss_reason,
     b.has_changed_prices                                                              as bid_has_changed_prices,
     b.has_design_modifications                                                        as bid_has_design_modifications,
