@@ -55,7 +55,9 @@ models:
     netsuite_sandbox:
       +schema: data_lake
       +enabled: false
-    reporting:
+    protolabs:
+      +schema: protolabs  
+    reporting: 
       +schema: reporting
       +materialized: table
       orders:
