@@ -281,7 +281,6 @@ select
     li.total_volume_cm3,
     li.number_of_expedited_shipping_line_items,
     li.has_customer_note,
-    li.has_exceeded_standard_tolerances,
     li.has_technical_drawings,
     li.has_custom_material_subset,
     li.has_custom_finish,

@@ -65,7 +65,10 @@ with auction_tech as (
         and type = 'part'
         and upload_properties is not null
     )
+    
 select orders.uuid                                                                  as order_uuid,
+
+           -- Supply Line Items Base Fields
            sqli.created                                                                 as created_date,
            sqli.updated                                                                 as updated_date,
            sqli.id                                                                      as line_item_id,
@@ -83,25 +86,15 @@ select orders.uuid                                                              
            sqli.material_color_id,
            sqli.branded_material_id,
            sqli.shipping_option_id,
-           -- Dimensions
            sqli.type                                                                    as line_item_type,
-           dt.name                                                                      as technology_name,
-           mat.name                                                                     as material_name,
-           msub.name                                                                    as material_subset_name,
-           msub.density                                                                 as material_density_g_cm3,
-           mc.name                                                                      as material_color_name,
            sqli.custom_material_subset_name                                             as custom_material_subset_name,
            (nullif(sqli.custom_material_subset_name, '') is not null)                   as has_custom_material_subset,
-           prc.name                                                                     as process_name,
-           bmat.name                                                                    as branded_material_name,
-           mf.name                                                                      as surface_finish_name,
            sqli.custom_finish_name                                                      as custom_surface_finish_name,
            (nullif(sqli.custom_finish_name, '') is not null)                            as has_custom_finish,
-           sqli.description                                                             as line_item_description, -- comment from customer
+           sqli.description                                                             as line_item_description, -- comment from customer 
            (nullif(sqli.description, '') is not null)                                   as has_customer_note,
            sqli.admin_description,
            sqli.title                                                                   as line_item_title,       -- by default set to model file name; custom line_items: set by admin
-           sqli.exceeds_standard_tolerances                                             as has_exceeded_standard_tolerances,
            sqli.should_quote_manually                                                   as needs_manual_quoting,  -- true if customer put custom material_subset
            sqli.has_technical_drawings,
            sqli.lead_time_options,
@@ -111,6 +104,32 @@ select orders.uuid                                                              
            sqli.requires_specific_gate_position                                         as has_specific_gate_position,
            sqli.requires_specific_parting_line                                          as has_specific_parting_line,
            sqli.unit,
+           sqli.quantity,
+           sqli.has_threads,
+           sqli.infill,
+           sqli.layer_height,
+           sqli.is_cosmetic,
+
+           -- Tolerances
+           t.name                                                                       as tiered_tolerance,
+           sqli.general_tolerance_class                                                 as general_tolerance,
+           sqli.custom_tolerance,
+           sqli.custom_tolerance_unit,
+
+           -- Technology (Defined from multiple sources)
+           dt.name                                                                      as technology_name,
+
+           -- Materials, Processes & Finishes
+           mat.name                                                                     as material_name,
+           msub.name                                                                    as material_subset_name,
+           msub.density                                                                 as material_density_g_cm3,
+           mc.name                                                                      as material_color_name,
+           prc.name                                                                     as process_name,
+           bmat.name                                                                    as branded_material_name,
+           mf.name                                                                      as surface_finish_name,
+           mf.cosmetic_type,
+
+           -- Dispute Fields
            d.dispute_created_at,
            d.dispute_created_at is not null                                             as is_dispute,
            d.dispute_description,
@@ -122,6 +141,7 @@ select orders.uuid                                                              
            d.has_surface_finish_issue,
            d.has_incorrect_material_issue,
            d.has_parts_damaged_issue,
+
            -- Complaints data
            c.created_at as complaint_created_at,
            c.created_at is not null as is_complaint,
@@ -136,6 +156,7 @@ select orders.uuid                                                              
            c.claim_type as complaint_type,
            c.liability as complaint_liability,
            --c.number_of_parts as complaint_affected_parts_quantity, perhaps onboarded later.
+
            -- Part Dimensional Fields
            pdf.part_depth_cm,
            pdf.part_width_cm,
@@ -146,13 +167,8 @@ select orders.uuid                                                              
            round(pdf.part_volume_cm3 * sqli.quantity)                                   as line_item_total_volume_cm3,
            round(coalesce(msub.density * pdf.part_volume_cm3, sqli.weight_in_grams), 1) as part_weight_g,
            round(coalesce(part_weight_g, sqli.weight_in_grams) * sqli.quantity, 1)      as line_item_weight_g,
-           sqli.quantity,
-           sqli.has_threads,
-           sqli.infill,
-           sqli.layer_height,
-           sqli.is_cosmetic,
-           mf.cosmetic_type,
-           t.name                                                                       as tiered_tolerance,
+
+           -- Amount Fields
            case
                when sqli.type = 'part' and sqli.technology_id = 3
                    then round((coalesce(price_amount, unit_price_amount * quantity::double precision,
@@ -183,13 +199,19 @@ select orders.uuid                                                              
                              auto_price_amount::double precision) / 100.00 / rates.rate
                end                                                                      as line_item_price_amount_usd,
            soq.currency_code                                                            as line_item_price_amount_source_currency
+
     from supply_orders as orders
              inner join {{ ref('line_items') }} as sqli on sqli.quote_uuid = orders.quote_uuid
-             inner join {{ ref('cnc_order_quotes') }} as soq on soq.uuid = orders.quote_uuid
-             left outer join orders_tech sot on sot.order_uuid = orders.uuid
-             left outer join part_dimensional_attributes pdf on pdf.id = sqli.id
-             left outer join {{ ref('technologies') }} dt on dt.technology_id = sot.derived_order_technology_id
-             left outer join {{ ref('agg_line_items_disputes') }} as d on d.line_item_uuid = sqli.uuid
+             inner join {{ ref('cnc_order_quotes') }} as soq on soq.uuid = orders.quote_uuid           
+
+             -- Technology
+             left outer join orders_tech sot on sot.order_uuid = orders.uuid             
+             left outer join {{ ref('technologies') }} dt on dt.technology_id = sot.derived_order_technology_id             
+
+             -- Disputes
+             left outer join {{ ref('agg_line_items_disputes') }} as d on d.line_item_uuid = sqli.uuid                             
+
+             -- Materials Processes and Finishes
              left outer join {{ ref('materials') }} as mat on mat.material_id = sqli.material_id
              left outer join {{ ref('processes') }} as prc on prc.process_id = sqli.process_id
              left outer join {{ ref('material_subsets') }} as msub
@@ -198,10 +220,16 @@ select orders.uuid                                                              
                              on bmat.branded_material_id = sqli.branded_material_id
              left outer join {{ ref('material_finishes') }} as mf on sqli.finish_slug = mf.slug
              left outer join {{ ref('material_colors') }} as mc on sqli.material_color_id = mc.material_color_id -- TODO: does not exist.
-             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
-                             on rates.currency_code_to = soq.currency_code and trunc(soq.created) = trunc(rates.date)
-             left outer join {{ ref('tolerances') }} t on t.id = sqli.tolerance_id
+
+             -- Complaints 
              left outer join {{ ref ('complaints')}} c on c.line_item_uuid = sqli.uuid
              left join {{ ref('users') }} u on u.user_id = c.created_by_user_id
              left join {{ ref('users') }} ur on ur.user_id = c.reviewed_by_user_id
+
+             -- Other Joins
+             left outer join part_dimensional_attributes pdf on pdf.id = sqli.id
+             left outer join {{ ref('tolerances') }} t on t.id = sqli.tolerance_id             
+             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+                             on rates.currency_code_to = soq.currency_code and trunc(soq.created) = trunc(rates.date)  
+
     where sqli.legacy_id is null

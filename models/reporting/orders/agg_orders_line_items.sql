@@ -39,7 +39,6 @@ with agg_line_items as (
 
            -- Boolean Aggregates
            bool_or(coalesce(fli.has_customer_note, false))                     as has_customer_note,
-           bool_or(coalesce(fli.has_exceeded_standard_tolerances, false))      as has_exceeded_standard_tolerances,
            bool_or(coalesce(fli.has_technical_drawings, false))                as has_technical_drawings,
            bool_or(coalesce(fli.has_custom_material_subset, false))            as has_custom_material_subset,
            bool_or(coalesce(fli.has_custom_finish, false))                     as has_custom_finish,
