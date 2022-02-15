@@ -95,7 +95,6 @@ select orders.uuid                                                              
            (nullif(sqli.description, '') is not null)                                   as has_customer_note,
            sqli.admin_description,
            sqli.title                                                                   as line_item_title,       -- by default set to model file name; custom line_items: set by admin
-           sqli.should_quote_manually                                                   as needs_manual_quoting,  -- true if customer put custom material_subset
            sqli.has_technical_drawings,
            sqli.lead_time_options,
            sqli.part_orientation_additional_notes,
@@ -198,7 +197,9 @@ select orders.uuid                                                              
                else coalesce(price_amount, unit_price_amount * quantity::double precision,
                              auto_price_amount::double precision) / 100.00 / rates.rate
                end                                                                      as line_item_price_amount_usd,
-           soq.currency_code                                                            as line_item_price_amount_source_currency
+           soq.currency_code                                                            as line_item_price_amount_source_currency,
+           -- These amount fields are only manually inserted, nowadays only unit_price_amount is populated and the price_amount is calculated from the quantity
+           coalesce(sqli.unit_price_amount, sqli.price_amount) is not null              as line_item_price_amount_manually_edited
 
     from supply_orders as orders
              inner join {{ ref('line_items') }} as sqli on sqli.quote_uuid = orders.quote_uuid
