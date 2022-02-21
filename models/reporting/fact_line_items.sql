@@ -1,4 +1,4 @@
-
+ 
 {{
     config(
         pre_hook = "lock table {{ source('int_service_supply', 'line_items') }}",
@@ -169,34 +169,37 @@ select orders.uuid                                                              
 
            -- Amount Fields
            case
-               when sqli.type = 'part' and sqli.technology_id = 3
-                   then round((coalesce(price_amount, unit_price_amount * quantity::double precision,
-                                        auto_price_amount::double precision *
-                                        coalesce(sqli.price_multiplier, soq.price_multiplier)) +
-                               coalesce(tooling_price_amount, auto_tooling_price_amount)) / 100.00,
-                              2) -- tooling costs only apply to IM parts
-               when sqli.type = 'part'
-                   then round(coalesce(price_amount, unit_price_amount * quantity::double precision,
-                                       auto_price_amount::double precision *
-                                       coalesce(sqli.price_multiplier, soq.price_multiplier)) / 100.00,
-                              2) -- price_amount is the manually overridden price field and auto_price_amount is automatically generated. Only multiply by quantity if price is per unit
-               else round(coalesce(price_amount, unit_price_amount * quantity::double precision,
-                                   auto_price_amount::double precision) / 100.00,
-                          2) -- price multiplier is only applied for parts
-               end                                                                      as line_item_price_amount,
-           case
-               when sqli.type = 'part' and sqli.technology_id = 3
-                   then (coalesce(price_amount, unit_price_amount * quantity::double precision,
-                                  auto_price_amount::double precision *
-                                  coalesce(sqli.price_multiplier, soq.price_multiplier)) +
-                         coalesce(tooling_price_amount, auto_tooling_price_amount)) / 100.00 / rates.rate
-               when sqli.type = 'part' then coalesce(price_amount, unit_price_amount * quantity::double precision,
-                                                     auto_price_amount::double precision *
-                                                     coalesce(sqli.price_multiplier, soq.price_multiplier)) / 100.00 /
-                                            rates.rate
-               else coalesce(price_amount, unit_price_amount * quantity::double precision,
-                             auto_price_amount::double precision) / 100.00 / rates.rate
-               end                                                                      as line_item_price_amount_usd,
+           --          If price amount is given always use this as it is the manually set amount
+           when sqli.price_amount is not null then
+                sqli.price_amount
+
+
+
+           --          Some non part line items have no unit price, thus we use auto_price amount (e.g. such as surcharge)
+            when sqli.type != 'part' and sqli.auto_price_amount is not null then
+                    coalesce(sqli.auto_price_amount, 0)
+
+           --          When unit price amount is given a simple multiplication with the quantity (if 0 then 1) will do (both parts and non parts), if the
+           --          order is of technology injection molding then we also add in tooling
+           when sqli.unit_price_amount is not null then
+                coalesce(sqli.unit_price_amount::double precision * coalesce(nullif(sqli.quantity, 0), 1) +
+                coalesce(sqli.tooling_price_amount, sqli.auto_tooling_price_amount, 0),0)
+
+           --          For all other line items auto_price_amount is given but still requires to be rounded appropriately.
+           --          Unit prices should have no more decimals than 2, therefore, the auto_price_amount for the total line item is
+           --          divided by the quantity and then rounded through the banker rounding method before multiplier again with the
+           --          Quantity this ensures that the unit price is within 2 decimals and that the total is equal to unit price * q
+           else
+
+                case when abs(cast((sqli.auto_price_amount * soq.price_multiplier)/coalesce(nullif(sqli.quantity, 0), 1) as int) -
+                                (sqli.auto_price_amount * soq.price_multiplier)/coalesce(nullif(sqli.quantity, 0), 1)) = 0.5 then
+                        round((sqli.auto_price_amount * soq.price_multiplier)/coalesce(nullif(sqli.quantity, 0), 1)/2,0)*2
+                else round((sqli.auto_price_amount * soq.price_multiplier)/coalesce(nullif(sqli.quantity, 0),1),0)
+                end * coalesce(nullif(sqli.quantity, 0), 1)
+
+           end  / 100.00                                                               as line_item_price_amount,
+           line_item_price_amount / rates.rate                                         as line_item_price_amount_usd,
+           
            soq.currency_code                                                            as line_item_price_amount_source_currency,
            -- These amount fields are only manually inserted, nowadays only unit_price_amount is populated and the price_amount is calculated from the quantity
            coalesce(sqli.unit_price_amount, sqli.price_amount) is not null              as line_item_price_amount_manually_edited
