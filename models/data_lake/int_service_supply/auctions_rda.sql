@@ -33,8 +33,6 @@ with auctions as (select
                       oqs.technology_id,
                       round((oqs.subtotal_price_amount / 100.00), 2) as auction_amount_usd,
                       oqs.document_number as auction_document_number,
-                      -- Fields from Orders Table
-                      orders.is_eligible_for_restriction,
                       -- Fields from Suppliers
                       suppliers.id as auction_supplier_id,
                       suppliers.address_id as auction_supplier_address_id,
@@ -46,7 +44,6 @@ with auctions as (select
                       as recency_idx
                   from {{ source('int_service_supply', 'auctions') }} as auctions
                       inner join {{ ref('cnc_order_quotes') }} as oqs on auctions.uuid = oqs.uuid
-                      left join {{ ref('cnc_orders') }} as orders on orders.quote_uuid = oqs.uuid
                       left join {{ ref ('bids')}} as bids on auctions.winner_bid_uuid = bids.uuid
                       left join {{ ref('suppliers') }} as suppliers on bids.supplier_id = suppliers.id
                       left join {{ ref ('technologies') }} as technologies on oqs.technology_id = technologies.technology_id

@@ -42,6 +42,9 @@ select
     'supply'                                                                               as data_source,
     case when orders.legacy_order_id is not null then true else false end                  as is_legacy,
 
+    -- Product Features
+    orders.is_eligible_for_restriction,
+
     ---------- SOURCE: STG ORDERS HUBSPOT --------------
 
     -- HS Deals: Main Fields
@@ -127,7 +130,6 @@ select
     rda.auction_technology_id,
     rda.auction_document_number,
     rda.auction_is_cancelled_manually,
-    rda.is_eligible_for_restriction,
     rda.has_restricted_suppliers,
     rda.auction_cancelled_manually_at,
 
