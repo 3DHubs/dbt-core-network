@@ -30,6 +30,7 @@ select
          when legacy_order_id is null then orders.uuid end                                 as order_uuid, -- Most drupal orders exists in supply but we want to keep their original ID
     orders.quote_uuid                                                                      as order_quote_uuid,
     orders.reorder_original_order_uuid,
+    orders.billing_request_id                                                              as billing_id, -- This is the key used to indenitfy when the order was paid out and under which billing month
 
     -- Orders: Dates
     orders.created                                                                         as created_at,

@@ -227,6 +227,7 @@ sources:
       - name: transactions
       - name: users
       - name: currencies
+      - name: billing_requests
 
   - name: reporting
     tables:

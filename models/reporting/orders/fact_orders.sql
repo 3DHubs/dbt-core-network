@@ -43,6 +43,7 @@ bdr_owner_id,
 mechanical_engineer_id,
 hubspot_owner_id,
 hubspot_sourcing_owner_id,
+orders.billing_id,
 
 -- General Attributes
 process_name,
