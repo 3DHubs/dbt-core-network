@@ -89,7 +89,7 @@ select *,
        case
               when campaign_market in ('US', 'CA', 'US-CA', 'USCA') then 'US/CA'
               when campaign_market in ('GB', 'IE', 'UKI') then 'UKI'
-              when campaign_market in ('DACH', 'DE', 'AT', 'CH') then 'DACH'
+              when campaign_market in ('DACH', 'DE', 'AT', 'CH','PL','HU','CZ','SK') then 'DACH'
               when campaign_market in ('FR') then 'FR'
               when campaign_market in ('IT') then 'IT'
               when campaign_market in ('NEUR', 'BE', 'NL', 'BN', 'DK', 'FI', 'NO', 'SE') then 'NEUR'

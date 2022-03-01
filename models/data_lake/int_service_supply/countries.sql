@@ -23,7 +23,7 @@ select issc.created,
             end region,
        --market
        case when lower(issc.alpha2_code) in ('dk','fi','be','no','se','lu','nl') then 'benelux and nordics'
-            when lower(issc.alpha2_code) in ('at','de','ch') then 'dach'
+            when lower(issc.alpha2_code) in ('at','de','ch','pl','cz','hu','sk') then 'dach'
             when lower(issc.alpha2_code) = 'fr' then 'france'
             when lower(issc.alpha2_code) in ('ie','gb') then 'uki'
             when lower(issc.alpha2_code) in ('ca','us') then 'us/ca'
