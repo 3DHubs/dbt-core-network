@@ -17,9 +17,11 @@
      ),
 
      stg_cube_invoices_supply as (
-         select invoices.uuid                                                      as invoice_uuid,
-                invoices.created                                                   as invoice_created_date,
-                null                                                               as invoice_due_date,
+         select 
+                invoices.uuid                                                      as invoice_uuid,
+                invoices.created                                                   as invoice_created_date, -- This should not be used to determine creation date of invoice, actual creaiton date is at finalization.
+                invoices.finalized_at                                              as invoice_finalized_at,
+                dateadd(day, invoices.payment_term, invoices.finalized_at)   as invoice_due_date,
                 invoices.order_uuid                                                as order_uuid,
                 invoices.status                                                    as invoice_status,
                 invoices.document_number                                           as invoice_document_number,
