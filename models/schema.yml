@@ -221,6 +221,7 @@ sources:
       - name: suppliers
       - name: suppliers_material_subsets
       - name: teams
+      - name: team_invites
       - name: team_users
       - name: technologies
       - name: tolerances
