@@ -1,4 +1,8 @@
--- Close to replica of stg_advertising_data in the ../clients directory, but that model aggregates on client_id, whereas we need to process data on contact_id.
+{{
+    config(
+        materialized='incremental'
+    )
+}}
 
 with keywords as (select distinct source, account_id, campaign_id, adgroup_id, keyword_id, campaign_group
                       from {{ ref('agg_advertising_spend_monthly') }}
@@ -6,7 +10,16 @@ with keywords as (select distinct source, account_id, campaign_id, adgroup_id, k
          campaigns as (
              select distinct source, account_id, campaign_id, campaign_group
                        from {{ ref('agg_advertising_spend_monthly') }}
-                       )
+                       ),
+         new_contacts as (select * from  {{ ref('stg_contacts_dimensions') }} as dcps 
+ {% if is_incremental() %}
+
+  -- this filter will only be applied on an incremental run
+  where dcps.hubspot_contact_id  not in  (select hubspot_contact_id  from {{ this }})
+
+{% endif %}        
+         )
+
 
 select  dcps.hubspot_contact_id,
         dcps.advertising_gclid,
@@ -34,7 +47,7 @@ select  dcps.hubspot_contact_id,
             when stg_device similar to '%mobile%|m' then 'Mobile'
             else stg_device end                                                           as advertising_click_device
 
-from {{ ref('stg_contacts_dimensions') }} as dcps
+from new_contacts as dcps
             left join {{ ref('google_ads_click_performance_report') }} cpc on (dcps.advertising_gclid = cpc.google_click_id)
             left join keywords on (cpc.google_click_id is null and
                                 keywords.source = dcps.advertising_source and -- performance optimization: exclude already joined gclds from this join, so bing and some google clicks without gclid are only joined here. This join is expensive!

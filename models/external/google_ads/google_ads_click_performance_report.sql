@@ -1,10 +1,19 @@
-{{ config(bind=False) }}
+{{ config(bind=False,
+          pre_hook=["
+            delete
+            from analytics.ext_adwords.click_performance_report
+            where _sdc_sequence in (
+                with to_remove as (
+                    select _sdc_sequence,
+                        row_number() over (partition by day, googleclickid order by _sdc_report_datetime desc) as row_number
+                    from analytics.ext_adwords.click_performance_report)
+            select _sdc_sequence
+            from to_remove
+            where row_number > 1) 
+        "],
+            ) }}
 
-with click_performance_report_ranked as (
-    select *,
-           row_number() over (partition by day, googleclickid order by _sdc_report_datetime desc) as row_number
-    from {{ source('ext_adwords', 'click_performance_report') }}
-    )
+
 select account                                      as account_name,
        adgroup,
        adgroupid                                    as adgroup_id,
@@ -43,8 +52,7 @@ select account                                      as account_name,
        regionlocationofinterest                     as region_location_of_interest,
        mostspecificlocationtargetlocationofinterest as most_specific_location_target_location_of_interest,
        metroarealocationofinterest                  as metro_area_location_of_interest
-from click_performance_report_ranked
-where row_number = 1
+from {{ source('ext_adwords', 'click_performance_report') }}
 union
 select null                                as account_name,
        null,
@@ -85,4 +93,4 @@ select null                                as account_name,
        aoi_most_specific_target_id::bigint as most_specific_location_target_location_of_interest,
        null                                as metro_area_location_of_interest
 from {{ source('adwords', 'click_performance_reports') }} -- Data originating from Segment
-where gcl_id not in (select googleclickid from click_performance_report_ranked where row_number = 1)
+where gcl_id not in (select googleclickid from  {{ source('ext_adwords', 'click_performance_report') }})
