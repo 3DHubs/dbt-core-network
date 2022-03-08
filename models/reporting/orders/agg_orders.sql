@@ -45,7 +45,7 @@ select
     count(case when is_closed then order_uuid end) over (partition by hubspot_contact_id)                                                              as number_of_closed_orders_contact,
 
     -- Financial Totals
-    nullif(sum(closed_amount_usd) over (partition by hubspot_contact_id), 0)                                                                           as closed_sales_usd_contact,
+    nullif(sum(subtotal_closed_amount_usd) over (partition by hubspot_contact_id), 0)                                                                  as closed_sales_usd_contact,
 
     -- First Values
     first_value(technology_name) 
@@ -84,7 +84,7 @@ select
     count(case when is_closed then order_uuid end) over (partition by hubspot_company_id)                                                              as number_of_closed_orders_company,
 
     -- Financial Totals
-    nullif(sum(closed_amount_usd) over (partition by hubspot_company_id), 0)                                                                           as closed_sales_usd_company,
+    nullif(sum(subtotal_closed_amount_usd) over (partition by hubspot_company_id), 0)                                                                           as closed_sales_usd_company,
 
     -- First Values
     first_value(technology_name) 
@@ -203,9 +203,9 @@ select orders.order_uuid,
        prep.number_of_closed_orders_contact,
        -- Financial Totals
        prep.closed_sales_usd_contact,
-       sum(case when is_closed and closed_order_is_from_new_customer_contact then closed_amount_usd end)
+       sum(case when is_closed and closed_order_is_from_new_customer_contact then subtotal_closed_amount_usd end)
             over ( partition by orders.hubspot_contact_id)                                                                                              as closed_sales_usd_new_customer_contact,
-       sum(case when is_closed and closed_order_is_from_new_customer_contact then (sourced_amount_usd - sourced_cost_usd) end)
+       sum(case when is_closed and closed_order_is_from_new_customer_contact then (subtotal_sourced_amount_usd - subtotal_sourced_cost_usd) end)
             over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_new_customer_contact,
        -- First Values
        prep.first_submitted_order_technology_contact,
@@ -237,9 +237,9 @@ select orders.order_uuid,
        prep.number_of_closed_orders_company,
        -- Financial
        prep.closed_sales_usd_company,
-       sum(case when is_closed and closed_order_is_from_new_customer_company then closed_amount_usd end)
+       sum(case when is_closed and closed_order_is_from_new_customer_company then subtotal_closed_amount_usd end)
             over ( partition by orders.hubspot_company_id)                                                                                              as closed_sales_usd_new_customer_company,
-       sum(case when is_closed and closed_order_is_from_new_customer_company then (sourced_amount_usd - sourced_cost_usd) end)
+       sum(case when is_closed and closed_order_is_from_new_customer_company then (subtotal_sourced_amount_usd - subtotal_sourced_cost_usd) end)
             over (partition by orders.hubspot_company_id)                                                                                               as total_precalc_margin_usd_new_customer_company,
        -- First Values
        prep.first_submitted_order_technology_company,

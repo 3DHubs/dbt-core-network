@@ -15,6 +15,7 @@ with auctions as (select
                       auctions.uuid  as auction_uuid,
                       -- Foreign Keys
                       oqs.order_uuid as order_uuid,
+                      oqs.parent_uuid as quote_uuid,
                       -- Auction Attributes
                       auctions.winner_bid_uuid as winning_bid_uuid,
                       auctions.status,  -- If auction gets status 'resourced' it means it has been brought back to the auction

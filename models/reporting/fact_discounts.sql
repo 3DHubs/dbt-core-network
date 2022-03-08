@@ -32,8 +32,6 @@ select so.uuid                                                  as order_uuid,
         d.title as discount_title,
         true as has_discount,
         d.discount_factor,
-        coalesce(trunc(-l.auto_price_amount *1.0 / 100.00,2), 0) as discount_amount_local_currency,
-        trunc((discount_amount_local_currency / rates.rate), 2)  as discount_amount_usd,
 
         -- Discount Codes Attributes
        discount_code_id,
@@ -48,8 +46,4 @@ from {{ ref('line_items') }} l
          inner join {{ ref('discounts') }} d on d.id = l.discount_id
          left join  {{ ref('discount_codes') }} dc on dc.id = l.discount_code_id
          left join  {{ ref('users') }} u on u.user_id = dc.author_id
-         left join  {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
-                   on rates.currency_code_to = coq.currency_code
-                     and trunc(l.created) = trunc(rates.date)
 where l.type='discount'
-order by l.created

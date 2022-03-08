@@ -226,7 +226,7 @@ select orders.uuid                                                              
              left outer join {{ ref('material_colors') }} as mc on sqli.material_color_id = mc.material_color_id -- TODO: does not exist.
 
              -- Complaints 
-             left outer join {{ ref ('complaints')}} c on c.line_item_uuid = sqli.uuid
+             left join {{ ref ('complaints')}} c on c.line_item_uuid = sqli.uuid
              left join {{ ref('users') }} u on u.user_id = c.created_by_user_id
              left join {{ ref('users') }} ur on ur.user_id = c.reviewed_by_user_id
 

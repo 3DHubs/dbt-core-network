@@ -8,7 +8,7 @@ select reorder.order_uuid as reorder_order_uuid,
        original.created_at as original_order_created_at,
        original.closed_at as original_order_closed_at,
        original.lead_time as original_order_lead_time,
-       original.amount_usd as original_order_amount_usd,
+       original.subtotal_amount_usd as original_order_amount_usd,
        original.total_quantity as original_order_quantity,
        original.number_of_part_line_items as original_order_number_of_part_line_items,
        original.parts_titles as original_order_parts_titles

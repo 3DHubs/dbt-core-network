@@ -73,7 +73,8 @@ select
     b.has_changed_shipping_date                                                       as bid_has_changed_shipping_date,
     b.bid_amount_usd                                                                  as bid_amount_usd,
     b.margin_without_discount                                                         as bid_margin,
-    sod.order_quote_amount_usd_excl_discount * b.margin_without_discount              as bid_margin_usd,
+    (ali.li_subtotal_amount_usd - ali.discount_cost_usd) 
+        * b.margin_without_discount                                                   as bid_margin_usd,
     b.design_modification_text                                                        as design_modification_text,
     case when b.uuid = a.winning_bid_uuid then true else false end                    as is_winning_bid,
 
@@ -89,10 +90,10 @@ select
     a.base_margin_without_discount                                                    as auction_base_margin,
 
     -- Order Level Fields
-    sod.order_quote_amount_usd_excl_discount                                          as auction_quote_amount_usd
+    (ali.li_subtotal_amount_usd - ali.discount_cost_usd)     as auction_quote_amount_usd
 
 from stg_supplier_auctions as sa
-         inner join {{ ref('auctions_rda') }} as a
-on a.auction_uuid = sa.auction_uuid -- Filter for only RDA Auctions
+    inner join {{ ref('auctions_rda') }} as a on a.auction_uuid = sa.auction_uuid -- Filter for only RDA Auctions
     left join (select * from bids where rn=1) as b on b.sa_uuid = sa.sa_uuid
+    left join {{ ref ('agg_line_items')}} as ali on a.quote_uuid = ali.quote_uuid
     left join {{ ref ('stg_orders_documents')}} as sod on sod.order_uuid = a.order_uuid

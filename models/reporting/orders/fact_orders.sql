@@ -104,7 +104,6 @@ po_active_document_number,
 order_quote_document_number,
 order_quote_status,
 quote_first_created_by_admin,
-quote_first_has_part_without_automatic_pricing,
 number_of_quote_versions,
 has_admin_created_quote,
 has_manual_quote_review,
@@ -139,18 +138,26 @@ agg.closed_order_number_client,
 -- Supplier Attributes
 supplier_name,
 
--- Amounts (USD)
-amount_usd,
-closed_amount_usd,
-discount_cost_usd, -- From Fact Discounts, discount line item 
-sourced_amount_usd,
-sourced_cost_usd, -- From First PO
-shipping_amount_usd, -- Value in the quote, derived from line items
-po_first_shipping_usd,
-po_active_amount_usd,
-po_active_shipping_usd,
+-- Amounts Quote (USD):
+parts_amount_usd, -- "order_quote_" fields are derived from line items
+shipping_amount_usd,    
+discount_cost_usd,
+other_amount_usd,
+subtotal_amount_usd, -- Value derived from the quotes table, closing and sourcing should vary due to exchange rates 
+subtotal_closed_amount_usd,
+subtotal_sourced_amount_usd,
 hubspot_amount_usd,
 hubspot_estimated_close_amount_usd,
+
+-- Amounts PO (USD):
+subtotal_sourced_cost_usd, -- From First PO
+parts_cost_usd,
+shipping_cost_usd,
+other_costs_usd,
+po_active_subtotal_cost_usd,
+po_active_parts_cost_usd,
+po_active_shipping_cost_usd,
+po_active_other_costs_usd,
 
 -- Amounts CM1 (USD)
 cogs_amount_usd,

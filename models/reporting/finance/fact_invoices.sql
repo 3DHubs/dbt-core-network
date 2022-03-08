@@ -4,24 +4,11 @@
 -- with Netsuite data for data after March 2021. Invoices with negative sign
 -- are credit memos. Invoices are considered recognized based on the recognition date of the order.
 
-     with stg_line_items_supply as (
-         select quote_uuid,
-                sum(case
-                        when (li.type = 'shipping' or (li.type = 'custom' and lower(title) like '%shipping%')) and
-                             not (li.type = 'shipping' and lower(title) like '%refund%') then nvl(price_amount, 0)
-                        else 0 end) as order_shipping_revenue
-         from {{ ref('line_items') }} as li
-            left join {{ ref('cnc_order_quotes') }} soq
-         on soq.uuid = li.quote_uuid
-         group by 1
-     ),
-
-     stg_cube_invoices_supply as (
-         select 
-                invoices.uuid                                                      as invoice_uuid,
-                invoices.created                                                   as invoice_created_date, -- This should not be used to determine creation date of invoice, actual creaiton date is at finalization.
+with stg_cube_invoices_supply as (
+         select invoices.uuid                                                      as invoice_uuid,
+                invoices.created                                                   as invoice_created_date,
                 invoices.finalized_at                                              as invoice_finalized_at,
-                dateadd(day, invoices.payment_term, invoices.finalized_at)   as invoice_due_date,
+                dateadd(day, invoices.payment_term, invoices.finalized_at)         as invoice_due_date,
                 invoices.order_uuid                                                as order_uuid,
                 invoices.status                                                    as invoice_status,
                 invoices.document_number                                           as invoice_document_number,
@@ -30,8 +17,9 @@
                 round(((invoices.subtotal_price_amount / 100.00) / rates.rate), 2) as invoice_subtotal_price_amount_usd,
                 null                                                               as invoice_remaining_amount,
                 null                                                               as invoice_remaining_amount_usd,
-                round(((nvl(sli.order_shipping_revenue, 0) / 100.00) / rates.rate),
-                      2)                                                           as order_shipping_revenue_usd,
+                null                                                               as order_shipping_revenue_usd,
+
+                -- Recognition Date
                 case
                     when orders.recognized_at < current_date and invoices.finalized_at < current_date
                         then true end                                              as invoice_is_recognized,
@@ -49,33 +37,31 @@
                                                                                when invoices.finalized_at < '2020-10-01'
                                                                                    then '2020-10-01'
                                                                                else invoices.finalized_at end
-                    else null end                                                  as invoice_revenue_date,
+                    else null end                                                  as invoice_revenue_date, 
+
+                -- Other Fields
                 null                                                               as is_downpayment,
                 'supply'                                                           as _data_source
+
          from {{ ref('cnc_order_quotes') }} as invoices
                 left outer join {{ ref('stg_fact_orders') }} as orders using (order_uuid)
-                left outer join stg_line_items_supply as sli
-         on sli.quote_uuid = orders.order_quote_uuid
-             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
-             on rates.currency_code_to = invoices.currency_code and
-             trunc(invoices.finalized_at) = trunc(rates.date)
+                left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+                    on rates.currency_code_to = invoices.currency_code and trunc(invoices.finalized_at) = trunc(rates.date)
          where true
            and invoices.type in ('invoice')
            and invoices.finalized_at is not null -- Locked quotes only
-           and date_trunc('day'
-             , invoices.created)
-             < '2021-03-01'
-     ),
+           and date_trunc('day', invoices.created)< '2021-03-01'
+           ),
 
 -- Netsuite Invoice Data
      stg_cube_invoices_netsuite as (
-         select netsuite_trn.internalid::text                                                   as invoice_uuid,
-                netsuite_trn.createddate                                                        as invoice_created_date,
-                netsuite_trn.duedate                                                            as invoice_due_date,
-                invoices.order_uuid                                                             as order_uuid,
-                netsuite_trn.status                                                             as invoice_status,
-                netsuite_trn.tranid                                                             as invoice_document_number,
-                netsuite_trn.currencyname                                                       as invoice_currency_code,
+         select netsuite_trn.internalid::text                    as invoice_uuid,
+                netsuite_trn.createddate                         as invoice_created_date,
+                netsuite_trn.duedate                             as invoice_due_date,
+                invoices.order_uuid                              as order_uuid,
+                netsuite_trn.status                              as invoice_status,
+                netsuite_trn.tranid                              as invoice_document_number,
+                netsuite_trn.currencyname                        as invoice_currency_code,
                 -- Credit Memos are negative invoices
                 invoice_subtotal_price_amount,
                 invoice_subtotal_price_amount_usd,
@@ -84,12 +70,12 @@
                 order_shipping_revenue_usd,
                 case
                     when orders.recognized_at < current_date and netsuite_trn.createddate < current_date
-                        then true end                                                           as invoice_is_recognized,
+                        then true end                            as invoice_is_recognized,
                 case
                     when netsuite_trn.createddate <= orders.first_completed_at
                         then orders.first_completed_at
                     when netsuite_trn.createddate > orders.first_completed_at then netsuite_trn.createddate
-                    else null end                                                               as invoice_revenue_date_legacy,
+                    else null end                                as invoice_revenue_date_legacy,
                 case
                     when invoice_revenue_date_legacy < '2020-10-01' then invoice_revenue_date_legacy
                     when netsuite_trn.createddate <= orders.recognized_at then case
@@ -100,13 +86,13 @@
                                                                                   when netsuite_trn.createddate < '2020-10-01'
                                                                                       then '2020-10-01'
                                                                                   else netsuite_trn.createddate end
-                    else null end                                                               as invoice_revenue_date,
-                case when custbody_downpayment > 0 then true end                                as is_downpayment,
-                'netsuite'                                                                      as _data_source
+                    else null end                                as invoice_revenue_date,
+                case when custbody_downpayment > 0 then true end as is_downpayment,
+                'netsuite'                                       as _data_source
+                
          from {{ ref('netsuite_invoices') }} as netsuite_trn
-                left outer join {{ ref('cnc_order_quotes') }} as invoices
-         on invoices.document_number = netsuite_trn.custbodyquotenumber
-             left outer join {{ ref('stg_fact_orders') }} as orders on orders.order_uuid = invoices.order_uuid
+                left outer join {{ ref('cnc_order_quotes') }} as invoices on invoices.document_number  = netsuite_trn.custbodyquotenumber
+                left outer join {{ ref('stg_fact_orders') }} as orders on orders.order_uuid = invoices.order_uuid
          where true
            and date_trunc('day', netsuite_trn.createddate) >= '2021-03-01'
      )

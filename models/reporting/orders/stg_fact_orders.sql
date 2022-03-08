@@ -176,7 +176,6 @@ select
 
     --Documents: First Quote
     docs.quote_first_created_by_admin,
-    docs.quote_first_has_part_without_automatic_pricing,
     docs.quote_first_splitted_from_quote_uuid,
     docs.is_splitted_from_order,
     docs.is_splitted_order,
@@ -200,19 +199,18 @@ select
     docs.has_manual_quote_review,
 
     --Documents: First Purchase Order
+    docs.po_first_uuid,
+    docs.subtotal_sourced_cost_usd,    
     docs.sourced_at,
     docs.is_sourced,
-    docs.sourced_cost_usd,
-    docs.po_first_shipping_usd,
 
     --Documents: Active Purchase Order
     docs.po_active_uuid,
-    docs.po_active_amount_usd,
+    docs.po_active_subtotal_cost_usd,
     docs.po_active_document_number,
     docs.po_active_company_entity,
     docs.po_active_support_ticket_id,
     docs.promised_shipping_at_by_supplier,
-    docs.po_active_shipping_usd,
 
     --Documents: All Purchase Orders
     docs.number_of_purchase_orders,
@@ -273,25 +271,38 @@ select
     otr.shipping_by_supplier_delay_days,
     otr.first_delay_submitted_at,
 
-    -------- SOURCE: STG ORDERS LINE ITEMS --------
+    -------- SOURCE: AGG ORDERS LINE ITEMS --------
 
-    li.number_of_part_line_items,
-    li.number_of_materials,
-    li.number_of_processes,
-    li.total_quantity,
-    li.total_weight_grams,
-    li.total_bounding_box_volume_cm3,
-    li.total_volume_cm3,
-    li.number_of_expedited_shipping_line_items,
-    li.has_customer_note,
-    li.has_technical_drawings,
-    li.has_custom_material_subset,
-    li.has_custom_finish,
-    li.shipping_amount_usd,
-    li.line_item_technology_id,
-    li.line_item_process_id as process_id,
-    li.line_item_process_name as process_name,
-    li.parts_titles,
+    -- Quote
+    qli.number_of_part_line_items,
+    qli.number_of_materials,
+    qli.number_of_processes,
+    qli.total_quantity,
+    qli.total_weight_grams,
+    qli.total_bounding_box_volume_cm3,
+    qli.total_volume_cm3,
+    qli.number_of_expedited_shipping_line_items,
+    qli.has_customer_note,
+    qli.has_technical_drawings,
+    qli.has_custom_material_subset,
+    qli.has_custom_finish,
+    qli.parts_amount_usd,
+    qli.shipping_amount_usd,    
+    qli.discount_cost_usd,
+    qli.other_line_items_amount_usd as other_amount_usd,
+    qli.line_item_technology_id,
+    qli.line_item_process_id as process_id,
+    qli.line_item_process_name as process_name,
+    qli.parts_titles,
+
+    -- Purchase Orders
+    fpoli.parts_amount_usd as parts_cost_usd,
+    fpoli.shipping_amount_usd as shipping_cost_usd,    
+    fpoli.other_line_items_amount_usd as other_costs_usd,
+
+    apoli.parts_amount_usd as po_active_parts_cost_usd,
+    apoli.shipping_amount_usd as po_active_shipping_cost_usd,    
+    apoli.other_line_items_amount_usd as po_active_other_costs_usd,
 
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews
@@ -360,13 +371,6 @@ select
     disputes.dispute_resolution_time_hours,
     disputes.first_dispute_resolution_type,
 
-    ---------- SOURCE: FACT DISCOUNTS ------------------
-    -- Discounts have a 1-1 relationship with orders (Jan 2022)
-    -- thus can be joined directly without need for an stg table.
-    -- Discounts is also used directly on Looker hence the fact prefix.
-
-    discounts.discount_amount_usd as discount_cost_usd,
-
     ---------- SOURCE: INT SERVICE SUPPLY --------------
     -- Joins that are used to bring a few fields
     -- , they do not aggregate or compile data
@@ -401,9 +405,9 @@ select
           else logistics.full_delivered_at end, dealstage.first_completed_at)              as recognized_at, -- Let's think of a way to do this better :)
 
     -- Financial:
-    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as amount_usd,
-    case when is_closed then amount_usd else 0 end                                         as closed_amount_usd,
-    case when is_sourced then amount_usd else 0 end                                        as sourced_amount_usd,
+    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as subtotal_amount_usd,
+    case when is_closed then subtotal_amount_usd else 0 end                                as subtotal_closed_amount_usd,
+    case when is_sourced then subtotal_amount_usd else 0 end                               as subtotal_sourced_amount_usd,
 
     -- Suppliers:
     coalesce(docs.po_active_supplier_id, rda.auction_supplier_id)                          as supplier_id,
@@ -411,15 +415,15 @@ select
     coalesce(docs.po_active_supplier_address_id, rda.auction_supplier_address_id)          as supplier_address_id,
 
     -- Technology:
-    coalesce(rda.auction_technology_id, li.line_item_technology_id, hubspot_technology_id) as technology_id,
-    coalesce(rda.auction_technology_name, li.line_item_technology_name,
+    coalesce(rda.auction_technology_id, qli.line_item_technology_id, hubspot_technology_id) as technology_id,
+    coalesce(rda.auction_technology_name, qli.line_item_technology_name,
              hubspot_technology_name)                                                      as technology_name,
 
     -- Commission Related:
-    case when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - shipping_amount_usd > 50 -- Threshold
+    case when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - qli.shipping_amount_usd > 50 -- Threshold
             and interactions.has_svp_interaction is not true and is_closed is true 
             then true when is_closed is not true then null else false end                  as has_significant_amount_gap, 
-    coalesce(interactions.has_svp_interaction or li.has_svp_line_item,false)               as is_svp
+    coalesce(interactions.has_svp_interaction or qli.has_svp_line_item,false)               as is_svp
 
 from {{ ref('cnc_orders') }} as orders
 
@@ -441,7 +445,9 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ ref ('agg_orders_rfq') }} as rfq on orders.uuid = rfq.order_uuid
     left join {{ ref ('agg_orders_technical_reviews') }} as reviews on orders.uuid = reviews.order_uuid
     left join {{ ref ('agg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
-    left join {{ ref ('agg_orders_line_items') }} as li on orders.quote_uuid = li.quote_uuid
+    left join {{ ref ('agg_line_items') }} as qli on orders.quote_uuid = qli.quote_uuid -- Agg Order-Quotes
+    left join {{ ref ('agg_line_items') }} as fpoli on docs.po_first_uuid = fpoli.quote_uuid -- Agg First POs
+    left join {{ ref ('agg_line_items') }} as apoli on docs.po_active_uuid = apoli.quote_uuid -- Agg Active POs        
 
     -- Data Lake
     left join {{ ref ('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
@@ -451,6 +457,6 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
 
 where true
-  and li.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
+  and qli.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
   and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth in a later stage
   and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately

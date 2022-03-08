@@ -35,12 +35,10 @@ with stg_supplier_auctions as (
                 row_number()
                 over (partition by bid_quotes.order_uuid, supplier_id order by bid_quotes.created asc) as supplier_bid_idx
          from {{ ref('cnc_order_quotes') }} as bid_quotes
-                left join {{ ref('bids') }} as bids
-         on bid_quotes.uuid = bids.uuid
-             left join {{ ref('cnc_order_quotes') }} as auction_quote
-             on auction_quote.uuid = bid_quotes.parent_uuid
+                left join {{ ref('bids') }} as bids on bid_quotes.uuid = bids.uuid
+             left join {{ ref('cnc_order_quotes') }} as auction_quote on auction_quote.uuid = bid_quotes.parent_uuid
              inner join {{ ref('auctions_rfq') }} as auctions -- Inner Join to Filter on RFQ
-             on auctions.order_quotes_uuid = auction_quote.uuid
+                on auctions.order_quotes_uuid = auction_quote.uuid
          where bid_quotes.type = 'bid'
      ),
 
@@ -88,7 +86,7 @@ with stg_supplier_auctions as (
                   left outer join winning_bid on bid_quotes.bid_uuid = winning_bid.uuid
      ),
 
-    ---------- SOURCE: 2. SUPPLIER-AUCTIONS (RFQ) --------------
+    ---------- SOURCE: 2. SUPPLIER RFQs ----------------------
 
      -- Query old supplier RFQs - these are orders that were RFQ'ed before we automated the RFQ process (and also started creating an auction for supplier RFQs)
      -- Supplier_rfqs only allows 1 RFQ request per supplier (per order) when in reality an order can have mulitple RFQ requests from the same order
