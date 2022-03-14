@@ -75,6 +75,8 @@ select
     b.margin_without_discount                                                         as bid_margin,
     (ali.li_subtotal_amount_usd - ali.discount_cost_usd) 
         * b.margin_without_discount                                                   as bid_margin_usd,
+    (ali.li_subtotal_amount_usd - ali.discount_cost_usd) 
+        * (a.base_margin_without_discount - b.margin_without_discount)                as bid_margin_loss_usd,        
     b.design_modification_text                                                        as design_modification_text,
     case when b.uuid = a.winning_bid_uuid then true else false end                    as is_winning_bid,
 

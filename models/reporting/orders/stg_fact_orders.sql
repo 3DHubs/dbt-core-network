@@ -150,6 +150,7 @@ select
     rda.winning_bid_uuid,
     rda.winning_bid_margin,
     rda.winning_bid_margin_usd,
+    rda.winning_bid_margin_loss_usd,
     rda.has_winning_bid,
     rda.has_accepted_winning_bid,
     rda.has_restricted_winning_bid,
