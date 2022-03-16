@@ -173,8 +173,6 @@ select orders.uuid                                                              
            when sqli.price_amount is not null then
                 sqli.price_amount
 
-
-
            --          Some non part line items have no unit price, thus we use auto_price amount (e.g. such as surcharge)
             when sqli.type != 'part' and sqli.auto_price_amount is not null then
                     coalesce(sqli.auto_price_amount, 0)
@@ -230,10 +228,16 @@ select orders.uuid                                                              
              left join {{ ref('users') }} u on u.user_id = c.created_by_user_id
              left join {{ ref('users') }} ur on ur.user_id = c.reviewed_by_user_id
 
+            -- Joins for exchange rates
+             left outer join {{ ref('stg_orders_dealstage') }} as order_deals on orders.uuid = order_deals.order_uuid
+             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+                             on rates.currency_code_to = soq.currency_code 
+                             -- From '2022-04-01' we started using the more appropriate closing date as exchange rate date for closing values instead of quote finalized_at, this has been changed but not retroactively.
+                             and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, soq.finalized_at, soq.created)) = trunc(rates.date)
+
+
              -- Other Joins
              left outer join part_dimensional_attributes pdf on pdf.id = sqli.id
-             left outer join {{ ref('tolerances') }} t on t.id = sqli.tolerance_id             
-             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
-                             on rates.currency_code_to = soq.currency_code and trunc(soq.created) = trunc(rates.date)  
+             left outer join {{ ref('tolerances') }} t on t.id = sqli.tolerance_id           
 
     where sqli.legacy_id is null

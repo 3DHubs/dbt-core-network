@@ -50,10 +50,15 @@ with first_quote as (
                 quotes.requires_local_production                                 as order_quote_requires_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd
          from {{ ref('cnc_orders') }} as orders
-         left join {{ ref('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
-             left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates on rates.currency_code_to = quotes.currency_code and
-                trunc(coalesce (quotes.finalized_at, quotes.created)) = trunc(rates.date)
+             left join {{ ref('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
              left join {{ source('int_service_supply', 'lead_time_tiers') }} as lt_tiers on quotes.lead_time_tier_id = lt_tiers.id
+
+             -- Joins for exchange rates
+             left outer join {{ ref('stg_orders_dealstage') }} as order_deals on orders.uuid = order_deals.order_uuid
+             left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates 
+                on rates.currency_code_to = quotes.currency_code
+                -- From '2022-04-01' we started using the more appropriate closing date as exchange rate date for closing values instead of quote finalized_at, this has been changed but not retroactively.
+                and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, quotes.finalized_at, quotes.created)) = trunc(rates.date)
          where true
            and quotes.type = 'quote'
      ),
@@ -92,10 +97,10 @@ with first_quote as (
                             round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,                                                             
                             row_number() over (partition by order_uuid order by finalized_at)      as rn
                      from {{ ref('cnc_order_quotes') }} as soq
-    left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
-                     on rates.currency_code_to = soq.currency_code and
-                         rates.date = trunc(soq.finalized_at)
-                         left join {{ ref('purchase_orders') }} as spocl on soq.uuid = spocl.uuid
+                     left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
+                        on rates.currency_code_to = soq.currency_code 
+                        and rates.date = trunc(soq.finalized_at)
+                     left join {{ ref('purchase_orders') }} as spocl on soq.uuid = spocl.uuid
                      where true
                        and soq.type like 'purchase_order'
                        and soq.finalized_at is not null
@@ -133,7 +138,8 @@ with first_quote as (
     inner join {{ ref('purchase_orders') }} as purchase_orders
          on quotes.uuid = purchase_orders.uuid
              left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
-             on rates.currency_code_to = quotes.currency_code and rates.date = trunc(quotes.finalized_at)
+                on rates.currency_code_to = quotes.currency_code 
+                and rates.date = trunc(quotes.finalized_at)
              left join {{ ref('company_entities') }} as ce on quotes.company_entity_id = ce.id
              left join {{ ref('countries') }} as countries on ce.corporate_country_id = countries.country_id
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
@@ -148,11 +154,7 @@ with first_quote as (
          select osl.uuid as order_uuid,
                 count(*) as number_of_purchase_orders -- Not leveraged? But seems important.
          from {{ ref('cnc_order_quotes') }} as oqsl
-    inner join {{ ref('cnc_orders') }} as osl
-         on oqsl.order_uuid = osl.uuid
-             left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
-             on rates.currency_code_to = oqsl.currency_code and
-             trunc(osl.delivered_at) = trunc(rates.date)
+         inner join {{ ref('cnc_orders') }} as osl on oqsl.order_uuid = osl.uuid
          where oqsl.type = 'purchase_order'
            and oqsl.parent_uuid is not null
          group by 1
