@@ -7,26 +7,29 @@
 
 -- Invoices originating from supply
 with stg_cube_invoices_supply as (
-         select invoices.uuid                                                      as invoice_uuid,
-                invoices.finalized_at                                              as invoice_created_date, -- invoice finalization is the moment when the invoice gets created in supply
-                dateadd(day, invoices.payment_term, invoices.finalized_at)         as invoice_due_date,
-                invoices.order_uuid                                                as order_uuid,
-                invoices.status                                                    as invoice_status,
-                invoices.document_number                                           as invoice_document_number,
-                invoices.currency_code                                             as invoice_source_currency,
-                invoices.subtotal_price_amount / 100.00                            as invoice_subtotal_price_amount,
-                round(((invoices.subtotal_price_amount / 100.00) / rates.rate), 2) as invoice_subtotal_price_amount_usd,
-                null::decimal(15, 2)                                               as invoice_remaining_amount,
-                null::decimal(15, 2)                                               as invoice_remaining_amount_usd,
-                null::decimal(15, 2)                                               as order_shipping_revenue_usd,
-                                -- Other Fields
-                null                                                               as is_downpayment,
-                'supply'                                                           as _data_source
 
-         from {{ ref('cnc_order_quotes') }} as invoices
-                left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
-                    on rates.currency_code_to = invoices.currency_code and trunc(invoices.finalized_at) = trunc(rates.date)
-         where true
+        select invoices.uuid                                                                   as invoice_uuid,
+            invoices.finalized_at                                                           as invoice_created_date, -- invoice finalization is the moment when the invoice gets created in supply
+            dateadd(day, invoices.payment_term, invoices.finalized_at)                      as invoice_due_date,
+            invoices.order_uuid                                                             as order_uuid,
+            invoices.status                                                                 as invoice_status,
+            invoices.document_number                                                        as invoice_document_number,
+            invoices.currency_code                                                          as invoice_source_currency,
+            round((invoices.tax_price_amount + invoices.subtotal_price_amount)/100.00 ,2)   as invoice_total_price_amount,
+            round((invoice_total_price_amount / rates.rate), 2)                             as invoice_total_price_amount_usd,
+            invoices.subtotal_price_amount / 100.00                                         as invoice_subtotal_price_amount,
+            round(((invoices.subtotal_price_amount / 100.00) / rates.rate), 2)              as invoice_subtotal_price_amount_usd,
+            null::decimal(15, 2)                                                            as invoice_remaining_amount,
+            null::decimal(15, 2)                                                            as invoice_remaining_amount_usd,
+            null::decimal(15, 2)                                                            as order_shipping_revenue_usd,
+                            -- Other Fields
+            null                                                                            as is_downpayment,
+            'supply'                                                                        as _data_source
+
+        from {{ ref('cnc_order_quotes') }} as invoices
+            left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+                on rates.currency_code_to = invoices.currency_code and trunc(invoices.finalized_at) = trunc(rates.date)
+        where true
            and invoices.type in ('invoice')
            and invoices.finalized_at is not null -- Locked quotes only
            and date_trunc('day', invoices.created)< '2021-03-01'
@@ -41,13 +44,15 @@ with stg_cube_invoices_supply as (
                 netsuite_trn.status                              as invoice_status,
                 netsuite_trn.tranid                              as invoice_document_number,
                 netsuite_trn.currencyname                        as invoice_source_currency,
-                -- Credit Memos are negative invoices
-                invoice_subtotal_price_amount,
-                invoice_subtotal_price_amount_usd,
-                invoice_remaining_amount,
-                invoice_remaining_amount_usd,
-                order_shipping_revenue_usd,
-                case when custbody_downpayment > 0 then true end as is_downpayment,
+                -- Credit Memos are negative invoices\
+                netsuite_trn.total                               as invoice_total_price_amount,
+                netsuite_trn.invoice_total_price_amount_usd,
+                netsuite_trn.invoice_subtotal_price_amount,
+                netsuite_trn.invoice_subtotal_price_amount_usd,
+                netsuite_trn.invoice_remaining_amount,
+                netsuite_trn.invoice_remaining_amount_usd,
+                netsuite_trn.order_shipping_revenue_usd,
+                case when netsuite_trn.custbody_downpayment > 0 then true end as is_downpayment,
                 'netsuite'                                       as _data_source
 
          from {{ ref('netsuite_invoices') }} as netsuite_trn
@@ -66,30 +71,30 @@ with stg_cube_invoices_supply as (
 
     -- Union of all invoices and determining of recognition of invoices.
     select  invoices.*,
-            round(invoice_subtotal_price_amount_usd, 2)::decimal(15, 2)                                             as recognized_revenue_usd,
-            round(coalesce(order_shipping_revenue_usd, 0), 2)::decimal(15, 2)                                       as shipping_revenue_usd,
-            round(invoice_subtotal_price_amount, 2)::decimal(15, 2)                                                 as recognized_revenue_source_currency,
+        round(invoice_subtotal_price_amount_usd, 2)::decimal(15, 2)                                             as revenue_usd,
+        round(coalesce(order_shipping_revenue_usd, 0), 2)::decimal(15, 2)                                       as shipping_revenue_usd,
+        round(invoice_subtotal_price_amount, 2)::decimal(15, 2)                                                 as revenue_source_currency,
+        case
+            when invoices.invoice_created_date <= orders.first_completed_at then orders.first_completed_at
+            when invoices.invoice_created_date > orders.first_completed_at then invoices.invoice_created_date
+            else null end                                                                                       as revenue_recognized_at_legacy,
+        date_trunc('day',  
             case
-                when invoices.invoice_created_date <= orders.first_completed_at then orders.first_completed_at
-                when invoices.invoice_created_date > orders.first_completed_at then invoices.invoice_created_date
-                else null end                                                                                       as revenue_recognized_at_legacy,
-            date_trunc('day',  
-                case
-                    when invoices.invoice_status = 'processing' then null
-                    when revenue_recognized_at_legacy < '2020-10-01' then revenue_recognized_at_legacy
-                    when invoices.invoice_created_date <= orders.recognized_at then 
-                        case
-                            when orders.recognized_at < '2020-10-01' then '2020-10-01'
-                            else orders.recognized_at 
-                        end
-                    when invoices.invoice_created_date > orders.recognized_at then 
-                        case
-                            when invoices.invoice_created_date < '2020-10-01' then '2020-10-01'
-                            else invoices.invoice_created_date 
-                        end
-                else null 
-                end
-            )                                                                                                       as revenue_recognized_at,
-            case when revenue_recognized_at is not null then True else False end                                     as revenue_is_recognized
+                when invoices.invoice_status = 'processing' then null
+                when revenue_recognized_at_legacy < '2020-10-01' then revenue_recognized_at_legacy
+                when invoices.invoice_created_date <= orders.recognized_at then 
+                    case
+                        when orders.recognized_at < '2020-10-01' then '2020-10-01'
+                        else orders.recognized_at 
+                    end
+                when invoices.invoice_created_date > orders.recognized_at then 
+                    case
+                        when invoices.invoice_created_date < '2020-10-01' then '2020-10-01'
+                        else invoices.invoice_created_date 
+                    end
+            else null 
+            end
+        )                                                                                                       as revenue_recognized_at,
+        case when revenue_recognized_at is not null then True else False end                                     as revenue_is_recognized
      from stg_invoices_unionized as invoices
      left outer join {{ ref('stg_fact_orders') }} as orders on orders.order_uuid = invoices.order_uuid

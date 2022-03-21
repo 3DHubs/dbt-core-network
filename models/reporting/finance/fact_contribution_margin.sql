@@ -16,8 +16,8 @@ select  invoice_uuid                       as source_uuid,
         order_uuid,
         trunc(revenue_recognized_at)       as recognized_date,
         invoice_source_currency            as source_currency,
-        recognized_revenue_usd             as amount_usd,
-        recognized_revenue_source_currency as amount_source_currency,
+        revenue_usd                        as amount_usd,
+        revenue_source_currency            as amount_source_currency,
         shipping_revenue_usd               as shipping_usd
 from {{ ref('fact_invoices') }}
 where revenue_is_recognized

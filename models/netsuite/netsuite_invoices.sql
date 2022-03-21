@@ -19,13 +19,22 @@ select netsuite_trn.*,
        -- Credit Memos are negative invoices
        case
            when _type = 'CreditMemo' then -1 * netsuite_trn.subtotal
-           else netsuite_trn.subtotal end                                              as invoice_subtotal_price_amount,
-       coalesce(netsuite_trn.amountremaining, 0) + coalesce(netsuite_trn.unapplied, 0) as invoice_remaining_amount,
+           else netsuite_trn.subtotal 
+       end                                                                                as invoice_subtotal_price_amount,
+       coalesce(netsuite_trn.amountremaining, 0) + coalesce(netsuite_trn.unapplied, 0)    as invoice_remaining_amount,
+       
        -- For exchange rates, default null to 1 as this means it is in base USD already.
-       round((invoice_subtotal_price_amount) * nvl(rates.exchangerate, 1.0000),
-             2)                                                                        as invoice_subtotal_price_amount_usd,
-       round((invoice_remaining_amount) * nvl(rates.exchangerate, 1.0000), 2)          as invoice_remaining_amount_usd,
-       nvl(li.order_shipping_revenue * nvl(rates.exchangerate, 1.0000), 0)             as order_shipping_revenue_usd
+       round((netsuite_trn.total) * nvl(rates.exchangerate, 1.0000),2)                    as invoice_total_price_amount_usd,
+       round((invoice_subtotal_price_amount) * nvl(rates.exchangerate, 1.0000),2)         as invoice_subtotal_price_amount_usd,
+
+       round((invoice_remaining_amount) * nvl(rates.exchangerate, 1.0000), 2)             as remaining_amount_usd,
+       case
+           when _type = 'CreditMemo' then -1 * remaining_amount_usd
+           else remaining_amount_usd
+       end                                                                                as invoice_remaining_amount_usd,
+
+
+       nvl(li.order_shipping_revenue * nvl(rates.exchangerate, 1.0000), 0)                as order_shipping_revenue_usd
 from {{ source('ext_netsuite', 'transaction') }} as netsuite_trn
 left outer join {{ ref('netsuite_currency_rates') }} as rates
 on rates.transactioncurrency__internalid = netsuite_trn.currency__internalid
