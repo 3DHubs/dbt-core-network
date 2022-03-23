@@ -38,16 +38,15 @@ coalesce(sum(case when invoices._type = 'CreditMemo' then invoices.unapplied end
 
 coalesce(sum(case when invoices._type = 'Invoice' then invoices.amountremaining end),0)
     + coalesce(sum(case when invoices._type = 'CreditMemo' then -invoices.unapplied end),0) as order_remaining_amount,
-
-coalesce(sum(case when invoices._type = 'Invoice' then invoices.invoice_remaining_amount_usd end),0)
-    + coalesce(sum(case when invoices._type = 'CreditMemo' then invoices.invoice_remaining_amount_usd end),0) as order_remaining_amount_usd,
-coalesce(sum(case when invoices._type = 'Invoice' then invoices.invoice_subtotal_price_amount_usd end),0) as total_invoiced,
-coalesce(sum(case when invoices._type = 'CreditMemo' then invoices.invoice_subtotal_price_amount_usd end),0) as total_credited
+coalesce(sum(case when invoices._type = 'Invoice' then invoices.invoice_remaining_amount end),0)
+    + coalesce(sum(case when invoices._type = 'CreditMemo' then invoices.invoice_remaining_amount end),0) as order_remaining_amount_usd,
+coalesce(sum(case when invoices._type = 'Invoice' then invoices.invoice_subtotal_price_amount end),0) as total_invoiced,
+coalesce(sum(case when invoices._type = 'CreditMemo' then invoices.invoice_subtotal_price_amount end),0) as total_credited
 from {{ ref('cnc_orders') }} as orders
 left join {{ ref('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
 left join {{ ref('netsuite_invoices') }} as invoices on invoices.custbodyquotenumber = quotes.document_number
-where true
-group by 1,2,3
+    where true
+    group by 1,2,3
 
 ), payment_labels as (
 
