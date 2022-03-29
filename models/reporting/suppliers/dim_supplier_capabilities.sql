@@ -12,7 +12,8 @@ with supplier_tech as (
            st.num_parts_max, 
            st.num_units_min, 
            st.num_units_max,
-           cl.business_classification
+           cl.business_classification,
+           cl.service_level_classification
     from {{ ref('suppliers') }} s
              left join {{ ref('supplier_technologies') }} st on st.supplier_id = s.id
              left outer join {{ ref('technologies') }} as tec on st.technology_id = tec.technology_id
