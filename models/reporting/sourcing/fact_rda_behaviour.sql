@@ -87,7 +87,6 @@ select
     a.winning_bid_uuid                                                                as auction_winning_bid_uuid,
     a.status                                                                          as auction_status,
     a.finished_at                                                                     as auction_finished_at,
-    a.ship_by_date                                                                    as auction_ship_by_at,
     a.auction_document_number                                                         as auction_document_number,
     a.base_margin_without_discount                                                    as auction_base_margin,
 

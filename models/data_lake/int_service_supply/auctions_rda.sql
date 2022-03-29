@@ -21,7 +21,6 @@ with auctions as (select
                       auctions.status,  -- If auction gets status 'resourced' it means it has been brought back to the auction
                       auctions.started_at,
                       auctions.finished_at,
-                      auctions.ship_by_date,
                       auctions.base_margin,  -- For debugging purposes only, do not use for reporting
                       auctions.base_margin_without_discount,                    
                       decode(auctions.is_accepted_manually, 'true', True, 'false', False)                     as is_accepted_manually,

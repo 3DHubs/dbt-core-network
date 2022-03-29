@@ -24,7 +24,6 @@ with stg as (
               auctions.status,                       -- If auction gets status 'resourced' it means it has been brought back to the auction
               auctions.started_at,
               auctions.finished_at,
-              auctions.ship_by_date,
               auctions.last_processed_at,
               auctions.internal_support_ticket_id,
               auctions.base_margin,                  -- For debugging purposes only, do not use for reporting
