@@ -8,13 +8,13 @@
 -- quotes of type quote or type purchase orders.
 
 with agg_line_items as (
-    select li.quote_uuid, -- To join to orders on quote/purchase order quote uuid
+    select fli.quote_uuid, -- To join to orders on quote/purchase order quote uuid
            fli.order_uuid, -- Due to the filter at the bottom there should be 1-1 relationship in this table of quotes and orders
 
            -- Counts
+           count(*)                                                                        as number_of_line_items, -- Used to filter stg_fact_orders on non-empty orders
            count(distinct fli.material_id)                                                 as number_of_materials,
            count(distinct fli.process_id)                                                  as number_of_processes,
-           count(distinct li.uuid)                                                         as number_of_line_items, -- Used to filter empty carts
            count(case when fli.line_item_type = 'part' then line_item_id end)              as number_of_part_line_items,
 
            -- Totals
@@ -76,8 +76,7 @@ with agg_line_items as (
            bool_or(case
                        when lower(line_item_title) like ('%svp required%') then true
                        else false end)                                                     as has_svp_line_item
-    from {{ ref('line_items') }} as li
-        left join {{ ref('fact_line_items') }} as fli on li.id = fli.line_item_id
+    from {{ ref('fact_line_items') }} as fli
         left join {{ ref('shipping_options') }} as so on fli.shipping_option_id = so.id
     group by 1,2
 
@@ -126,7 +125,5 @@ select agg.*,
         seq.line_item_process_name,
         lists.parts_titles
 from agg_line_items as agg
-        left join {{ ref('cnc_order_quotes') }} as quotes on agg.quote_uuid = quotes.uuid
         left join sequence_line_items as seq on agg.quote_uuid = seq.quote_uuid
         left join lists as lists on agg.quote_uuid = lists.quote_uuid
-where quotes.type in ('quote', 'purchase_order')

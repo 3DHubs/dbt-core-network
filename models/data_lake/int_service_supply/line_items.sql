@@ -1,3 +1,8 @@
+-- This model queries from int_service_supply.line_items and considerably filters the data to improve the performance of models downstream.
+-- Furthermore this model is combined with a few selected fields from supply_documents (cnc_order_quotes) to facilitate identifying the 
+-- characteristics of the document (quote or purchase orders) the line item belongs to. Because the total number of line items is rather large
+-- this model runs incrementally but a post_hook has been added to remove deleted line items.
+
 {{
     config(
         materialized='incremental',
@@ -19,73 +24,102 @@
     ]
 %}
 
-select created,
-       updated,
-       deleted,
-       id,
-       uuid,
-       quote_uuid,
-       upload_id,
-       type,
-       quantity,
-       auto_price_original_amount,
-       price_amount,
-       price_variations,
-       unit,
-       custom_material_subset_name,
-       finish_slug,
-       custom_finish_name,
-       title,
-       description,
-       admin_description,
-       auto_price_amount,
-       unit_price_amount,
-       material_subset_id,
-       material_id,
-       process_id,
-       technology_id,
-       parent_uuid,
-       auto_tooling_price_amount,
-       auto_tooling_price_original_amount,
-       tooling_price_amount,
-       infill,
-       layer_height,
-       material_color_id,
-       lead_time_options,
-       legacy_id,
-       branded_material_id,
-       part_orientation_additional_notes,
-       part_orientation_vector,
-       weight_in_grams,
-       tax_code,
-       tax_details,
-       tax_price_amount,
-       tax_price_exempt_amount,
-       upload_properties,
-       price_multiplier,
-       commodity_code,
-       shipping_option_id,
-       target_margin,
-       commodity_code_source,
-       discount_id,
-       discount_code_id,
-       tolerance_id,
-       custom_tolerance,
-       custom_tolerance_unit,
-       general_tolerance_class,
-       estimated_price_amount,
-       estimated_price_original_amount,
-       thickness,
+select  
+
+    -- Fields from Documents
+    -- Useful to filter line items from different documents and their statuses
+       docs.order_uuid,
+       docs.uuid as document_uuid,
+       docs.type as document_type,
+       docs.revision as document_revision,
+       docs.is_order_quote,
+       docs.is_active_po,
+    -- Line Item Fields
+       li.created,
+       li.updated,
+       li.deleted,
+       li.id,
+       li.uuid,
+       li.quote_uuid,
+       li.upload_id,
+       li.type,
+       li.quantity,
+       li.auto_price_original_amount,
+       li.price_amount,
+       li.price_variations,
+       li.unit,
+       li.custom_material_subset_name,
+       li.finish_slug,
+       li.custom_finish_name,
+       li.title,
+       li.description,
+       li.admin_description,
+       li.auto_price_amount,
+       li.unit_price_amount,
+       li.material_subset_id,
+       li.material_id,
+       li.process_id,
+       li.technology_id,
+       li.parent_uuid,
+       li.auto_tooling_price_amount,
+       li.auto_tooling_price_original_amount,
+       li.tooling_price_amount,
+       li.infill,
+       li.layer_height,
+       li.material_color_id,
+       li.lead_time_options,
+       li.legacy_id,
+       li.branded_material_id,
+       li.part_orientation_additional_notes,
+       li.part_orientation_vector,
+       li.weight_in_grams,
+       li.tax_code,
+       li.tax_details,
+       li.tax_price_amount,
+       li.tax_price_exempt_amount,
+       li.upload_properties,
+       li.price_multiplier,
+       li.commodity_code,
+       li.shipping_option_id,
+       li.target_margin,
+       li.commodity_code_source,
+       li.discount_id,
+       li.discount_code_id,
+       li.tolerance_id,
+       li.custom_tolerance,
+       li.custom_tolerance_unit,
+       li.general_tolerance_class,
+       li.estimated_price_amount,
+       li.estimated_price_original_amount,
+       li.thickness,
        {% for boolean_field in boolean_fields %}
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}
        {% endfor %}
 
-from {{ source('int_service_supply', 'line_items') }}
-
+from {{ source('int_service_supply', 'line_items') }} as li
+inner join (
+    -- Pick specific fields to avoid ambiguity
+    select  uuid, 
+            order_uuid, 
+            type,
+            status, 
+            revision, 
+            is_active_po, 
+            is_order_quote
+    from {{ ref('supply_documents') }}
+    ) as docs on li.quote_uuid = docs.uuid
+where true
+    -- Filter: only interested until now on the main quote and purchase orders
+    and (docs.is_order_quote or docs.type = 'purchase_order')    
+    -- Filter: only interested on quotes that are not in the cart status
+    and docs.status <> 'cart'
+    -- Filter: not interested on line items from legacy orders
+    and li.legacy_id is null
+    
 {% if is_incremental() %}
 
   -- this filter will only be applied on an incremental run
-  where updated >= (select max(updated) from {{ this }})
+  and updated >= (select max(updated) from {{ this }})
 
 {% endif %}
