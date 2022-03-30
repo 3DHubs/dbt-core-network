@@ -23,10 +23,13 @@ with submit as (
                upload.mql_upload,
                frontend.mql_wall_event,
                hc.hs_lifecyclestage_marketingqualifiedlead_date,
-               became_cart_date) as mql_date
+               became_cart_date) as mql_date,
+               technology.name as mql_technology
     from {{ ref('stg_hs_contacts_union_legacy') }} hc
             left join submit on submit.email = hc.email
             left join upload on upload.email = hc.email
             left join frontend on frontend.email = hc.email
             left join opportunity on opportunity.hubspot_contact_id = hc.contact_id
-    group by 1, 2
+            left join {{ ref('cnc_order_quotes') }} quotes on quotes.order_uuid =  hc.first_cart_uuid  and type='quote' and revision=1
+            left join {{ ref('technologies') }} technology on technology.technology_id = quotes.technology_id
+    group by 1, 2,3

@@ -23,6 +23,7 @@ with stg_invite_accepted as (
 -- Aggregate all users that are added to a team / invited to a team
 select distinct u.hubspot_contact_id,
        coalesce(t.name, stg_os.team_name)           as team_name,
+       coalesce(t.id, stg_os.team_id)                    as team_id,
        coalesce(t.created, stg_os.team_created_at)     team_created_at,
        coalesce(stg_a.created, stg_os.created)   as invited_at,
        coalesce(stg_a.updated)                      as invite_accepted_at,

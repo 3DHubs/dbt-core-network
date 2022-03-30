@@ -34,5 +34,6 @@ select
        strategic,
        bdr_campaign,
        notes_last_contacted,
+       first_cart_uuid,
        is_legacy
 from union_contacts

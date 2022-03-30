@@ -35,6 +35,7 @@ select con.created_at                                             as created_at,
            con.lifecyclestage                                         as lifecyclestage,
            con.hs_lifecyclestage_lead_date                            as became_lead_at_contact,
            mql.mql_date                                               as became_mql_at_contact,
+           mql.mql_technology                                         as mql_technology,
            con.hs_lifecyclestage_salesqualifiedlead_date              as became_sql_at_contact,
            con.hs_lead_status                                         as hs_lead_status,
            con.contact_source                                         as contact_source,
@@ -55,12 +56,14 @@ select con.created_at                                             as created_at,
            dc.region,
            lower(dc.continent)                                        as continent,
            teams.team_created_at                                      as team_created_at,
+           teams.team_id                                              as team_id,
            teams.team_name                                            as team_name,
            teams.invited_at                                           as team_invited_at,
            teams.invite_accepted_at                                   as team_invite_accepted_at,
            teams.invite_status                                        as team_invite_status,                                                            
            case when teams.team_name is not null and (team_invite_status = 'accepted' or team_invite_status is null)  
-           then true else false end                                   as is_team_member
+           then true else false end                                   as is_team_member,
+           users.created                                              as platform_user_created_at
     from {{ ref('stg_hs_contacts_attributed') }} as con
              left join {{ ref('stg_contacts_mqls') }} as mql on  con.contact_id = mql.contact_id
              left join {{ ref('countries') }} dc on lower(con.country_iso2) = lower(dc.alpha2_code)
@@ -68,3 +71,4 @@ select con.created_at                                             as created_at,
                              on own.is_current = true and own.owner_id::bigint = con.hubspot_owner_id::bigint
              left join {{ source('data_lake', 'hubspot_owners') }} bdr on bdr.is_current = true and bdr.owner_id = con.bdr_owner_id
              left join {{ ref('stg_contacts_teams') }} teams on teams.hubspot_contact_id = con.contact_id
+             left join {{ ref ('users')}} users on users.hubspot_contact_id = con.contact_id and users.hubspot_contact_id is not null and rnk_desc_hubspot_contact_id = 1

@@ -79,6 +79,7 @@ select
 
        -- Aggregates from Orders
        acc.became_mql_at_company                                                 as became_mql_at, 
+       acc.mql_technology                                                        as mql_technology,
        agg_orders.became_opportunity_at_company                                  as became_opportunity_at,      -- New Field (1st Sept 2021)   as 
        agg_orders.became_customer_at_company                                     as became_customer_at,
        agg_orders.serie_two_order_created_at_company                             as serie_two_order_created_at,

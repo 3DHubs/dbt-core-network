@@ -28,6 +28,7 @@ select created,
            when last_sign_in_at_days_ago >= 365 or not last_sign_in_at_days_ago then False
            else decode(is_active, 'true', True, 'false', False)
            end                                                               is_active,
-       mail ~ '@(3d)?hubs.com'                                               as is_internal
+       mail ~ '@(3d)?hubs.com'                                               as is_internal,
+       rank() over (partition by hubspot_contact_id order by created desc) as rnk_desc_hubspot_contact_id    
 
 from {{ source('int_service_supply', 'users') }}
