@@ -8,6 +8,6 @@
         )
     }}
 
-    select user_id, last_sign_in_at from {{ ref('users') }}
+    select user_id, last_sign_in_at from {{ ref('users') }} where last_sign_in_at is not null
 
 {% endsnapshot %}
