@@ -15,7 +15,13 @@ with sales_target as (
             left join {{ source('data_lake', 'hubspot_owners') }}lead on lead.owner_id = s.reports_to_lead and lead.is_current is true
         where day = 1
         order by date
-    )
+    ),
+    employee_status as (
+    select hubspot_id,
+           max(coalesce(s.end_date,'2100-01-01')) as  final_end_date,
+           case when final_end_date < '2100-01-01' then false else true end as active
+    from {{ ref('seed_sales_targets') }} s
+    group by 1)
     select
     s.hubspot_id,
     role,
@@ -29,7 +35,10 @@ with sales_target as (
     max(monthly_target) over (partition by s.hubspot_id) as max_target,
     case when monthly_target <> max_target then true else false end as is_ramp_up,
     dr.employee as director,
-    dr.hubspot_id as director_id
+    dr.hubspot_id as director_id,
+    es.active as employee_active_status
+
 
     from sales_target s
     left join (select region, hubspot_id, date, employee from sales_target where role='director') dr on dr.region = s.region and dr.date = s.date
+    left join employee_status es on es.hubspot_id = s.hubspot_id
