@@ -67,6 +67,9 @@ models:
       miscellaneous:
         +tags: ["adhoc"]
 
+# Seeds schema
+seeds:
+  +schema: seed_data
 
 # Snapshot configuration
 snapshots:

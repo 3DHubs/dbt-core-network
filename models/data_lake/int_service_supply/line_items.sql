@@ -106,7 +106,8 @@ inner join (
             status, 
             revision, 
             is_active_po, 
-            is_order_quote
+            is_order_quote,
+            updated
     from {{ ref('supply_documents') }}
     ) as docs on li.quote_uuid = docs.uuid
 where true
@@ -120,6 +121,6 @@ where true
 {% if is_incremental() %}
 
   -- this filter will only be applied on an incremental run
-  and updated >= (select max(updated) from {{ this }})
+  and (li.updated >= (select max(updated) from {{ this }}) or docs.updated >= (select max(updated) from {{ this }}))
 
 {% endif %}
