@@ -138,8 +138,8 @@ with shipment_carrier_supplier as (
                     else false end                                                        as has_consistent_delivered_to_customer_dates
 
          from supply_packages p
-                  left join  {{ ref('cnc_orders') }} o on o.uuid = p.order_uuid
-                  left join  {{ ref('cnc_order_quotes') }} as oq on oq.uuid = o.quote_uuid
+                  left join  {{ ref('supply_orders') }} o on o.uuid = p.order_uuid
+                  left join  {{ ref('supply_documents') }} as oq on oq.uuid = o.quote_uuid
      )
 
 select soq.order_uuid,
@@ -185,7 +185,7 @@ select soq.order_uuid,
 
 from supply_package_inconsistencies sp
          left join shipment_carrier sc on sc.package_uuid = sp.package_uuid
-         left join {{ ref('cnc_order_quotes') }} soq on soq.order_uuid = sp.order_uuid
+         left join {{ ref('supply_documents') }} soq on soq.order_uuid = sp.order_uuid
          inner join {{ ref('purchase_orders') }}pos on soq.uuid = pos.uuid
 
      --check if we still need the PO filter

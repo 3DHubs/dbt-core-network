@@ -35,7 +35,7 @@ with stg as (
               row_number() over (partition by oqs.order_uuid order by auctions.started_at desc nulls last)
                                                                              as recency_idx
        from {{ source('int_service_supply', 'auctions') }} as auctions
-              inner join {{ ref('cnc_order_quotes') }} as oqs
+              inner join {{ ref('supply_documents') }} as oqs
                             on auctions.uuid = oqs.uuid
 )
 select *

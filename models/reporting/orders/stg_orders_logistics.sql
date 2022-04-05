@@ -18,7 +18,7 @@ with supply_cdt as (
     from {{ source('data_lake', 'supply_cross_docking_tracking_details_20200911') }} as cdtd
              left join {{ ref('shipments') }} as ss
     on ss.order_uuid = cdtd.order_uuid
-        left join {{ ref('cnc_orders') }} as o
+        left join {{ ref('supply_orders') }} as o
         on o.uuid = cdtd.order_uuid
     group by 1
 ),
@@ -180,16 +180,16 @@ select distinct soq.order_uuid                                                  
                          delivered_to_cross_dock_at is null
                         then shipped_date + interval '7 days' end                                    as derived_delivered_to_cross_dock_at
 
-from {{ ref('cnc_order_quotes') }} as soq
+from {{ ref('supply_documents') }} as soq
     inner join {{ ref('purchase_orders') }} as pos on soq.uuid = pos.uuid
-    left join {{ ref('cnc_order_quotes') }} as cnc_po on pos.uuid = cnc_po.uuid
+    left join {{ ref('supply_documents') }} as cnc_po on pos.uuid = cnc_po.uuid
     left join {{ ref('addresses') }} as po_ship_addr on cnc_po.shipping_address_id = po_ship_addr.address_id
     left join  {{ ref('countries') }} po_ship_coun on po_ship_addr.country_id = po_ship_coun.country_id
     left join supply_packages as sp on soq.order_uuid = sp.order_uuid
     left join supply_shipments as ss on sp.order_uuid = ss.order_uuid
     left join supply_cdt as cdt on cdt.order_uuid = sp.order_uuid
-    left join {{ ref('cnc_orders') }} as o on o.uuid = cnc_po.order_uuid
+    left join {{ ref('supply_orders') }} as o on o.uuid = cnc_po.order_uuid
     --todo: is this join necessary?
-    left join {{ ref('cnc_order_quotes') }} as oq on oq.uuid = o.quote_uuid
+    left join {{ ref('supply_documents') }} as oq on oq.uuid = o.quote_uuid
 where soq.type = 'purchase_order'
   and pos.status = 'active'

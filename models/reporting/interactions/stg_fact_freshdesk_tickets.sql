@@ -7,10 +7,10 @@
 
 with fdmapping as (select coalesce(hs.uuid, po.order_uuid, ho.uuid) as order_uuid, t.id
                    from {{ ref('freshdesk_tickets') }} t
-             left outer join {{ ref('cnc_orders') }} as hs
+             left outer join {{ ref('supply_orders') }} as hs
                    on hs.hubspot_deal_id = t.hubspot_deal_id
-                       left outer join {{ ref('cnc_orders') }} as ho on ho.number = t.derived_document_number
-                       left outer join {{ ref('cnc_order_quotes') }} as po on po.document_number = t.derived_po_number
+                       left outer join {{ ref('supply_orders') }} as ho on ho.number = t.derived_document_number
+                       left outer join {{ ref('supply_documents') }} as po on po.document_number = t.derived_po_number
                    where t._is_latest),
      tickets as (select * from {{ ref('freshdesk_tickets') }} where _is_latest),
      t1 as (

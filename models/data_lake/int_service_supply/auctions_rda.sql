@@ -43,7 +43,7 @@ with auctions as (select
                       row_number() over (partition by oqs.order_uuid order by auctions.started_at desc nulls last)
                       as recency_idx
                   from {{ source('int_service_supply', 'auctions') }} as auctions
-                      inner join {{ ref('cnc_order_quotes') }} as oqs on auctions.uuid = oqs.uuid
+                      inner join {{ ref('supply_documents') }} as oqs on auctions.uuid = oqs.uuid
                       left join {{ ref ('bids')}} as bids on auctions.winner_bid_uuid = bids.uuid
                       left join {{ ref('suppliers') }} as suppliers on bids.supplier_id = suppliers.id
                       left join {{ ref ('technologies') }} as technologies on oqs.technology_id = technologies.technology_id

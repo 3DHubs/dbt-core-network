@@ -43,8 +43,8 @@ select orders.uuid                                                              
        -- Status
        coalesce(order_status.mapped_value, stg_hubspot.hubspot_status_mapped) as order_status
 
-from {{ ref ('cnc_orders') }} as orders
-         left join {{ ref ('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
+from {{ ref ('supply_orders') }} as orders
+         left join {{ ref ('supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
          left join hubspot_dealstage_history as hdh on orders.hubspot_deal_id = hdh.deal_id
          left join supply_order_events as soe on orders.uuid = soe.order_uuid
          left join {{ ref ('order_status') }} as order_status on orders.status = order_status.supply_status_value

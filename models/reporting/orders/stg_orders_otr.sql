@@ -55,7 +55,7 @@ select distinct orders.uuid       as order_uuid,
        delays.first_delay_submitted_at
 
 
-from {{ ref('cnc_orders') }} as orders
+from {{ ref('supply_orders') }} as orders
 left join {{ ref ('stg_orders_documents')}} as docs
     on orders.uuid = docs.order_uuid
 left join {{ ref ('stg_orders_logistics')}} as logistics on orders.uuid = logistics.order_uuid

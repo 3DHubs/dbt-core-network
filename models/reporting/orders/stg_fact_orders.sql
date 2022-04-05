@@ -426,7 +426,7 @@ select
             then true when is_closed is not true then null else false end                  as has_significant_amount_gap, 
     coalesce(interactions.has_svp_interaction or qli.has_svp_line_item,false)               as is_svp
 
-from {{ ref('cnc_orders') }} as orders
+from {{ ref('supply_orders') }} as orders
 
     -- Staging
     left join {{ ref ('stg_orders_hubspot') }} as hs_deals on hs_deals.hubspot_deal_id = orders.hubspot_deal_id
@@ -451,13 +451,12 @@ from {{ ref('cnc_orders') }} as orders
     left join {{ ref ('agg_line_items') }} as apoli on docs.po_active_uuid = apoli.quote_uuid -- Agg Active POs        
 
     -- Data Lake
-    left join {{ ref ('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
+    left join {{ ref ('supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
 
     -- Service Supply
     left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
     left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
 
 where true
-  and qli.number_of_line_items > 0 -- New approach to filter empty carts (Aug 2021)
   and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth in a later stage
   and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately

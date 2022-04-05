@@ -13,5 +13,5 @@ select oqs.created,
        po.billing_request_id
 
 from {{ source('int_service_supply', 'purchase_orders') }} as po
-         inner join {{ ref('cnc_order_quotes') }} as oqs
+         inner join {{ ref('supply_documents') }} as oqs
                     on po.uuid = oqs.uuid

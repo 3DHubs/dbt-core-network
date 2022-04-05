@@ -18,5 +18,5 @@ select oqs.created,
        {{ varchar_to_boolean('has_changed_shipping_date') }},
        {{ varchar_to_boolean('is_active') }}
 from {{ source('int_service_supply', 'bids') }} as bids
-         inner join {{ ref('cnc_order_quotes') }} as oqs
+         inner join {{ ref('supply_documents') }} as oqs
                     on bids.uuid = oqs.uuid

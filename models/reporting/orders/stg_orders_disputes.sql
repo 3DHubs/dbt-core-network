@@ -79,9 +79,9 @@ with disputes as (
              select coalesce(hs.uuid, po.order_uuid, ho.uuid) as order_uuid,
                     min(con.created_at)                       as dispute_remake_resolution_date
              from {{ ref('freshdesk_tickets') }} t
-                      left outer join {{ ref('cnc_orders') }} hs on hs.hubspot_deal_id = t.hubspot_deal_id
-                      left outer join {{ ref('cnc_orders') }} ho on ho.number = t.derived_document_number
-                      left outer join {{ ref('cnc_order_quotes') }} po on po.document_number = t.derived_po_number
+                      left outer join {{ ref('supply_orders') }} as hs on hs.hubspot_deal_id = t.hubspot_deal_id
+                      left outer join {{ ref('supply_orders') }} as ho on ho.number = t.derived_document_number
+                      left outer join {{ ref('supply_documents') }} po on po.document_number = t.derived_po_number
                       left outer join {{ ref('freshdesk_ticket_conversations') }} con on con.ticket_id = t.id
              where t._is_latest
                and body_text like
@@ -105,7 +105,7 @@ with disputes as (
                     when least(dispute_refund_resolution_date, dispute_remake_resolution_date) =
                          dispute_remake_resolution_date then 'remake'
                     else null end                                                     as first_dispute_resolution_type
-         from {{ ref('cnc_orders') }} so
+         from {{ ref('supply_orders') }} so
                   left join dispute_refund_requests rr on rr.order_uuid = so.uuid
                   left join freshdesk_ticket_remake_request rer on rer.order_uuid = so.uuid
          where rr.order_uuid is not null
@@ -124,7 +124,7 @@ with disputes as (
             disr.dispute_resolution_at,
             datediff('hour', dispute_created_at, dispute_resolution_at) as dispute_resolution_time_hours,
             disr.first_dispute_resolution_type
-     from {{ ref('cnc_orders') }} as orders
+     from {{ ref('supply_orders') }} as orders
      left join disputes on orders.uuid = disputes.order_uuid
      left join dispute_resolution as disr on orders.uuid = disr.order_uuid
      where dispute_created_at is not null

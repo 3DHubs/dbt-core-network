@@ -15,5 +15,5 @@ select orders.uuid as order_uuid,
        min(first_review_ongoing_date)   as hubspot_first_technical_review_ongoing_at,
        min(review_completed_date)       as hubspot_first_technical_review_completed_at
 from {{ ref('fact_hubspot_deal_reviews') }} as dr
-left join {{ ref('cnc_orders') }} as orders on dr.deal_id = orders.hubspot_deal_id
+left join {{ ref('supply_orders') }} as orders on dr.deal_id = orders.hubspot_deal_id
 group by 1

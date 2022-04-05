@@ -30,6 +30,6 @@ with submit as (
             left join upload on upload.email = hc.email
             left join frontend on frontend.email = hc.email
             left join opportunity on opportunity.hubspot_contact_id = hc.contact_id
-            left join {{ ref('cnc_order_quotes') }} quotes on quotes.order_uuid =  hc.first_cart_uuid  and type='quote' and revision=1
+            left join {{ ref('supply_documents') }} quotes on quotes.order_uuid =  hc.first_cart_uuid  and type='quote' and revision=1
             left join {{ ref('technologies') }} technology on technology.technology_id = quotes.technology_id
     group by 1, 2,3

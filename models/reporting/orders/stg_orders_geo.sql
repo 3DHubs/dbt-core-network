@@ -49,8 +49,8 @@ select distinct orders.uuid                    as order_uuid,
        addresses_origin.lat         as origin_latitude,
        addresses_origin.lon         as origin_longitude
 
-from {{ ref('cnc_orders') }} as orders
-         left join {{ ref('cnc_order_quotes') }} as quotes on orders.quote_uuid = quotes.uuid
+from {{ ref('supply_orders') }} as orders
+         left join {{ ref('supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
 
 -- Destination Related (Client)
          left join {{ ref('addresses') }} as addresses_destination

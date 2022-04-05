@@ -82,7 +82,7 @@ eligibility_sample as (
         count (case when is_preferred = 'true' then true end) as number_of_eligible_preferred_suppliers,
         count (case when is_local = 'true' then true end) as number_of_eligible_local_suppliers
     from {{ source('int_service_supply', 'matching_scores') }} as ms
-    inner join {{ ref('cnc_orders') }} as orders on ms.quote_uuid = orders.quote_uuid
+    inner join {{ ref('supply_orders') }} as orders on ms.quote_uuid = orders.quote_uuid
     group by 1
 )
 

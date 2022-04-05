@@ -40,7 +40,7 @@ with stg_supplier_auctions as (
                 b.bid_loss_reason,
                 row_number() over (partition by b.auction_uuid, b.supplier_id order by b.updated desc, b.placed_at desc) as rn
          from {{ ref('bids') }} as b 
-            left join {{ ref('cnc_order_quotes') }} as q on b.uuid = q.uuid
+            left join {{ ref('supply_documents') }} as q on b.uuid = q.uuid
             left join {{ ref('bids_bid_reasons') }} as bbr on b.uuid = bbr.bid_uuid
             left join {{ source('int_service_supply', 'bid_reasons') }} as br on bbr.bid_reasons_id = br.id
             left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as e on e.currency_code_to = q.currency_code and trunc(e.date) = trunc(q.created)

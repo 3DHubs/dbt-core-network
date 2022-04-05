@@ -36,8 +36,8 @@ select
        ali.shipping_amount                                                                   as shipping_cost,
        ali.shipping_amount_usd                                                               as shipping_cost_usd,
        row_number() over (partition by oqsl.order_uuid order by po_finalized_at)               as rn
-from {{ ref('cnc_order_quotes') }} as oqsl
-            left join {{ ref('cnc_orders') }} as osl on oqsl.order_uuid = osl.uuid
+from {{ ref('supply_documents') }} as oqsl
+            left join {{ ref('supply_orders') }} as osl on oqsl.order_uuid = osl.uuid
             left join {{ ref('stg_fact_orders') }} as orders on oqsl.order_uuid = orders.order_uuid
             left join {{ ref('purchase_orders') }} as spocl on spocl.uuid = oqsl.uuid
             left join {{ ref('agg_line_items') }} as ali on oqsl.uuid = ali.quote_uuid

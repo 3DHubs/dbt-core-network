@@ -26,7 +26,7 @@ with stg_cube_invoices_supply as (
             null                                                                            as is_downpayment,
             'supply'                                                                        as _data_source
 
-        from {{ ref('cnc_order_quotes') }} as invoices
+        from {{ ref('supply_documents') }} as invoices
             left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
                 on rates.currency_code_to = invoices.currency_code and trunc(invoices.finalized_at) = trunc(rates.date)
         where true
@@ -56,7 +56,7 @@ with stg_cube_invoices_supply as (
                 'netsuite'                                       as _data_source
 
          from {{ ref('netsuite_invoices') }} as netsuite_trn
-                left outer join {{ ref('cnc_order_quotes') }} as invoices on invoices.document_number  = netsuite_trn.custbodyquotenumber
+                left outer join {{ ref('supply_documents') }} as invoices on invoices.document_number  = netsuite_trn.custbodyquotenumber
          where true
            and date_trunc('day', netsuite_trn.createddate) >= '2021-03-01'
      ),

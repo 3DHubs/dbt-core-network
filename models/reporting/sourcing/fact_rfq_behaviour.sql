@@ -18,7 +18,7 @@ with stg_supplier_auctions as (
 
 ), winning_bid as (
     select oqsl.parent_uuid as uuid
-        from {{ ref('cnc_order_quotes') }} oqsl
+        from {{ ref('supply_documents') }} oqsl
                 inner join {{ ref('purchase_orders') }} spocl on oqsl.uuid = spocl.uuid
     where oqsl.type = 'purchase_order' and spocl.status = 'active'
     group by 1
@@ -34,9 +34,9 @@ with stg_supplier_auctions as (
                 md5(bids.supplier_id || bids.auction_uuid)                                             as supplier_rfq_uuid,
                 row_number()
                 over (partition by bid_quotes.order_uuid, supplier_id order by bid_quotes.created asc) as supplier_bid_idx
-         from {{ ref('cnc_order_quotes') }} as bid_quotes
+         from {{ ref('supply_documents') }} as bid_quotes
                 left join {{ ref('bids') }} as bids on bid_quotes.uuid = bids.uuid
-             left join {{ ref('cnc_order_quotes') }} as auction_quote on auction_quote.uuid = bid_quotes.parent_uuid
+             left join {{ ref('supply_documents') }} as auction_quote on auction_quote.uuid = bid_quotes.parent_uuid
              inner join {{ ref('auctions_rfq') }} as auctions -- Inner Join to Filter on RFQ
                 on auctions.order_quotes_uuid = auction_quote.uuid
          where bid_quotes.type = 'bid'

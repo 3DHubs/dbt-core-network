@@ -14,10 +14,10 @@
 with supply_orders as (
     -- Reduce the number of orders to improve query time
     select distinct so.uuid, quote_uuid
-    from {{ ref('cnc_orders') }} as so
+    from {{ ref('supply_orders') }} as so
     where exists(
                   select *
-                  from {{ ref('cnc_order_quotes') }} as soq
+                  from {{ ref('supply_documents') }} as soq
                   where status != 'cart'
                     and so.uuid = soq.order_uuid
               )
@@ -41,7 +41,7 @@ select so.uuid                                                  as order_uuid,
        u.first_name + ' ' + u.last_name as discount_code_created_by
 
 from {{ ref('line_items') }} l
-         inner join {{ ref('cnc_order_quotes') }} coq on coq.uuid = l.quote_uuid
+         inner join {{ ref('supply_documents') }} coq on coq.uuid = l.quote_uuid
          inner join supply_orders so on so.quote_uuid = l.quote_uuid
          inner join {{ ref('discounts') }} d on d.id = l.discount_id
          left join  {{ ref('discount_codes') }} dc on dc.id = l.discount_code_id
