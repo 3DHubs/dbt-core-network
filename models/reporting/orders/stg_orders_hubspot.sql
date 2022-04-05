@@ -46,22 +46,22 @@ with stg as (
 
         -- Owners
         hs.hubspot_owner_id,
-        own2.first_name || ' ' || own2.last_name                                          as hubspot_owner_name,
+        own2.name                                                                         as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
         trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp
         fst.sales_lead_id                                                                 as sales_lead_id,
         fst.sales_lead                                                                    as sales_lead_name,
         hs.bdr_assigned                                                                   as bdr_owner_id,
-        bdr2.first_name || ' ' || bdr2.last_name                                          as bdr_owner_name,
+        bdr2.name                                                                         as bdr_owner_name,
         bdr.primary_team_name                                                             as bdr_owner_primary_team,
-        csr.first_name || ' ' || csr.last_name                                            as customer_success_representative_name,
-        psr.first_name || ' ' || psr.last_name                                            as partner_support_representative_name,
+        csr.name                                                                          as customer_success_representative_name,
+        psr.name                                                                          as partner_support_representative_name,
         hs.sales_engineer                                                                 as mechanical_engineer_id,
-        me.first_name || ' ' || me.last_name                                              as mechanical_engineer_name,
+        me.name                                                                           as mechanical_engineer_name,
         hs.purchasing_manager                                                             as hubspot_purchasing_manager,
         hs.review_owner                                                                   as hubspot_technical_review_owner,
         hs.sourcing_owner                                                                 as hubspot_sourcing_owner_id,
-        so.first_name || ' ' || so.last_name                                              as hubspot_sourcing_owner_name,
+        so.name                                                                           as hubspot_sourcing_owner_name,
 
         -- TEAM FIELDS
         -- Properties added by the different teams
@@ -96,22 +96,22 @@ with stg as (
     on hs.dealstage = dealstage.dealstage_internal_label
         left join {{ ref('order_status') }} as status
             on dealstage.dealstage_mapped_value = status.hubspot_status_value
-        left join {{ source('data_lake', 'hubspot_owners') }} as own
+        left join {{ ref ('hubspot_owners') }} as own
             on own.owner_id = hs.hubspot_owner_id
             and coalesce (hubspot_owner_assigneddate, createdate) between own.start_date and own.end_date
-        left join {{ source('data_lake', 'hubspot_owners') }} own2 on own2.owner_id = hs.hubspot_owner_id and own2.is_current is true
-        left join {{ source('data_lake', 'hubspot_owners') }} as bdr
+        left join {{ ref ('hubspot_owners') }} own2 on own2.owner_id = hs.hubspot_owner_id 
+        left join {{ ref ('hubspot_owners') }} as bdr
             on bdr.owner_id = hs.bdr_assigned and createdate between bdr.start_date and bdr.end_date
-        left join {{ source('data_lake', 'hubspot_owners') }} as bdr2
-            on bdr2.owner_id = hs.bdr_assigned and bdr2.is_current is true
-        left join {{ source('data_lake', 'hubspot_owners') }} as me
-            on me.owner_id = hs.sales_engineer and me.is_current is true
-        left join {{ source('data_lake', 'hubspot_owners') }} as csr
-            on csr.owner_id = hs.customer_success_manager and csr.is_current is true
-        left join {{ source('data_lake', 'hubspot_owners') }} as psr
-            on psr.owner_id = hs.supply_owner and psr.is_current is true
-        left join {{ source('data_lake', 'hubspot_owners') }} as so
-            on so.owner_id = hs.sourcing_owner and so.is_current is true
+        left join {{ ref ('hubspot_owners') }} as bdr2
+            on bdr2.owner_id = hs.bdr_assigned
+        left join {{ ref ('hubspot_owners') }} as me
+            on me.owner_id = hs.sales_engineer
+        left join {{ ref ('hubspot_owners') }} as csr
+            on csr.owner_id = hs.customer_success_manager
+        left join {{ ref ('hubspot_owners') }} as psr
+            on psr.owner_id = hs.supply_owner 
+        left join {{ ref ('hubspot_owners') }} as so
+            on so.owner_id = hs.sourcing_owner
         left join {{ref('fact_sales_target') }} as fst
                 on fst.hubspot_id = hs.hubspot_owner_id and fst.target_date::date = coalesce(date_trunc('month',hs.closedate),'2022-01-01') 
         left join {{ ref('hubspot_technology_mapping') }} as htm

@@ -73,6 +73,14 @@ sources:
       - name: campaign_performance_report
       - name: campaigns
       - name: keyword_performance_report
+
+  - name: ext_gsheets
+    freshness:
+      warn_after: {count: 48, period: hour}
+      error_after: {count: 72, period: hour}
+    loaded_at_field: _sdc_received_at
+    tables:
+      - name: marketing_youtube
   
   - name: ext_netsuite
     freshness:

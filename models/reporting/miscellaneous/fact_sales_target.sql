@@ -6,13 +6,13 @@ with sales_target as (
                monthly_target,
                reports_to_lead,
                d.date,
-               own.first_name || ' ' || own.last_name            as employee,
-               lead.first_name || ' ' || lead.last_name            as sales_lead
+               own.name           as employee,
+               lead.name           as sales_lead
         from {{ ref('seed_sales_targets') }} s
             inner join {{ source('data_lake', 'dim_dates') }} d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
                                                       s.start_date <= d.date AND coalesce(s.end_date, '2023-01-01') > d.date
-            left join {{ source('data_lake', 'hubspot_owners') }} own on own.owner_id = s.hubspot_id and own.is_current is true
-            left join {{ source('data_lake', 'hubspot_owners') }}lead on lead.owner_id = s.reports_to_lead and lead.is_current is true
+            left join {{ ref('hubspot_owners') }} own on own.owner_id = s.hubspot_id
+            left join {{ ref('hubspot_owners') }}lead on lead.owner_id = s.reports_to_lead 
         where day = 1
         order by date
     ),

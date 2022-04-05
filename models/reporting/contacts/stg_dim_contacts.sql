@@ -24,11 +24,11 @@ select con.created_at                                             as created_at,
            con.channel_drilldown2                                     as channel_drilldown_2,
            con.hubspot_owner_id                                       as hubspot_owner_id,
            con.bdr_owner_id                                           as bdr_owner_id,
-           bdr.first_name || ' ' || bdr.last_name                     as bdr_owner_name,
+           bdr.name                                                   as bdr_owner_name,
            con.bdr_campaign                                           as bdr_campaign,
            con.hubspot_owner_assigned_at,
            con.last_contacted_at,
-           own.first_name || ' ' || own.last_name                     as hubspot_owner_name,
+           own.name                                                   as hubspot_owner_name,
            own.primary_team_name                                      as hubspot_owner_primary_team_name,
            con.is_strategic                                           as is_strategic,
            con.email_type                                             as email_type,
@@ -67,8 +67,8 @@ select con.created_at                                             as created_at,
     from {{ ref('stg_hs_contacts_attributed') }} as con
              left join {{ ref('stg_contacts_mqls') }} as mql on  con.contact_id = mql.contact_id
              left join {{ ref('countries') }} dc on lower(con.country_iso2) = lower(dc.alpha2_code)
-             left join {{ source('data_lake', 'hubspot_owners') }} own
-                             on own.is_current = true and own.owner_id::bigint = con.hubspot_owner_id::bigint
-             left join {{ source('data_lake', 'hubspot_owners') }} bdr on bdr.is_current = true and bdr.owner_id = con.bdr_owner_id
+             left join {{ ref('hubspot_owners') }} own
+                             on own.owner_id::bigint = con.hubspot_owner_id::bigint
+             left join {{ ref('hubspot_owners') }} bdr on bdr.owner_id = con.bdr_owner_id
              left join {{ ref('stg_contacts_teams') }} teams on teams.hubspot_contact_id = con.contact_id
              left join {{ ref ('users')}} users on users.hubspot_contact_id = con.contact_id and users.hubspot_contact_id is not null and rnk_desc_hubspot_contact_id = 1

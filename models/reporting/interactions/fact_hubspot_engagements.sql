@@ -49,7 +49,7 @@ select he.id::bigint                                                            
        he.type,
        he.source,
        he.owner_id as engagement_owner_id,
-       concat(ho.first_name, concat(' ', ho.last_name)) as engagement_owner_name,
+       ho.name as engagement_owner_name,
        nullif(he_gather.contact_id, '')::bigint as contact_id,
        nullif(he_gather.company_id, '')::bigint as company_id,
        nullif(he_gather.deal_id, '')::bigint    as deal_id,
@@ -70,5 +70,5 @@ select he.id::bigint                                                            
 
 from hubspot_engagements as he
          inner join engagements_gather3 as he_gather on he.id = he_gather.id
-         left outer join {{ source('data_lake', 'hubspot_owners') }} ho on he.owner_id = ho.owner_id and ho.is_current is true
+         left outer join {{ ref('hubspot_owners') }} ho on he.owner_id = ho.owner_id 
          left outer join {{ ref('hubspot_engagement_dispositions') }} hedm on he.disposition = hedm.uuid

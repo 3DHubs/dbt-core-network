@@ -7,7 +7,7 @@
 
 with list_of_emails as (
     select distinct email as email
-    from {{ source('data_lake', 'hubspot_owners') }}
+    from {{ ref('hubspot_owners') }}
     where is_current
 
     union all
@@ -26,8 +26,8 @@ with list_of_emails as (
 
          from list_of_emails emails
                   left join (
-             select owner_id, primary_team_name, email, first_name || ' ' || last_name as owner_name
-             from {{ source('data_lake', 'hubspot_owners') }}
+             select owner_id, primary_team_name, email, name as owner_name
+             from {{ ref('hubspot_owners') }}
              where is_current
          ) ho on emails.email = ho.email
                   left join (
