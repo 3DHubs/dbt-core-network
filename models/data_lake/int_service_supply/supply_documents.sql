@@ -55,6 +55,7 @@ select docs.created,
        -- Key Fields for Filtering
        docs.uuid = orders.quote_uuid as is_order_quote,
        po.status = 'active' as is_active_po,       
+       rank() over (partition by docs.order_uuid, docs.type order by revision, docs.created desc) as revision_last_created_rank,
 
        -- Boolean Fields
        {{ varchar_to_boolean('is_admin') }},       
