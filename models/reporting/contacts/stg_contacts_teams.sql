@@ -21,13 +21,13 @@ with stg_invite_accepted as (
                              and email not in (select email from stg_invite_accepted)
                            group by 1, 2, 3, 4)
 -- Aggregate all users that are added to a team / invited to a team
-select distinct u.hubspot_contact_id,
+select u.hubspot_contact_id,
        coalesce(t.name, stg_os.team_name)           as team_name,
        coalesce(t.id, stg_os.team_id)                    as team_id,
        coalesce(t.created, stg_os.team_created_at)     team_created_at,
-       coalesce(stg_a.created, stg_os.created)   as invited_at,
-       coalesce(stg_a.updated)                      as invite_accepted_at,
-       lower(coalesce(stg_a.status, stg_os.status)) as invite_status
+       coalesce(min(stg_a.created), min(stg_os.created))   as invited_at, -- added min to avoid users with same hubspot contact id that were both invited as user, example 370382101
+       coalesce(min(stg_a.updated))                      as invite_accepted_at,
+       lower(coalesce(min(stg_a.status), min(stg_os.status))) as invite_status
 from {{ ref('users') }} u
          left join {{ source('int_service_supply', 'team_users') }} tu on tu.user_id = u.user_id
          left join {{ source('int_service_supply', 'teams') }} t on t.id = tu.team_id
@@ -38,3 +38,4 @@ where u.hubspot_contact_id is not null
   and (t.created is not null or stg_os.created is not null)
   and coalesce(t.id, stg_os.team_id) not in (4, 10, 75, 77, 124)
   and u.is_internal = false
+  group by 1,2,3,4
