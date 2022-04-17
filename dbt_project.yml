@@ -27,50 +27,55 @@ clean-targets: # directories to be removed by `dbt clean`
 # Model config
 models:
   hubs:
-    external:
-      bing_ads:
-        +schema: data_lake
-        +tags: ["advertising", "bing"]
-      google_ads:
-        +schema: data_lake
-        +tags: ["advertising", "google"]
-    data_lake:
-      +schema: data_lake
+    1_base:
+      +schema: core
+      advertising:
+        bing_ads:
+          +tags: ["advertising", "bing"]
+        google_ads:
+          +tags: ["advertising", "google"]
+      freshdesk:
+        +tags: freshdesk
+      hubspot:
+        +tags: ["hubspot", "crm"]
       int_service_supply:
         materialized: view
         +tags: supply
         +bind: false
-      freshdesk:
-        +tags: freshdesk
-    
-    hubspot:
-      +schema: data_lake
-      +tags: ["hubspot", "crm"]
-    mapping:
-      +schema: data_lake
-      +tags: ["adhoc"]
-    netsuite:
-      +schema: data_lake
-      +tags: ["netsuite", "finance"]
-    netsuite_sandbox:
-      +schema: data_lake
-      +enabled: false
-    protolabs:
-      +schema: protolabs  
-      post-hook: 'grant select on {{ this }} to protolabs'
-    reporting: 
-      +schema: reporting
+      netsuite:
+        +tags: ["netsuite", "finance"]
+
+    2_prep:
+      +schema: core
+      +materialized: table
+
+    3_staging:
+      +schema: core
       +materialized: table
       orders:
         +tags: ["orders"]
       contacts:
         +tags: ["contacts"]
-      miscellaneous:
+
+    4_reporting: 
+      +schema: reporting
+      +materialized: table
+
+    5_protolabs:
+      +schema: protolabs  
+      post-hook: 'grant select on {{ this }} to protolabs'
+
+    6_miscellaneous:
+      +schema: core
+      adhoc_refresh:
         +tags: ["adhoc"]
+      weekly_refresh:
+        +tags: ["weekly"]
+
 
 # Seeds schema
 seeds:
-  +schema: seed_data
+  +schema: seed
 
 # Snapshot configuration
 snapshots:
