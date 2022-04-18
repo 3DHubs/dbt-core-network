@@ -28,8 +28,8 @@ with base_query as (
                 -- The procurement emissions factor is units of g-CO2/kg of material.
                 material_density_g_cm3 * line_item_total_bounding_box_volume_cm3 * mat.emissions * 0.001 as li_procurement_co2_emissions_g
          from base_query as li
-                  left join dbt_prod_seed_data.greenhubs_electricity as kwh on li.country = kwh.country
-                  left join dbt_prod_seed_data.greenhubs_material as mat
+                  left join {{ ref ('seed_greenhubs_electricity') }} kwh on li.country = kwh.country
+                  left join {{ ref ('seed_greenhubs_material') }} mat
                             on li.country = mat.country and li.material = mat.material
      )
 select supply.order_uuid,
