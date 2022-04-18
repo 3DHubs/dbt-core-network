@@ -13,7 +13,7 @@ select sqli.uuid                                   as line_item_uuid,
        max(case when sdi.id = 6 then 1 else 0 end) as has_parts_damaged_issue
 from {{ ref('prep_line_items') }} as sqli
             inner join {{ ref('prep_dispute_line_items') }} sdli on sqli.uuid = sdli.line_item_uuid
-            left join {{ ref('disputes') }} sd on sd.uuid = sdli.dispute_uuid
-            left join {{ ref('dispute_issues') }} sdi on sdli.dispute_issue_id = sdi.id
+            left join {{ source('int_service_supply', 'disputes') }} sd on sd.uuid = sdli.dispute_uuid
+            left join {{ source('int_service_supply', 'dispute_issues') }} sdi on sdli.dispute_issue_id = sdi.id
 where sd.status = 'new'
 group by 1

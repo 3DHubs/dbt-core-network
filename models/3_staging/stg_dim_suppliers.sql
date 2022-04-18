@@ -51,7 +51,7 @@ with stg_states as (
                 left outer join {{ ref('addresses') }} sa
          on sa.address_id = s.address_id
              left outer join {{ ref('prep_countries') }} c on c.country_id = sa.country_id
-             left outer join {{ ref('supplier_users') }} as ssu on s.id = ssu.supplier_id
+             left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
              left outer join {{ ref('users') }} as su on ssu.user_id = su.user_id
              left join stg_states as states on states.address_id = s.address_id
          where supplier_email !~ '@(3d)?hubs.com'),

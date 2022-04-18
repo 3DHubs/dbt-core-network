@@ -22,7 +22,7 @@ with stripe_transactions as (
            min(case when t.status = 'successful' and t.type = 'refund' then 1 end)::bool      as is_successful_refund,
            min(case when t.status = 'failed' and t.type = 'payment' then 1 end)::bool         as is_failed_payment,
            sum(case when t.status = 'failed' and t.type = 'payment' then 1 end)               as num_failed_payments
-    from {{ ref('transactions') }} as t
+    from {{ source('int_service_supply', 'transactions') }} as t
     where status != 'new' -- 'Pending' transactions discarded
     group by 1
 ), invoice_aggregates as (

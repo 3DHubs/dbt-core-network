@@ -179,9 +179,9 @@ select     li.order_uuid,
              left join {{ ref('materials') }} as mat on mat.material_id = li.material_id
              left join {{ ref('processes') }} as prc on prc.process_id = li.process_id
              left join {{ ref('prep_material_subsets') }} as msub on msub.material_subset_id = li.material_subset_id
-             left join {{ ref('branded_materials') }} as bmat on bmat.branded_material_id = li.branded_material_id
+             left join {{ source('int_service_supply', 'branded_materials') }} as bmat on bmat.branded_material_id = li.branded_material_id
              left join {{ ref('material_finishes') }} as mf on li.finish_slug = mf.slug
-             left join {{ ref('material_colors') }} as mc on li.material_color_id = mc.material_color_id -- TODO: does not exist.
+             left join {{ source('int_service_supply', 'material_colors') }} as mc on li.material_color_id = mc.material_color_id -- TODO: does not exist.
 
              -- Complaints 
              left join {{ ref ('complaints')}} c on c.line_item_uuid = li.uuid

@@ -17,7 +17,7 @@ with supplier_tech as (
     from {{ ref('suppliers') }} s
              left join {{ ref('supplier_technologies') }} st on st.supplier_id = s.id
              left outer join {{ ref('technologies') }} as tec on st.technology_id = tec.technology_id
-             left outer join {{ ref('supplier_users') }} as ssu on s.id = ssu.supplier_id
+             left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
              left outer join {{ ref('users') }} as su on ssu.user_id = su.user_id
              left join {{ ref('seed_supplier_business_classification')}} cl on cl.supplier_id =  s.id and cl.technology_name = tec.name
     where su.mail !~ '@(3d)?hubs.com'
@@ -31,9 +31,9 @@ with supplier_tech as (
                 m.name        as material_name,
                 m.material_id as material_id
          from {{ ref('suppliers') }} s
-                  left join {{ ref('supplier_finishes') }} sf on sf.supplier_id = s.id
+                  left join {{ source('int_service_supply', 'supplier_finishes') }} sf on sf.supplier_id = s.id
                   left join {{ ref('material_finishes') }} mf on mf.id = sf.finish_id
-                  left join {{ ref('materials_material_finishes') }} mmf
+                  left join {{ source('int_service_supply', 'materials_material_finishes') }} mmf
                             on mmf.material_finish_id = sf.finish_id
                   left join {{ ref('materials') }} m on mmf.material_id = m.material_id
      ),
@@ -58,7 +58,7 @@ with supplier_tech as (
                 m.material_id,
                 ms.process_id
          from {{ ref('suppliers') }} as s
-                  left outer join {{ ref('suppliers_material_subsets') }} as sms on s.id = sms.supplier_id
+                  left outer join {{ source('int_service_supply', 'suppliers_material_subsets') }} as sms on s.id = sms.supplier_id
                   left outer join {{ ref('prep_material_subsets') }} as ms
                                   on sms.material_subset_id = ms.material_subset_id
                   left join {{ ref('materials') }} m on ms.material_id = m.material_id
@@ -76,7 +76,7 @@ with supplier_tech as (
                 sp.height_min, 
                 sp.height_max
          from {{ ref('suppliers') }} as s
-                  left outer join {{ ref('supplier_processes') }} as sp on s.id = sp.supplier_id
+                  left outer join {{ source('int_service_supply', 'supplier_processes') }} as sp on s.id = sp.supplier_id
                   left outer join {{ ref('processes') }} as p on sp.process_id = p.process_id
      )
 select st.*,

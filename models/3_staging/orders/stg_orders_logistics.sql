@@ -16,7 +16,7 @@ with supply_cdt as (
            min(ss.created)      as cdtd_shipped_from_cross_dock_at,
            min(ss.delivered_at) as cdtd_delivered_at
     from {{ source('data_lake', 'supply_cross_docking_tracking_details_20200911') }} as cdtd
-             left join {{ ref('shipments') }} as ss
+             left join {{ source('int_service_supply', 'shipments') }} as ss
     on ss.order_uuid = cdtd.order_uuid
         left join {{ ref('prep_supply_orders') }} as o
         on o.uuid = cdtd.order_uuid
@@ -46,8 +46,8 @@ with supply_cdt as (
                         when shipping_leg = 'cross_docking:customer' then estimated_delivery
                         when shipping_leg = 'drop_shipping:customer'
                             then estimated_delivery end)                                          as estimated_delivery_to_customer
-         from {{ ref('shipments') }} shp
-             left join {{ ref('shipping_carriers') }} car on car.id = shp.tracking_carrier_id
+         from {{ source('int_service_supply', 'shipments') }} shp
+             left join {{ source('int_service_supply', 'shipping_carriers') }} car on car.id = shp.tracking_carrier_id
          where order_uuid not in
              (select order_uuid from {{ source('data_lake'
              , 'supply_cross_docking_tracking_details_20200911') }})

@@ -24,7 +24,7 @@ with disputes as (
          line_item_disputes as (
              select order_uuid,
                     min(dli.created) as line_item_created
-             from {{ ref('disputes') }} dis
+             from {{ source('int_service_supply', 'disputes') }} dis
         left join {{ ref ('prep_dispute_line_items') }} dli
              on dli.dispute_uuid = dis.uuid
              where dis.status = 'new' and dis.deleted is null
@@ -38,7 +38,7 @@ with disputes as (
                                   dis.status                                                                                     as dispute_status,
 
                                   row_number() over ( partition by dis.order_uuid order by coalesce(lid.line_item_created, created) desc) as rn -- Prioritize 'new' over 'draft', most recent first
-                           from {{ ref('disputes') }} dis
+                           from {{ source('int_service_supply', 'disputes') }} dis
                                left join line_item_disputes lid
                            on dis.order_uuid = lid.order_uuid
                            where deleted is null

@@ -11,7 +11,7 @@ select sup.id                                                 as supplier_id,
 from {{ ref('suppliers') }} as sup
             left outer join {{ ref('supplier_technologies') }} as supt on sup.id = supt.supplier_id
             left outer join {{ ref('technologies') }} as tec on supt.technology_id = tec.technology_id
-            left outer join {{ ref('suppliers_material_subsets') }} as supmatsub
+            left outer join {{ source('int_service_supply', 'suppliers_material_subsets') }} as supmatsub
                             on supmatsub.supplier_id = sup.id
             left outer join {{ ref('prep_material_subsets') }} as matsub
                             on matsub.material_subset_id = supmatsub.material_subset_id

@@ -8,8 +8,8 @@
 with shipment_carrier_supplier as (
     select package_uuid,
            car.name as carrier_from_supplier
-    from  {{ ref('shipments') }} shp
-             left join  {{ ref('shipping_carriers') }} car on car.id = shp.tracking_carrier_id
+    from  {{ source('int_service_supply', 'shipments') }} shp
+             left join  {{ source('int_service_supply', 'shipping_carriers') }} car on car.id = shp.tracking_carrier_id
     where shipping_leg in ('drop_shipping:customer', 'cross_docking:warehouse')
     order by package_uuid
 ),
@@ -19,8 +19,8 @@ with shipment_carrier_supplier as (
                 (first_value(car.name) over (partition by package_uuid
                     order by created asc
                     rows between unbounded preceding and unbounded following)) as carrier_from_cross_dock
-         from {{ ref('shipments') }} shp
-                  left join {{ ref('shipping_carriers') }} car on car.id = shp.tracking_carrier_id
+         from {{ source('int_service_supply', 'shipments') }} shp
+                  left join {{ source('int_service_supply', 'shipping_carriers') }} car on car.id = shp.tracking_carrier_id
          where shipping_leg in ('cross_docking:customer')
          order by package_uuid
      ),
@@ -195,4 +195,4 @@ where soq.type = 'purchase_order'
   --that doesn't always seem to happen so this is a filter to make sure we only include packages that also have a shipment
   and sp.package_uuid in (
     select package_uuid
-    from {{ ref('shipments') }})
+    from {{ source('int_service_supply', 'shipments') }})
