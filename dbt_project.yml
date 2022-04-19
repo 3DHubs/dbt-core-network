@@ -29,7 +29,6 @@ models:
   hubs:
     1_base:
       +schema: core
-      +tags: ["daily"]
       advertising:
         bing_ads:
           +tags: ["advertising", "bing"]
@@ -48,12 +47,10 @@ models:
 
     2_prep:
       +schema: core
-      +tags: ["daily"]
       +materialized: table
 
     3_staging:
       +schema: core
-      +tags: ["daily"]
       +materialized: table
       orders:
         +tags: ["orders"]
@@ -62,12 +59,10 @@ models:
 
     4_reporting: 
       +schema: reporting
-      +tags: ["daily"]
       +materialized: table
 
     5_protolabs:
       +schema: protolabs 
-      +tags: ["daily"] 
       post-hook: 'grant select on {{ this }} to protolabs'
 
     6_miscellaneous:

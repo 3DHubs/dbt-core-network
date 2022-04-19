@@ -1,3 +1,7 @@
+{{ config(
+    tags=["adhoc"]
+) }}
+
 select
     sci.carrier,
     sci.carrier_invoiced_date,
