@@ -38,5 +38,5 @@ left outer join {{ ref('netsuite_currency_rates') }} as rates
     trunc(nt_so.createddate) = dateadd(day,1,trunc(rates.effectivedate))
 left outer join {{ ref('prep_supply_documents') }} as quote
     on quote.document_number = nt_so.custbodyquotenumber
-left outer join {{ ref('fact_orders') }} as fo on fo.order_uuid = quote.order_uuid
+left outer join {{ ref('stg_fact_orders') }} as fo on fo.order_uuid = quote.order_uuid
 where nt_so._type = 'SalesOrder'
