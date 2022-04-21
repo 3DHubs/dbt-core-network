@@ -14,17 +14,17 @@
 
 select distinct
     interactions.hubspot_deal_id,
-    count(interactions.interaction_id) as number_of_interactions,
-    count(
+    count(distinct interactions.interaction_id) as number_of_interactions,
+    count(distinct
         case
             when
-                interactions.interaction_type_mapped = 'Outgoing Email' then interaction_id
+                interactions.interaction_type_mapped = 'Outgoing Email' then  interaction_id
         end
     ) as number_of_outgoing_emails,
-    count(
+    count(distinct
         case
             when
-                interactions.interaction_type_mapped = 'Incoming Email' then interaction_id
+                interactions.interaction_type_mapped = 'Incoming Email' then  interaction_id
         end
     ) as number_of_incoming_emails,
     bool_or(

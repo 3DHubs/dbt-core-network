@@ -4,8 +4,8 @@ with stg_invite_accepted as (
            ti.status,
            min(created) created,
            min(updated) updated
-    from {{ source('int_service_supply', 'team_invites') }} ti
-    where status = 'Accepted'
+    from {{ ref('team_invites') }} ti
+    where status = 'Accepted' and ti.rnk_desc_email = 1
     group by 1, 2),
 -- Get other invited users with different status
      stg_other_invites as (select hubspot_contact_id,
@@ -14,11 +14,11 @@ with stg_invite_accepted as (
                                   t.created       as team_created_at,
                                   min(ti.created) as created,
                                   max(ti.status)  as status
-                           from {{ source('int_service_supply', 'team_invites') }}  ti
+                           from {{ ref('team_invites') }}  ti
                                     inner join {{ ref('users') }} u on u.mail = ti.email
                                     left join {{ source('int_service_supply', 'teams') }}  t on t.id = ti.team_id
                            where status in ('Pending', 'Revoked')
-                             and email not in (select email from stg_invite_accepted)
+                             and email not in (select email from stg_invite_accepted)  and ti.rnk_desc_email = 1
                            group by 1, 2, 3, 4)
 -- Aggregate all users that are added to a team / invited to a team
 select u.hubspot_contact_id,
