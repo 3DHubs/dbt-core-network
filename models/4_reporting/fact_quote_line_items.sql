@@ -4,6 +4,7 @@
 -- Line Items from the Active PO, in some rare cases an order has > 1 active POs.
 with active_po_line_items as (
      select order_uuid, 
+            upload_id,
             line_item_number, 
             line_item_price_amount_usd,
             dense_rank() over (partition by order_uuid order by quote_uuid) as dr 
@@ -17,4 +18,4 @@ select qli.*,
        poli.line_item_price_amount_usd as line_item_cost_usd
 from (select * from {{ ref('fact_line_items') }} where is_order_quote) as qli
 left join (select * from active_po_line_items where dr = 1) as poli -- Eliminates scenario with > 1 active PO, extremely rare.
-    on qli.order_uuid = poli.order_uuid and qli.line_item_number = poli.line_item_number -- Note: upload_id and title were not suitable for joining
+    on qli.order_uuid = poli.order_uuid and qli.upload_id = poli.upload_id and qli.line_item_number = poli.line_item_number
