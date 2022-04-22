@@ -6,7 +6,7 @@ with active_po_line_items as (
      select order_uuid, 
             line_item_number, 
             line_item_price_amount_usd,
-            row_number() over (partition by line_item_number order by created_date) as rn 
+            dense_rank() over (partition by order_uuid order by quote_uuid) as dr 
      from {{ ref('fact_line_items') }} 
      where true
         and is_active_po
@@ -16,5 +16,5 @@ with active_po_line_items as (
 select qli.*,
        poli.line_item_price_amount_usd as line_item_cost_usd
 from (select * from {{ ref('fact_line_items') }} where is_order_quote) as qli
-left join (select * from active_po_line_items where rn = 1) as poli -- Eliminates scenario with > 1 active PO, extremely rare.
+left join (select * from active_po_line_items where dr = 1) as poli -- Eliminates scenario with > 1 active PO, extremely rare.
     on qli.order_uuid = poli.order_uuid and qli.line_item_number = poli.line_item_number -- Note: upload_id and title were not suitable for joining
