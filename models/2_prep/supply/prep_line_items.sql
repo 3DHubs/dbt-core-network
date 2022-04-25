@@ -104,7 +104,8 @@ inner join (
             order_uuid, 
             type,
             status, 
-            revision, 
+            revision,
+            order_updated_at, 
             is_active_po, 
             is_order_quote,
             updated
@@ -121,6 +122,6 @@ where true
 {% if is_incremental() %}
 
   -- this filter will only be applied on an incremental run
-  and (li.updated >= (select max(updated) from {{ this }}) or docs.updated >= (select max(updated) from {{ this }}))
+  and (li.updated >= (select max(updated) from {{ this }}) or docs.updated >= (select max(updated) from {{ this }}) or docs.order_updated_at >= (select max(updated) from {{ this }}))
 
 {% endif %}
