@@ -1,96 +1,54 @@
 {{ config(bind=False,
           pre_hook=["
             delete
-            from analytics.ext_adwords.click_performance_report
+            from analytics.ext_google_ads_console.click_performance_report
             where _sdc_sequence in (
                 with to_remove as (
                     select _sdc_sequence,
-                        row_number() over (partition by day, googleclickid order by _sdc_report_datetime desc) as row_number
-                    from analytics.ext_adwords.click_performance_report)
+                        row_number() over (partition by date, click_view_gclid order by _sdc_batched_at desc) as row_number
+                    from analytics.ext_google_ads_console.click_performance_report)
             select _sdc_sequence
             from to_remove
             where row_number > 1) 
         "],
             ) }}
 
-
-select account                                      as account_name,
+select distinct
+       ad_group_name as adgroup,
+       ad_group_id                                  as adgroup_id,
+       campaign_name as campaign,
+       campaign_id                                  as campaign_id,
+       customer_id                                   as customer_id,
+       date                                          as date,
+       device,
+       click_view_gclid                             as google_click_id,
+       reverse(split_part(reverse(click_view_keyword),'~',1))::bigint   as keyword_id,
+       click_view_keyword_info__text                as keyword
+from {{ source('ext_google_ads_console', 'click_performance_report') }}
+union
+select distinct
        adgroup,
        adgroupid                                    as adgroup_id,
-       adgroupstate                                 as adgroup_status,
-       adid                                         as ad_id,
-       adtype                                       as ad_type,
-       advariationcontroltrialarmid                 as advariation_control_trial_arm_id,
-       advariationtreatmenttrialarmid               as advariation_treatment_trial_arm_id,
-       advariationtrialid                           as ad_variation_trial_id,
        campaign,
        campaignid                                   as campaign_id,
-       campaignlocationtarget                       as campaign_location_target,
-       campaignstate                                as campaig_status,
-       cityphysicallocation                         as city_physical_location,
-       clicks,
-       clicktype                                    as click_type,
-       countryterritoryphysicallocation             as country_territory_physical_location,
        customerid                                   as customer_id,
        day                                          as date,
        device,
        googleclickid                                as google_click_id,
        keywordid                                    as keyword_id,
-       keywordplacement                             as keyword,
-       matchtype                                    as match_type,
-       metroareaphysicallocation                    as metro_area_physical_location,
-       monthofyear                                  as month_of_year,
-       mostspecificlocationtargetphysicallocation   as most_specific_location_target_physical_location,
-       network,
-       networkwithsearchpartners                    as network_with_search_partners,
-       page,
-       regionphysicallocation                       as region_physical_location,
-       topvsother                                   as top_vs_other,
-       userlistid                                   as user_list_id,
-       countryterritorylocationofinterest           as country_territory_location_of_interest,
-       citylocationofinterest                       as city_location_of_interest,
-       regionlocationofinterest                     as region_location_of_interest,
-       mostspecificlocationtargetlocationofinterest as most_specific_location_target_location_of_interest,
-       metroarealocationofinterest                  as metro_area_location_of_interest
+       keywordplacement                             as keyword
 from {{ source('ext_adwords', 'click_performance_report') }}
+where googleclickid not in (select click_view_gclid from  {{ source('ext_google_ads_console', 'click_performance_report') }})
 union
-select null                                as account_name,
-       null,
+select null,
        ad_group_id::bigint                 as adgroup_id,
-       null                                as adgroup_status,
-       creative_id::bigint                 as ad_id,
-       ad_format                           as ad_type,
-       null                                as advariation_control_trial_arm_id,
-       null                                as advariation_treatment_trial_arm_id,
-       null                                as ad_variation_trial_id,
        null                                as campaign,
        campaign_id::bigint                 as campaign_id,
-       null                                as campaign_location_target,
-       null                                as campaig_status,
-       null                                as city_physical_location,
-       null                                as clicks,
-       click_type                          as click_type,
-       null                                as country_territory_physical_location,
        adwords_customer_id::bigint         as customer_id,
        date_start                          as date,
        device,
        gcl_id                              as google_click_id,
        original_keyword_id::bigint         as keyword_id,
-       criteria_parameters                 as keyword,
-       null                                as match_type,
-       null                                as metro_area_physical_location,
-       null                                as month_of_year,
-       null                                as most_specific_location_target_physical_location,
-       ad_network_type_1,
-       ad_network_type_2                   as network_with_search_partners,
-       page,
-       null                                as region_physical_location,
-       slot                                as top_vs_other,
-       user_list_id::bigint,
-       null                                as country_territory_location_of_interest,
-       null                                as city_location_of_interest,
-       null                                as region_location_of_interest,
-       aoi_most_specific_target_id::bigint as most_specific_location_target_location_of_interest,
-       null                                as metro_area_location_of_interest
+       criteria_parameters                 as keyword
 from {{ source('adwords', 'click_performance_reports') }} -- Data originating from Segment
 where gcl_id not in (select googleclickid from  {{ source('ext_adwords', 'click_performance_report') }})

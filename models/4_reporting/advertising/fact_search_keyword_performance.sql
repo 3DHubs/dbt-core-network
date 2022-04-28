@@ -45,10 +45,6 @@ select trunc(akpr.date)                                      as date,
        akpr.clicks,
        akpr.cost_usd,
        akpr.cost_orginal_currency,
-       akpr.historical_quality_score,
-       akpr.historical_ad_relevance,
-       akpr.historical_expected_ctr,
-       akpr.historical_landingpage_experience,
        akpr._kw_report_sk
 
 from akpr
@@ -76,10 +72,6 @@ select trunc(bkpr.date)                                          as date,
        bkpr.clicks,
        bkpr.cost_usd,
        bkpr.cost_orginal_currency,
-       bkpr.historical_quality_score,
-       bkpr.historical_ad_relevance,
-       bkpr.historical_expected_ctr,
-       bkpr.historical_landingpage_experience,
        bkpr._kw_report_sk
 
 from bkpr

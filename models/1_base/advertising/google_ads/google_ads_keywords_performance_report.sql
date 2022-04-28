@@ -10,73 +10,74 @@
 -- data. If we have the pre_hook in place, we can omit the `row_number()` CTE.
  
 with keywords_performance_report_ranked as (
-       select *,
-              {{ dbt_utils.surrogate_key(['day', 'keywordid', 'adgroupid', 'customerid']) }} as _kw_report_sk,
-              row_number() over (
-                     partition by day, keywordid, adgroupid, customerid
-                     order by _sdc_report_datetime desc, _sdc_sequence desc
-              ) as row_number
+       with prep_keyword_performance_report as 
+       (select customerid,
+       adgroup,
+       adgroupid,
+       campaign,
+       campaignid,
+       clicks,
+       cost,
+       currency,
+       day,
+       impressions,
+       keyword,
+       keywordid,
+       _sdc_batched_at,
+       _sdc_sequence
        
        from {{ source('ext_adwords', 'keywords_performance_report') }}
+
+       {% if is_incremental() %}
+
+              where date >= current_date - 31
+
+       {% endif %}
+       union all
+select customer_id,
+       ad_group_name,
+       ad_group_id,
+       campaign_name,
+       campaign_id,
+       clicks,
+       cost_micros,
+       customer_currency_code,
+       date,
+       impressions,
+       ad_group_criterion_keyword__text,
+       ad_group_criterion_criterion_id,
+       _sdc_batched_at,
+       _sdc_sequence
+       from {{ source('ext_google_ads_console', 'keywords_performance_report') }}
 
        {% if is_incremental() %}
 
               where day >= current_date - 31
 
        {% endif %}
+       ) select *,
+              {{ dbt_utils.surrogate_key(['day', 'keywordid', 'adgroupid', 'customerid']) }} as _kw_report_sk,
+              row_number() over (
+                     partition by day, keywordid, adgroupid, customerid
+                     order by _sdc_batched_at desc, _sdc_sequence desc
+              ) as row_number
+       from prep_keyword_performance_report
 )
 
 select _kw_report_sk,
        customerid                                                       as account_id,
-       account                                                          as account_name,
        adgroup                                                          as adgroup_name,
        adgroupid                                                        as adgroup_id,
-       adgroupstate                                                     as adgroup_status,
-       allconv                                                          as all_conversions,
        campaign                                                         as campaign_name,
        campaignid                                                       as campaign_id,
-       campaignstate                                                    as campaign_status,
        clicks,
-       conversions,
        (cost / 1000000.0)::decimal(9, 2)                                as cost_orginal_currency,
        (cost_orginal_currency / rates.rate)::decimal(9, 2)              as cost_usd,
        currency                                                         as orginal_currency,
        day                                                              as date,
-       decode(adrelevancehist,
-              'Above average', 3,
-              'Average', 2,
-              'Below average', 1,
-              null)                                                     as historical_ad_relevance,
-       decode(expectedclickthroughratehist,
-              'Above average', 3,
-              'Average', 2,
-              'Below average', 1,
-              null)                                                     as historical_expected_ctr,
-       decode(expectedclickthroughratehist,
-              'Above average', 3,
-              'Average', 2,
-              'Below average', 1,
-              null)                                                     as historical_landingpage_experience,
-       qualscorehist                                                    as historical_quality_score,
-       (firstpagecpc / 1000000.0)::decimal(9, 2)                        as firstpage_cpc_orginal_currency,
-       (firstpage_cpc_orginal_currency / rates.rate)::decimal(9, 2)     as firstpage_cpc_usd,
-       (firstpositioncpc / 1000000.0)::decimal(9, 2)                    as firstposition_cpc_orginal_currency,
-       (firstposition_cpc_orginal_currency / rates.rate)::decimal(9, 2) as firstposition_cpc_usd,
        impressions,
        keyword,
-       keywordid                                                        as keyword_id,
-       keywordstate                                                     as keyword_status,
-       labelids                                                         as label_ids,
-       labels                                                           as labels,
-       landingpageexperience                                            as landingpage_experience,
-       qualityscore                                                     as quality_score,
-       searchabstopis                                                   as seach_absolute_top_impression_share,
-       searchimprshare                                                  as seach_impression_share,
-       searchtopis                                                      as search_top_impression_share,
-       (topofpagecpc / 1000000.0)::decimal(9, 2)                        as top_of_page_cpc_orginal_currency,
-       (top_of_page_cpc_orginal_currency / rates.rate)::decimal(9, 2)   as top_of_page_cpc_usd,
-       viewthroughconv                                                  as view_trough_conversions
-
+       keywordid                                                        as keyword_id
 from keywords_performance_report_ranked
 
          left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
