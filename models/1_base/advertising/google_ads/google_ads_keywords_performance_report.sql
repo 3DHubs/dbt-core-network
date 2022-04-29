@@ -30,7 +30,7 @@ with keywords_performance_report_ranked as (
 
        {% if is_incremental() %}
 
-              where date >= current_date - 31
+              where day >= current_date - 31
 
        {% endif %}
        union all
@@ -52,7 +52,7 @@ select customer_id,
 
        {% if is_incremental() %}
 
-              where day >= current_date - 31
+              where date >= current_date - 31
 
        {% endif %}
        ) select *,
