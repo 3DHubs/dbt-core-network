@@ -100,7 +100,7 @@ with time_in_hubspot_stage as (
            coalesce(rfd.first_review_rejected_date, rfd.first_review_completed_date) as review_completed_date,
            case
                when rfd.first_review_rejected_date is not null then 'rejected'
-               when rfd.first_review_completed_date is not null then 'completed' end as review_outcome,
+               when rfd.first_review_completed_date is not null then 'completed' end as review_result,
            rfd.total_time_in_review_stage_new_minutes,
            rfd.total_time_in_review_stage_ongoing_minutes,
            hd.review_owner,
