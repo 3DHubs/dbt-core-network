@@ -27,10 +27,10 @@ with keywords_performance_report_ranked as (
        _sdc_sequence
        
        from {{ source('ext_adwords', 'keywords_performance_report') }}
-
+       where day < '2022-01-01'
        {% if is_incremental() %}
 
-              where day >= current_date - 31
+              and day >= current_date - 31
 
        {% endif %}
        union all
@@ -49,16 +49,16 @@ select customer_id,
        _sdc_batched_at,
        _sdc_sequence
        from {{ source('ext_google_ads_console', 'keywords_performance_report') }}
-
+       where date >='2022-01-01'
        {% if is_incremental() %}
 
-              where date >= current_date - 31
+              and date >= current_date - 31
 
        {% endif %}
        ) select *,
               {{ dbt_utils.surrogate_key(['day', 'keywordid', 'adgroupid', 'customerid']) }} as _kw_report_sk,
               row_number() over (
-                     partition by day, keywordid, adgroupid, customerid
+                     partition by day, keywordid, adgroupid, customerid, cost, impressions
                      order by _sdc_batched_at desc, _sdc_sequence desc
               ) as row_number
        from prep_keyword_performance_report
