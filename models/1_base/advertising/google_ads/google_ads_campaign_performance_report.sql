@@ -12,7 +12,8 @@ with campaign_performance_report_ranked as
                     day as date,
                     impressions,
                     _sdc_batched_at
-             from {{ source('ext_adwords', 'campaign_performance_report') }} -- JG old stitch source till April 27th 2022
+             from {{ source('ext_adwords', 'campaign_performance_report') }}
+             where day < '2022-01-01' -- JG new stitch source from April 27th 2022, but using full year for consistency
              union all
              select customer_id,
                     campaign_name,
@@ -24,7 +25,9 @@ with campaign_performance_report_ranked as
                     date,
                     impressions,
                     _sdc_batched_at
-             from {{ source('ext_google_ads_console', 'campaign_performance_report') }}) -- JG new stitch source from April 27th 2022
+             from {{ source('ext_google_ads_console', 'campaign_performance_report') }}
+             where date >= '2022-01-01' -- JG new stitch source from April 27th 2022, but using full year for consistency
+             ) 
              select *, row_number()
                     over (partition by date, campaignid, customerid, device order by _sdc_batched_at desc) as row_number 
              from prep_campaign_performance    
