@@ -15,10 +15,10 @@ with stg as (
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields
-        coalesce(hcon.associatedcompanyid,hcon_fix.hubspot_company_id)                    as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
+        hcon.associatedcompanyid                                                          as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
         hs.hs_latest_associated_company_id                                                as original_hubspot_company_id, --JG: Kept for reference
         hcom.name                                                                         as hubspot_company_name,
-        coalesce(hs.hs_latest_associated_contact_id,hcon_fix.hubspot_contact_id)          as hubspot_contact_id, --JG: Fix 2022-01-28 to have a contact id for all orders where company is not null and contact id is null
+        hs.hs_latest_associated_contact_id                                                as hubspot_contact_id, --JG: Fix 2022-01-28 to have a contact id for all orders where company is not null and contact id is null
         hs.bdr_company_source                                                             as hubspot_company_source,
         htm.technology_id                                                                 as hubspot_technology_id,
         technologies.name                                                                 as hubspot_technology_name,
@@ -120,11 +120,8 @@ with stg as (
             on htm.technology_id = technologies.technology_id
         left join {{ source('data_lake', 'hubspot_contacts_stitch') }} as hcon
             on hs.hs_latest_associated_contact_id = hcon.contact_id
-        left join {{ ref('stg_hs_contact_id_null_fix') }} as hcon_fix
-            on hcon_fix.order_hubspot_deal_id = hs.deal_id
         left join {{ source('data_lake', 'hubspot_companies_stitch') }} as hcom 
-            on hcon.associatedcompanyid = hcom.hubspot_company_id
-)
+            on hcon.associatedcompanyid = hcom.hubspot_company_id)
 select *
 from stg
 where rn = 1
