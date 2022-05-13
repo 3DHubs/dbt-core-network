@@ -15,6 +15,7 @@ select distinct id as company_id,
 from {{ source('data_lake', 'btyd') }}
 where date_trunc('week', snapshot_date) = (select date_trunc('week', max(snapshot_date)) from {{ source('data_lake', 'btyd') }})
 )
+
 select 
        -- Fields from HS Companies (Stitch)
        hc.created_at,
@@ -105,7 +106,8 @@ select
 
        -- Other Fields
        indm.industry_mapped::varchar                                             as industry_mapped,
-       btyd.alive_probability
+       btyd.alive_probability,
+       sct.potential_tier
        
        
 from {{ source('data_lake', 'hubspot_companies_stitch') }} hc
@@ -119,4 +121,5 @@ on lower(hc.industry) = indm.industry
     left join {{ ref('hubspot_owners') }} as own on own.owner_id::bigint = hc.hubspot_owner_id::bigint
     left join {{ ref('hubspot_owners') }} as own_inside on own_inside.owner_id::bigint = hc.inside_sales_owner::bigint
     left join companies_btyd as btyd on btyd.company_id = hc.hubspot_company_id
+    left join {{ ref('stg_customer_tiering') }} as sct on hc.hubspot_company_id = sct.hubspot_company_id
 where hc.hubspot_company_id >= 1
