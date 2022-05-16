@@ -63,6 +63,7 @@ models:
 
     5_protolabs:
       +schema: protolabs 
+      +materialized: table
       post-hook: 'grant select on {{ this }} to protolabs'
 
     6_miscellaneous:

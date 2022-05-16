@@ -36,7 +36,7 @@ select
        hc.is_reactivated_customer,
        hc.reactivated_customer_date,
        hc.lead_score,
-       hc.tier,
+       hc.tier, --JG unclear what this tier means
        hc.is_qualified,
        hc.strategic as is_strategic,
        hc.became_strategic_date,
