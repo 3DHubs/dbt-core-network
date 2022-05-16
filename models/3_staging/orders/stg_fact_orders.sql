@@ -76,7 +76,6 @@ select
     hs_deals.hubspot_closed_lost_reason,
     hs_deals.delay_liability,
     hs_deals.delay_status,
-    hs_deals.dispute_liability,
 
     -- TODO: create aggregate table for deal's employee/owners fields
     -- HS Deals: Owners

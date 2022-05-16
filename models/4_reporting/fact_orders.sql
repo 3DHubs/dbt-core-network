@@ -309,7 +309,6 @@ delay_liability,
 delay_status,
 
 -- Disputes
-dispute_liability,
 dispute_status,
 dispute_requested_outcome,
 dispute_type,

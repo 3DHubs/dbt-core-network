@@ -42,7 +42,6 @@ with stg as (
             when hs.closedate > '2020-01-01'
                 then nullif(regexp_replace(hs.delay_liability, 'liability_', ''), '') end as delay_liability,
         hs.delay_status                                                                   as delay_status,
-        nullif(replace(hs.dispute_liability, 'dl_', ''), '')                              as dispute_liability,
 
         -- Owners
         hs.hubspot_owner_id,
