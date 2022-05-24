@@ -13,7 +13,7 @@ select id,
        anonymous_id,
        description
 
-from {{ source('int_service_supply', 'order_history_events') }}
+from {{ source('data_lake', 'full_order_history_events') }}
 
 {% if is_incremental() %}
 
