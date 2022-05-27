@@ -1,4 +1,4 @@
-{{ config(bind=False,
+{{ config(
           pre_hook=["
             INSERT INTO {{ source('data_lake', 'full_order_history_events') }}
             SELECT id,

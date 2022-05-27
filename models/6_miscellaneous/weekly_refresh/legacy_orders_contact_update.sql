@@ -1,4 +1,4 @@
-{{ config(bind=False,
+{{ config(
           pre_hook=["
             update {{ source('data_lake', 'legacy_orders') }} 
             set hubspot_company_id = associatedcompanyid
