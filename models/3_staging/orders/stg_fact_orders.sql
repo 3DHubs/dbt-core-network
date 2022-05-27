@@ -96,6 +96,8 @@ select
     hs_deals.hubspot_owner_assigned_date,
     hs_deals.sales_lead_id,
     hs_deals.sales_lead_name,
+    hs_deals.hubspot_im_project_manager_id,
+    hs_deals.hubspot_im_project_manager,
 
     -- HS Deals: Properties Requested by Teams
     -- Check upstream model for details on the team
@@ -114,6 +116,8 @@ select
     hs_deals.qc_inspection_result,
     hs_deals.qc_inspection_result_latest,
     hs_deals.in_country_qc_status,
+    hs_deals.me_team_review_results,
+    hs_deals.is_delayed_due_to_customs,
 
     ---------- SOURCE: STG ORDERS RDA --------------
 

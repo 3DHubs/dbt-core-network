@@ -61,6 +61,8 @@ with stg as (
         hs.review_owner                                                                   as hubspot_technical_review_owner,
         hs.sourcing_owner                                                                 as hubspot_sourcing_owner_id,
         so.name                                                                           as hubspot_sourcing_owner_name,
+        pm.owner_id                                                                       as hubspot_im_project_manager_id,
+        pm.name                                                                           as hubspot_im_project_manager,
 
         -- TEAM FIELDS
         -- Properties added by the different teams
@@ -70,6 +72,7 @@ with stg as (
             target_price as is_target_price_met,
             match_lead_time as is_target_lead_time_met,
             review_outcome,
+            me_team_review_results,
 
             -- Project Operation Fields
             approved_by_services as custom_approval,
@@ -86,6 +89,9 @@ with stg as (
             -- Supply Fields
             latest_qc_result as qc_inspection_result_latest,
             in_country_qc_status,
+
+            -- Logistics Fields
+            is_delayed_due_to_customs,
 
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn
@@ -111,6 +117,8 @@ with stg as (
             on psr.owner_id = hs.supply_owner 
         left join {{ ref ('hubspot_owners') }} as so
             on so.owner_id = hs.sourcing_owner
+        left join {{ ref ('hubspot_owners') }} as pm
+            on pm.owner_id = hs.im_pm
         left join {{ref('fact_sales_target') }} as fst
                 on fst.hubspot_id = hs.hubspot_owner_id and fst.target_date::date = coalesce(date_trunc('month',hs.closedate),'2022-01-01') 
         left join {{ ref('seed_hubspot_technology_mapping') }} as htm

@@ -43,6 +43,7 @@ bdr_owner_id,
 mechanical_engineer_id,
 hubspot_owner_id,
 hubspot_sourcing_owner_id,
+hubspot_im_project_manager_id,
 orders.billing_id,
 
 -- General Attributes
@@ -182,6 +183,8 @@ origin_latitude,
 origin_longitude,
 
 -- Hubspot Attributes
+is_delayed_due_to_customs,
+me_team_review_results,
 hubspot_pipeline,
 is_high_risk,
 rfq_priority,
@@ -215,6 +218,7 @@ mechanical_engineer_name,
 hubspot_purchasing_manager,
 hubspot_technical_review_owner,
 hubspot_sourcing_owner_name,
+hubspot_im_project_manager,
 sales_lead_name,
 
 -- Line Items
