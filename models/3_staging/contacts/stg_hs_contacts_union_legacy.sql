@@ -35,5 +35,6 @@ select
        bdr_campaign,
        notes_last_contacted,
        first_cart_uuid,
-       is_legacy
+       is_legacy,
+       rank() over (partition by email order by createdate desc) as rnk_desc_email   
 from union_contacts

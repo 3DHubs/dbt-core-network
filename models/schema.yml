@@ -87,6 +87,15 @@ sources:
       - name: marketing_ahrefs
       - name: marketing_share_of_voice
       - name: marketing_youtube
+
+  - name: ext_hubspot
+    tables:
+      - name: campaigns
+      - name: email_events  
+        freshness:
+          warn_after: {count: 24, period: hour}
+          error_after: {count: 48, period: hour}
+        loaded_at_field: _sdc_received_at
   
   - name: ext_netsuite
     freshness:
@@ -147,8 +156,8 @@ sources:
       
       - name: customer_tiering
         freshness:
-            warn_after: {count: 7, period: day}
-            error_after: {count: 14, period: day}
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
         loaded_at_field: snapshot_at
 
       - name: supply_countries_markets_mapping
