@@ -62,7 +62,7 @@ with stg as (
         hs.sourcing_owner                                                                 as hubspot_sourcing_owner_id,
         so.name                                                                           as hubspot_sourcing_owner_name,
         pm.owner_id                                                                       as hubspot_im_project_manager_id,
-        pm.name                                                                           as hubspot_im_project_manager,
+        pm.name                                                                           as hubspot_im_project_manager_name,
 
         -- TEAM FIELDS
         -- Properties added by the different teams

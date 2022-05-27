@@ -97,7 +97,7 @@ select
     hs_deals.sales_lead_id,
     hs_deals.sales_lead_name,
     hs_deals.hubspot_im_project_manager_id,
-    hs_deals.hubspot_im_project_manager,
+    hs_deals.hubspot_im_project_manager_name,
 
     -- HS Deals: Properties Requested by Teams
     -- Check upstream model for details on the team

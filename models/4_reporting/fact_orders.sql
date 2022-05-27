@@ -218,7 +218,7 @@ mechanical_engineer_name,
 hubspot_purchasing_manager,
 hubspot_technical_review_owner,
 hubspot_sourcing_owner_name,
-hubspot_im_project_manager,
+hubspot_im_project_manager_name,
 sales_lead_name,
 
 -- Line Items
