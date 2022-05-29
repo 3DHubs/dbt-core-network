@@ -1,7 +1,7 @@
   
   with union_contacts as (
   {{ dbt_utils.union_relations(
-    relations=[source('data_lake', 'legacy_contacts'), source('data_lake', 'hubspot_contacts_stitch')]
+    relations=[source('data_lake', 'legacy_contacts'), ref('hubspot_contacts') ]
   )}}
 
   )

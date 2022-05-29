@@ -96,7 +96,7 @@ with stg as (
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn
 
-    from {{ source('data_lake', 'hubspot_deals_stitch') }} as hs
+    from {{ ref('hubspot_deals') }} as hs
             left join {{ ref('seed_hubspot_dealstages') }} as dealstage
     on hs.dealstage = dealstage.dealstage_internal_label
         left join {{ ref('seed_order_status') }} as status
@@ -125,9 +125,9 @@ with stg as (
             on hs.technologies = htm.hubspot_technology
         left join {{ ref ('technologies') }} as technologies
             on htm.technology_id = technologies.technology_id
-        left join {{ source('data_lake', 'hubspot_contacts_stitch') }} as hcon
+        left join {{ ref('hubspot_contacts') }} as hcon
             on hs.hs_latest_associated_contact_id = hcon.contact_id
-        left join {{ source('data_lake', 'hubspot_companies_stitch') }} as hcom 
+        left join {{ ref('hubspot_companies') }} as hcom 
             on hcon.associatedcompanyid = hcom.hubspot_company_id)
 select *
 from stg

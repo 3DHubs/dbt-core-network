@@ -96,5 +96,5 @@ from {{ ref('stg_dim_contacts') }} as base
         left join {{ ref('stg_contacts_advertising_data') }} ad on base.hubspot_contact_id = ad.hubspot_contact_id
         left join {{ ref('agg_orders_contacts') }} as agg_orders on base.hubspot_contact_id = agg_orders.hubspot_contact_id
         left join {{ ref('stg_contacts_companies') }} as agg_companies on base.hubspot_contact_id = agg_companies.hubspot_contact_id
-        left join {{ source('data_lake', 'hubspot_companies_stitch') }} hc on hc.hubspot_company_id = base.hubspot_company_id
+        left join {{ ref('hubspot_companies') }}  hc on hc.hubspot_company_id = base.hubspot_company_id
         

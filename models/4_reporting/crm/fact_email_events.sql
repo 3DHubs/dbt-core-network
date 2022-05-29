@@ -37,8 +37,8 @@ select
 
              {% if is_incremental() %}
 
-         where latest_upload
-             > (select max (_sdc_batched_at) from {{ this }})
+         where _sdc_batched_at
+             > (select max (latest_upload) from {{ this }})
 
              {% endif %}
 group by 1,2,3,4,5,6,7 -- order by total_bounced desc limit 500

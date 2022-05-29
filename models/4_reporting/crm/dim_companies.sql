@@ -110,7 +110,7 @@ select
        sct.potential_tier
        
        
-from {{ source('data_lake', 'hubspot_companies_stitch') }} hc
+from {{ ref('hubspot_companies') }} hc
     left join {{ ref('mapping_industry') }} as indm
 on lower(hc.industry) = indm.industry
     left join {{ ref('stg_companies_dimensions') }} as adc on hc.hubspot_company_id = adc.hubspot_company_id
