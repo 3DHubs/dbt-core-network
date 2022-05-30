@@ -45,8 +45,8 @@ group by 1,2,3,4,5,6,7 -- order by total_bounced desc limit 500
  )
 select
     campaign_id,
-    c.name as campaign_name,
-    c.subject,
+    coalesce(c.name, cm.name) as campaign_name,
+    coalesce(c.subject, cm.subject) as subject,
     sent_at,
     campaign_type, 
     coalesce(device_type, 'UNKNOWN') as device_type,
@@ -66,6 +66,7 @@ select
     unique_forwarded,
     latest_upload
     from prep_recipient p
-    left join {{ source('ext_hubspot', 'campaigns') }} c on c.id = p.campaign_id
+    left join {{ source('ext_hubspot', 'campaigns') }} c on c.id = p.campaign_id 
+    left join {{ source('ext_hubspot', 'campaigns') }} cm on cm.id = p.emailcampaignid -- in case no emailcampaigngroupid is matching campaigns.
     left join {{ ref('stg_hs_contacts_union_legacy') }} u on u.email = p.unencrypted_recipient and u.rnk_desc_email = 1
     where p_sent > 0
