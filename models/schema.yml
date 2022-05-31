@@ -94,18 +94,18 @@ sources:
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
-        loaded_at_field: createdate
+        loaded_at_field: _sdc_received_at
       - name: companies
         freshness:
           warn_after: {count: 24, period: hour} 
           error_after: {count: 48, period: hour}
-        loaded_at_field: created_at
+        loaded_at_field: _sdc_received_at
       - name: campaigns
       - name: deals
         freshness:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
-        loaded_at_field: createdate
+        loaded_at_field: _sdc_received_at
       - name: deals__associations__associatedcompanyids
       - name: deals__associations__associatedvids
       - name: email_events
