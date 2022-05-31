@@ -29,14 +29,17 @@ select
     -- Fields from Documents
     -- Useful to filter line items from different documents and their statuses
        docs.order_uuid,
-       docs.uuid as document_uuid,
-       docs.type as document_type,
-       docs.revision as document_revision,
+       docs.uuid             as document_uuid,
+       docs.type             as document_type,
+       docs.revision         as document_revision,
        docs.is_order_quote,
        docs.is_active_po,
+       docs.updated          as doc_updated_at,
+       docs.order_updated_at as order_updated_at,
     -- Line Item Fields
        li.created,
-       li.updated,
+       li.updated            as li_updated_at,
+
        li.deleted,
        li.id,
        li.uuid,
@@ -122,6 +125,6 @@ where true
 {% if is_incremental() %}
 
   -- this filter will only be applied on an incremental run
-  and (li.updated >= (select max(updated) from {{ this }}) or docs.updated >= (select max(updated) from {{ this }}) or docs.order_updated_at >= (select max(updated) from {{ this }}))
+  and (li_updated_at >= (select max(li_updated_at) from {{ this }}) or doc_updated_at >= (select max(doc_updated_at) from {{ this }}) or order_updated_at >= (select max(order_updated_at) from {{ this }}))
 
 {% endif %}
