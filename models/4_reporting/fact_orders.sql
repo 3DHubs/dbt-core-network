@@ -75,10 +75,10 @@ first_delay_submitted_at,
 order_shipped_at,
 promised_shipping_at_to_customer, -- From order quote
 promised_shipping_at_by_supplier, -- From active PO
-estimated_delivery_to_cross_dock,
+estimated_delivery_to_cross_dock_at,
 delivered_to_cross_dock_at,
 shipped_from_cross_dock_at,
-estimated_delivery_to_customer,
+estimated_delivery_to_customer_at,
 delivered_at,
 derived_delivered_at,
 recognized_at,
@@ -294,7 +294,7 @@ remaining_amount_usd,
 -- Logistics
 number_of_shipments,
 is_cross_docking,
-number_of_packages,
+number_of_batches,
 has_consistent_shipping_info,
 
 -- On Time Rate

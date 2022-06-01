@@ -7,6 +7,24 @@ version: 2
 
 sources:
 
+  - name: ext_aftership_bv
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _sdc_received_at
+    tables:
+      - name: data
+      - name: data__msg__checkpoints
+    
+  - name: ext_aftership_llc
+    freshness:
+      warn_after: {count: 12, period: hour}
+      error_after: {count: 24, period: hour}
+    loaded_at_field: _sdc_received_at
+    tables:
+      - name: data
+      - name: data__msg__checkpoints
+
   - name: ext_hubspot_webhooks
     freshness:
       warn_after: {count: 12, period: hour}
@@ -240,6 +258,7 @@ sources:
       - name: shipments
       - name: shipping_carriers
       - name: shipping_options
+      - name: shipping_labels
       - name: supplier_auction_line_items
       - name: supplier_auctions
       - name: supplier_finishes

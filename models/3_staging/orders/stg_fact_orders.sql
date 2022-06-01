@@ -242,7 +242,7 @@ select
 
     -- Logistics: Base Fields
     logistics.number_of_shipments,
-    logistics.number_of_packages,
+    logistics.number_of_batches,
     logistics.cross_dock_city,
     logistics.cross_dock_country,
     logistics.cross_dock_latitude,
@@ -261,8 +261,8 @@ select
     logistics.delivered_at,
     logistics.full_delivered_at, -- Used for a definition
     logistics.derived_delivered_at,
-    logistics.estimated_delivery_to_cross_dock,
-    logistics.estimated_delivery_to_customer,
+    logistics.estimated_delivery_to_cross_dock_at,
+    logistics.estimated_delivery_to_customer_at,
     logistics.delivered_to_cross_dock_at,
 
     -------- SOURCE: STG OTR -----------
