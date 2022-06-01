@@ -36,7 +36,7 @@ select     li.order_uuid,
            li.is_active_po,
            -- Supply Line Items Base Fields
            li.created                                                                 as created_date,
-           li.updated                                                                 as updated_date,
+           li.li_updated_at,
            li.id                                                                      as line_item_id,
            case when li.type = 'part' then
            row_number() over (partition by li.quote_uuid, li.type order by li.id asc)
