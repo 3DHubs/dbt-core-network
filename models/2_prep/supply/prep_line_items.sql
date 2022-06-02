@@ -1,15 +1,7 @@
 -- This model queries from int_service_supply.line_items and considerably filters the data to improve the performance of models downstream.
 -- Furthermore this model is combined with a few selected fields from supply_documents (cnc_order_quotes) to facilitate identifying the 
--- characteristics of the document (quote or purchase orders) the line item belongs to. Because the total number of line items is rather large
--- this model runs incrementally but a post_hook has been added to remove deleted line items.
+-- characteristics of the document (quote or purchase orders) the line item belongs to. 
 
-{{
-    config(
-        materialized='incremental',
-        unique_key='uuid',
-        post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ source('int_service_supply', 'line_items') }} )"]
-    )
-}}
 
 {% set boolean_fields = [
     "exceeds_standard_tolerances",
@@ -39,7 +31,6 @@ select
     -- Line Item Fields
        li.created,
        li.updated            as li_updated_at,
-
        li.deleted,
        li.id,
        li.uuid,
@@ -101,30 +92,11 @@ select
        {% endfor %}
 
 from {{ source('int_service_supply', 'line_items') }} as li
-inner join (
-    -- Pick specific fields to avoid ambiguity
-    select  uuid, 
-            order_uuid, 
-            type,
-            status, 
-            revision,
-            order_updated_at, 
-            is_active_po, 
-            is_order_quote,
-            updated
-    from {{ ref('prep_supply_documents') }}
-    ) as docs on li.quote_uuid = docs.uuid
+inner join {{ ref('prep_supply_documents') }} as docs on li.quote_uuid = docs.uuid
 where true
     -- Filter: only interested until now on the main quote and purchase orders
-    and (docs.is_order_quote or docs.type = 'purchase_order')    
+    and (is_order_quote or docs.type = 'purchase_order')    
     -- Filter: only interested on quotes that are not in the cart status
     and docs.status <> 'cart'
     -- Filter: not interested on line items from legacy orders
     and li.legacy_id is null
-    
-{% if is_incremental() %}
-
-  -- this filter will only be applied on an incremental run
-  and (li_updated_at >= (select max(li_updated_at) from {{ this }}) or doc_updated_at >= (select max(doc_updated_at) from {{ this }}) or order_updated_at >= (select max(order_updated_at) from {{ this }}))
-
-{% endif %}
