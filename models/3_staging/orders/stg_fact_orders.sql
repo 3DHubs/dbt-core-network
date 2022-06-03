@@ -270,7 +270,9 @@ select
     -- the stg tables of documents & logistics
 
     otr.is_shipped_on_time_by_supplier,
+    otr.is_picked_up_on_time_from_supplier,
     otr.is_shipped_on_time_to_customer,
+    otr.is_pick_up_on_time_to_customer,
     otr.shipping_to_customer_delay_days,
     otr.shipping_by_supplier_delay_days,
     otr.first_delay_submitted_at,

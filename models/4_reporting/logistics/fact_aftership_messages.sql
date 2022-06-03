@@ -69,18 +69,21 @@ with fact_aftership_messages_bv as (
 
 select famu.*, -- FAMU Fact Aftership Messages Unionised
        -- Field: has_logistics_message_alert identifies if the message contains words which are highly associated with delays which are resolvable by logistics.
-       regexp_count(lower(famu.tracking_message),
-                    'restriction|attention|missing|company|name|e|number|ave|contacted|investigation|message|' ||
-                    'pre|funds|street|about|product|receiving|return|either|begun|locate|invoice|improper|authorization|oversized|overweight|require|' ||
-                    'commercial|goods|commercial|identification|express|invoice|claim|accident|situation|either|classify|commodity|description|insufficient' ||
-                    '|breakdown|composition|itemized|original|get|opened|allowed|maximum|reaching|remains|nees|company|ne|detailed|ein|etc|examples|gst|include' ||
-                    '|registration|rfc|ssn|vat|lost|redelivery|reminder|highway|state|logo|f|llendorffstr|mu|end|fwy|importation|indicating|reason|statement|stemmons' ||
-                    '|use|written|vista|cave|colossal|leon|ne|ponce|fcringer|fcrnberg|nu|thu|centre|nw|form|specialized|statement') >
-       1                                                                                               as has_logistics_message_alert,
+       regexp_count(lower(' '||famu.tracking_message||' '),
+                    '( restriction | attention | missing | company | name | e | number | ave | contacted | investigation' ||
+                    '| message | pre | funds | street | about | product | receiving | return | either | begun | locate |'||
+                    ' invoice | improper | authorization | oversized | overweight | require | commercial | goods | commercial |'||
+                    ' identification | express | invoice | claim | accident | situation | either | classify | commodity |'||
+                    ' description | insufficient | breakdown | composition | itemized | original | get | opened | allowed |'||
+                    ' maximum | reaching | remains | nees | company | ne | detailed | ein | etc | examples | gst | include |'||
+                    ' registration | rfc | ssn | vat | lost | redelivery | reminder | highway | state | logo | f | llendorffstr |'||
+                    ' mu | end | fwy | importation | indicating | reason | statement | stemmons | use | written | vista | cave |'||
+                    ' colossal | leon | ne | ponce | fcringer | fcrnberg | nu | thu | centre | nw | form | specialized | statement )') >
+       0                                                                                               as has_logistics_message_alert,
 
        -- Field: has_tracking_status_alert states if aftership indicates that the message has a high likelyhood to a delay.
-       regexp_count(lower(famu.tracking_status), 'delay|external|exception|payment|held|damaged|lost') >
-       1                                                                                               as has_tracking_status_alert,
+       regexp_count(lower(famu.tracking_status), '(delay|external|exception|payment|held|damaged|lost)') >
+       0                                                                                               as has_tracking_status_alert,
 
        row_number()
        OVER (PARTITION BY famu.carrier_tracking_number ORDER BY famu.tracking_message_received_at asc) AS message_number,
