@@ -68,6 +68,7 @@ models:
 
     6_miscellaneous:
       +schema: core
+      +materialized: table
       adhoc_refresh:
         +tags: ["adhoc"]
       weekly_refresh:
