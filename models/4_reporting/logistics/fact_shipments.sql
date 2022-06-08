@@ -65,13 +65,11 @@ select s.order_uuid,
        -- 99% of shipments which were delivered have at least 3 status updates = messages, 95% of shipments receive the third message within 98 hours of receiving the first.
        -- Therefore if a shipment has not received the 3 message within 98 hours they are considered invalid unless they receive a delivery update.
        case
-           when falm.tracking_status = 'Info Received' and s.status != 'delivered' and
-                date_diff('day', tracking_last_message_received_at, current_date) > 4 and
+           when s.status != 'delivered' and s.delivered_at is null and
                 faam.third_message_received is null then
-                   round(DATEDIFF(seconds, faam.first_message_received, getdate()) / 3600.0, 0) < 98
-           when falm.tracking_status is not null or s.status is not null then True
-           else false
-           end                                    as is_valid_shipment,
+                   round(DATEDIFF(seconds, coalesce(faam.first_message_received,s.created), getdate()) / 3600.0, 0) < 98
+           else True
+       end                                    as is_valid_shipment,
 
        MIN(case
                when fam.tracking_status = 'In Transit' or fam.tracking_status = 'Acceptance scan' or
