@@ -38,7 +38,8 @@ with stg_supplier_auctions as (
                 br.title,
                 b.explanation,
                 b.bid_loss_reason,
-                row_number() over (partition by b.auction_uuid, b.supplier_id order by b.updated desc, b.placed_at desc) as rn
+                b.bid_version,
+                row_number() over (partition by b.auction_uuid, b.supplier_id order by b.is_active desc,  b.placed_at desc, b.updated desc) as rn
          from {{ ref('prep_bids') }} as b
             left join {{ ref('prep_supply_documents') }} as q on b.uuid = q.uuid
             left join {{ ref('bids_bid_reasons') }} as bbr on b.uuid = bbr.bid_uuid
@@ -72,11 +73,14 @@ select
     b.has_design_modifications                                                        as bid_has_design_modifications,
     b.has_changed_shipping_date                                                       as bid_has_changed_shipping_date,
     b.bid_amount_usd                                                                  as bid_amount_usd,
+    b_1.bid_amount_usd                                                                as bid_original_amount_usd,
     b.margin_without_discount                                                         as bid_margin,
+    b_1.margin_without_discount                                                       as bid_original_margin,
     (ali.li_subtotal_amount_usd - ali.discount_cost_usd) 
         * b.margin_without_discount                                                   as bid_margin_usd,
     (ali.li_subtotal_amount_usd - ali.discount_cost_usd) 
-        * (a.base_margin_without_discount - b.margin_without_discount)                as bid_margin_loss_usd,        
+        * (a.base_margin_without_discount - b.margin_without_discount)                as bid_margin_loss_usd,
+    case when b_1.response_type = 'countered' then true else false end                as has_multiple_supplier_counter_bids_on_price,    
     b.design_modification_text                                                        as design_modification_text,
     case when b.uuid = a.winning_bid_uuid then true else false end                    as is_winning_bid,
 
@@ -95,6 +99,8 @@ select
 
 from stg_supplier_auctions as sa
     inner join {{ ref('prep_auctions_rda') }} as a on a.auction_uuid = sa.auction_uuid -- Filter for only RDA Auctions
-    left join (select * from bids where rn=1) as b on b.sa_uuid = sa.sa_uuid
+    left join bids as b on b.sa_uuid = sa.sa_uuid and b.rn=1
+    left join bids as b_1 on b_1.sa_uuid = sa.sa_uuid and b_1.is_active = false  -- To get 1st counter bid on price of supplier that is followed by a newer bid (to identify negotiation winnings)
+    and b_1.bid_version=1 and b_1.has_changed_prices and b_1.bid_amount_usd <> b.bid_amount_usd and b.bid_amount_usd > 0
     left join {{ ref ('agg_line_items')}} as ali on a.quote_uuid = ali.quote_uuid
     left join {{ ref ('stg_orders_documents')}} as sod on sod.order_uuid = a.order_uuid
