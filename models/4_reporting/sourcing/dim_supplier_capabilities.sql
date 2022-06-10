@@ -8,6 +8,8 @@ with supplier_tech as (
            st.max_active_orders,
            st.allow_strategic_orders,
            st.allow_non_strategic_orders,
+           st.allow_cosmetic_worthy_finishes,
+           st.allow_orders_with_custom_finishes,
            st.num_parts_min, 
            st.num_parts_max, 
            st.num_units_min, 

@@ -1,5 +1,6 @@
 {% set boolean_fields = [
        "allow_orders_with_custom_finishes",
+       "allow_cosmetic_worthy_finishes",
        "allow_strategic_orders",
        "allow_non_strategic_orders",
        "allow_super_strategic_orders"
@@ -23,6 +24,7 @@ select supplier_id,
        {% endfor %},
        {{ dbt_utils.surrogate_key(['technology_id',
                                    'allow_orders_with_custom_finishes',
+                                   'allow_cosmetic_worthy_finishes',
                                    'allow_strategic_orders',
                                    'strategic_orders_priority',
                                    'min_order_amount',
