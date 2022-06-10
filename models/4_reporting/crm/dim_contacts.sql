@@ -1,5 +1,6 @@
 select base.created_at,
        base.client_id,
+       base.platform_user_id,
        base.name,
        lower(coalesce(agg_orders.first_submitted_order_country_iso2, base.country_iso2))   as country_iso2,
        base.hubspot_company_id,

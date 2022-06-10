@@ -141,6 +141,7 @@ sources:
     tables:
       - name: currencyrate
       - name: transaction
+      - name: customer
       - name: transaction__itemlist__item
 
   - name: data_lake
@@ -229,6 +230,7 @@ sources:
       - name: dispute_line_items
       - name: dispute_line_items_issues
       - name: disputes
+      - name: financial_settings
       - name: lead_time_tiers
       - name: line_items
       - name: matching_scores
@@ -238,6 +240,7 @@ sources:
       - name: material_subsets_region_settings
       - name: materials
       - name: materials_material_finishes
+      - name: netsuite_customers
       - name: order_change_requests
       - name: order_delays
       - name: order_history_events
