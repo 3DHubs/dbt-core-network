@@ -40,6 +40,10 @@ with stg_states as (
                 lower(c.alpha2_code)                                                         as country_code,
                 lower(c.continent)                                                           as continent,
                 sa.locality                                                                  as city,
+                sa.postal_code,
+                sa.address_line1 || ' ' || coalesce(sa.address_line2, ' ')                   as address,
+                sa.lon                                                                       as longitude,
+                sa.lat                                                                       as latitude,
                 case when country_name = 'United States' then 'US'
                      when country_name = 'Mexico' then 'Mexico'
                      when country_name = 'India' THEN 'India'
@@ -74,6 +78,10 @@ select supplier_id,
        continent,
        region,
        city,
+       postal_code,
+       address,
+       longitude,
+       latitude,
        state
 from t2
 where rn = 1
