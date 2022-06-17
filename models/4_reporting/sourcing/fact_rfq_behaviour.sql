@@ -77,7 +77,7 @@ with stg_supplier_auctions as (
              case when winning_bid.uuid > 0 then true else false end                              as is_winning_bid,
              bid_quotes.placed_at                                                                 as supplier_rfq_responded_date,
              case when bid_quotes.placed_at is not null then rank() over (partition by rfq_a.order_uuid, rfq_a.supplier_id
-             order by coalesce(bid_quotes.placed_at,'2000-01-01') desc) end                       as win_rate_rank, --prepares logic to get per order the unique responses of a supplier
+             order by is_winning_bid desc, coalesce(bid_quotes.placed_at,'2000-01-01') desc) end  as win_rate_rank, --prepares logic to get per order the unique responses of a supplier
              case when win_rate_rank = 1 and is_winning_bid then 1 
                   when win_rate_rank = 1 then 0 else null end                                     as supplier_win_rate, --the winning bid counts positive and 1 other bid per order per supplier counts negative to the win rate
              -- Data Source
@@ -111,8 +111,8 @@ with stg_supplier_auctions as (
                 round(((bid_quotes.subtotal_price_amount / 100.00) / rates.rate), 2)::decimal(15, 2) as rfq_bid_amount_usd,
                 case when winning_bid.uuid > 0 then true else false end                              as is_winning_bid,
                 bid_quotes.placed_at                                                                 as supplier_rfq_responded_date,
-                case when bid_quotes.placed_at  is not null then rank() over (partition by supplier_rfqs.order_uuid, supplier_rfqs.supplier_id
-                order by coalesce(bid_quotes.placed_at ,'2000-01-01') desc) end                      as win_rate_rank,
+                case when bid_quotes.placed_at is not null then rank() over (partition by supplier_rfqs.order_uuid, supplier_rfqs.supplier_id
+                order by is_winning_bid desc, coalesce(bid_quotes.placed_at,'2000-01-01') desc) end  as win_rate_rank,
                 case when win_rate_rank = 1 and is_winning_bid then 1 
                      when win_rate_rank = 1 then 0 else null end                                     as supplier_win_rate,
                 'supplier_rfqs'                                                                      as data_source
