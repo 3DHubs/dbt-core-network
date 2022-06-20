@@ -1,4 +1,5 @@
 select order_uuid,
+       hubspot_contact_id,
        closed_at,
        sourced_at,
        technology_name,
@@ -7,4 +8,4 @@ select order_uuid,
        subtotal_sourced_amount_usd - subtotal_sourced_cost_usd        as subtotal_sourced_precalculated_margin_usd,
        subtotal_sourced_amount_usd                                                                           
 from  {{ ref('fact_orders') }}
-where closed_at >= '2021-01-01'
+where closed_at >= '2019-01-01'
