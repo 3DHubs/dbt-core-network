@@ -1,4 +1,4 @@
-{{ config(bind=False,
+{{ config(
           pre_hook=["
             delete
             from analytics.ext_google_ads_console.click_performance_report

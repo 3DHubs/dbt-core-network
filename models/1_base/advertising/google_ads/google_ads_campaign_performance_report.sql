@@ -1,4 +1,4 @@
-{{ config(bind=False, materialized='table') }}
+{{ config(materialized='table') }}
 
 with campaign_performance_report_ranked as
         ( with prep_campaign_performance as (

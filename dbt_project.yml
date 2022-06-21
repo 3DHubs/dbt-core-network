@@ -26,10 +26,12 @@ clean-targets: # directories to be removed by `dbt clean`
 
 # Model config
 models:
+
   hubs:
     1_base:
       +schema: core
       +materialized: view
+      +bind: false
       advertising:
         bing_ads:
           +tags: ["advertising", "bing"]
@@ -41,13 +43,14 @@ models:
         +tags: ["hubspot", "crm"]
       int_service_supply:
         +tags: supply
-        +bind: false
       netsuite:
         +tags: ["netsuite", "finance"]
 
     2_prep:
       +schema: core
       +materialized: view
+      +bind: false
+
 
     3_staging:
       +schema: core
@@ -56,6 +59,7 @@ models:
         +tags: ["orders"]
       contacts:
         +tags: ["contacts"]
+      +bind: false
 
     4_reporting: 
       +schema: reporting

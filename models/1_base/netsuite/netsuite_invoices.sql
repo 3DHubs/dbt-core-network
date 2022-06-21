@@ -1,5 +1,3 @@
-{{ config(bind=False) }}
-
 -- This model pre-process the data from Netsuite transactions and delivers it into fact_invoices.
 -- The processing that occurs here is adding line items and exchange rate in an intermediate step.
 

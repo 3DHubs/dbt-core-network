@@ -1,4 +1,3 @@
-{{ config(bind=False) }}
 select id, name
 from {{ source('ext_google_ads_console', 'ad_groups') }}
 union
