@@ -11,7 +11,9 @@
 -- HS Engagements table is joined to get some fields that are unique
 -- to HS, like Task Subject (as Freshdesk don't have interactions of
 -- task type.)
-
+{{ config(
+    tags=["notmultipledayrefresh"]
+) }}
 select distinct
     interactions.hubspot_deal_id,
     count(distinct interactions.interaction_id) as number_of_interactions,

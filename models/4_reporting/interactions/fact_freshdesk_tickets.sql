@@ -1,3 +1,6 @@
+{{ config(
+    tags=["notmultipledayrefresh"]
+) }}
 with frt_rn as (
         
         select *,

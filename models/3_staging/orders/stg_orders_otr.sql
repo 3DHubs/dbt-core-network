@@ -18,6 +18,9 @@ with delays as (
     group by 1
 )
 
+{{ config(
+    tags=["notmultipledayrefresh"]
+) }}
 
 -- Main Query: It compares shipping dates with promised shipping date from order documents (PO & Quote)
 

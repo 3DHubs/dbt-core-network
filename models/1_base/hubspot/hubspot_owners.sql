@@ -1,5 +1,3 @@
-{{ config(materialized='table') }}
-
 select owner_id::bigint as owner_id,
        email,
        initcap(first_name) as "first_name",

@@ -2,6 +2,10 @@
 -- with similar features, when this occurs an order will get assigned an reorder_original_order_uuid
 -- with a parent-child relationship.
 
+{{ config(
+    tags=["notmultipledayrefresh"]
+) }}
+
 select reorder.order_uuid as reorder_order_uuid,
        reorder.reorder_original_order_uuid as original_order_uuid,
        true as is_reorder,
