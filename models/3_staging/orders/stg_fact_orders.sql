@@ -1,3 +1,6 @@
+{{ config(materialized='table') }}
+
+
 -- This table is created by combining supply's cnc orders table with 
 -- several staging tables and other few secondary sources
 

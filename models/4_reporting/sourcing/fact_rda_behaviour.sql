@@ -103,4 +103,3 @@ from stg_supplier_auctions as sa
     left join bids as b_1 on b_1.sa_uuid = sa.sa_uuid and b_1.is_active = false  -- To get 1st counter bid on price of supplier that is followed by a newer bid (to identify negotiation winnings)
     and b_1.bid_version=1 and b_1.has_changed_prices and b_1.bid_amount_usd <> b.bid_amount_usd and b.bid_amount_usd > 0
     left join {{ ref ('agg_line_items')}} as ali on a.quote_uuid = ali.quote_uuid
-    left join {{ ref ('stg_orders_documents')}} as sod on sod.order_uuid = a.order_uuid

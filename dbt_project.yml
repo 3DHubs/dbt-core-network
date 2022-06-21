@@ -29,6 +29,7 @@ models:
   hubs:
     1_base:
       +schema: core
+      +materialized: view
       advertising:
         bing_ads:
           +tags: ["advertising", "bing"]
@@ -39,7 +40,6 @@ models:
       hubspot:
         +tags: ["hubspot", "crm"]
       int_service_supply:
-        materialized: view
         +tags: supply
         +bind: false
       netsuite:
@@ -47,7 +47,7 @@ models:
 
     2_prep:
       +schema: core
-      +materialized: table
+      +materialized: view
 
     3_staging:
       +schema: core
@@ -65,6 +65,7 @@ models:
       +schema: protolabs 
       +materialized: table
       post-hook: 'grant select on {{ this }} to protolabs'
+      +tags: protolabs
 
     6_miscellaneous:
       +schema: core
