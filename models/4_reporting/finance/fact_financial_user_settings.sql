@@ -11,7 +11,7 @@ select
        case
            when enc.parent__internalid is null then 'Parent'
            else 'Child'
-       end as netsuite_company_typ,
+       end as netsuite_company_type,
        nagg.child_count,
        enc.email,
        enc.custentity_financial_contact_email as financial_contact_email,
