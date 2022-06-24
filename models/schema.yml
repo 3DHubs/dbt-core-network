@@ -285,9 +285,18 @@ sources:
     tables:
       - name: cube_deals
 
+  - name: dbt_backups
+    tables:
+      - name: backup_fact_contribution_margin
+      - name: backup_fact_orders
+      - name: backup_full_order_history_events
+
+
 #########
 # TESTS #
 #########
+
+
 
 models:
   - name: dim_companies

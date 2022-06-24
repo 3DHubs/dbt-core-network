@@ -78,6 +78,8 @@ models:
         +tags: ["adhoc"]
       weekly_refresh:
         +tags: ["weekly"]
+      backup_refresh:
+          post-hook: 'grant all on schema dbt_backups to group etl; grant all on schema dbt_backups to group dbt_devs;grant all on all tables in schema dbt_backups to group etl; grant all on all tables in schema dbt_backups to group dbt_devs;'
 
 
 # Seeds schema
