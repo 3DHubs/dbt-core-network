@@ -10,9 +10,7 @@
 -- Supply Dispute Line Items
 -- Supply Order History Events 
 
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 
 with disputes as (
 

@@ -1,6 +1,7 @@
 {{
     config(
-        sort = "review_id"
+        sort = "review_id",
+        tags=["multirefresh"]
     )
 }}
 

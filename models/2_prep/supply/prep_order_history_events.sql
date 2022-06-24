@@ -24,8 +24,8 @@
                     description
             FROM {{ source('data_lake', 'full_order_history_events') }} as dl_fohe
             where iss_ohe.id = dl_fohe.id)
-                "]
-            
+                "],
+        tags=["multirefresh"]
     )
 }}
 

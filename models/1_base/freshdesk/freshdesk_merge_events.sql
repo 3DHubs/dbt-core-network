@@ -28,8 +28,7 @@
 
 {{
     config(
-        materialized='table',
-        tags=["notmultipledayrefresh"]
+        materialized='table'
     )
 }}
 

@@ -8,9 +8,7 @@
 -- 3. Docusign Requests.
 -- 4. Netsuite, payments.
 
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 
 with stripe_transactions as (
     select t.quote_uuid,

@@ -13,7 +13,8 @@ Note 1: on 2021-08-20 we (Diego and Bart) discussed an approach to quicken the d
     config(
         materialized = 'incremental',
         sort = ['order_uuid', 'std_event_id'],
-        dist = 'created'
+        dist = 'created',
+        tags=["multirefresh"]
     )
 }}
 

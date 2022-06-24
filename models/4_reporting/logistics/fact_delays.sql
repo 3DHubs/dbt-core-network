@@ -13,6 +13,10 @@
 -- future with the new setup of shipments/packages and batch shipments
 -- we might want to reconsider checking this at the package level. 
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 select min(created) as  submitted_at,
        max(uuid)    as  delay_uuid,
        max(description) delay_description,

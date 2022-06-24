@@ -7,9 +7,7 @@
 -- 2. Data Lake Supply Shipments (+ addresses, countries and shipping carriers)
 -- 3. Data Lake Supply batches
 
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 
 with supply_cdt as (
     select cdtd.order_uuid,

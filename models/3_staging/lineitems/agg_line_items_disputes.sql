@@ -1,7 +1,3 @@
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
-
 select sqli.uuid                                   as line_item_uuid,
        min(sdli.created)                           as dispute_created_at,
        listagg(distinct '[' || trunc(sdli.created) || '] ' || trim(sdli.description),

@@ -1,7 +1,6 @@
 {{
     config(
-        post_hook="analyze {{ this }}",
-        tags=["notmultipledayrefresh"]
+        post_hook="analyze {{ this }}"
     )
 }}
 

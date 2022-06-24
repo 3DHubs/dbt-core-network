@@ -6,6 +6,10 @@
 -- then enriched using the auctions table for auction fields (e.g. auction doc number) and the bids table
 -- where responses from the suppliers are stored.
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 with stg_supplier_auctions as (
     select md5(supplier_id || auction_uuid) as sa_uuid, *
 

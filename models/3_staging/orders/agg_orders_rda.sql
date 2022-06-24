@@ -18,6 +18,10 @@
 
 -- Parent Sources: Auctions, Bids, Supplier Auctions, Order Quotes & Technologies
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 with rda_interactions as ( 
     select sai.order_uuid,
            count(distinct auction_uuid)                                                              as number_of_rda_auctions,

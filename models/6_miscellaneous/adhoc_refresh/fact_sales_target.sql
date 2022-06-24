@@ -1,6 +1,3 @@
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
 with sales_target as (
         select
                hubspot_id,

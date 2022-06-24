@@ -12,6 +12,10 @@
 -- Service Supply
 -- Aftership Message (through Fact Aftership Messages)
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 select fs.order_uuid,
        fs.batch_uuid,
        oq.company_entity_id,

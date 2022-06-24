@@ -6,6 +6,9 @@
 -- 1. Data Lake Hubspot Dealstage History (Closing and Cancellation)
 -- 2. Data Lake Supply Order History Events (Completion)
 
+{{ config(
+    tags=["multirefresh"]
+) }}
 
 with hubspot_dealstage_history as (
     select deal_id,

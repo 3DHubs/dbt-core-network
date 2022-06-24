@@ -10,6 +10,10 @@
 
 ------------- SOURCE: HUBSPOT -----------
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 select orders.uuid as order_uuid,
        true                             as has_technical_review,
        min(first_review_ongoing_date)   as hubspot_first_technical_review_ongoing_at,

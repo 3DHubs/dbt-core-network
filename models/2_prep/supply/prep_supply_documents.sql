@@ -2,7 +2,11 @@
 -- as supply_documents as the source model is not exclusive to CNC technology nor it is exclusive to
 -- quotes, it also contains other documents such as auctions, bids, purchase orders and invoices.
 
-{{ config(materialized='table') }}
+{{ config(
+            materialized='table',
+            tags=["multirefresh"]
+    )
+    }}
 
 select docs.created,
        docs.updated,

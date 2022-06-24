@@ -6,6 +6,9 @@
 -- This table is also the foundation for the contacts and companies aggregates so the fields created here
 -- can be used either in fact_orders, dim_companies or dim_contacts.
 
+{{ config(
+    tags=["multirefresh"]
+) }}
 
 with complete_orders as (
 

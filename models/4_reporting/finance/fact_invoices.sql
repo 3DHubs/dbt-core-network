@@ -6,9 +6,7 @@
 -- are credit memos. Invoices are considered recognized based on the recognition date of the order.
 
 -- Invoices originating from supply
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 with stg_cube_invoices_supply as (
 
         select invoices.uuid                                                                   as invoice_uuid,

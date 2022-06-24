@@ -9,6 +9,10 @@
 -- 2. Destination (Based on Supplier Address)
 -- 3. Company (Hubs) Entity
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 with stg_us_states as (
     select distinct lower(replace(sa.administrative_area, 'US-', '')) as administrative_area,
                     sa.address_id                                     as address_id,

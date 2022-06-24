@@ -4,7 +4,11 @@
        
 -- Data comes from the model fact_rfq_behaviour, this model primarily depends on
 -- the table supplier-rfqs coming from supply DB where auctions are of type RFQ.
-       
+
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 select order_uuid,
        true                                                                                              as has_rfq,
        -- An quote can be duplicated manually and not show as a winning bid

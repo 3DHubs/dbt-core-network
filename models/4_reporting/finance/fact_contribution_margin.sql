@@ -1,6 +1,4 @@
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 select  fpo.po_uuid                            as source_uuid,
         fpo.po_document_number                 as source_document_number,
         'cost'                                 as type,

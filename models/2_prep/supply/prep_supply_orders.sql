@@ -2,7 +2,9 @@
 -- as supply_orders as cnc_orders is not exclusive to the CNC technology. Furthermore in this model
 -- by implementing an inner join with line items we filter out empty orders or carts (orders at their earliest stage).
 
-{{ config(materialized='table') }}
+{{ config(  materialized='table',
+            tags=["multirefresh"]
+    ) }}
 
 select orders.created,
        orders.updated,

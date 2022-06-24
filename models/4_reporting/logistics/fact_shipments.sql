@@ -13,6 +13,11 @@
 -- Aftership Message (through Fact Aftership Messages)
 
 -- fact_after_ship_last_messages this sub query returns the last message from fact_aftership_messages
+
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 with fact_after_ship_last_messages as (
     select *
     from {{ ref('fact_aftership_messages') }} as fam

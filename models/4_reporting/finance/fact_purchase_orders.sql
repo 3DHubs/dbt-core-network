@@ -1,6 +1,4 @@
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 with purchase_orders as (
 select 
        -- Purchase Order Attributes

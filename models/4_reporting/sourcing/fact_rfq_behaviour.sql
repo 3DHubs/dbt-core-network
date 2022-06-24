@@ -9,7 +9,9 @@ The legacy table contains only one-to-one relationship whereas auctions reflect 
  -- 1. Supplier-Auctions: combined with auctions (rfq type) and bids (rfq type) data.
  -- 2. Supplier-RFQ: legacy data when there was only one rfq per order.
 
-    ---------- SOURCE: 1. SUPPLIER-AUCTIONS (RFQ) --------------
+{{ config(
+    tags=["multirefresh"]
+) }}
 
 with stg_supplier_auctions as (
 

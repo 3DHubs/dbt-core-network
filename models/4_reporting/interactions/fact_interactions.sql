@@ -1,8 +1,7 @@
 {{
     config(
         materialized='incremental',
-        post_hook = "analyze {{ this }}",
-        tags=["notmultipledayrefresh"]
+        post_hook = "analyze {{ this }}"
     )
 }}
 

@@ -2,9 +2,7 @@
 -- The calculations are based on assumptions made regarding emissions per kwh of energy consumed varying per country as well as the
 -- emissions per kg of raw material per country. The result are two columns which are later combined in stg_fact_orders.
 
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 
 with base_query as (
 -- In this part the required line item data from our DB is derived

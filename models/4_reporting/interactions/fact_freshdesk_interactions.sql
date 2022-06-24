@@ -1,6 +1,4 @@
-{{ config(
-    tags=["notmultipledayrefresh"]
-) }}
+
 with freshdesk_interactions as (
 
 select distinct {{ redshift.try_cast('con.id', 'bigint') }}                         as interaction_id,

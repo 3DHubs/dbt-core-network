@@ -3,6 +3,10 @@
 -- QUOTES & PURCHASE ORDERS
 ----------------------------------------------------------------
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 -- Sources: Hubspot Deals, Hubspot Dealstages, Dim Order Status and Hubspot Owners
 with stg as (
     select

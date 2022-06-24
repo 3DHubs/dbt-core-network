@@ -13,6 +13,10 @@
 -- Sources:
 -- Aftership Message
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 with fact_aftership_messages_bv as (
     select 'BV'                                               as entity,
            exa.msg__tracking_number                           as carrier_tracking_number, -- EXA EXt Aftership

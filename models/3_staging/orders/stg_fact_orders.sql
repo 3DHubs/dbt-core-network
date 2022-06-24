@@ -1,4 +1,6 @@
-{{ config(materialized='table') }}
+{{ config(  materialized='table',
+            tags=["multirefresh"]
+    ) }}
 
 
 -- This table is created by combining supply's cnc orders table with 

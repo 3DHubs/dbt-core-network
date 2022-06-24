@@ -9,6 +9,10 @@
 -- QUOTE FIELDS & AGGREGATES
 ----------------------------------------------------------------
 
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 -- FIRST QUOTE FIELDS
 
 with first_quote as (

@@ -1,8 +1,7 @@
 {{
        config(
               sort = ["ticket_id", "order_uuid"],
-              post_hook = "analyze {{ this }}",
-              tags=["notmultipledayrefresh"]
+              post_hook = "analyze {{ this }}"
        )
 }}
 

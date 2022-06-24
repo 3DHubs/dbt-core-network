@@ -6,7 +6,9 @@
 -- Aggregates data from Fact Line Items in the reporting layer
 -- as we have important fields defined there. This table aggregates data from both 
 -- quotes of type quote or type purchase orders.
-
+{{ config(
+    tags=["multirefresh"]
+) }}
 with agg_line_items as (
     select fli.quote_uuid, -- To join to orders on quote/purchase order quote uuid
            fli.order_uuid, -- Due to the filter at the bottom there should be 1-1 relationship in this table of quotes and orders
