@@ -260,6 +260,7 @@ select
 
     -- Logistics: Shipping Dates
     logistics.shipped_at as order_shipped_at, -- Prefix to avoid ambiguous field
+    logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
 
     -- Logistics: Delivery Dates

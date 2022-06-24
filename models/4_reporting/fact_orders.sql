@@ -76,6 +76,7 @@ auction_finished_at,
 sourced_at,
 first_delay_submitted_at,
 order_shipped_at,
+shipped_to_customer_at,
 promised_shipping_at_to_customer, -- From order quote
 promised_shipping_at_by_supplier, -- From active PO
 estimated_delivery_to_cross_dock_at,
