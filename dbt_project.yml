@@ -80,8 +80,7 @@ models:
         +tags: ["weekly"]
       backup_refresh:
         +tags: ["backup"]
-          post-hook: 'grant all on schema dbt_backups to group etl; grant all on schema dbt_backups to group dbt_devs;grant all on all tables in schema dbt_backups to group etl; grant all on all tables in schema dbt_backups to group dbt_devs;'
-
+        post-hook: 'grant all on schema dbt_backups to group etl; grant all on schema dbt_backups to group dbt_devs;grant all on all tables in schema dbt_backups to group etl; grant all on all tables in schema dbt_backups to group dbt_devs;'
 
 # Seeds schema
 seeds:
