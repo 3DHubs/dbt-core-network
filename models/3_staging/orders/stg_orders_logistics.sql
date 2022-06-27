@@ -148,13 +148,16 @@ select distinct soq.order_uuid                                                  
                 --------------------------
                 case
                     when cdt.order_uuid is not null then coalesce(cdt.cdtd_delivered_at, o.delivered_at)
-                    when has_shipment_delivered_to_customer_date_consecutive then coalesce(ab.shipment_delivered_to_customer_at, o.delivered_at) end    as delivered_at,
+                    when has_shipment_delivered_to_customer_date_consecutive then coalesce(ab.shipment_delivered_to_customer_at, o.delivered_at) end    as delivered_temp,
+                -- delivered_temp gets renamed to delivered_at after the usage in by derived delivered, this so to prevent that deireved_deliverd depends on the delivered_at which exists in prep_supply_docouments.
 
                 coalesce(case
-                             when delivered_at is not null then delivered_at
+                             when delivered_temp is not null then delivered_temp
                              when shipped_to_customer_at + interval '7 days' < current_date and
-                                  delivered_at is null then shipped_to_customer_at + interval '7 days' end,
+                                  delivered_temp is null then shipped_to_customer_at + interval '7 days' end,
                          o.completed_at)                                                           as derived_delivered_at,
+
+                delivered_temp as delivered_at,
 
                 case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_from_cross_dock_at
