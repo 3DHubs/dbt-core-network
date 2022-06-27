@@ -20,7 +20,7 @@ with disputes as (
                min(created)                  as dispute_created_at,
                'supply_order_history_events' as _data_source
         from {{ ref('fact_order_events') }}
-        where description ~ 'dispute'
+        where description ~ 'dispute' and created < '2022-01-01' --JG 270622, decided with Alison to have only disputes before 2022 measured this way. Since the description field caused issues and official process should be followed.
         group by 1, 2
     ),
          line_item_disputes as (
