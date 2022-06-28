@@ -18,6 +18,6 @@ with tickets as (
 )
 select
        tickets.id as ticket_id,
-       TRIM(SPLIT_PART(tickets.ctags, ',', seq.n)) as "tag"
+       TRIM(SPLIT_PART(tickets.ctags, ',', seq.n)) as ticket_tag
 from sequence as seq
 inner join tickets ON seq.n <= REGEXP_COUNT(tickets.ctags, ',') + 1
