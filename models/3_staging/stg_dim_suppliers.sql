@@ -58,7 +58,7 @@ with stg_states as (
              left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
              left outer join {{ ref('users') }} as su on ssu.user_id = su.user_id
              left join stg_states as states on states.address_id = s.address_id
-         where supplier_email !~ '@(3d)?hubs.com'),
+         where supplier_email !~ '@(3d)?hubs.com' or s.id=494 --JG 300622 requested by Arnoldas),
      t2 as (select *, row_number() over (partition by supplier_id order by create_date desc nulls last) as rn from t1)
 select supplier_id,
        create_date,
