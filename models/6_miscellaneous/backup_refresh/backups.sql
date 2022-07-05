@@ -1,6 +1,5 @@
 {{
     config(
-        enabled=false,
         pre_hook=["
                 drop table if exists {{ source('dbt_backups', 'backup_fact_contribution_margin') }};
                 Create table {{ source('dbt_backups', 'backup_fact_contribution_margin') }} as
