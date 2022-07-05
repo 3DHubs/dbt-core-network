@@ -1,0 +1,12 @@
+selectors:
+  - name: dbt_run_ex_backups
+    description: >
+        This will run ensure that DBT Run selects all models except backups.
+        Otherwise, backups are triggered as an unwanted by product during the dbt run command.
+    default: true
+    definition:
+      union:
+        - '*'
+        - exclude:
+            - method: tag
+              value: backup
