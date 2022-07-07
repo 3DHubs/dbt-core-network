@@ -150,9 +150,9 @@ full join {{ ref('fact_orders') }} as fo on bfo.order_uuid = fo.order_uuid
 where ((bfo.order_uuid is null != fo.order_uuid is null)
     or (coalesce(bfo.closed_at, '1000-01-01') != coalesce(fo.closed_at, '1000-01-01'))
     or (coalesce(bfo.subtotal_closed_amount_usd, 0) != coalesce(fo.subtotal_closed_amount_usd, 0)))
-  and fo.closed_at < (select max(bfo.closed_at) from "analytics"."dbt_backups"."backup_fact_orders" as bfo)
-  and fo.closed_at < (select max(bfo.closed_at) from "analytics"."dbt_backups"."backup_fact_orders" as bfo)
-
+  and fo.closed_at < (select max(bfo.closed_at) from {{ source('dbt_backups', 'backup_fact_orders') }} as bfo)
+  and fo.closed_at < (select max(bfo.closed_at) from {{ source('dbt_backups', 'backup_fact_orders') }} as bfo)
+  and fo.is_closed and bfo.is_closed
 union all
 
 --------------------------------------------
