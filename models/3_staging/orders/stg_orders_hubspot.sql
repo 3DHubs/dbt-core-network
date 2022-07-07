@@ -49,13 +49,13 @@ with stg as (
 
         -- Owners
         hs.hubspot_owner_id,
-        own2.name                                                                         as hubspot_owner_name,
+        own.name                                                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
         trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp
         fst.sales_lead_id                                                                 as sales_lead_id,
         fst.sales_lead                                                                    as sales_lead_name,
         hs.bdr_assigned                                                                   as bdr_owner_id,
-        bdr2.name                                                                         as bdr_owner_name,
+        bdr.name                                                                          as bdr_owner_name,
         bdr.primary_team_name                                                             as bdr_owner_primary_team,
         csr.name                                                                          as customer_success_representative_name,
         psr.name                                                                          as partner_support_representative_name,
@@ -107,12 +107,9 @@ with stg as (
             on dealstage.dealstage_mapped_value = status.hubspot_status_value
         left join {{ ref ('hubspot_owners') }} as own
             on own.owner_id = hs.hubspot_owner_id
-            and coalesce (hubspot_owner_assigneddate, createdate) between own.start_date and own.end_date
-        left join {{ ref ('hubspot_owners') }} own2 on own2.owner_id = hs.hubspot_owner_id 
+            -- and coalesce (hubspot_owner_assigneddate, createdate) between own.start_date and own.end_date JG 202207 We stopped tracking history of teams
         left join {{ ref ('hubspot_owners') }} as bdr
-            on bdr.owner_id = hs.bdr_assigned and createdate between bdr.start_date and bdr.end_date
-        left join {{ ref ('hubspot_owners') }} as bdr2
-            on bdr2.owner_id = hs.bdr_assigned
+            on bdr.owner_id = hs.bdr_assigned --and createdate between bdr.start_date and bdr.end_date JG We stopped tracking history of teams
         left join {{ ref ('hubspot_owners') }} as me
             on me.owner_id = hs.sales_engineer
         left join {{ ref ('hubspot_owners') }} as csr
