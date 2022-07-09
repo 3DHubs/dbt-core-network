@@ -12,6 +12,6 @@
 
 select oit.test_description,
        count(*) as failure_count
-from {{ ref('comprehensive_integrity_test') }}  as oit
+from {{ ref('integrity_test') }}  as oit
 group by 1
 having failure_count > 0

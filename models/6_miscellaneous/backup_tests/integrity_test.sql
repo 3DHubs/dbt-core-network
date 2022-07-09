@@ -20,6 +20,25 @@
 -- Maintained by: Daniel Salazar Soplapuco
 
 
+-- This code sets a local variable called date_constraint which is used to limit the range of the integrity test to a maximum date.
+-- The maximum date is set on the last completed fiscal month, thus if the current day of the month is on or after the 10th
+-- then the test will runn until previous month otherwise it will run until 2 months ago.
+{% if execute %}
+{% set date_constraint = run_query("select to_char(add_months(date_trunc('month', getdate()), case when DATE_PART('day', getdate()) >= 10 then 0 else -1 end),'YYYYMMDD')")[0][0] %}
+{% endif %}
+
+--------------------------------------------
+-- Full order history events integrity test
+--------------------------------------------
+
+-- Use case:
+-- This test ensures that the historical order history events in production remain unchanged.
+
+-- Method:
+-- The test compares if the number of events in production per month remain equal to the events in the backups.
+-- In the event that the number of events per month remain the same but the events themselves are adjusted
+-- then this would arise errors in the cm1 integrity test.
+
 with production_order_history_events as (
     select date_trunc('day', fohe.created) as created_at, count(*) as number_of_events
     from {{ source('data_lake', 'full_order_history_events') }} as fohe
@@ -30,6 +49,22 @@ with production_order_history_events as (
          from {{ source('dbt_backups', 'backup_full_order_history_events') }} as bfohe
          group by 1
      )
+
+select 'Order history events integrity check'                               as test_description,
+       'Not applicable'                                                     as identifier_type,
+       'Not applicable'                                                     as identifier,
+       'Missing order events'                                               as integrity_test_result,
+       'Comparing the number of events in month: ' ||
+       cast(trunc(coalesce(b_ohe.created_at, p_ohe.created_at)) as varchar) as comparison_explanation,
+       cast(b_ohe.number_of_events as varchar)                              as backup_value,
+       cast(p_ohe.number_of_events as varchar)                              as production_value
+from production_order_history_events as p_ohe
+         full join backups_order_history_events as b_ohe on p_ohe.created_at = b_ohe.created_at
+where b_ohe.number_of_events != p_ohe.number_of_events
+  and b_ohe.created_at < to_date({{date_constraint}}, 'YYYYMMDD')
+  and p_ohe.created_at < to_date({{date_constraint}}, 'YYYYMMDD')
+
+union all
 
 ----------------------
 -- Cm1 integrity test
@@ -87,10 +122,8 @@ full join {{ ref('fact_contribution_margin') }} as fcm  on bfcm.source_uuid = fc
 where ((bfcm.source_uuid is null != fcm.source_uuid is null)
     or (coalesce(bfcm.recognized_date, '1000-01-01') != coalesce(fcm.recognized_date, '1000-01-02'))
     or (coalesce(bfcm.amount_usd, 0) != coalesce(fcm.amount_usd, 0)))
-  and fcm.recognized_date
-    < (select max(bfcm.recognized_date) from "analytics"."dbt_backups"."backup_fact_contribution_margin" as bfcm)
-  and bfcm.recognized_date
-    < (select max(bfcm.recognized_date) from "analytics"."dbt_backups"."backup_fact_contribution_margin" as bfcm)
+  and fcm.recognized_date < to_date({{date_constraint}}, 'YYYYMMDD')
+  and bfcm.recognized_date < to_date({{date_constraint}}, 'YYYYMMDD')
 
 union all
 
@@ -150,33 +183,6 @@ full join {{ ref('fact_orders') }} as fo on bfo.order_uuid = fo.order_uuid
 where ((bfo.order_uuid is null != fo.order_uuid is null)
     or (coalesce(bfo.closed_at, '1000-01-01') != coalesce(fo.closed_at, '1000-01-01'))
     or (coalesce(bfo.subtotal_closed_amount_usd, 0) != coalesce(fo.subtotal_closed_amount_usd, 0)))
-  and fo.closed_at < (select max(bfo.closed_at) from {{ source('dbt_backups', 'backup_fact_orders') }} as bfo)
-  and fo.closed_at < (select max(bfo.closed_at) from {{ source('dbt_backups', 'backup_fact_orders') }} as bfo)
+  and fo.closed_at < to_date({{date_constraint}}, 'YYYYMMDD')
+  and bfo.closed_at < to_date({{date_constraint}}, 'YYYYMMDD')
   and fo.is_closed and bfo.is_closed
-union all
-
---------------------------------------------
--- Full order history events integrity test
---------------------------------------------
-
--- Use case:
--- This test ensures that the historical order history events in production remain unchanged.
-
--- Method:
--- The test compares if the number of events in production per month remain equal to the events in the backups.
--- In the event that the number of events per month remain the same but the events themselves are adjusted
--- then this would arise errors in the cm1 integrity test.
-
-select 'Order history events integrity check'                               as test_description,
-       'Not applicable'                                                     as identifier_type,
-       'Not applicable'                                                     as identifier,
-       'Missing order events'                                               as integrity_test_result,
-       'Comparing the number of events in month: ' ||
-       cast(trunc(coalesce(b_ohe.created_at, p_ohe.created_at)) as varchar) as comparison_explanation,
-       cast(b_ohe.number_of_events as varchar)                              as backup_value,
-       cast(p_ohe.number_of_events as varchar)                              as production_value
-from production_order_history_events as p_ohe
-         full join backups_order_history_events as b_ohe on p_ohe.created_at = b_ohe.created_at
-where b_ohe.number_of_events != p_ohe.number_of_events
-  and b_ohe.created_at < (select max(created_at) from backups_order_history_events)
-  and p_ohe.created_at < (select max(created_at) from backups_order_history_events)
