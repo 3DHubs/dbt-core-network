@@ -1,7 +1,8 @@
 {% set boolean_fields = [
     "is_in_eu",
     "has_payment_embargo",
-    "is_in_efta"
+    "is_in_efta",
+    "is_in_european_union"
     ]
 %}
 
@@ -36,6 +37,7 @@ select issc.created,
        {% endfor %}
 from {{ source('int_service_supply', 'countries') }} as issc
 left join {{ source('data_lake', 'supply_countries_markets_mapping')}} as scmm on lower(issc.alpha2_code) = scmm.country_iso2
+left join {{ref('seed_countries_european_union')}} as  eu_union on issc.country_id = eu_union.country_id
 
 
 

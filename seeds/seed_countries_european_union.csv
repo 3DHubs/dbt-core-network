@@ -1,0 +1,252 @@
+country_id,name,is_in_european_union
+184,Russia,FALSE
+251,Canary Islands,FALSE
+22,Belgium,TRUE
+13,Aruba,FALSE
+6,Andorra,FALSE
+235,United Arab Emirates,FALSE
+1,Afghanistan,FALSE
+10,Antigua and Barbuda,FALSE
+8,Anguilla,FALSE
+3,Albania,FALSE
+12,Armenia,FALSE
+158,Netherlands Antilles,FALSE
+7,Angola,FALSE
+9,Antarctica,FALSE
+11,Argentina,FALSE
+5,American Samoa,FALSE
+15,Austria,TRUE
+14,Australia,FALSE
+16,Azerbaijan,FALSE
+28,Bosnia and Herzegovina,FALSE
+20,Barbados,FALSE
+19,Bangladesh,FALSE
+36,Burkina Faso,FALSE
+35,Bulgaria,TRUE
+18,Bahrain,FALSE
+37,Burundi,FALSE
+24,Benin,FALSE
+25,Bermuda,FALSE
+34,Brunei,FALSE
+27,Bolivia,FALSE
+32,Brazil,FALSE
+17,Bahamas,FALSE
+26,Bhutan,FALSE
+31,Bouvet Island,FALSE
+30,Botswana,FALSE
+21,Belarus,FALSE
+23,Belize,FALSE
+40,Canada,FALSE
+48,Cocos (Keeling) Islands,FALSE
+52,Congo (Kinshasa),FALSE
+43,Central African Republic,FALSE
+51,Congo (Brazzaville),FALSE
+217,Switzerland,FALSE
+55,Ivory Coast,FALSE
+53,Cook Islands,FALSE
+45,Chile,FALSE
+39,Cameroon,FALSE
+46,China,FALSE
+49,Colombia,FALSE
+54,Costa Rica,FALSE
+57,Cuba,FALSE
+41,Cape Verde,FALSE
+47,Christmas Island,FALSE
+59,Cyprus,TRUE
+60,Czech Republic,TRUE
+83,Germany,TRUE
+62,Djibouti,FALSE
+61,Denmark,TRUE
+63,Dominica,FALSE
+64,Dominican Republic,FALSE
+4,Algeria,FALSE
+65,Ecuador,FALSE
+70,Estonia,TRUE
+66,Egypt,FALSE
+247,Western Sahara,FALSE
+69,Eritrea,FALSE
+209,Spain,TRUE
+71,Ethiopia,FALSE
+75,Finland,TRUE
+74,Fiji,FALSE
+72,Falkland Islands,FALSE
+145,Micronesia,FALSE
+73,Faroe Islands,FALSE
+76,France,TRUE
+80,Gabon,FALSE
+236,United Kingdom,FALSE
+88,Grenada,FALSE
+82,Georgia,FALSE
+77,French Guiana,FALSE
+92,Guernsey,FALSE
+84,Ghana,FALSE
+85,Gibraltar,FALSE
+87,Greenland,FALSE
+81,Gambia,FALSE
+93,Guinea,FALSE
+89,Guadeloupe,FALSE
+68,Equatorial Guinea,FALSE
+86,Greece,TRUE
+208,South Georgia and the South Sandwich Islands,FALSE
+91,Guatemala,FALSE
+90,Guam,FALSE
+94,Guinea-Bissau,FALSE
+95,Guyana,FALSE
+100,"Hong Kong S.A.R., China",FALSE
+97,Heard Island and McDonald Islands,FALSE
+99,Honduras,FALSE
+56,Croatia,TRUE
+96,Haiti,FALSE
+101,Hungary,TRUE
+104,Indonesia,FALSE
+107,Ireland,TRUE
+109,Israel,FALSE
+108,Isle of Man,FALSE
+103,India,FALSE
+33,British Indian Ocean Territory,FALSE
+106,Iraq,FALSE
+105,Iran,FALSE
+102,Iceland,FALSE
+110,Italy,TRUE
+113,Jersey,FALSE
+111,Jamaica,FALSE
+114,Jordan,FALSE
+112,Japan,FALSE
+116,Kenya,FALSE
+121,Kyrgyzstan,FALSE
+38,Cambodia,FALSE
+117,Kiribati,FALSE
+50,Comoros,FALSE
+188,Saint Kitts and Nevis,FALSE
+118,North Korea,FALSE
+119,South Korea,FALSE
+120,Kuwait,FALSE
+42,Cayman Islands,FALSE
+115,Kazakhstan,FALSE
+122,Laos,FALSE
+124,Lebanon,FALSE
+189,Saint Lucia,FALSE
+128,Liechtenstein,FALSE
+210,Sri Lanka,FALSE
+126,Liberia,FALSE
+125,Lesotho,FALSE
+129,Lithuania,TRUE
+130,Luxembourg,TRUE
+123,Latvia,TRUE
+127,Libya,FALSE
+151,Morocco,FALSE
+147,Monaco,FALSE
+146,Moldova,FALSE
+149,Montenegro,FALSE
+133,Madagascar,FALSE
+139,Marshall Islands,FALSE
+132,Macedonia,FALSE
+137,Mali,FALSE
+153,Myanmar,FALSE
+148,Mongolia,FALSE
+131,"Macao S.A.R., China",FALSE
+166,Northern Mariana Islands,FALSE
+140,Martinique,FALSE
+141,Mauritania,FALSE
+150,Montserrat,FALSE
+138,Malta,TRUE
+142,Mauritius,FALSE
+136,Maldives,FALSE
+134,Malawi,FALSE
+144,Mexico,FALSE
+135,Malaysia,FALSE
+152,Mozambique,FALSE
+154,Namibia,FALSE
+159,New Caledonia,FALSE
+162,Niger,FALSE
+165,Norfolk Island,FALSE
+163,Nigeria,FALSE
+161,Nicaragua,FALSE
+157,Netherlands,TRUE
+167,Norway,FALSE
+156,Nepal,FALSE
+155,Nauru,FALSE
+164,Niue,FALSE
+160,New Zealand,FALSE
+168,Oman,FALSE
+172,Panama,FALSE
+175,Peru,FALSE
+78,French Polynesia,FALSE
+173,Papua New Guinea,FALSE
+176,Philippines,FALSE
+169,Pakistan,FALSE
+178,Poland,TRUE
+191,Saint Pierre and Miquelon,FALSE
+177,Pitcairn,FALSE
+180,Puerto Rico,FALSE
+171,Palestinian Territory,FALSE
+179,Portugal,TRUE
+170,Palau,FALSE
+174,Paraguay,FALSE
+181,Qatar,FALSE
+182,Reunion,FALSE
+183,Romania,TRUE
+198,Serbia,FALSE
+185,Rwanda,FALSE
+196,Saudi Arabia,FALSE
+205,Solomon Islands,FALSE
+199,Seychelles,FALSE
+212,Sudan,FALSE
+216,Sweden,TRUE
+201,Singapore,FALSE
+187,Saint Helena,FALSE
+204,Slovenia,TRUE
+214,Svalbard and Jan Mayen,FALSE
+203,Slovakia,TRUE
+200,Sierra Leone,FALSE
+194,San Marino,FALSE
+197,Senegal,FALSE
+206,Somalia,FALSE
+213,Suriname,FALSE
+195,Sao Tome and Principe,FALSE
+67,El Salvador,FALSE
+218,Syria,FALSE
+215,Swaziland,FALSE
+231,Turks and Caicos Islands,FALSE
+44,Chad,FALSE
+79,French Southern Territories,FALSE
+224,Togo,FALSE
+222,Thailand,FALSE
+220,Tajikistan,FALSE
+225,Tokelau,FALSE
+223,Timor-Leste,FALSE
+230,Turkmenistan,FALSE
+226,Tonga,FALSE
+229,Turkey,FALSE
+227,Trinidad and Tobago,FALSE
+232,Tuvalu,FALSE
+219,Taiwan,FALSE
+221,Tanzania,FALSE
+234,Ukraine,FALSE
+233,Uganda,FALSE
+237,United States,FALSE
+239,Uruguay,FALSE
+240,Uzbekistan,FALSE
+98,Vatican,FALSE
+192,Saint Vincent and the Grenadines,FALSE
+244,British Virgin Islands,FALSE
+245,U.S. Virgin Islands,FALSE
+243,Vietnam,FALSE
+241,Vanuatu,FALSE
+246,Wallis and Futuna,FALSE
+193,Samoa,FALSE
+248,Yemen,FALSE
+143,Mayotte,FALSE
+207,South Africa,FALSE
+249,Zambia,FALSE
+250,Zimbabwe,FALSE
+2,Aland Islands,FALSE
+186,Saint Barthélemy,FALSE
+29,"Bonaire, Sint Eustatius and Saba",FALSE
+58,Curaçao,FALSE
+190,Saint Martin (French part),FALSE
+211,South Sudan,FALSE
+202,Sint Maarten (Dutch part),FALSE
+238,United States Minor Outlying Islands,FALSE
+242,Venezuela,FALSE
+228,Tunisia,FALSE
