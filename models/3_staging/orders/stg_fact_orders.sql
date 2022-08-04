@@ -281,7 +281,11 @@ select
     otr.is_pick_up_on_time_to_customer,
     otr.shipping_to_customer_delay_days,
     otr.shipping_by_supplier_delay_days,
-    otr.first_delay_submitted_at,
+    -- Delay Notifications
+    otr.has_delay_notifications,
+    otr.number_of_delays,
+    otr.has_delay_liability_supplier,
+    otr.first_delay_created_at,
 
     -------- SOURCE: AGG ORDERS LINE ITEMS --------
 

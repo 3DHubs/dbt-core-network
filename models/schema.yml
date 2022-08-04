@@ -216,6 +216,7 @@ sources:
       - name: bids
       - name: bids_bid_reasons
       - name: bid_reasons
+      - name: billing_requests      
       - name: branded_materials
       - name: cancellation_reasons
       - name: cnc_order_parts_inspection_attachments
@@ -233,6 +234,7 @@ sources:
       - name: complaint_types
       - name: complaints
       - name: countries
+      - name: currencies      
       - name: discount_codes
       - name: discounts
       - name: dispute_issues
@@ -267,6 +269,7 @@ sources:
       - name: refunds
       - name: replies
       - name: reply_options
+      - name: roles      
       - name: shipments
       - name: shipping_carriers
       - name: shipping_options
@@ -287,12 +290,7 @@ sources:
       - name: tolerances
       - name: transactions
       - name: users
-      - name: currencies
-      - name: billing_requests
-
-  - name: reporting
-    tables:
-      - name: cube_deals
+      - name: users_roles
 
   - name: dbt_backups
     tables:

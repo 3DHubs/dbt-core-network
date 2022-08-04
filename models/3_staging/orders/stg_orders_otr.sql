@@ -9,16 +9,17 @@
 -- 4. Reporting Fact Delays
 
 
--- Suppliers Submit a form when an order is Delayed
+-- Suppliers submit a form when an order is delayed
 
-with delays as (
+with delay_aggregates as (
     select order_uuid,
-           min(submitted_at) as first_delay_submitted_at
+           count(*) as number_of_delays,
+           true as has_delay_notifications,
+           bool_or(delay_liability='supplier') as has_delay_liability_supplier,
+           min(delay_created_at) as first_delay_created_at
     from {{ ref('fact_delays') }}
     group by 1
 )
-
-
 
 -- Main Query: It compares shipping dates with promised shipping date from order documents (PO & Quote)
 
@@ -83,11 +84,14 @@ select distinct orders.uuid                              as order_uuid,
 
                 round(extract(minutes from (logistics.shipped_at - docs.promised_shipping_at_by_supplier)) / 1440,
                       1)                                 as shipping_by_supplier_delay_days,
-    delays.first_delay_submitted_at
 
+                -- Delay Notification Feature Aggregates
+                dagg.has_delay_notifications,
+                dagg.number_of_delays,
+                dagg.has_delay_liability_supplier,
+                dagg.first_delay_created_at
 
 from {{ ref('prep_supply_orders') }} as orders
-left join {{ ref ('stg_orders_documents')}} as docs
-on orders.uuid = docs.order_uuid
+    left join {{ ref ('stg_orders_documents')}} as docs on orders.uuid = docs.order_uuid
     left join {{ ref ('stg_orders_logistics')}} as logistics on orders.uuid = logistics.order_uuid
-    left join delays on orders.uuid = delays.order_uuid
+    left join delay_aggregates as dagg on orders.uuid = dagg.order_uuid

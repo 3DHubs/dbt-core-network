@@ -74,7 +74,6 @@ auction_created_at, -- When the auctions enters the RDA
 auction_started_at,
 auction_finished_at,
 sourced_at,
-first_delay_submitted_at,
 order_shipped_at,
 shipped_to_customer_at,
 promised_shipping_at_to_customer, -- From order quote
@@ -317,6 +316,10 @@ has_technical_review,
 -- Delays
 delay_liability,
 delay_status,
+has_delay_notifications,
+number_of_delays,
+has_delay_liability_supplier,
+first_delay_created_at,
 
 -- Disputes
 dispute_status,
