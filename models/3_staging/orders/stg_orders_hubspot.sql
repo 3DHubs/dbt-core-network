@@ -3,7 +3,7 @@
 -- QUOTES & PURCHASE ORDERS
 ----------------------------------------------------------------
 
-{{ config(
+{{ config(materialized='table',
     tags=["multirefresh"]
 ) }}
 
