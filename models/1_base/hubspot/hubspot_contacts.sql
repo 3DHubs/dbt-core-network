@@ -33,7 +33,6 @@ select nullif(property_lifecyclestage__value, '')::varchar(1024)                
        --         nullif(property_bdr_qualification__value, '')::varchar(1024) as bdr_qualification,
        nullif(property_bdr_assigned__value, '')::bigint                                                 as bdr_assigned,
        property_associatedcompanyid__value__double::bigint::bigint                                      as associatedcompanyid,
-       nullif(property_account_category__value, '')::varchar(1024)                                      as account_category,
        nullif(property_zip__value, '')::varchar(64)                                                     as zip,
        nullif(property_industry__value, '')::varchar(256)                                               as industry,
        nullif(property_phone__value, '')::varchar(64)                                                   as phone,
