@@ -46,7 +46,7 @@ select fs.order_uuid,
                when fs.shipping_leg = 'cross_docking:warehouse' then fs.tracking_estimated_delivery
                else Null end)                                                                                       as most_recent_estimate_delivery_to_crossdock_at,
        MIN(case
-               when fs.shipping_leg = 'cross_docking:warehouse' then fs.shipment_delivered_at
+               when fs.shipping_leg = 'cross_docking:warehouse' then fs.shipment_delivered_at   
                else Null end)                                                                                       as delivered_to_crossdock_at,
 
        case

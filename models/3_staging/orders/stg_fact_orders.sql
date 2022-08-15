@@ -29,7 +29,6 @@
 select
 
     ------------- SOURCE: DATA LAKE ORDERS -----------
-
     -- Orders: IDs
     case when legacy_order_id is not null then orders.legacy_order_id::varchar
          when legacy_order_id is null then orders.uuid end                                 as order_uuid, -- Most drupal orders exists in supply but we want to keep their original ID
@@ -253,6 +252,12 @@ select
     logistics.cross_dock_latitude,
     logistics.cross_dock_longitude,
 
+    -- Logistics: Shipping Legs
+    logistics.first_leg_carrier_name,
+    logistics.first_leg_carrier_name_mapped,
+    logistics.second_leg_carrier_name,
+    logistics.second_leg_carrier_name_mapped,
+
     -- Logistics: Verification and Consistency Fields
     logistics.has_shipment_delivered_to_crossdock_date_consecutive,
     logistics.has_shipment_delivered_to_customer_date_consecutive,
@@ -270,6 +275,9 @@ select
     logistics.estimated_delivery_to_cross_dock_at,
     logistics.estimated_delivery_to_customer_at,
     logistics.delivered_to_cross_dock_at,
+
+    -- Logistics: Estimates
+    quotes.shipping_price_estimates,
 
     -------- SOURCE: STG OTR -----------
     -- Calculated based on cnc orders, and

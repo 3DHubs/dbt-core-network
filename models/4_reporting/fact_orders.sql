@@ -300,6 +300,15 @@ is_cross_docking,
 number_of_batches,
 has_consistent_shipping_info,
 
+-- Logistics: First leg and second leg carriers
+first_leg_carrier_name,
+first_leg_carrier_name_mapped,
+second_leg_carrier_name,
+second_leg_carrier_name_mapped,
+
+-- Logistics: Estimates
+shipping_price_estimates,
+
 -- On Time Rate
 is_picked_up_on_time_from_supplier,
 is_shipped_on_time_by_supplier,

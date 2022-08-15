@@ -99,7 +99,7 @@ with first_quote as (
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
                             supplier_support_ticket_id                                             as po_first_support_ticket_id,
                             round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,                                                             
-                            row_number() over (partition by order_uuid order by finalized_at)      as rn
+                            row_number() over (partition by soq.order_uuid order by finalized_at)      as rn
                      from {{ ref('prep_supply_documents') }} as soq
                      left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
                         on rates.currency_code_to = soq.currency_code 

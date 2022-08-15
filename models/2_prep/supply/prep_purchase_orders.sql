@@ -1,6 +1,9 @@
-select oqs.created,
+select 
+       oqs.order_uuid,
+       oqs.created,
        oqs.updated,
        oqs.deleted,
+       oqs.shipping_address_id,
        po.uuid,
        po.supplier_document_number,
        po.status,

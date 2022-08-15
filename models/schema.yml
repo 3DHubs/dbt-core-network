@@ -258,6 +258,7 @@ sources:
       - name: order_review_answers
       - name: order_review_questions
       - name: packages
+      - name: package_line_items
       - name: processes
       - name: purchase_orders
       - name: question_groups

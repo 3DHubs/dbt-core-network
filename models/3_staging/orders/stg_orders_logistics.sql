@@ -48,7 +48,31 @@ with supply_cdt as (
              (select order_uuid from {{ source('data_lake'
              , 'supply_cross_docking_tracking_details_20200911') }})
          group by 1
-     )
+     ), 
+        -- Select the carrier's used for each shipping leg and which are related to the dates from agg_batches and OTR.
+        -- Example Supplier OTR relates to the first shipment to warehouse or to customer (dropshipped) which relates to
+        -- the first_leg_carrier_name mentioned below.
+        agg_shipment as (
+            select fs_first_leg.order_uuid,
+                listagg(fs_first_leg.carrier_name)         as first_leg_carrier_name,
+                listagg(fs_first_leg.carrier_name_mapped)  as first_leg_carrier_name_mapped,
+                listagg(fs_second_leg.carrier_name)        as second_leg_carrier_name,
+                listagg(fs_second_leg.carrier_name_mapped) as second_leg_carrier_name_mapped
+
+            from {{ ref('fact_shipments') }} as fs_first_leg
+                    left join {{ ref('fact_shipments') }} as fs_second_leg
+                            on fs_first_leg.order_uuid = fs_second_leg.order_uuid
+                                and fs_second_leg.shipping_leg = 'cross_docking:customer'
+                                and fs_second_leg.is_first_shipment_of_leg
+            where fs_first_leg.shipping_leg in ('cross_docking:warehouse', 'drop_shipping:customer')
+            and fs_first_leg.is_first_shipment_of_leg
+            group by 1
+            )
+
+        -- Daniel Salazar 2022-08-04:
+        -- To do replace agg_batches with agg_shipment using is_first_shipment_of_leg 
+        ---using is_first_shipment_of_leg you get the same result as min(fp.label_created_to_crossdock_at))
+
 
 select distinct soq.order_uuid                                                                     as order_uuid,
 
@@ -58,12 +82,18 @@ select distinct soq.order_uuid                                                  
                 coalesce(ab.number_of_shipments, 1)                                                as number_of_shipments,
                 ab.number_of_batches                                                              as number_of_batches,
 
+                ---- shipment leg fields ---
+                agg_s.first_leg_carrier_name,
+                agg_s.first_leg_carrier_name_mapped,
+                agg_s.second_leg_carrier_name,
+                agg_s.second_leg_carrier_name_mapped,
+
                 ---- cross docking fields ----
-                case when oq.is_cross_docking is true then true else false end                     as is_cross_docking_ind,
-                case when is_cross_docking_ind then po_ship_addr.locality else null end            as cross_dock_city,
-                case when is_cross_docking_ind then po_ship_coun.alpha2_code else null end         as cross_dock_country,
-                case when is_cross_docking_ind then po_ship_addr.lat else null end                 as cross_dock_latitude,
-                case when is_cross_docking_ind then po_ship_addr.lon else null end                 as cross_dock_longitude,
+                sog.is_cross_docking_ind,
+                sog.cross_dock_city,
+                sog.cross_dock_country,
+                sog.cross_dock_latitude,
+                sog.cross_dock_longitude,
 
                 ab.estimated_delivery_to_cross_dock_at,
                 ab.estimated_delivery_to_customer_at,
@@ -166,14 +196,12 @@ select distinct soq.order_uuid                                                  
 
 
 from {{ ref('prep_supply_documents') }} as soq
+    left join {{ ref('stg_orders_geo') }} as sog on soq.order_uuid = sog.order_uuid
     inner join {{ ref('prep_purchase_orders') }} as pos on soq.uuid = pos.uuid
-    left join {{ ref('prep_supply_documents') }} as cnc_po on pos.uuid = cnc_po.uuid
-    left join {{ ref('addresses') }} as po_ship_addr on cnc_po.shipping_address_id = po_ship_addr.address_id
-    left join  {{ ref('prep_countries') }} po_ship_coun on po_ship_addr.country_id = po_ship_coun.country_id
     left join agg_batches as ab on soq.order_uuid = ab.order_uuid
     left join supply_cdt as cdt on cdt.order_uuid = soq.order_uuid
-    left join {{ ref('prep_supply_orders') }} as o on o.uuid = cnc_po.order_uuid
-    --todo: is this join necessary?
+    left join {{ ref('prep_supply_orders') }} as o on o.uuid = soq.order_uuid
+    left join agg_shipment as agg_s on soq.order_uuid = agg_s.order_uuid
     left join {{ ref('prep_supply_documents') }} as oq on oq.uuid = o.quote_uuid
 where soq.type = 'purchase_order'
   and pos.status = 'active'
