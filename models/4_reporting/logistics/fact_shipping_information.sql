@@ -29,6 +29,8 @@ select
     sci.charge_name,
     sci.charge_category,
     sci.currency,
+    sci.charge_amount as source_currency_charge_amount,
+    sci.total_amount as source_currency_total_amount,
     coalesce(round(sci.charge_amount / ex.rate,2),0) as charge_amount,
     coalesce(round(sci.total_amount / ex.rate,2),0) as total_costs_usd
 from {{ source('int_logistics', 'automated_shipping_customs_information') }} as sci
