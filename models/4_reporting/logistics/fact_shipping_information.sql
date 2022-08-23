@@ -6,7 +6,7 @@ with quotes_documents as (
     select
         coq.order_uuid,
         coq.document_number
-    from {{ source('int_service_supply', 'cnc_order_quotes') }} as coq
+    from {{ ref('prep_supply_documents') }} as coq
     where coq.type = 'quote'
 )
 

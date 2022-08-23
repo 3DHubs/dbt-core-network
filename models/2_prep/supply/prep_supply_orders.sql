@@ -45,3 +45,5 @@ where exists (
     select 1 from {{ source('int_service_supply', 'line_items') }} as li
     where orders.quote_uuid = li.quote_uuid
 )
+-- Filters: external orders created through the PAPI integration
+and is_external = 'false'
