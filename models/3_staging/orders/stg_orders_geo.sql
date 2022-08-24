@@ -39,10 +39,10 @@ select distinct orders.uuid                                                     
 
        -- Crossdock
        case when quotes.is_cross_docking is true then true else false end                       as is_cross_docking_ind,
-       case when is_cross_docking_ind then addresses_crossdock.locality else null end           as cross_dock_city,
-       case when is_cross_docking_ind then countries_crossdock.name else null end               as cross_dock_country,
-       case when is_cross_docking_ind then addresses_crossdock.lat else null end                as cross_dock_latitude,
-       case when is_cross_docking_ind then addresses_crossdock.lon else null end                as cross_dock_longitude,
+       case when is_cross_docking_ind then cross_dock_geo.locality else null end           as cross_dock_city,
+       case when is_cross_docking_ind then cross_dock_geo.name else null end               as cross_dock_country,
+       case when is_cross_docking_ind then cross_dock_geo.lat else null end                as cross_dock_latitude,
+       case when is_cross_docking_ind then cross_dock_geo.lon else null end                as cross_dock_longitude,
 
        -- Destination (Based on Contact Shipping Address)
        addresses_destination.locality                                                           as destination_city,
@@ -74,9 +74,18 @@ from {{ ref('prep_supply_orders') }} as orders
                    on countries_origin.country_id = addresses_origin.country_id
 
 -- Purchase Order Related (CrossDock)
-         left join {{ ref('prep_purchase_orders') }} as ppo on orders.uuid = ppo.order_uuid
-         left join {{ ref('addresses') }} as addresses_crossdock on ppo.shipping_address_id = addresses_crossdock.address_id
-         left join {{ ref('prep_countries') }} as countries_crossdock on addresses_crossdock.country_id = countries_crossdock.country_id
+         left join (
+             select
+                       ppo.order_uuid,
+                       addresses_crossdock.locality,
+                       addresses_crossdock.lat,
+                       countries_crossdock.name,
+                       addresses_crossdock.lon
+             from {{ ref('prep_purchase_orders') }} as ppo
+             left join {{ ref('addresses') }} as addresses_crossdock on ppo.shipping_address_id = addresses_crossdock.address_id
+             left join {{ ref('prep_countries') }} as countries_crossdock on addresses_crossdock.country_id = countries_crossdock.country_id
+             where ppo.status = 'active'
+         ) as cross_dock_geo on  orders.uuid = cross_dock_geo.order_uuid
 
 -- Destination Related (Client)
          left join {{ ref('addresses') }} as addresses_destination
@@ -89,6 +98,3 @@ from {{ ref('prep_supply_orders') }} as orders
          left join {{ ref('company_entities') }} as entity on quotes.company_entity_id = entity.id
          left join {{ ref('prep_countries') }} as countries_entity
                    on entity.corporate_country_id = countries_entity.country_id
--- Filters
-        -- Crossdock
-        where ppo.status = 'active'
