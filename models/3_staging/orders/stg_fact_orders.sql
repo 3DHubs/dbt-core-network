@@ -483,3 +483,4 @@ from {{ ref('prep_supply_orders') }} as orders
 where true
   and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth in a later stage
   and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately
+  and orders.hubspot_deal_id != 9665453990 -- Revamp of a big order that landed in December 2020, to be filtered out as indicated by Marnix.
