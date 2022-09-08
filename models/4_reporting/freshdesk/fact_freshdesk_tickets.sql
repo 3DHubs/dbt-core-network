@@ -90,6 +90,7 @@ select ft.ticket_id,
         case when fme.ticket_id is null then frt.first_response_reply_date end    first_response_reply_date,
         case when fme.ticket_id is null then frt.first_response_time_in_hours end first_response_time_in_hours,
         case when fme.ticket_id is not null then true else false end              is_involved_in_merge
+        
 from {{ ref('stg_fact_freshdesk_tickets') }} as ft
             left join first_response_time frt on ft.ticket_id = frt.ticket_id
             left join {{ ref('freshdesk_merge_events') }} as fme on ft.ticket_id = fme.ticket_id
