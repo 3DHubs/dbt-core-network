@@ -1,6 +1,7 @@
 select
     line_item_uuid,
     order_uuid,
+    line_item_type,
     is_complaint,
     complaint_is_valid,
     complaint_created_at,
