@@ -17,6 +17,11 @@ select
     subtotal_sourced_cost_usd,
     subtotal_sourced_amount_usd,
 
+    --on time attributes
+    is_shipped_on_time_by_supplier,
+    is_shipped_on_time_to_customer,
+    delay_liability,
+    
     --sourcing attributes
     number_of_design_counterbids, 
     number_of_lead_time_counterbids,
