@@ -31,7 +31,7 @@ select orders.created,
        orders.accepted_at,
        orders.description,
        orders.shipped_to_warehouse_at,
-       
+
        -- Boolean Fields
        {{ varchar_to_boolean('is_admin') }},
        {{ varchar_to_boolean('is_strategic') }},
@@ -40,10 +40,11 @@ select orders.created,
        {{ varchar_to_boolean('is_eligible_for_restriction') }}
 
 from {{ source('int_service_supply', 'cnc_orders') }} as orders
+        left join {{ ref('prep_supply_integration') }} as pse on orders.uuid = pse.order_uuid 
 -- Filter: only orders with line items on the main quote, this removes empty carts.
 where exists (
     select 1 from {{ source('int_service_supply', 'line_items') }} as li
     where orders.quote_uuid = li.quote_uuid
 )
 -- Filters: external orders created through the PAPI integration
-and is_external = 'false'
+and pse.is_test is not true 

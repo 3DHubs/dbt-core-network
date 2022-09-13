@@ -59,6 +59,13 @@ is_svp,
 data_source,
 is_legacy, 
 
+
+-- External Attributes
+is_integration,
+integration_order_id, 
+integration_order_number, 
+integration_purchase_order_number,  
+
 -- Lifecycle Dates
 created_at, -- Upload/cart
 submitted_at, -- Quote request

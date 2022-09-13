@@ -9,7 +9,7 @@
 
 with stg_cube_invoices_supply as (
 
-        select invoices.uuid                                                                   as invoice_uuid,
+        select invoices.uuid                                                                as invoice_uuid,
             invoices.finalized_at                                                           as invoice_created_date, -- invoice finalization is the moment when the invoice gets created in supply
             dateadd(day, invoices.payment_term, invoices.finalized_at)                      as invoice_due_date,
             invoices.order_uuid                                                             as order_uuid,
@@ -58,8 +58,10 @@ with stg_cube_invoices_supply as (
 
          from {{ ref('netsuite_invoices') }} as netsuite_trn
                 left outer join {{ ref('prep_supply_documents') }} as invoices on invoices.document_number  = netsuite_trn.custbodyquotenumber
+                left outer join {{ ref('prep_supply_integration') }} as test_orders on test_orders.document_number = netsuite_trn.custbodyquotenumber
          where true
            and date_trunc('day', netsuite_trn.createddate) >= '2021-03-01'
+           and test_orders.is_test is not true 
      ),
 
      stg_invoices_unionized as (

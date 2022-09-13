@@ -39,4 +39,6 @@ left outer join {{ ref('netsuite_currency_rates') }} as rates
 left outer join {{ ref('prep_supply_documents') }} as quote
     on quote.document_number = nt_so.custbodyquotenumber
 left outer join {{ ref('stg_fact_orders') }} as fo on fo.order_uuid = quote.order_uuid
+left outer join {{ ref('prep_supply_integration') }} test_orders on test_orders.document_number = nt_so.custbodyquotenumber
 where nt_so._type = 'SalesOrder'
+and test_orders.is_test is not true 

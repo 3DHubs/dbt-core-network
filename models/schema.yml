@@ -229,6 +229,7 @@ sources:
       - name: dispute_line_items
       - name: dispute_line_items_issues
       - name: disputes
+      - name: external_orders
       - name: financial_settings
       - name: lead_time_tiers
       - name: line_items

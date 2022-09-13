@@ -133,4 +133,6 @@ on s.tracking_number = falm.carrier_tracking_number
     left join fact_after_ship_aggregate_message as faam on s.tracking_number = faam.carrier_tracking_number
     left join {{ ref('shipping_carriers') }} as sc on s.tracking_carrier_id = sc.id
     left join {{ source('int_service_supply', 'shipping_labels') }} as sl on s.shipping_label_id = sl.id
-    left join {{ref('stg_orders_geo')}} as sog on s.order_uuid = sog.order_uuid
+    left join {{ ref('stg_orders_geo')}} as sog on s.order_uuid = sog.order_uuid
+    left join {{ ref('prep_supply_integration') }}  as integration on integration.order_uuid = s.order_uuid
+    where integration.is_test is not true
