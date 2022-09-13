@@ -18,7 +18,9 @@ select
     subtotal_sourced_amount_usd,
 
     --on time attributes
+    promised_shipping_at_by_supplier,
     is_shipped_on_time_by_supplier,
+    promised_shipping_at_to_customer,
     is_shipped_on_time_to_customer,
     delay_liability,
     
