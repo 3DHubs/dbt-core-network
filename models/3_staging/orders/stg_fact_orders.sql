@@ -53,7 +53,7 @@ select
     ---------- SOURCE: SUPPLY EXTERNAL ORDERS --------------
 
     -- External Orders: Main fields
-    integration.is_integration,
+    coalesce(integration.is_integration,false) as is_integration,
     integration.integration_order_id, 
     integration.integration_order_number, 
     integration.integration_purchase_order_number,  
