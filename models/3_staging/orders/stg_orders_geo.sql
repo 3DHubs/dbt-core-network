@@ -53,9 +53,6 @@ select distinct orders.uuid                                                     
        countries_destination.market                                                             as destination_market,
        countries_destination.region                                                             as destination_region,
        states_destination.state                                                                 as destination_us_state,
-       case
-           when addresses_destination.email ~ '@(3d)?hubs.com' and addresses_destination.email !~ 'anonymized' then true
-           else false end                                                                       as contact_email_from_hubs,
 
        -- Company Entity
        countries_entity.name                                                                    as company_entity
