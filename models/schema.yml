@@ -287,6 +287,8 @@ sources:
       - name: backup_fact_contribution_margin
       - name: backup_fact_orders
       - name: backup_full_order_history_events
+      - name: backup_dim_companies
+      - name: backup_dim_contacts      
 
 
 #########
