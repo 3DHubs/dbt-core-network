@@ -190,6 +190,8 @@ destination_us_state,
 origin_country,
 origin_latitude,
 origin_longitude,
+origin_market,
+origin_region,
 
 -- Hubspot Attributes
 is_delayed_due_to_customs,

@@ -36,6 +36,8 @@ select distinct orders.uuid                                                     
        countries_origin.name                                                                    as origin_country,
        addresses_origin.lat                                                                     as origin_latitude,
        addresses_origin.lon                                                                     as origin_longitude,
+       countries_origin.market                                                                  as origin_market,
+       countries_origin.region                                                                  as origin_region,
 
        -- Crossdock
        case when quotes.is_cross_docking is true then true else false end                       as is_cross_docking_ind,

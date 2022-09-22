@@ -361,6 +361,8 @@ select
     geo.origin_country,
     geo.origin_latitude,
     geo.origin_longitude,
+    geo.origin_market,
+    geo.origin_region,
 
     ------ SOURCE: STG DEALSTAGE ---------
     -- Combines data from order history events (supply),
