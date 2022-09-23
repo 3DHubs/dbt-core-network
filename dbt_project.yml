@@ -91,7 +91,6 @@ snapshots:
   +target_schema: dbt_prod_snapshots # TODO: figure out proper way to run in user schema for testing
 
 # Tests
-# Can be found in models/schema.yml
 
 # Access
 # On run-end read-only access is granted to the ro_group in Redshift on the target schema's contents.

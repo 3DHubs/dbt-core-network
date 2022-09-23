@@ -226,7 +226,9 @@ dim_companies_integrity_test as (
         cast(pdc.number_of_companies as varchar)                             as comparison_production
     from production_companies as pdc
             full join backup_companies as bdc on pdc.created_date = bdc.created_date
-    where bdc.number_of_companies != pdc.number_of_companies
+    where true
+    -- Difference of 1% between backup and production
+    and (abs(bdc.number_of_companies - pdc.number_of_companies)/bdc.number_of_companies) > 0.01
     and bdc.created_date < to_date({{date_constraint}}, 'YYYYMMDD')
     and pdc.created_date < to_date({{date_constraint}}, 'YYYYMMDD')
 ),
@@ -266,7 +268,9 @@ dim_contacts_integrity_test as (
         cast(pdc.number_of_contacts as varchar)                              as comparison_production
     from production_contacts as pdc
             full join backup_contacts as bdc on pdc.created_date = bdc.created_date
-    where bdc.number_of_contacts != pdc.number_of_contacts
+    where true
+    -- Difference of 1% between backup and production
+    and (abs(bdc.number_of_contacts - pdc.number_of_contacts)/bdc.number_of_contacts) > 0.01    
     and bdc.created_date < to_date({{date_constraint}}, 'YYYYMMDD')
     and pdc.created_date < to_date({{date_constraint}}, 'YYYYMMDD')
 )
