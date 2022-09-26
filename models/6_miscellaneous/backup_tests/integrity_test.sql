@@ -76,6 +76,7 @@ with order_history_events_integrity_test as (
 -- Method:
 -- The test compares the cm1 data present in the dbt_backups table against the cm1 data in production.
 -- Through comparing records on its existence, recognized date and recognized amounts.
+-- For it to trigger an error on recognized revenue amount the absolute difference has to be bigger than 100 Dollars
 
 cm1_integrity_test as (
 
@@ -123,7 +124,8 @@ cm1_integrity_test as (
     full join {{ ref('fact_contribution_margin') }} as fcm  on bfcm.source_uuid = fcm.source_uuid
     where ((bfcm.source_uuid is null != fcm.source_uuid is null)
         or (coalesce(bfcm.recognized_date, '1000-01-01') != coalesce(fcm.recognized_date, '1000-01-02'))
-        or (coalesce(bfcm.amount_usd, 0) != coalesce(fcm.amount_usd, 0)))
+        or abs((coalesce(bfcm.amount_usd, 0) - coalesce(fcm.amount_usd, 0)))  > 100
+        )
     and fcm.recognized_date < to_date({{date_constraint}}, 'YYYYMMDD')
     and bfcm.recognized_date < to_date({{date_constraint}}, 'YYYYMMDD')
 ),
