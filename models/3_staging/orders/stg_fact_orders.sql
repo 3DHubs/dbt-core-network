@@ -208,7 +208,6 @@ select
     docs.order_quote_lead_time as lead_time,
     docs.order_quote_lead_time_tier as lead_time_tier,
     docs.order_quote_is_cross_docking as is_cross_docking,
-    docs.order_quote_requires_local_sourcing,
 
     --Documents: All Quotes
     docs.order_first_submitted_at,

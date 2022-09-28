@@ -51,7 +51,6 @@ with first_quote as (
                 quotes.lead_time                                                 as order_quote_lead_time,
                 lt_tiers.name                                                    as order_quote_lead_time_tier,
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
-                quotes.requires_local_production                                 as order_quote_requires_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
@@ -184,7 +183,6 @@ select -- First Quote
        oq.order_quote_lead_time,
        oq.order_quote_lead_time_tier,
        oq.order_quote_is_cross_docking,
-       oq.order_quote_requires_local_sourcing,
        oq.order_quote_amount_usd,
 
        -- All Quotes
