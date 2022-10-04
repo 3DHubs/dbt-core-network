@@ -10,6 +10,9 @@
 {% set boolean_fields = [
     "exceeds_standard_tolerances",
     "has_threads",
+    "has_fits",
+    "has_internal_corners",
+    "has_part_marking",
     "should_quote_manually",
     "has_technical_drawings",
     "requires_specific_gate_position",

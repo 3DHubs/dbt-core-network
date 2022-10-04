@@ -56,5 +56,11 @@ select hc.property_createdate__value                                            
        nullif(hc.property_inside_sales_owner__value, '')                                                             as inside_sales_owner,
        hc.property_notes_last_updated__value                                                                         as notes_last_updated_at,
        hc.property_notes_last_contacted__value                                                                       as notes_last_contacted_at,
+       case
+           when hc.property_outbound_handover__value = 'true' then true
+           when hc.property_outbound_handover__value = 'false'
+               then false end ::boolean                                                                              as is_outbound_handover, 
+           (TIMESTAMP 'epoch' + nullif(hc.property_outbound_handover_date__value, '') / 1000 *
+                            INTERVAL '1 second')::timestamp without time zone                                        as outbound_handover_date,
        0                                                                                                             as is_deleted
 from {{ source('ext_hubspot', 'companies') }}  hc

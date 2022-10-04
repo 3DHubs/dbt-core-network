@@ -207,6 +207,7 @@ select
     docs.order_quote_finalised_at,
     docs.order_quote_lead_time as lead_time,
     docs.order_quote_lead_time_tier as lead_time_tier,
+    docs.order_quote_price_multiplier as price_multiplier,
     docs.order_quote_is_cross_docking as is_cross_docking,
 
     --Documents: All Quotes

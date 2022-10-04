@@ -51,7 +51,8 @@ with first_quote as (
                 quotes.lead_time                                                 as order_quote_lead_time,
                 lt_tiers.name                                                    as order_quote_lead_time_tier,
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
-                round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd
+                round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
+                quotes.price_multiplier                                          as order_quote_price_multiplier
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
              left join {{ source('int_service_supply', 'lead_time_tiers') }} as lt_tiers on quotes.lead_time_tier_id = lt_tiers.id
@@ -184,6 +185,7 @@ select -- First Quote
        oq.order_quote_lead_time_tier,
        oq.order_quote_is_cross_docking,
        oq.order_quote_amount_usd,
+       oq.order_quote_price_multiplier,
 
        -- All Quotes
        aaq.order_first_submitted_at,

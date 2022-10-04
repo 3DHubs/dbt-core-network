@@ -43,6 +43,8 @@ select
        hc.hubspot_owner_assigned_date,
        hc.notes_last_updated_at                                                  as last_activity_at,
        hc.notes_last_contacted_at                                                as last_contacted_at,
+       hc.is_outbound_handover,
+       hc.outbound_handover_date,
 
        -- Source: Hubspot Owners
        own.name                                                                  as hubspot_owner_name,
