@@ -98,5 +98,6 @@ select distinct orders.uuid                              as order_uuid,
 from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('stg_orders_documents')}} as docs on orders.uuid = docs.order_uuid
     left join {{ ref ('stg_orders_logistics')}} as logistics on orders.uuid = logistics.order_uuid
-    left join {{ ref ('prep_supply_buffers')}}  as buffers on docs.sourced_at::date = buffers.date and logistics.origin_country = buffers.supplier_country and logistics.cross_dock_country = buffers.crossdock_country
+    left join {{ ref ('prep_supply_buffers')}}  as buffers on docs.sourced_at::date = buffers.date and 
+    case when logistics.origin_country not in ('United States', 'China', 'India', 'Mexico') then 'Row' else logistics.origin_country end = buffers.supplier_country and logistics.cross_dock_country = buffers.crossdock_country
     left join delay_aggregates as dagg on orders.uuid = dagg.order_uuid
