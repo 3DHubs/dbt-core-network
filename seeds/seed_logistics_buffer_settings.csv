@@ -1,0 +1,26 @@
+setting,author,default_value,value,start_date,end_date,supplier_country,crossdock_country
+cross_docking_supplier_shipping_added_lead_time.NL.CH,,3,0,2020-11-19,2021-01-11,China,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.CH,,3,1,2021-01-11,2021-04-16,China,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.CH,,3,2,2021-04-16,2022-05-10,China,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.CH,,3,3,2022-05-10,2022-08-02,China,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.CH,Bono de Visser (bono.devisser@hubs.com),3,2,2022-08-02,,China,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.default,,3,0,2020-11-19,2021-01-11,Row,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.default,William Johnston (william@3dhubs.com),3,1,2021-01-11,,Row,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.IN,,3,0,2020-11-19,2021-01-11,India,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.IN,,3,3,2021-01-11,2021-04-16,India,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.IN,,3,2,2021-04-16,2021-07-12,India,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.IN,,3,1,2021-07-12,2022-01-07,India,Netherlands
+cross_docking_supplier_shipping_added_lead_time.NL.IN,Ibrahim Tarim (ibrahim.tarim@hubs.com),3,2,2022-01-07,,India,Netherlands
+cross_docking_supplier_shipping_added_lead_time.US.CH,,3,0,2020-11-19,2021-01-11,China,United States
+cross_docking_supplier_shipping_added_lead_time.US.CH,,3,1,2021-01-11,2021-04-16,China,United States
+cross_docking_supplier_shipping_added_lead_time.US.CH,,3,2,2021-04-16,,China,United States
+cross_docking_supplier_shipping_added_lead_time.US.default,Alexander Konstantinov (alex@3dhubs.com),3,1,2020-11-19,,Row,United States
+cross_docking_supplier_shipping_added_lead_time.US.IN,,3,0,2020-11-19,2021-01-11,India,United States
+cross_docking_supplier_shipping_added_lead_time.US.IN,,3,3,2021-01-11,2021-04-16,India,United States
+cross_docking_supplier_shipping_added_lead_time.US.IN,,3,2,2021-04-16,2021-07-12,India,United States
+cross_docking_supplier_shipping_added_lead_time.US.IN,,3,1,2021-07-12,2022-01-07,India,United States
+cross_docking_supplier_shipping_added_lead_time.US.IN,Ibrahim Tarim (ibrahim.tarim@hubs.com),3,2,2022-01-07,,India,United States
+cross_docking_supplier_shipping_added_lead_time.US.MX,,3,0,2020-11-19,2021-01-11,Mexico,United States
+cross_docking_supplier_shipping_added_lead_time.US.MX,,3,2,2021-01-11,2021-07-12,Mexico,United States
+cross_docking_supplier_shipping_added_lead_time.US.MX,Artisa Burazeri (artisa@3dhubs.com),3,1,2021-07-12,,Mexico,United States
+cross_docking_supplier_shipping_added_lead_time.US.US,William Johnston (william@3dhubs.com),3,0,2020-11-19,,United States,United States

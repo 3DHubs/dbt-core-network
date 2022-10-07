@@ -319,12 +319,14 @@ second_leg_carrier_name_mapped,
 shipping_price_estimates,
 
 -- On Time Rate
+first_leg_buffer_value,
 is_picked_up_on_time_from_supplier,
 is_shipped_on_time_by_supplier,
 is_pick_up_on_time_to_customer,
 is_shipped_on_time_to_customer,
 shipping_to_customer_delay_days,
 shipping_by_supplier_delay_days,
+
 
 -- RFQ & Technical Review
 in_review_reason,

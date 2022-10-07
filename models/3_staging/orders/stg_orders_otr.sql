@@ -7,6 +7,7 @@
 -- 2. STG Documents
 -- 3. STG Logistics
 -- 4. Reporting Fact Delays
+-- 5. Prep Supply Buffers
 
 
 -- Suppliers submit a form when an order is delayed
@@ -89,9 +90,13 @@ select distinct orders.uuid                              as order_uuid,
                 dagg.has_delay_notifications,
                 dagg.number_of_delays,
                 dagg.has_delay_liability_supplier,
-                dagg.first_delay_created_at
+                dagg.first_delay_created_at,
+
+                -- Buffer value
+                buffers.first_leg_buffer_value
 
 from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('stg_orders_documents')}} as docs on orders.uuid = docs.order_uuid
     left join {{ ref ('stg_orders_logistics')}} as logistics on orders.uuid = logistics.order_uuid
+    left join {{ ref ('prep_supply_buffers')}}  as buffers on docs.sourced_at::date = buffers.date and logistics.origin_country = buffers.supplier_country and logistics.cross_dock_country = buffers.crossdock_country
     left join delay_aggregates as dagg on orders.uuid = dagg.order_uuid

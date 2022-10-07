@@ -95,6 +95,8 @@ select distinct soq.order_uuid                                                  
                 sog.cross_dock_latitude,
                 sog.cross_dock_longitude,
 
+                sog.origin_country, --to include buffers in stg_orders_otr
+
                 ab.estimated_delivery_to_cross_dock_at,
                 ab.estimated_delivery_to_customer_at,
                 ab.full_delivered_at,
