@@ -23,7 +23,7 @@ select hc.property_createdate__value                                            
        (TIMESTAMP 'epoch' + nullif(hc.property_added_as_ae__value, '') / 1000 *
                             INTERVAL '1 second')::timestamp without time zone                                        as became_ae_account_date,
        hc.property_hs_lead_status__value::character varying                                                          as hs_lead_status,
-       nullif(nullif(property_founded_year__value, ''),'N/A')::int                                                   as founded_year,
+       case when len(property_founded_year__value) < 5 then nullif(nullif(property_founded_year__value, ''),'N/A')::int end  as founded_year,
        hc.property_total_money_raised__value                                                                         as total_money_raised,
        case
            when hc.property_deactivated__value = 'true' then true
