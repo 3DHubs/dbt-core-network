@@ -3,7 +3,7 @@ select
        quotes.uuid,
        quotes.order_uuid,
        quotes.document_number,
-       case when quotes.created < '2022-09-01' or addresses_destination.email='customerservice-network@protolabs.co.uk' then true else false end is_test,
+       case when quotes.created < '2022-10-01' or lower(consumer_purchase_order_number) ~ 'test'  then true else false end is_test,
        decode(is_external, 'true', True, 'false', False) as is_integration,
        external_orders.consumer_order_id                                                      as integration_order_id, 
        external_orders.consumer_order_number                                                  as integration_order_number, 
