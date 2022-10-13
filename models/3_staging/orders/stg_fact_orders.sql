@@ -488,7 +488,7 @@ from {{ ref('prep_supply_orders') }} as orders
 
     -- Data Lake
     left join {{ ref ('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
-    left join {{ ref ('prep_supply_integration') }} as integration on orders.uuid = integration.uuid
+    left join {{ ref ('prep_supply_integration') }} as integration on orders.uuid = integration.order_uuid
 
     -- Service Supply
     left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
