@@ -28,5 +28,5 @@ orders as (
         convert_timezone('Europe/Amsterdam', delivered_to_cross_dock_at) end as delivered_to_cross_dock_at_local,
         case when cross_dock_city = 'Chicago' then  convert_timezone('America/Chicago', shipped_from_cross_dock_at) else
         convert_timezone('Europe/Amsterdam', shipped_from_cross_dock_at) end as shipped_from_cross_dock_at_local,
-         {{ business_minutes_between('delivered_to_cross_dock_at_local', 'shipped_from_cross_dock_at_local') }} as business_minutes_at_cross_dock
+         {{ business_minutes_between('delivered_to_cross_dock_at_local', 'shipped_from_cross_dock_at_local') }} as time_transit_at_cross_dock_business_minutes
     from orders   
