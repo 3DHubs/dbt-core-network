@@ -61,6 +61,8 @@ The below macro will take three inputs into consideration:
             when (date_trunc('hour', {{ start_date }} ) = date_trunc('hour', {{ end_date }} ))  
                 then datediff('minute', {{ start_date }}, {{ end_date }})
             else {{ working_min_between(start_date, end_date) }}
+               + (60 - extract(minute from {{ start_date }}))
+                + (extract(minute from {{ end_date }}))
 
         end
 {%- endmacro -%}

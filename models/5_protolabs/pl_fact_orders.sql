@@ -1,3 +1,7 @@
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 select 
     order_uuid,
     hubspot_contact_id,

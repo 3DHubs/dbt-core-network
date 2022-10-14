@@ -1,3 +1,7 @@
+{{ config(
+    tags=["multirefresh"]
+) }}
+
 select
     line_item_uuid,
     order_uuid,

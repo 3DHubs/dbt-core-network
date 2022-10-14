@@ -11,6 +11,7 @@
 -- Stg Orders Documents Table (Quotes & POs)
 -- Stg Finance Table
 -- Stg Logistics Table
+-- Stg Logistics Business Hours Table
 -- Stg OTR Table (Depends on Documents & Logistics)
 -- Stg Reviews Table
 -- Stg Geo/Location Table
@@ -286,6 +287,9 @@ select
     logistics.estimated_delivery_to_customer_at,
     logistics.delivered_to_cross_dock_at,
 
+    -- Logsitics: Time spent at cross dock
+    logistics_business_hours.business_minutes_at_cross_dock,
+
     -- Logistics: Estimates
     quotes.shipping_price_estimates,
 
@@ -469,6 +473,7 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('stg_orders_documents') }} as docs on orders.uuid = docs.order_uuid
     left join {{ ref ('stg_orders_finance') }} as finance on orders.uuid = finance.order_uuid
     left join {{ ref ('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
+    left join {{ ref ('stg_orders_logistics_business_hours') }} as logistics_business_hours on orders.uuid = logistics_business_hours.order_uuid
     left join {{ ref ('stg_orders_otr') }} as otr on orders.uuid = otr.order_uuid
     left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
