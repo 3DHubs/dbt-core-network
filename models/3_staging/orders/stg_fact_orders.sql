@@ -288,7 +288,7 @@ select
     logistics.delivered_to_cross_dock_at,
 
     -- Logsitics: Time spent at cross dock
-    logistics_business_hours.business_minutes_at_cross_dock,
+    logistics_business_hours.time_transit_at_cross_dock_business_minutes,
 
     -- Logistics: Estimates
     quotes.shipping_price_estimates,
