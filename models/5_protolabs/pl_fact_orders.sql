@@ -10,6 +10,7 @@ select
     technology_name,
     destination_market,
     order_status,
+    lead_time,
 
     is_integration,
     integration_order_id, 
