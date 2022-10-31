@@ -462,7 +462,7 @@ select
 
     -- Commission Related:
     case when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - qli.shipping_amount_usd > 50 -- Threshold
-            and interactions.has_svp_interaction is not true and is_closed is true 
+            and is_closed is true and rfq.has_rfq = false
             then true when is_closed is not true then null else false end                  as has_significant_amount_gap, 
     coalesce(interactions.has_svp_interaction or qli.has_svp_line_item,false)               as is_svp
 
