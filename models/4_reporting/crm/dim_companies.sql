@@ -51,6 +51,7 @@ select
        own.primary_team_name                                                     as hubspot_owner_primary_team_name,
        own_inside.name                                                           as hubspot_inside_owner_name,
        own_inside.primary_team_name                                              as hubspot_inside_owner_primary_team_name,
+       own_handover.name                                                         as hubspot_handover_owner_name,
 
        -- Source: Location
        lower(coalesce(hc.country,adc.country_iso2))                              as country_iso2,
@@ -122,6 +123,7 @@ on lower(hc.industry) = indm.industry
     left join city_coordinates as cc on cc.city = lower(hc.city) and cc.country_id = dc.country_id 
     left join {{ ref('hubspot_owners') }} as own on own.owner_id::bigint = hc.hubspot_owner_id::bigint
     left join {{ ref('hubspot_owners') }} as own_inside on own_inside.owner_id::bigint = hc.inside_sales_owner::bigint
+    left join {{ ref('hubspot_owners') }} as own_handover on own_handover.owner_id = hc.handover_owner
     left join companies_btyd as btyd on btyd.company_id = hc.hubspot_company_id
     left join {{ ref('stg_customer_tiering') }} as sct on hc.hubspot_company_id = sct.hubspot_company_id
 where hc.hubspot_company_id >= 1
