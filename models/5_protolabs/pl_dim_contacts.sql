@@ -16,6 +16,7 @@ select
     dc.region,
     dc.continent,
     dc.job_role,
+    dc.utm_campaign,
     dc.became_mql_at,
     dc.mql_technology,
     dc.became_opportunity_at,
