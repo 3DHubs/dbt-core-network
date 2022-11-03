@@ -17,7 +17,7 @@ select
     hubspot_owner_name,
 
     is_papi_integration,
-    is_integration_type,
+    integration_type,
     integration_order_id, 
     integration_order_number, 
     integration_purchase_order_number,
