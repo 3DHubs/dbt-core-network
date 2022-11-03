@@ -14,6 +14,7 @@ select
     destination_market,
     order_status,
     lead_time,
+    hubspot_owner_name,
 
     is_papi_integration,
     is_integration_type,
