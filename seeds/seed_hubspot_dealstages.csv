@@ -19,3 +19,4 @@ id_redshift,dealstage_internal_label,dealstage_internal_value,dealstage_mapped_v
 "12","f4036e27-df3a-4265-8ee3-68c1bdc58430","Closed - Canceled","Closed - Canceled","supply","N"
 "9","contractsent","Closed - Lost","Closed - Lost","supply","O"
 "20","11450348","In review - Rejected","In review - Rejected","supply","E"
+"21","13809082","In review - Pending","In review - Pending","supply","C"

@@ -62,10 +62,13 @@ is_legacy,
 
 
 -- External Attributes
-is_integration,
+is_papi_integration,
+is_integration_type,
 integration_order_id, 
 integration_order_number, 
-integration_purchase_order_number,  
+integration_purchase_order_number,
+integration_user_id,
+integration_utm_content,
 
 -- Lifecycle Dates
 created_at, -- Upload/cart

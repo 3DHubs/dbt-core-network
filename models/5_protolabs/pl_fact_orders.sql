@@ -4,6 +4,7 @@
 
 select 
     order_uuid,
+    document_number,
     hubspot_contact_id,
     closed_at,
     sourced_at,
@@ -12,10 +13,13 @@ select
     order_status,
     lead_time,
 
-    is_integration,
+    is_papi_integration,
+    is_integration_type,
     integration_order_id, 
     integration_order_number, 
     integration_purchase_order_number,
+    integration_user_id,
+    integration_utm_content,
 
     subtotal_closed_amount_usd,
     subtotal_sourced_amount_usd - subtotal_sourced_cost_usd        as subtotal_sourced_precalculated_margin_usd,
@@ -37,4 +41,4 @@ select
     has_winning_bid_countered_on_lead_time,
     has_winning_bid_countered_on_price                                                                       
 from  {{ ref('fact_orders') }}
-where closed_at >= '2019-01-01'
+where created_at >= '2019-01-01'

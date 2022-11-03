@@ -10,6 +10,7 @@ with time_in_hubspot_stage as (
             datediff(minutes, changed_at,
                         lead(changed_at, 1) over (partition by deal_id order by changed_at)) as time_in_stage_minutes
         from {{ ref ('hubspot_deal_dealstage_history') }}
+        where  dealstage_mapped is not null
         order by deal_id, changed_at asc
     ),
         -- Only select deals that have entered a in-review stage and create an index for all in-review changes (i.e.
@@ -26,20 +27,11 @@ with time_in_hubspot_stage as (
                         when dh.dealstage_mapped like 'In review - Ongoing%' then 'Ongoing'
                         when dh.dealstage_mapped like 'In review - Completed%' then 'Completed'
                         when dh.dealstage_mapped like 'In review - Rejected%' then 'Rejected' end as review_dealstage,
+                    case when review_dealstage = 'New' then
+                    row_number() over (partition by deal_id,review_dealstage  order by changed_at asc nulls last) else null end  as new_index,
                     time_in_stage_minutes                                                         as time_in_review_stage_minutes
             from time_in_hubspot_stage dh
             where has_in_review_stage
-        ),
-        -- A new row should be created every time a deal completes a review (stage in-review rejected or in-review
-        -- completed). To do this first index all completed reviews (i.e. give every completed review a number).
-        completed_index as (
-            select deal_id,
-                    dealstage_mapped,
-                    changed_at                                                                  as review_finish_date,
-                    row_number() over (partition by deal_id order by changed_at asc nulls last) as completed_index,
-                    total_index
-            from in_review_deals
-            where review_dealstage in ('Completed', 'Rejected')
         ),
         -- Then create an rfq_idx that will be used as the primary key for this table. The rfq index will be the same
         -- for every unique review process.
@@ -49,12 +41,9 @@ with time_in_hubspot_stage as (
                     rd.dealstage_mapped,
                     rd.total_index,
                     rd.time_in_review_stage_minutes,
-                    coalesce(max(ci.completed_index), 0)                      as review_iteration,
+                    last_value(new_index ignore nulls) over (partition by deal_id order by changed_at rows unbounded preceding) as review_iteration,
                     concat(rd.deal_id, lpad(review_iteration, 2, 00))::bigint as review_id
             from in_review_deals rd
-                    left join completed_index ci on ci.deal_id = rd.deal_id
-                and rd.total_index > ci.total_index
-            group by 1, 2, 3, 4, 5
         ),
         -- Select timestamps for each review stage
         ts_events as (
@@ -105,11 +94,7 @@ with time_in_hubspot_stage as (
            rfd.total_time_in_review_stage_new_minutes,
            rfd.total_time_in_review_stage_ongoing_minutes,
            hd.review_owner,
-           hd.sourcing_owner                                                         as sourcing_owner_id,
-           so.name                                                                   as sourcing_owner_name,
            review_iteration
     from first_review_dates rfd
             left join {{ ref('hubspot_deals') }} hd using (deal_id)
-            left join {{ ref('hubspot_owners') }} so
-                    on so.owner_id = hd.sourcing_owner 
     order by review_id

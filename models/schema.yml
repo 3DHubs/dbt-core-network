@@ -114,6 +114,7 @@ sources:
       - name: marketing_ahrefs
       - name: marketing_share_of_voice
       - name: marketing_youtube
+      - name: hr_bamboo_employees
 
   - name: ext_hubspot
     tables:
@@ -253,6 +254,7 @@ sources:
       - name: question_groups
       - name: question_types
       - name: questions
+      - name: quicklinks_tracking
       - name: quote_docusign_requests
       - name: refund_reasons
       - name: refund_requests
