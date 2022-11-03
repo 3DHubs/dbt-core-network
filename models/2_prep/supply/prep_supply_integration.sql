@@ -5,7 +5,7 @@ select
        quotes.document_number,
        case when quotes.created < '2022-10-01' or lower(consumer_purchase_order_number) ~ 'test'  then true else false end is_test,
        decode(is_external, 'true', True, 'false', False)                                      as is_papi_integration,
-       case when is_external = 'true' then 'papi' else 'shallowquicklink' end                 as is_integration_type,
+       case when is_external = 'true' then 'papi' else 'shallowquicklink' end                 as integration_type,
        external_orders.consumer_order_id                                                      as integration_order_id,
        coalesce(external_orders.consumer_order_number,qt.quote_number)                        as integration_order_number,
        external_orders.consumer_purchase_order_number                                         as integration_purchase_order_number,
