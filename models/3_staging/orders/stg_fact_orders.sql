@@ -55,7 +55,7 @@ select
 
     -- External Orders: Main fields
     coalesce(integration.is_papi_integration,false) as is_papi_integration,
-    integration.is_integration_type,
+    integration.integration_type,
     integration.integration_order_id, 
     integration.integration_order_number, 
     integration.integration_purchase_order_number,    
