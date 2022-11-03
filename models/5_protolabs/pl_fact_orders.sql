@@ -6,6 +6,8 @@ select
     order_uuid,
     document_number,
     hubspot_contact_id,
+    created_at, 
+    submitted_at,
     closed_at,
     sourced_at,
     technology_name,
