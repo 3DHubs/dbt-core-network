@@ -199,6 +199,10 @@ sources:
       - name: automated_shipping_customs_information
 
   - name: int_service_supply
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    loaded_at_field: created
     tables:
       - name: addresses
       - name: auctions
