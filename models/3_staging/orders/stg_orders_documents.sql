@@ -51,6 +51,9 @@ with first_quote as (
                 quotes.lead_time                                                 as order_quote_lead_time,
                 lt_tiers.name                                                    as order_quote_lead_time_tier,
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
+                quotes.is_eligible_for_cross_docking                             as order_quote_is_eligible_for_cross_docking,
+                quotes.is_eligible_for_local_sourcing                            as order_quote_is_eligible_for_local_sourcing,
+                quotes.is_local_sourcing                                         as order_quote_is_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
                 quotes.price_multiplier                                          as order_quote_price_multiplier
          from {{ ref('prep_supply_orders') }} as orders
@@ -184,6 +187,10 @@ select -- First Quote
        oq.order_quote_lead_time,
        oq.order_quote_lead_time_tier,
        oq.order_quote_is_cross_docking,
+       oq.order_quote_is_eligible_for_cross_docking,
+       oq.order_quote_is_local_sourcing,
+       oq.order_quote_is_eligible_for_local_sourcing,
+
        oq.order_quote_amount_usd,
        oq.order_quote_price_multiplier,
 

@@ -213,6 +213,10 @@ select
     docs.order_quote_lead_time_tier as lead_time_tier,
     docs.order_quote_price_multiplier as price_multiplier,
     docs.order_quote_is_cross_docking as is_cross_docking,
+    docs.order_quote_is_eligible_for_cross_docking as is_eligible_for_cross_docking,
+    docs.order_quote_is_local_sourcing as is_local_sourcing,
+    docs.order_quote_is_eligible_for_local_sourcing as is_eligible_for_local_sourcing,
+    
 
     --Documents: All Quotes
     docs.order_first_submitted_at,

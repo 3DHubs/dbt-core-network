@@ -310,6 +310,9 @@ remaining_amount_usd,
 -- Logistics
 number_of_shipments,
 is_cross_docking,
+is_eligible_for_cross_docking,
+is_local_sourcing,
+is_eligible_for_local_sourcing,
 number_of_batches,
 has_consistent_shipping_info,
 

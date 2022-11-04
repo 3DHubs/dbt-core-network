@@ -64,9 +64,12 @@ select docs.created,
        rank() over (partition by docs.order_uuid, docs.type order by revision, docs.created desc) as revision_last_created_rank,
 
        -- Boolean Fields
+       {{ varchar_to_boolean('is_eligible_for_local_sourcing') }},       
+       {{ varchar_to_boolean('is_local_sourcing') }},       
+       {{ varchar_to_boolean('is_eligible_for_cross_docking') }},       
+       {{ varchar_to_boolean('is_cross_docking') }},
        {{ varchar_to_boolean('is_admin') }},       
        {{ varchar_to_boolean('tax_category_override') }},
-       {{ varchar_to_boolean('is_cross_docking') }},
        {{ varchar_to_boolean('is_admin_only') }},
        {{ varchar_to_boolean('is_instant_payment') }}                     
 
