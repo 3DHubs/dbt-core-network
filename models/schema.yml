@@ -203,8 +203,8 @@ sources:
       - name: bid_reasons
       - name: billing_requests
         freshness:
-          warn_after: {count: 4, period: week}
-          error_after: {count: 5, period: week}
+          warn_after: {count: 31, period: day}
+          error_after: {count: 33, period: day}
         loaded_at_field: created            
       - name: branded_materials
       - name: cancellation_reasons
