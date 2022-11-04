@@ -6425,13 +6425,11 @@ page,page_group
 /injection-molding/plastic/polyurethane/,Materials - IM
 /injection-molding/plastic/pom-delrin/,Materials - IM
 /injection-molding/plastic/pvc/,Materials - IM
-/injection-molding/quote-request/,Service - IM
 /internal-knowledge-base-3d-printing/,Other
 /internal/3d-printing/,Other
 /internal/componentsandcodes/,Other
 /internal/translated-pages-overview/,Other
 /internal/carrier-status/,Other
-/internal/cnc-machining/,Service - IM
 /jackson/hubs/devis3d-designs/,Service - 3DP Geo
 /internal/homepage/,Homepage
 /johannesburg/hubs/redsalamander/3dprint/,Service - 3DP Geo
@@ -7887,3 +7885,38 @@ page,page_group
 /videos/surface-finishes-cnc/,Blog
 /videos/what-cnc-machining-how-it-works/,Blog
 /videos/what-is%20multi-jet-fusion/,Blog
+/3d-druck/deutschland/halle-saale/,Service - 3DP Geo
+/3d-printing/new-york/ramapo/,Service - 3DP Geo
+/3d-printing/tennessee/memphis/,Service - 3DP Geo
+/de/cnc-bearbeitung/deutschland/krefeld/,Service - CNC Geo
+/de/spritzguss-service/,Service - IM
+/fr/moulage-par-injection-1/,Service - IM
+/fr/qualite-moulage-par-injection-rapide/,Service - IM
+/impression-3d/france/brest/,Service - 3DP Geo
+/impression-3d/france/metz/,Service - 3DP Geo
+/impression-3d/france/mulhouse/,Service - 3DP Geo
+/impression-3d/france/reims/,Service - 3DP Geo
+/knowledge-base/manufacturing-for-initial-prototyping/,Knowledge Base
+/knowledge-base/sharp-corners-in-cnc-machining/,Knowledge Base - CNC
+/knowledge-base/what-is-geometric-dimensioning-and-tolerancing/,Knowledge Base
+/local-sourcing/,Other
+/managed-services/,Other
+/nl/bestellen/,Other
+/nl/spuitgietwerk/,Service - IM
+/quality-control/,Other
+/surface-finishes/,Surface finishes
+/surface-finishes/aluminum-anodizing-services/,Surface finishes
+/surface-finishes/as-machined-services/,Surface finishes
+/surface-finishes/bead-blasting-services/,Surface finishes
+/surface-finishes/black-oxide-services/,Surface finishes
+/surface-finishes/chromate-conversion-coating-services/,Surface finishes
+/surface-finishes/electroless-nickel-plating-services/,Surface finishes
+/surface-finishes/fine-machining-services/,Surface finishes
+/surface-finishes/polishing-services/,Surface finishes
+/surface-finishes/powder-coating-service/,Surface finishes
+/surface-finishes/powder-coating-services/,Surface finishes
+/surface-finishes/smooth-machining-services/,Surface finishes
+/the-hubs-standard/,Other
+/usinage-cnc/france/nantes/,Service - CNC Geo
+/usinage-cnc/france/rouen/,Service - CNC Geo
+/videos/technical-drawing-tutorial-prepare-perfect-mechanical-drawing-machinists/,Other
