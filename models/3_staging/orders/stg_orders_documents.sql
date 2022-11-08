@@ -49,7 +49,6 @@ with first_quote as (
                 quotes.submitted_at                                              as order_quote_submitted_at,
                 quotes.finalized_at                                              as order_quote_finalised_at,
                 quotes.lead_time                                                 as order_quote_lead_time,
-                lt_tiers.name                                                    as order_quote_lead_time_tier,
                 quotes.is_cross_docking                                          as order_quote_is_cross_docking,
                 quotes.is_eligible_for_cross_docking                             as order_quote_is_eligible_for_cross_docking,
                 quotes.is_eligible_for_local_sourcing                            as order_quote_is_eligible_for_local_sourcing,
@@ -58,7 +57,6 @@ with first_quote as (
                 quotes.price_multiplier                                          as order_quote_price_multiplier
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
-             left join {{ source('int_service_supply', 'lead_time_tiers') }} as lt_tiers on quotes.lead_time_tier_id = lt_tiers.id
 
              -- Joins for exchange rates
              left outer join {{ ref('stg_orders_dealstage') }} as order_deals on orders.uuid = order_deals.order_uuid
