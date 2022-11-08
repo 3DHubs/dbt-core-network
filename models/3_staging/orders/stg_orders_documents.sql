@@ -183,7 +183,6 @@ select -- First Quote
        oq.order_quote_submitted_at,
        oq.order_quote_finalised_at,
        oq.order_quote_lead_time,
-       oq.order_quote_lead_time_tier,
        oq.order_quote_is_cross_docking,
        oq.order_quote_is_eligible_for_cross_docking,
        oq.order_quote_is_local_sourcing,
