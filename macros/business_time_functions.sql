@@ -1,68 +1,65 @@
 {# 
+Ideas coming from:
+https://github.com/dbt-labs/dbt-labs-experimental-features/tree/main/business-hours
+https://docs.getdbt.com/blog/measuring-business-hours-sql-time-on-task
 
-### PURPOSE ###
-This macro calculates the total working minutes between two timestamps,
-meaning, if a ticket begins on a Friday and then carries into Monday,
-we do not want to count non-working hours (e.g. Saturdays) towards the
-total time to respond/close.
-
-## MACROS + INPUTS ##
-* Macro 1: working_min_between
-    This macro takes the two timestamps and finds the total number
-    of working hours between the timestamps and multiples it by 60
-    to get the total working minutes between the two timestamps
-
-    Example:
-    ticket_id = '14025'
-    first_message_at: 2021-07-09 11:29
-    first_closed_at: 2021-07-12 14:46
-
-    The total business hours between these two timestamps
-    (2021-07-09 11:00:00 and 2021-07-12 14:00:00) is 14hr
-    NOTE: We do not include the 11:00 and 14:00 hours in this
-    because we will manually calculate the minutes from these
-    hours in the next macro
-
-* Macro 2: business_minutes_between
-    This macro will do two things:
-     1. If the working minutes between is 0min, then 
-        just datediff the start and end timestamps to
-        find the minutes between.
-    2. If its greater than 0, then we want to
-    add the start_minutes and end_minutes to the
-    hours between to get the total working minutes.
-    See example below for a walk-through explanation
-Example:
-    ticket_id = '14025'
-    first_message_at: 2021-07-09 11:29
-    first_closed_at: 2021-07-12 14:46
-The below macro will take three inputs into consideration:
-    1. The total working hours/minutes between the timestmaps
-        ^in this case -- 14 * 60 = 840min
-    2. The minutes from the start timestamp to the next hour
-        ^in this case -- 2021-07-09 11:29 --> 31min
-    3. The minutes from the end timestamp
-        ^in this case, 46min
-    We then add these together to see the total working business minutes
-    between the two timestamps which is 917min
+JG 2022-11-08 Due performance issues decided to use nested macro's instead of subqueries. Subquery is supposed to give more flexibility.
 #}
-{%- macro working_min_between(start_date, end_date) -%}
-     ( select
-          coalesce(count(CASE WHEN is_business_hour THEN 1 END) ,0) * 60
-      from {{ ref('business_hours') }}
-      where date_hour > date_trunc('hour', {{ start_date }})
-      and date_hour < date_trunc('hour', {{ end_date }})
-     )
-{%- endmacro -%}
-{%- macro business_minutes_between(start_date, end_date) -%}
-    
-        case
-            -- take into account tickets opened and closed in same hour
-            when (date_trunc('hour', {{ start_date }} ) = date_trunc('hour', {{ end_date }} ))  
-                then datediff('minute', {{ start_date }}, {{ end_date }})
-            else {{ working_min_between(start_date, end_date) }}
-               + (60 - extract(minute from {{ start_date }}))
-                + (extract(minute from {{ end_date }}))
 
-        end
-{%- endmacro -%}
+
+--------- using macros
+
+{% macro weekdays_between(start_date, end_date) %}
+
+        datediff('day', {{ start_date }}, {{ end_date }} ) -
+        datediff('week', {{ start_date }}, dateadd('day', 1, {{ end_date }} )) -
+        datediff('week', {{ start_date }}, {{ end_date }} )
+
+{% endmacro %}
+
+
+{# non_business_hours_between:
+
+    Terms in this macro:
+    - weekdays_between:
+        returns the number of weekdays between two dates. This is used to evaluate the number of overnights that occur between the two dates.
+        i.e. Monday to Wednesday is 2 weekdays, ie two weeknights of non-business time. Friday to Monday evaluates to one overnight (8pm-12am Fri + 12am-8am Monday)
+        we multiply by 12 to convert the weekdays between to hours.
+    - evaluate weekends:
+        in order to compare if a weekend falls in between two dates, we can compare the regular datediff to the weekday datediff.
+        the difference is the number of weekend days (example, Friday to Monday, Datediff = 3, weekday = 1, 3-1 = 2)
+        muliply the difference by 24 hours per weekend day
+
+ #}
+
+{% macro non_business_hours_between(start_date, end_date) %}
+    {% set non_working_hours = (24 - (  var("working_hour_end")  -  var("working_hour_start") ))  %}
+    
+        coalesce(
+            (( {{ weekdays_between(start_date, end_date) }} ) *  {{ non_working_hours }}  )
+                + ((datediff('day', {{ start_date }}, {{ end_date }} )
+                - ({{ weekdays_between(start_date, end_date) }})
+            ) * 24 )::int,
+            0
+        )
+
+{% endmacro %}
+
+
+{# 
+    
+    business_minutes_between:
+        This macro leverages the above macros to remove non-business time from the calculation of time durations. 
+        
+        the basic structure here is:
+            (date diff in minutes) - (non-business hours * 60) = business minutes
+
+ #}
+
+
+{% macro business_minutes_between (start_date, end_date) %}
+
+        datediff('minute', {{ start_date }}, {{ end_date }} )
+            - ( {{ non_business_hours_between( start_date, end_date ) }} * 60 )
+
+{% endmacro %}

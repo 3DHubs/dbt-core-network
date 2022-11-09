@@ -96,3 +96,9 @@ snapshots:
 # On run-end read-only access is granted to the ro_group in Redshift on the target schema's contents.
 on-run-end:
   - "{{ grant_select_on_schemas(schemas, 'ro_group') }}"
+
+
+  # these variables will need to be in H24 format!
+vars:
+  working_hour_start: 9
+  working_hour_end: 18
