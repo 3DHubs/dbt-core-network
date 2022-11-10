@@ -31,7 +31,6 @@ select dealid::bigint                                                           
                then null end ::boolean                                                                        as high_risk,
        nullif(property_customer_success_manager__value, '')::bigint                                           as customer_success_manager,
        nullif(property_bdr_company_source__value, '')::varchar(65535)                                         as bdr_company_source,
-       'temp_fix_20221018'::varchar(65535)                                                                    as bdr_source,
        property_estimated_close_amount__value__double                                                         as estimated_close_amount,
        nullif(property_qc_inspection_result__value, '')::varchar(65535)                                       as qc_inspection_result,
        nullif(property_purchasing_manager__value, '')::bigint                                                 as purchasing_manager,

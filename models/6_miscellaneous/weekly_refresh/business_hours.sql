@@ -10,11 +10,11 @@ with hours as (
 
 ),
 
-/* -- if we had a seed for holidays, include it here
+
 holidays as (
-    select * from  ref('stg_company_holidays') 
+    select * from {{ ref('seed_hubs_holidays') }}
 ),
-*/
+
 
 --convert hour to EST
 converted_hours as (
@@ -44,7 +44,7 @@ business_hours as (
 --before we hired a rep in MST (M-F, 8am - 8pm EST)
             when date_part(dow, date_hour) not in (0,6)
                 and date_part(hour,date_hour) between 9 and 17
-                -- and holidays.date is null
+                  and holidays.date is null
                     then converted_hours.date_hour
 
 -- after we hired international reps (covering Sunday 7pm to Friday 5pm)
@@ -68,8 +68,8 @@ business_hours as (
         end as business_hour
 
     from converted_hours
-    -- left join holidays
-    --     on date_trunc(day, date_hour)::date = holidays.date
+     left join holidays
+         on date_trunc('day', date_hour)::date = holidays.date
 
 ),
 
