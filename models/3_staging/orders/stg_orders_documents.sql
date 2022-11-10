@@ -54,6 +54,7 @@ with first_quote as (
                 quotes.is_eligible_for_local_sourcing                            as order_quote_is_eligible_for_local_sourcing,
                 quotes.is_local_sourcing                                         as order_quote_is_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
+                rates.rate                                                       as exchange_rate_closed_amount,
                 quotes.price_multiplier                                          as order_quote_price_multiplier
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
@@ -99,7 +100,8 @@ with first_quote as (
                             finalized_at                                                           as sourced_at,
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
                             supplier_support_ticket_id                                             as po_first_support_ticket_id,
-                            round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,                                                             
+                            round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,
+                            rates.rate                                                             as exchange_rate_sourced_cost,                                                             
                             row_number() over (partition by soq.order_uuid order by finalized_at)      as rn
                      from {{ ref('prep_supply_documents') }} as soq
                      left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
@@ -109,13 +111,14 @@ with first_quote as (
                      where true
                        and soq.type like 'purchase_order'
                        and soq.finalized_at is not null
-                     group by 1, 2, 3, 4, 5, 6)
+                     group by 1, 2, 3, 4, 5, 6, 7)
          select order_uuid,
                 po_first_uuid,
                 sourced_at,  -- Used to define sourced_date                
                 po_first_supplier_id, -- Used to define is_resourced
                 po_first_support_ticket_id,
-                subtotal_sourced_cost_usd
+                subtotal_sourced_cost_usd,
+                exchange_rate_sourced_cost
          from rn
          where rn = 1
      ),
@@ -189,6 +192,7 @@ select -- First Quote
        oq.order_quote_is_eligible_for_local_sourcing,
 
        oq.order_quote_amount_usd,
+       oq.exchange_rate_closed_amount,
        oq.order_quote_price_multiplier,
 
        -- All Quotes
@@ -200,6 +204,7 @@ select -- First Quote
        -- First PO
        fpo.po_first_uuid,
        fpo.subtotal_sourced_cost_usd,
+       fpo.exchange_rate_sourced_cost,
        fpo.sourced_at,
        fpo.sourced_at is not null as is_sourced,
        fpo.po_first_supplier_id,

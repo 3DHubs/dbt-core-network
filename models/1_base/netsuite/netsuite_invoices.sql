@@ -22,6 +22,7 @@ select netsuite_trn.*,
        coalesce(netsuite_trn.amountremaining, 0) + coalesce(netsuite_trn.unapplied, 0)    as invoice_remaining_amount,
        
        -- For exchange rates, default null to 1 as this means it is in base USD already.
+       nvl(rates.exchangerate, 1.0000)                                                    as exchange_rate_invoices,
        round((netsuite_trn.total) * nvl(rates.exchangerate, 1.0000),2)                    as invoice_total_price_amount_usd,
        round((invoice_subtotal_price_amount) * nvl(rates.exchangerate, 1.0000),2)         as invoice_subtotal_price_amount_usd,
 

@@ -305,6 +305,9 @@ company_entity, -- From the order quote
 payment_label,
 remaining_amount,
 remaining_amount_usd,
+--Finance related exchange rates
+exchange_rate_closed_amount,
+exchange_rate_sourced_cost,
 
 -- Logistics
 number_of_shipments,

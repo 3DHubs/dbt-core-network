@@ -27,6 +27,7 @@ select
                 end
         else null end                                                                        as cost_recognized_at,
         case when cost_recognized_at is not null then True else False end                  as cogs_is_recognized,
+        rates.rate                                                                         as exchange_rate_po,
 
        -- Price dimensions
        oqsl.currency_code                                                                    as po_currency_code, 
@@ -62,6 +63,7 @@ select  poc.po_uuid,
         -- Recognized Date
         poc.cost_recognized_at,
         poc.cogs_is_recognized,
+        poc.exchange_rate_po,
         -- Financial Amounts
         poc.po_currency_code as source_currency, 
 

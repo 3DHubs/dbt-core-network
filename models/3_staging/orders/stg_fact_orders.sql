@@ -215,7 +215,10 @@ select
     docs.order_quote_is_eligible_for_cross_docking as is_eligible_for_cross_docking,
     docs.order_quote_is_local_sourcing as is_local_sourcing,
     docs.order_quote_is_eligible_for_local_sourcing as is_eligible_for_local_sourcing,
-    
+
+    --Finance related exchange rates
+    docs.exchange_rate_closed_amount,
+    docs.exchange_rate_sourced_cost,
 
     --Documents: All Quotes
     docs.order_first_submitted_at,

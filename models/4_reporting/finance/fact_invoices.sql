@@ -16,6 +16,7 @@ with stg_cube_invoices_supply as (
             invoices.status                                                                 as invoice_status,
             invoices.document_number                                                        as invoice_document_number,
             invoices.currency_code                                                          as invoice_source_currency,
+            rates.rate                                                                      as exchange_rate_invoices,
             round((invoices.tax_price_amount + invoices.subtotal_price_amount)/100.00 ,2)   as invoice_total_price_amount,
             round((invoice_total_price_amount / rates.rate), 2)                             as invoice_total_price_amount_usd,
             invoices.subtotal_price_amount / 100.00                                         as invoice_subtotal_price_amount,
@@ -45,6 +46,7 @@ with stg_cube_invoices_supply as (
                 netsuite_trn.status                              as invoice_status,
                 netsuite_trn.tranid                              as invoice_document_number,
                 netsuite_trn.currencyname                        as invoice_source_currency,
+                netsuite_trn.exchange_rate_invoices,
                 -- Credit Memos are negative invoices\
                 netsuite_trn.total                               as invoice_total_price_amount,
                 netsuite_trn.invoice_total_price_amount_usd,
