@@ -100,6 +100,7 @@ with stg_cube_invoices_supply as (
             else null 
             end
         )                                                                                                       as revenue_recognized_at,
-        case when revenue_recognized_at is not null then True else False end                                     as revenue_is_recognized
+        case when revenue_recognized_at is not null then True else False end                                     as revenue_is_recognized,
+        orders.exchange_rate_at_closing
      from stg_invoices_unionized as invoices
      left outer join {{ ref('stg_fact_orders') }} as orders on orders.order_uuid = invoices.order_uuid

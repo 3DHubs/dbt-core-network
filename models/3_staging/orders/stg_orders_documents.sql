@@ -54,7 +54,8 @@ with first_quote as (
                 quotes.is_eligible_for_local_sourcing                            as order_quote_is_eligible_for_local_sourcing,
                 quotes.is_local_sourcing                                         as order_quote_is_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
-                rates.rate                                                       as exchange_rate_closed_amount,
+                quotes.currency_code                                             as order_quote_source_currency,
+                rates.rate                                                       as exchange_rate_at_closing,
                 quotes.price_multiplier                                          as order_quote_price_multiplier
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
@@ -101,7 +102,7 @@ with first_quote as (
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
                             supplier_support_ticket_id                                             as po_first_support_ticket_id,
                             round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,
-                            rates.rate                                                             as exchange_rate_sourced_cost,                                                             
+                            rates.rate                                                             as exchange_rate_at_sourcing,                                                             
                             row_number() over (partition by soq.order_uuid order by finalized_at)      as rn
                      from {{ ref('prep_supply_documents') }} as soq
                      left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
@@ -118,7 +119,7 @@ with first_quote as (
                 po_first_supplier_id, -- Used to define is_resourced
                 po_first_support_ticket_id,
                 subtotal_sourced_cost_usd,
-                exchange_rate_sourced_cost
+                exchange_rate_at_sourcing
          from rn
          where rn = 1
      ),
@@ -192,7 +193,8 @@ select -- First Quote
        oq.order_quote_is_eligible_for_local_sourcing,
 
        oq.order_quote_amount_usd,
-       oq.exchange_rate_closed_amount,
+       oq.exchange_rate_at_closing,
+       oq.order_quote_source_currency,
        oq.order_quote_price_multiplier,
 
        -- All Quotes
@@ -204,7 +206,7 @@ select -- First Quote
        -- First PO
        fpo.po_first_uuid,
        fpo.subtotal_sourced_cost_usd,
-       fpo.exchange_rate_sourced_cost,
+       fpo.exchange_rate_at_sourcing,
        fpo.sourced_at,
        fpo.sourced_at is not null as is_sourced,
        fpo.po_first_supplier_id,

@@ -37,7 +37,8 @@ select
        ali.parts_amount_usd                                                                  as parts_cost_usd,
        ali.shipping_amount                                                                   as shipping_cost,
        ali.shipping_amount_usd                                                               as shipping_cost_usd,
-       row_number() over (partition by oqsl.order_uuid order by po_finalized_at)               as rn
+       row_number() over (partition by oqsl.order_uuid order by po_finalized_at)               as rn,
+       orders.exchange_rate_at_sourcing
 from {{ ref('prep_supply_documents') }} as oqsl
             left join {{ ref('prep_supply_orders') }} as osl on oqsl.order_uuid = osl.uuid
             left join {{ ref('stg_fact_orders') }} as orders on oqsl.order_uuid = orders.order_uuid
@@ -66,6 +67,8 @@ select  poc.po_uuid,
         poc.exchange_rate_po,
         -- Financial Amounts
         poc.po_currency_code as source_currency, 
+        -- Exchange Rates
+        poc.exchange_rate_at_sourcing,
 
         lag(subtotal_cost, 1) over (partition by poc.order_uuid order by po_date asc)                                      as previous_subtotal_cost,
         poc.subtotal_cost - (case when rn = 1 then 0 else previous_subtotal_cost end)                                         as cost_source_currency,

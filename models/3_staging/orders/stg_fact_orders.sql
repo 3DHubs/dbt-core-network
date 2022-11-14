@@ -216,8 +216,9 @@ select
     docs.order_quote_is_eligible_for_local_sourcing as is_eligible_for_local_sourcing,
 
     --Finance related exchange rates
-    docs.exchange_rate_closed_amount,
-    docs.exchange_rate_sourced_cost,
+    docs.order_quote_source_currency,
+    docs.exchange_rate_at_closing,
+    docs.exchange_rate_at_sourcing,
 
     --Documents: All Quotes
     docs.order_first_submitted_at,
@@ -452,6 +453,8 @@ select
           when order_shipped_at > logistics.full_delivered_at 
           then dealstage.first_completed_at
           else logistics.full_delivered_at end, dealstage.first_completed_at)              as recognized_at, -- Let's think of a way to do this better :)
+    
+
 
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as subtotal_amount_usd,

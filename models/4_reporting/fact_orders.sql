@@ -305,8 +305,8 @@ payment_label,
 remaining_amount,
 remaining_amount_usd,
 --Finance related exchange rates
-exchange_rate_closed_amount,
-exchange_rate_sourced_cost,
+exchange_rate_at_closing,
+exchange_rate_at_sourcing,
 
 -- Logistics
 number_of_shipments,
