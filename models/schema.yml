@@ -33,11 +33,6 @@ sources:
           warn_after: {count: 24, period: hour}
           error_after: {count: 48, period: hour}
         loaded_at_field: date
-      - name: google_search_console
-        freshness:
-          warn_after: {count: 5, period: day}
-          error_after: {count: 6, period: day}
-        loaded_at_field: date
       - name: btyd
         freshness:
           warn_after: {count: 7, period: day}
@@ -55,6 +50,14 @@ sources:
       - name: legacy_orders
       - name: freshdesk_groups_legacy_20200401
       - name: dim_dates
+
+  - name: ext_google_analytics
+    tables:
+      - name: search_console
+        freshness:
+          warn_after: {count: 5, period: day}
+          error_after: {count: 6, period: day}
+        loaded_at_field: date
 
   - name: dbt_backups
     tables:

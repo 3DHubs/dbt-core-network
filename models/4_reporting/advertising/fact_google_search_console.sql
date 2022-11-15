@@ -15,7 +15,7 @@ with stg_gsc_data as (
            position::decimal(15, 1)                                  as position,
            impressions,
            clicks
-    from {{ source('data_lake', 'google_search_console') }}
+    from {{ source('ext_google_analytics', 'search_console') }}
     where true
       and dimension1 = 'page'
       and dimension2 = 'country'
