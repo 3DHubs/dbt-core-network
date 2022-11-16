@@ -64,6 +64,7 @@ models:
     4_reporting: 
       +schema: reporting
       +materialized: table
+      post-hook: 'grant select on {{ this }} to protolabs'
 
     5_protolabs:
       +schema: protolabs 

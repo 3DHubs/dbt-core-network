@@ -47,6 +47,7 @@ select distinct orders.uuid                                                     
        case when is_cross_docking_ind then cross_dock_geo.lon else null end                     as cross_dock_longitude,
 
        -- Destination (Based on Contact Shipping Address)
+       addresses_destination.company_name                                                       as destination_company_name,
        addresses_destination.locality                                                           as destination_city,
        addresses_destination.lat                                                                as destination_latitude,
        addresses_destination.lon                                                                as destination_longitude,

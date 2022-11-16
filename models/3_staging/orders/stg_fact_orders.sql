@@ -364,6 +364,7 @@ select
     -- Location data from customers,
     -- suppliers and company entity
 
+    geo.destination_company_name,
     geo.destination_city,
     geo.destination_latitude,
     geo.destination_longitude,
