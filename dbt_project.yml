@@ -68,6 +68,7 @@ models:
 
     5_protolabs:
       +schema: protolabs 
+      +bind: false
       +materialized: table
       post-hook: 'grant select on {{ this }} to protolabs'
       +tags: protolabs
