@@ -57,7 +57,7 @@ sources:
         freshness:
           warn_after: {count: 5, period: day}
           error_after: {count: 6, period: day}
-        loaded_at_field: date
+        loaded_at_field: "date::timestamp"
 
   - name: dbt_backups
     tables:
