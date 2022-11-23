@@ -61,7 +61,9 @@ select dealid::bigint                                                           
            when property_delayed_due_to_customs__value = ''
                then null end ::boolean                                                                        as is_delayed_due_to_customs,
        nullif(property_im_pm__value, '')::bigint                                                              as im_pm,
-       nullif(property_me_team_review__value, '')::varchar(2048)                                              as me_team_review_results
+       nullif(property_me_team_review__value, '')::varchar(2048)                                              as me_team_review_results,
+       nullif(property_protolabs_cross_sell_company__value, '')::varchar(2048)                                as pl_cross_sell_company_name,
+       nullif(property_protolabs_cross_sell_salesperson__value, '')::varchar(2048)                            as pl_cross_sell_sales_manager_name
 from {{ source('ext_hubspot', 'deals') }}  as ehd
          left join {{ source('ext_hubspot', 'deals__associations__associatedcompanyids') }}  as ehdacomp
                    on ehd.dealid = ehdacomp._sdc_source_key_dealid

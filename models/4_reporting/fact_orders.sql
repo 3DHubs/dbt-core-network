@@ -126,6 +126,7 @@ has_manual_quote_review,
 -- Company Attributes
 hubspot_company_name,
 hubspot_company_source,
+pl_cross_sell_company_name,
 agg.became_opportunity_at_company,
 agg.became_customer_at_company,
 agg.created_order_is_from_new_company,
@@ -235,6 +236,7 @@ hubspot_technical_review_owner,
 hubspot_sourcing_owner_name,
 hubspot_im_project_manager_name,
 sales_lead_name,
+pl_cross_sell_sales_manager_name,
 
 -- Line Items
 number_of_part_line_items,

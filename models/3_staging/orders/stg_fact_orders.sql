@@ -76,6 +76,7 @@ select
     -- HS Deals: Foreign Fields
     hs_deals.hubspot_company_id,
     hs_deals.hubspot_company_name,
+    hs_deals.pl_cross_sell_company_name,
     hs_deals.hubspot_contact_id,
     hs_deals.hubspot_technology_id,
     hs_deals.hubspot_company_source,
@@ -116,6 +117,7 @@ select
     hs_deals.sales_lead_name,
     hs_deals.hubspot_im_project_manager_id,
     hs_deals.hubspot_im_project_manager_name,
+    hs_deals.pl_cross_sell_sales_manager_name,
 
     -- HS Deals: Properties Requested by Teams
     -- Check upstream model for details on the team

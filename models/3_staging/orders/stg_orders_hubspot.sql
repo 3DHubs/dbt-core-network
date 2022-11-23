@@ -24,6 +24,7 @@ with stg as (
            when hcon.email ~ '@(3d)?hubs.com' then true else false end                    as hubspot_contact_email_from_hubs,
         hs.hs_latest_associated_company_id                                                as original_hubspot_company_id, --JG: Kept for reference
         hcom.name                                                                         as hubspot_company_name,
+        hs.pl_cross_sell_company_name,
         hs.hs_latest_associated_contact_id                                                as hubspot_contact_id, --JG: Fix 2022-01-28 to have a contact id for all orders where company is not null and contact id is null
         hs.bdr_company_source                                                             as hubspot_company_source,
         htm.technology_id                                                                 as hubspot_technology_id,
@@ -69,6 +70,7 @@ with stg as (
         so.name                                                                           as hubspot_sourcing_owner_name,
         pm.owner_id                                                                       as hubspot_im_project_manager_id,
         pm.name                                                                           as hubspot_im_project_manager_name,
+        hs.pl_cross_sell_sales_manager_name,
 
         -- TEAM FIELDS
         -- Properties added by the different teams
