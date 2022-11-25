@@ -28,3 +28,4 @@ select  fi.invoice_uuid                       as source_uuid,
         fi.revenue_source_currency            as amount_source_currency,
         fi.shipping_revenue_usd               as shipping_usd
 from {{ ref('fact_invoices') }} as fi
+where revenue_is_recognized
