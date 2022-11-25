@@ -16,7 +16,7 @@ with stg_cube_invoices_supply as (
             invoices.status                                                                 as invoice_status,
             invoices.document_number                                                        as invoice_document_number,
             invoices.currency_code                                                          as invoice_source_currency,
-            rates.rate                                                                      as exchange_rate_invoices,
+            (1/rates.rate)                                                                  as exchange_rate_invoices,
             round((invoices.tax_price_amount + invoices.subtotal_price_amount)/100.00 ,2)   as invoice_total_price_amount,
             round((invoice_total_price_amount / rates.rate), 2)                             as invoice_total_price_amount_usd,
             invoices.subtotal_price_amount / 100.00                                         as invoice_subtotal_price_amount,

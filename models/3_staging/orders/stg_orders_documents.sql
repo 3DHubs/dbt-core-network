@@ -55,7 +55,7 @@ with first_quote as (
                 quotes.is_local_sourcing                                         as order_quote_is_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
                 quotes.currency_code                                             as order_quote_source_currency,
-                rates.rate                                                       as exchange_rate_at_closing,
+                (1/rates.rate)                                                   as exchange_rate_at_closing,
                 quotes.price_multiplier                                          as order_quote_price_multiplier
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
@@ -102,7 +102,7 @@ with first_quote as (
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
                             supplier_support_ticket_id                                             as po_first_support_ticket_id,
                             round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,
-                            rates.rate                                                             as exchange_rate_at_sourcing,                                                             
+                            (1/rates.rate)                                                         as exchange_rate_at_sourcing,                                                                                                                      
                             row_number() over (partition by soq.order_uuid order by finalized_at)      as rn
                      from {{ ref('prep_supply_documents') }} as soq
                      left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
@@ -193,8 +193,8 @@ select -- First Quote
        oq.order_quote_is_eligible_for_local_sourcing,
 
        oq.order_quote_amount_usd,
-       oq.exchange_rate_at_closing,
        oq.order_quote_source_currency,
+       oq.exchange_rate_at_closing,
        oq.order_quote_price_multiplier,
 
        -- All Quotes
