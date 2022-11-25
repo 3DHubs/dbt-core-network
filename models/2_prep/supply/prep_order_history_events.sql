@@ -42,6 +42,6 @@ from {{ source('data_lake', 'full_order_history_events') }}
 
 {% if is_incremental() %}
 
-  where id > (select max(id) from {{ this }})
+  where created > (select max(created) from {{ this }} )
 
 {% endif %}
