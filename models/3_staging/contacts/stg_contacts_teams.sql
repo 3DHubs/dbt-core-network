@@ -38,4 +38,5 @@ where u.hubspot_contact_id is not null
   and (t.created is not null or stg_os.created is not null)
   and coalesce(t.id, stg_os.team_id) not in (4, 10, 75, 77, 124)
   and u.is_internal = false
+  and u.rnk_desc_hubspot_contact_id = 1
   group by 1,2,3,4
