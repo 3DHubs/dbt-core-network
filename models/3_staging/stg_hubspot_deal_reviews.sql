@@ -18,7 +18,7 @@ reviews as (
 
 {% if is_incremental() %}
 
-	and primary_key not in (select primary_key from {{ this }})
+	and primary_key not in (select coalesce(primary_key,'') from {{ this }})
 
 
 {% endif %}
