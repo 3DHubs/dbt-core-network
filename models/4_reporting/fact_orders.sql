@@ -370,14 +370,14 @@ has_change_request,
 po_active_support_ticket_id,
 
 -- Original Orders
-coalesce(is_reorder, false) as is_reorder,
-original_order_created_at,
-original_order_closed_at,
-original_order_lead_time,
-original_order_amount_usd,
-original_order_quantity,
-original_order_number_of_part_line_items,
-original_order_parts_titles,
+coalesce(original.is_reorder, false) as is_reorder,
+original.original_order_created_at,
+original.original_order_closed_at,
+original.original_order_lead_time,
+original.original_order_amount_usd,
+original.original_order_quantity,
+original.original_order_number_of_part_line_items,
+original.original_order_parts_titles,
 
 -- Splitted Orders (Competitiveness Feature) 
 quote_first_splitted_from_quote_uuid,

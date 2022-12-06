@@ -42,10 +42,10 @@ select distinct orders.uuid                                                     
        -- Crossdock
        case when quotes.is_cross_docking is true then true else false end                       as is_cross_docking_ind,
        case when is_cross_docking_ind then cross_dock_geo.locality else null end                as cross_dock_city,
-       case when is_cross_docking_ind then cross_dock_geo.name else null end                    as cross_dock_country,
-       case when is_cross_docking_ind then cross_dock_geo.lat else null end                     as cross_dock_latitude,
-       case when is_cross_docking_ind then cross_dock_geo.lon else null end                     as cross_dock_longitude,
-
+       case when is_cross_docking_ind then cross_dock_geo.name else null end               as cross_dock_country,
+       case when is_cross_docking_ind then cross_dock_geo.lat else null end                as cross_dock_latitude,
+       case when is_cross_docking_ind then cross_dock_geo.lon else null end                as cross_dock_longitude,
+       
        -- Destination (Based on Contact Shipping Address)
        addresses_destination.company_name                                                       as destination_company_name,
        addresses_destination.locality                                                           as destination_city,
