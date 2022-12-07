@@ -17,8 +17,8 @@ select dcu.hubspot_contact_id,
               '')::bigint   as stg_hsa_cam,
        nullif(json_extract_path_text(dcu.first_page_seen_query, 'hsa_grp'),
               '')::bigint   as stg_hsa_grp,
-       nullif(split_part(split_part(
-                                   json_extract_path_text(dcu.first_page_seen_query, 'hsa_tgt'),
+       nullif(split_part(split_part(replace(
+              json_extract_path_text(dcu.first_page_seen_query, 'hsa_tgt'),'%3A',':'),
                                    'kwd-', 2), ':', 1),
               '')::bigint   as stg_hsa_keyword_id,
 
