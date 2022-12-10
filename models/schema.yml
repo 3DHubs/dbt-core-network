@@ -8,10 +8,6 @@ version: 2
 sources:
 
   - name: _3d_hubs
-    freshness:
-      warn_after: {count: 6, period: hour}
-      error_after: {count: 24, period: hour}
-    loaded_at_field: received_at
     tables:
       - name: supply_quote_updated
       - name: frontend_email_wall_submitted
