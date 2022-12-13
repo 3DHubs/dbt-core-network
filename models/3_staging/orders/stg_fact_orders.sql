@@ -74,10 +74,10 @@ select
     hs_deals.hubspot_pipeline,
 
     -- HS Deals: Foreign Fields
-    hs_deals.hubspot_company_id,
+    coalesce(hs_deals.hubspot_company_id,users.hubspot_company_id) as hubspot_company_id, -- for carts falling back on user link
     hs_deals.hubspot_company_name,
     hs_deals.pl_cross_sell_company_name,
-    hs_deals.hubspot_contact_id,
+    coalesce(hs_deals.hubspot_contact_id,users.hubspot_contact_id) as hubspot_contact_id,
     hs_deals.hubspot_technology_id,
     hs_deals.hubspot_company_source,
 
@@ -492,6 +492,7 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
     left join {{ ref ('stg_orders_disputes') }} as disputes on orders.uuid = disputes.order_uuid
+    left join {{ ref ('stg_orders_users') }} as users on orders.uuid = users.order_uuid
 
     -- Reporting
     left join {{ ref ('fact_discounts')}} as discounts on orders.uuid = discounts.order_uuid

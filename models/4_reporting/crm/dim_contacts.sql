@@ -66,6 +66,7 @@ select base.created_at,
        base.became_lead_at_contact                              as became_lead_at,
        base.became_mql_at_contact                               as became_mql_at,
        base.mql_technology                                      as mql_technology,
+       case when utm_campaign = 'plshallowquicklink' then 'protolabs' else mql_type end as mql_type,
        base.became_sql_at_contact                               as became_sql_at,
        -- Order Aggregates
        agg_orders.became_opportunity_at_contact                 as became_opportunity_at,

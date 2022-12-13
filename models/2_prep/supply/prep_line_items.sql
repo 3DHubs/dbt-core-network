@@ -25,5 +25,5 @@ where true
     -- Filter: only interested until now on the main quote and purchase orders
     and (is_order_quote or docs.type = 'purchase_order')    
     -- Filter: only interested on quotes that are not in the cart status
-    and docs.status <> 'cart'
+  --  and docs.status <> 'cart'
 

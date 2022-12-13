@@ -37,5 +37,7 @@ select nullif(property_lifecyclestage__value, '')::varchar(1024)                
        nullif(property_industry__value, '')::varchar(256)                                               as industry,
        nullif(property_phone__value, '')::varchar(64)                                                   as phone,
        nullif(property_anonymous_order_uuid__value, '')::varchar(512)                                   as first_cart_uuid,
+       rank() over (partition by first_cart_uuid order by createdate, contact_id)                       as rnk_asc_cart,     
        false                                                                                            as is_legacy
+
 from {{ source('ext_hubspot', 'contacts') }}
