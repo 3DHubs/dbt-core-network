@@ -106,6 +106,10 @@ sources:
     tables:
       - name: data
 
+  - name: fed_publicapi
+    tables:
+      - name: quick_link
+
   - name: ext_raw
     tables:
       - name: hubspot_pages
