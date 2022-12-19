@@ -8,4 +8,4 @@
     "],
 ) }}
 
-select 1
+select getdate()
