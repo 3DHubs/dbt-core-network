@@ -3,7 +3,8 @@ select
        quotes.uuid,
        quotes.order_uuid,
        quotes.document_number,
-       case when quotes.created < '2022-10-01' or lower(consumer_purchase_order_number) ~ 'test' or ql.request_id ~ 'test'  then true else false end is_test,
+       case when quotes.created < '2022-10-01' or lower(consumer_purchase_order_number) ~ 'test' or ql.request_id ~ 'test'
+       or ql.email ~ 'mailinator' or ql.email ~ 'protolabs' then true else false end is_test,
        decode(is_external, 'true', True, 'false', False)                                      as is_papi_integration,
        case when is_external = 'true' then 'papi'
            when ql.quote_id is not null then 'quicklink' else 'shallowquicklink' end          as integration_type,
