@@ -18,7 +18,6 @@ select
 
 from {{ source('int_service_supply', 'cnc_order_quotes') }}  as quotes
        inner join {{ source('int_service_supply', 'cnc_orders') }} as orders on orders.quote_uuid = quotes.uuid
-       left join {{ ref('addresses') }} as addresses_destination on quotes.shipping_address_id = addresses_destination.address_id
        left join {{ source('int_service_supply', 'external_orders') }} as external_orders on orders.uuid = external_orders.uuid
        left join {{ source('int_service_supply', 'quicklinks_tracking') }}  qt on qt.order_uuid = orders.uuid
        left join fed_publicapi.quick_link ql on ql.quote_id = quotes.uuid
