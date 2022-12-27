@@ -7,6 +7,7 @@ with attributable_contacts_numbered as (
                partition by hubspot_company_id order by (country_iso2 is null)::int, created_at asc rows between unbounded preceding and unbounded following) as country_iso2,
            hubspot_contact_id,
            hubspot_company_id,
+           mql_type,
            channel_type,
            channel,
            channel_grouped,
@@ -29,6 +30,7 @@ with attributable_contacts_numbered as (
       and not (channel_type = 'outbound' and lifecyclestage in ('lead', 'subscriber'))
 )
 select distinct hubspot_company_id,
+                mql_type,
                 country_iso2,
                 channel_type,
                 channel,

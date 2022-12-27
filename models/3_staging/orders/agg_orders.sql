@@ -58,7 +58,10 @@ select
     first_value(case when is_closed then process_name end)
         over (partition by hubspot_contact_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)         as first_closed_order_process_name_contact,
     first_value(destination_country_iso2)
-        over ( partition by hubspot_contact_id order by closed_at asc rows between unbounded preceding and unbounded following)                        as first_submitted_order_country_iso2,    
+        over ( partition by hubspot_contact_id order by closed_at asc rows between unbounded preceding and unbounded following)                        as first_submitted_order_country_iso2,
+    first_value(integration_type) 
+        over (partition by hubspot_contact_id order by created_at asc rows between unbounded preceding and unbounded following)                        as first_integration_type_contact,
+      
 
     -- Rank Values
     case when is_closed is true and hubspot_contact_id is not null then rank() over (partition by hubspot_contact_id order by closed_at asc) end       as closed_order_number_contact,
@@ -87,13 +90,15 @@ select
     count(case when is_closed then order_uuid end) over (partition by hubspot_company_id)                                                              as number_of_closed_orders_company,
 
     -- Financial Totals
-    nullif(sum(subtotal_closed_amount_usd) over (partition by hubspot_company_id), 0)                                                                           as closed_sales_usd_company,
+    nullif(sum(subtotal_closed_amount_usd) over (partition by hubspot_company_id), 0)                                                                  as closed_sales_usd_company,
 
     -- First Values
     first_value(technology_name) 
         over (partition by hubspot_company_id order by submitted_at asc rows between unbounded preceding and unbounded following)                      as first_submitted_order_technology_company,
     first_value(case when is_closed then technology_name end) 
         over (partition by hubspot_company_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)         as first_closed_order_technology_company,
+    first_value(integration_type) 
+        over (partition by hubspot_company_id order by created_at asc rows between unbounded preceding and unbounded following)                        as first_integration_type_company,
 
     -- Rank Values
     case when is_closed is true and hubspot_company_id is not null then rank() 
@@ -215,6 +220,8 @@ select orders.order_uuid,
        prep.first_closed_order_technology_contact,
        prep.first_closed_order_process_name_contact,
        prep.first_submitted_order_country_iso2,
+       prep.first_integration_type_contact,
+       
        -- Rank Values
        prep.closed_order_number_contact,
        -- Other Date Fields
@@ -247,6 +254,7 @@ select orders.order_uuid,
        -- First Values
        prep.first_submitted_order_technology_company,
        prep.first_closed_order_technology_company,
+       prep.first_integration_type_company,
        -- Rank Values
        prep.closed_order_number_company,
        prep.days_from_previous_closed_order_company,

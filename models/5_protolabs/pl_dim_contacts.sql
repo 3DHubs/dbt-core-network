@@ -19,6 +19,7 @@ select
     dc.utm_campaign,
     dc.became_mql_at,
     dc.mql_technology,
+    dc.mql_type,
     dc.became_opportunity_at,
     dc.became_customer_at,
     dc.recent_order_created_at,

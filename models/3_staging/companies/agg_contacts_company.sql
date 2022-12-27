@@ -10,7 +10,7 @@ with prep_mql_technology as (
 select
     hubspot_company_id, 
     first_value(mql_technology)
-           over ( partition by hubspot_company_id order by (mql_technology is null)::int, became_mql_at_contact asc rows between unbounded preceding and unbounded following) as mql_technology
+           over ( partition by hubspot_company_id order by (mql_technology is null)::int, became_mql_at_contact asc rows between unbounded preceding and unbounded following) as mql_technology 
     from {{ ref('stg_contacts_companies') }}
 )
 
