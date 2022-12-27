@@ -32,6 +32,7 @@ select
     subtotal_sourced_amount_usd - subtotal_sourced_cost_usd        as subtotal_sourced_precalculated_margin_usd,
     subtotal_sourced_cost_usd,
     subtotal_sourced_amount_usd,
+    shipping_amount_usd,
 
     --on time attributes
     order_shipped_at,
