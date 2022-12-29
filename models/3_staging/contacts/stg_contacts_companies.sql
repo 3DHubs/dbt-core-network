@@ -12,9 +12,8 @@ select contacts.hubspot_contact_id,
            else null end as inside_mql_number,
        contacts.became_mql_at_contact,
        contacts.mql_technology,
-       case when contacts.mql_type = 'empty_cart' and  utm_campaign = 'plshallowquicklink' then 'pl_shallowquicklink_empty_cart'
-       when first_integration_type_contact is not null then 'pl_' + first_integration_type_contact
-       when utm_campaign = 'plshallowquicklink' then 'pl_shallowquicklink'  else  contacts.mql_type end as mql_type,
+       case when first_integration_type_contact is not null then first_integration_type_contact
+       when utm_campaign = 'plshallowquicklink' then 'shallowquicklink'  else  contacts.mql_type end as mql_type,
        case
            when agg_orders.became_opportunity_at_contact is not null and contacts.hubspot_company_id is not null
                then rank() over (partition by contacts.hubspot_company_id order by agg_orders.became_opportunity_at_contact asc)
