@@ -80,7 +80,7 @@ select
        adc.advertising_adgroup_id,
        adc.advertising_keyword_id,
        adc.advertising_campaign_group,
-       adc.mql_type,  
+       case when acc.became_mql_at_company  >= '2022-01-01' then acc.mql_type end as mql_type, --Cart data only proper available since 2022, hence mql_type.
        acc.became_mql_at_company                                                 as became_mql_at, 
        acc.mql_technology                                                        as mql_technology,
 

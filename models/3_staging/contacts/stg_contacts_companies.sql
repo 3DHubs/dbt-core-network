@@ -12,6 +12,7 @@ select contacts.hubspot_contact_id,
            else null end as inside_mql_number,
        contacts.became_mql_at_contact,
        contacts.mql_technology,
+       contacts.mql_type,
        case
            when agg_orders.became_opportunity_at_contact is not null and contacts.hubspot_company_id is not null
                then rank() over (partition by contacts.hubspot_company_id order by agg_orders.became_opportunity_at_contact asc)
