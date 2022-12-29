@@ -19,7 +19,11 @@ select con.created_at                                             as created_at,
                when len(split_part(first_page_seen, '/', 2)) = 2 then
                    lower(split_part(first_page_seen, '/', 2))
                else 'en' end                                          as first_page_seen_language,
-           nullif(query_to_json(con.first_page_seen_query), '')       as first_page_seen_query,
+           first_page_seen_query_tmp                                  as first_page_seen_query,
+           nullif(json_extract_path_text(first_page_seen_query_tmp, 'utm_campaign'), '') as utm_campaign,
+           nullif(json_extract_path_text(first_page_seen_query_tmp, 'utm_content'), '')  as utm_content,
+           nullif(json_extract_path_text(first_page_seen_query_tmp, 'abt'), '')          as test_name,
+           nullif(json_extract_path_text(first_page_seen_query_tmp, 'abv'), '')          as test_variant, 
            con.first_page_seen_grouped,
            con.channel_drilldown1                                     as channel_drilldown_1,
            con.channel_drilldown2                                     as channel_drilldown_2,
