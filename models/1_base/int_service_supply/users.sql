@@ -27,6 +27,7 @@ select created,
        datediff('day', last_sign_in_at, current_date)                     as last_sign_in_at_days_ago,
        case
            when last_sign_in_at_days_ago >= 365 or not last_sign_in_at_days_ago then False
+           else True
         --    else decode(is_active, 'true', True, 'false', False) -- This seems to have been dropped without communication.
            end                                                               is_active,
        mail ~ '@(3d)?hubs.com'                                               as is_internal,
