@@ -289,6 +289,8 @@ select
     logistics.shipped_at as order_shipped_at, -- Prefix to avoid ambiguous field
     logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
+    logistics.shipment_received_by_carrier_at,
+    logistics.shipment_to_customer_received_by_carrier_at,
 
     -- Logistics: Delivery Dates
     logistics.delivered_at,

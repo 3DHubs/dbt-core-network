@@ -91,6 +91,8 @@ promised_shipping_at_by_supplier, -- From active PO
 estimated_delivery_to_cross_dock_at,
 delivered_to_cross_dock_at,
 shipped_from_cross_dock_at,
+shipment_received_by_carrier_at, -- when the carrier pick up the first shipment
+shipment_to_customer_received_by_carrier_at, -- when the carrier pick up the shipment to customer
 time_transit_at_cross_dock_business_minutes,
 estimated_delivery_to_customer_at,
 delivered_at,
