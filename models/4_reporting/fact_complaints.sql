@@ -20,7 +20,9 @@ select
     ct.name as reason_type,
     cr.name as reason,
     c.claim_type,
-    c.liability
+    c.liability,
+    c.corrective_action_plan_needed,
+    c.qc_comment
 from {{ ref('complaints') }} c
 left join {{ source('int_service_supply', 'complaint_type_reasons') }} ctr on ctr.complaint_uuid = c.line_item_uuid
 left join {{ source('int_service_supply', 'complaint_types') }} ct on ctr.complaint_type_id = ct.id

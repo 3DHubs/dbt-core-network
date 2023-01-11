@@ -11,7 +11,9 @@ select created created_at,
        resolution_datetime resolution_at,
        number_of_parts,
        claim_type,
-       liability
+       liability,
+       {{ varchar_to_boolean('corrective_action_plan_needed') }},
+       qc_comment
 
 
 from {{ source('int_service_supply', 'complaints') }}

@@ -123,6 +123,8 @@ select     li.order_uuid,
            c.comment as complaint_comment,
            c.claim_type as complaint_type,
            c.liability as complaint_liability,
+           c.corrective_action_plan_needed,
+           c.qc_comment,
 
            -- Part Dimensional Fields
            pdf.part_depth_cm,

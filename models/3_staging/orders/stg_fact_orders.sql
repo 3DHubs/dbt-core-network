@@ -211,6 +211,7 @@ select
     docs.order_quote_submitted_at,
     docs.order_quote_finalised_at,
     docs.order_quote_lead_time as lead_time,
+    docs.sourcing_window,
     docs.order_quote_price_multiplier as price_multiplier,
     docs.order_quote_is_cross_docking as is_cross_docking,
     docs.order_quote_is_eligible_for_cross_docking as is_eligible_for_cross_docking,
@@ -240,7 +241,7 @@ select
     docs.po_active_document_number,
     docs.po_active_company_entity,
     docs.po_active_support_ticket_id,
-    docs.promised_shipping_at_by_supplier,
+    docs.po_active_promised_shipping_at_by_supplier as promised_shipping_at_by_supplier,
 
     --Documents: All Purchase Orders
     docs.number_of_purchase_orders,

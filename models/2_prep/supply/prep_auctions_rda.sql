@@ -40,8 +40,9 @@ with auctions as (select
                       -- Fields from Technologies
                       technologies.name as auction_technology_name,
                       -- One order can have multiple auctions
-                      row_number() over (partition by oqs.order_uuid order by auctions.started_at desc nulls last)
-                      as recency_idx
+                      row_number() over (partition by oqs.order_uuid order by auctions.started_at desc nulls last) as recency_idx,
+                      row_number() over (partition by oqs.order_uuid, case when auctions.winner_bid_uuid is not null then 1 else 0 end
+                       order by auctions.started_at asc nulls last) =1 and auctions.winner_bid_uuid is not null as first_successful_auction
                   from {{ source('int_service_supply', 'auctions') }} as auctions
                       inner join {{ ref('prep_supply_documents') }} as oqs on auctions.uuid = oqs.uuid
                       left join {{ ref ('prep_bids')}} as bids on auctions.winner_bid_uuid = bids.uuid

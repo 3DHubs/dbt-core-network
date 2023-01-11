@@ -55,8 +55,9 @@ with first_quote as (
                 quotes.is_local_sourcing                                         as order_quote_is_local_sourcing,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
                 quotes.currency_code                                             as order_quote_source_currency,
-                (1/rates.rate)                                                   as exchange_rate_at_closing,
-                quotes.price_multiplier                                          as order_quote_price_multiplier
+                (1/rates.rate)                                                    as exchange_rate_at_closing,
+                quotes.price_multiplier                                          as order_quote_price_multiplier,
+                quotes.cross_docking_added_lead_time
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
 
@@ -102,7 +103,8 @@ with first_quote as (
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
                             supplier_support_ticket_id                                             as po_first_support_ticket_id,
                             round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,
-                            (1/rates.rate)                                                         as exchange_rate_at_sourcing,                                                                                                                      
+                            (1/rates.rate)                                                         as exchange_rate_at_sourcing,
+                            case when soq.shipping_date >= '2019-10-01' then soq.shipping_date end as po_first_promised_shipping_at_by_supplier,                                                                                                                      
                             row_number() over (partition by soq.order_uuid order by finalized_at)      as rn
                      from {{ ref('prep_supply_documents') }} as soq
                      left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
@@ -112,14 +114,15 @@ with first_quote as (
                      where true
                        and soq.type like 'purchase_order'
                        and soq.finalized_at is not null
-                     group by 1, 2, 3, 4, 5, 6, 7)
+                     group by 1, 2, 3, 4, 5, 6, 7, 8)
          select order_uuid,
                 po_first_uuid,
                 sourced_at,  -- Used to define sourced_date                
                 po_first_supplier_id, -- Used to define is_resourced
                 po_first_support_ticket_id,
                 subtotal_sourced_cost_usd,
-                exchange_rate_at_sourcing
+                exchange_rate_at_sourcing,
+                po_first_promised_shipping_at_by_supplier
          from rn
          where rn = 1
      ),
@@ -140,7 +143,7 @@ with first_quote as (
                 countries.name                                                               as po_active_company_entity,
                 case
                     when quotes.shipping_date >= '2019-10-01'
-                        then quotes.shipping_date end                                        as promised_shipping_at_by_supplier,
+                        then quotes.shipping_date end                                        as po_active_promised_shipping_at_by_supplier,
                 row_number() over (
                     partition by quotes.order_uuid order by quotes.created desc)             as rn -- Noticed a few orders with 2+ active POs, this helps us guarantee uniqueness
          from {{ ref('prep_supply_documents') }} as quotes
@@ -187,6 +190,14 @@ select -- First Quote
        oq.order_quote_submitted_at,
        oq.order_quote_finalised_at,
        oq.order_quote_lead_time,
+       case when oq.order_quote_lead_time <= 5 then 6
+        when oq.order_quote_lead_time <= 10 then 15
+        when oq.order_quote_lead_time <= 15 then 24
+        when oq.order_quote_lead_time <= 20 then 32
+        else 42
+       end as sourcing_window,
+
+       oq.cross_docking_added_lead_time,
        oq.order_quote_is_cross_docking,
        oq.order_quote_is_eligible_for_cross_docking,
        oq.order_quote_is_local_sourcing,
@@ -211,13 +222,14 @@ select -- First Quote
        fpo.sourced_at is not null as is_sourced,
        fpo.po_first_supplier_id,
        fpo.po_first_support_ticket_id,
+       fpo.po_first_promised_shipping_at_by_supplier,
 
        -- Active PO
        apo.po_active_uuid,
        apo.po_active_subtotal_cost_usd,
        apo.po_active_document_number,
        apo.po_active_company_entity,
-       apo.promised_shipping_at_by_supplier, -- This field has a different naming convention because is a key field
+       apo.po_active_promised_shipping_at_by_supplier, -- This field has a different naming convention because is a key field
        apo.po_active_supplier_id,
        apo.po_active_supplier_name,
        apo.po_active_supplier_address_id,
