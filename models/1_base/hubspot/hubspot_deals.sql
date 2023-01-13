@@ -63,7 +63,8 @@ select dealid::bigint                                                           
        nullif(property_im_pm__value, '')::bigint                                                              as im_pm,
        nullif(property_me_team_review__value, '')::varchar(2048)                                              as me_team_review_results,
        nullif(property_protolabs_cross_sell_company__value, '')::varchar(2048)                                as pl_cross_sell_company_name,
-       nullif(property_protolabs_cross_sell_salesperson__value, '')::varchar(2048)                            as pl_cross_sell_sales_manager_name
+       nullif(property_protolabs_cross_sell_salesperson__value, '')::varchar(2048)                            as pl_cross_sell_sales_manager_name,
+       nullif(property_pl_cross_sell_channel__value, '')::varchar(2048)                            as pl_cross_sell_channel
 from {{ source('ext_hubspot', 'deals') }}  as ehd
          left join {{ source('ext_hubspot', 'deals__associations__associatedcompanyids') }}  as ehdacomp
                    on ehd.dealid = ehdacomp._sdc_source_key_dealid

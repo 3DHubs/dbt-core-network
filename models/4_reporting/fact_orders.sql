@@ -225,6 +225,7 @@ closing_probability,
 qc_inspection_result,
 qc_inspection_result_latest,
 in_country_qc_status,
+pl_cross_sell_channel,
 
 -- Hubspot Owners
 hubspot_owner_name,

@@ -18,6 +18,7 @@ select
     hubspot_owner_name,
     pl_cross_sell_sales_manager_name,
     pl_cross_sell_company_name,
+    pl_cross_sell_channel,
 
 
     is_papi_integration,

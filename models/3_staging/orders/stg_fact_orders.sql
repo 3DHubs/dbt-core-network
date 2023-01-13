@@ -137,6 +137,7 @@ select
     hs_deals.in_country_qc_status,
     hs_deals.me_team_review_results,
     hs_deals.is_delayed_due_to_customs,
+    hs_deals.pl_cross_sell_channel,
 
     ---------- SOURCE: STG ORDERS RDA --------------
 
