@@ -89,6 +89,7 @@ select     li.order_uuid,
 
            -- Materials, Processes & Finishes
            mat.name                                                                     as material_name,
+           mt.name                                                                      as material_type_name,
            msub.name                                                                    as material_subset_name,
            msub.density                                                                 as material_density_g_cm3,
            mc.name                                                                      as material_color_name,
@@ -183,6 +184,7 @@ select     li.order_uuid,
 
              -- Materials Processes and Finishes
              left join {{ ref('materials') }} as mat on mat.material_id = li.material_id
+             left join {{ source('int_service_supply', 'material_types') }}  as mt on mt.material_type_id = mat.material_type_id
              left join {{ ref('processes') }} as prc on prc.process_id = li.process_id
              left join {{ ref('prep_material_subsets') }} as msub on msub.material_subset_id = li.material_subset_id
              left join {{ source('int_service_supply', 'branded_materials') }} as bmat on bmat.branded_material_id = li.branded_material_id

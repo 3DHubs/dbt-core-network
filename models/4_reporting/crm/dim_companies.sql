@@ -54,7 +54,7 @@ select
        own_handover.name                                                         as hubspot_handover_owner_name,
 
        -- Source: Location
-       lower(coalesce(hc.country,adc.country_iso2))                              as country_iso2,
+       lower(dc.alpha2_code)                                                     as country_iso2,
        dc.name                                                                   as country_name,
        lower(dc.continent)                                                       as continent,
        dc.market,
@@ -120,7 +120,7 @@ on lower(hc.industry) = indm.industry
     left join {{ ref('stg_companies_dimensions') }} as adc on hc.hubspot_company_id = adc.hubspot_company_id
     left join {{ ref('agg_contacts_company') }} as acc on hc.hubspot_company_id = acc.hubspot_company_id
     left join {{ ref('agg_orders_companies') }} as agg_orders on hc.hubspot_company_id = agg_orders.hubspot_company_id
-    left join {{ ref('prep_countries') }} as dc on lower( coalesce(hc.country,adc.country_iso2)) = lower(dc.alpha2_code)
+    left join {{ ref('prep_countries') }} as dc on lower(coalesce(hc.country,adc.country_iso2)) = lower(dc.alpha2_code) or lower(coalesce(hc.country,adc.country_iso2)) = lower(dc.name)
     left join city_coordinates as cc on cc.city = lower(hc.city) and cc.country_id = dc.country_id 
     left join {{ ref('hubspot_owners') }} as own on own.owner_id::bigint = hc.hubspot_owner_id::bigint
     left join {{ ref('hubspot_owners') }} as own_inside on own_inside.owner_id::bigint = hc.inside_sales_owner::bigint
