@@ -18,17 +18,22 @@ select issc.created,
        issc.lat,
        issc.lon,
        --region
-       case when lower(issc.alpha2_code) in ('al','ad','by','dk','ee','fi','ax','at','be','ba','bg','es-cn','hr','cy','cz','fo','fr','de','gi','gr','hu','ie','je','lv','lt','mk','mt','md','mc','no','pt','se','ch','ua','gg','is','im','it','li','lu','me','nl','pl','ro','ru','sm','rs','sk','si','es','sj','gb','va') then 'europe'
-            when lower(issc.alpha2_code) in ('ai','aw','bs','bb','cw','do','ag','bz','bm','bq','vg','ca','ky','cr','cu','dm','sv','gl','gp','mq','ms','an','pr','mf','pm','sx','tc','gd','gt','ht','hn','jm','mx','ni','pa','bl','kn','lc','vc','tt','vi','us') then 'north-america'
+       case 
+            when lower(issc.alpha2_code) in ('be','lu','nl','dk','fi','no','se','ie','gb') then 'neur'
+            when lower(issc.alpha2_code) in ('at','de','ch','pl') then 'ceur'
+            when lower(issc.alpha2_code) in ('es','it','pt','fr') then 'seur'
+            when lower(issc.alpha2_code) in ('ai','aw','bs','bb','cw','do','ag','bz','bm','bq','vg','ca','ky','cr','cu','dm','sv','gl','gp','mq','ms','an','pr','mf','pm','sx','tc','gd','gt','ht','hn','jm','mx','ni','pa','bl','kn','lc','vc','tt','vi','us') then 'na'
             else 'row'
             end region,
        --market
-       case when lower(issc.alpha2_code) in ('dk','fi','be','no','se','lu','nl') then 'benelux and nordics'
-            when lower(issc.alpha2_code) in ('at','de','ch','pl','cz','hu','sk') then 'dach'
+       case when lower(issc.alpha2_code) in ('be','lu','nl') then 'benelux'
+            when lower(issc.alpha2_code) in ('dk','fi','no','se') then 'nordics'
+            when lower(issc.alpha2_code) in ('at','de','ch','pl') then 'dach'
             when lower(issc.alpha2_code) = 'fr' then 'france'
             when lower(issc.alpha2_code) in ('ie','gb') then 'uki'
-            when lower(issc.alpha2_code) in ('ca','us') then 'us/ca'
-            else 'other'
+            when lower(issc.alpha2_code) in ('ca','us','mx') then 'us/ca/mx'
+            when lower(issc.alpha2_code) in ('es','it','pt') then 'iberia p /it'
+            else 'row'
             end market,
             scmm.country_iso3,
        {% for boolean_field in boolean_fields %}

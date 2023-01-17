@@ -17,7 +17,7 @@ with hc as (
            hs_analytics_first_url,
            hs_analytics_first_visit_timestamp,
            ip_country_code,
-           lower(coalesce(hc.ip_country_code, dc.alpha2_code)) as country_iso2,
+           lower(coalesce( dc.alpha2_code, hc.ip_country_code)) as country_iso2,
            createdate as created_at,
            lifecyclestage,
            associatedcompanyid,

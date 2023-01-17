@@ -2,7 +2,7 @@ select con.created_at                                             as created_at,
            coalesce(md5(concat('company', con.hs_company_id)),md5(concat('contact', con.contact_id))) as client_id,
            users.user_id                                              as platform_user_id,
            nvl(con.firstname || ' ' || con.lastname, con.email)       as name,
-           con.country_iso2,
+           lower(coalesce(agg_orders.first_submitted_order_country_iso2, con.country_iso2))   as country_iso2,
            con.hs_company_id                                          as hubspot_company_id,
            con.contact_id                                             as hubspot_contact_id,
            nullif(trim(con.hutk_analytics_source), '')                as hutk_analytics_source,
@@ -72,7 +72,8 @@ select con.created_at                                             as created_at,
            users.created                                              as platform_user_created_at
     from {{ ref('stg_hs_contacts_attributed') }} as con
              left join {{ ref('stg_contacts_mqls') }} as mql on  con.contact_id = mql.contact_id
-             left join {{ ref('prep_countries') }} dc on lower(con.country_iso2) = lower(dc.alpha2_code)
+             left join {{ ref('agg_orders_contacts') }} as agg_orders on con.contact_id = agg_orders.hubspot_contact_id
+             left join {{ ref('prep_countries') }} dc on  lower(coalesce(agg_orders.first_submitted_order_country_iso2, con.country_iso2))  = lower(dc.alpha2_code)
              left join {{ ref('hubspot_owners') }} own
                              on own.owner_id::bigint = con.hubspot_owner_id::bigint
              left join {{ ref('hubspot_owners') }} bdr on bdr.owner_id = con.bdr_owner_id
