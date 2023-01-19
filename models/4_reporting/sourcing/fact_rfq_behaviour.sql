@@ -27,7 +27,10 @@ with
     -- Data from Bids (RFQ)
     supplier_rfq_bids as (
         select
-            bid_quotes.*,
+            bids.created,
+            bids.currency_code,
+            bids.subtotal_price_amount,
+            bids.lead_time,
             bids.placed_at,
             bids.uuid as bid_uuid,
             bids.supplier_id,
@@ -35,18 +38,13 @@ with
             bids.ship_by_date,
             md5(bids.supplier_id || bids.auction_uuid) as supplier_rfq_uuid,
             row_number() over (
-                partition by bid_quotes.order_uuid, supplier_id
-                order by bid_quotes.created asc
+                partition by bids.uuid, supplier_id
+                order by bids.created asc
             ) as supplier_bid_idx
-        from {{ ref("prep_supply_documents") }} as bid_quotes
-        left join {{ ref("prep_bids") }} as bids on bid_quotes.uuid = bids.uuid
-        left join
-            {{ ref("prep_supply_documents") }} as auction_quote
-            on auction_quote.uuid = bid_quotes.parent_uuid
+        from {{ ref("prep_bids") }} as bids
         inner join  -- Inner Join to Filter on RFQ
             {{ ref("prep_auctions_rfq") }} as auctions
-            on auctions.order_quotes_uuid = auction_quote.uuid
-        where bid_quotes.type = 'bid'
+            on auctions.order_quotes_uuid = bids.auction_uuid
     ),
 
     -- Data from Supplier-Auctions (RFQ) + Auctions (RFQ)
@@ -176,7 +174,7 @@ with
         from {{ source("int_service_supply", "supplier_rfqs") }} as supplier_rfqs
         left outer join
             supplier_rfq_bids as bid_quotes
-            on supplier_rfqs.order_uuid = bid_quotes.order_uuid
+            on supplier_rfqs.order_uuid = bid_quotes.bid_uuid
             and bid_quotes.supplier_id = supplier_rfqs.supplier_id
             and supplier_bid_idx = 1
         left outer join {{ ref("suppliers") }} as s on s.id = supplier_rfqs.supplier_id

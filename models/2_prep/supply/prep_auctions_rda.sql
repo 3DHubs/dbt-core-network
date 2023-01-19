@@ -17,7 +17,7 @@ with auctions as (select
                       oqs.order_uuid as order_uuid,
                       oqs.parent_uuid as quote_uuid,
                       -- Auction Attributes
-                      auctions.winner_bid_uuid as winning_bid_uuid,
+                      auctions.new_winner_bid_uuid as winning_bid_uuid,
                       auctions.status,  -- If auction gets status 'resourced' it means it has been brought back to the auction
                       auctions.started_at,
                       auctions.finished_at,
@@ -41,11 +41,11 @@ with auctions as (select
                       technologies.name as auction_technology_name,
                       -- One order can have multiple auctions
                       row_number() over (partition by oqs.order_uuid order by auctions.started_at desc nulls last) as recency_idx,
-                      row_number() over (partition by oqs.order_uuid, case when auctions.winner_bid_uuid is not null then 1 else 0 end
-                       order by auctions.started_at asc nulls last) =1 and auctions.winner_bid_uuid is not null as first_successful_auction
+                      row_number() over (partition by oqs.order_uuid, case when auctions.new_winner_bid_uuid is not null then 1 else 0 end
+                       order by auctions.started_at asc nulls last) =1 and auctions.new_winner_bid_uuid is not null as first_successful_auction
                   from {{ source('int_service_supply', 'auctions') }} as auctions
                       inner join {{ ref('prep_supply_documents') }} as oqs on auctions.uuid = oqs.uuid
-                      left join {{ ref ('prep_bids')}} as bids on auctions.winner_bid_uuid = bids.uuid
+                      left join {{ ref ('prep_bids')}} as bids on auctions.new_winner_bid_uuid = bids.uuid
                       left join {{ ref('suppliers') }} as suppliers on bids.supplier_id = suppliers.id
                       left join {{ ref ('technologies') }} as technologies on oqs.technology_id = technologies.technology_id
                   where not decode(auctions.is_rfq, 'true', True, 'false', False))

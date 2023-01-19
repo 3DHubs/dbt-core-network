@@ -9,12 +9,7 @@
         )
     }}
 
-    select oqs.created,
-           oqs.updated,
-           oqs.deleted,
-           bids.*
-    from {{ source('int_service_supply', 'bids') }} as bids
-    inner join {{ source('int_service_supply', 'cnc_order_quotes') }} as oqs
-               on bids.uuid = oqs.uuid
+    select bids.*
+    from {{ source('int_service_supply', 'new_bids') }} as bids
 
 {% endsnapshot %}

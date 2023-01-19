@@ -1,11 +1,11 @@
-select oqs.created,
-       oqs.updated,
-       oqs.deleted,
+select bids.created,
+       bids.updated,
+       bids.deleted,
        bids.uuid,
        bids.auction_uuid,
        bids.response_type,
        bids.placed_at,
-       bids.bid_loss_reason,
+       bids.loss_reason as bid_loss_reason,
        bids.explanation,
        bids.ship_by_date,
        bids.supplier_id,
@@ -13,11 +13,13 @@ select oqs.created,
        bids.author_id,
        bids.margin, -- For debugging purposes only, do not use for reporting
        bids.margin_without_discount, -- This field will be used in auctions,
-       bids.bid_version, -- Used to calculate active vs 1st bid version.
+       bids.revision as bid_version, -- Used to calculate active vs 1st bid version.
+       bids.subtotal_price_amount,
+       bids.currency_code,
+       bids.description,
+       bids.lead_time,
        {{ varchar_to_boolean('has_changed_prices') }},
        {{ varchar_to_boolean('has_design_modifications') }},
        {{ varchar_to_boolean('has_changed_shipping_date') }},
        {{ varchar_to_boolean('is_active') }}
-from {{ source('int_service_supply', 'bids') }} as bids
-         inner join {{ ref('prep_supply_documents') }} as oqs
-                    on bids.uuid = oqs.uuid
+from {{ source('int_service_supply', 'new_bids') }} as bids

@@ -193,12 +193,12 @@ sources:
           warn_after: {count: 12, period: hour}
           error_after: {count: 24, period: hour}
         loaded_at_field: started_at      
-      - name: bids
+      - name: new_bids
         freshness:
           warn_after: {count: 12, period: hour}
           error_after: {count: 24, period: hour}
         loaded_at_field: placed_at       
-      - name: bids_bid_reasons
+      - name: new_bids_bid_reasons
       - name: bid_reasons
       - name: billing_requests
         freshness:
@@ -208,7 +208,6 @@ sources:
       - name: branded_materials
       - name: cancellation_reasons
       - name: cnc_order_parts_inspection_attachments
-      - name: cnc_order_quote_attachments
       - name: cnc_orders
         freshness:
           warn_after: {count: 12, period: hour}

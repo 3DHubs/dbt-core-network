@@ -7,12 +7,12 @@
 
     with bids_with_multiple_reasons as (
         select bid_uuid, count(*) as n_reasons
-        from {{ source('int_service_supply', 'bids_bid_reasons') }}
+        from {{ source('int_service_supply', 'new_bids_bid_reasons') }}
         group by 1
         having n_reasons > 1
     ) 
     
-    select * from {{ source('int_service_supply', 'bids_bid_reasons') }}
+    select * from {{ source('int_service_supply', 'new_bids_bid_reasons') }}
     where bid_uuid not in (select bid_uuid from bids_with_multiple_reasons)
     
     --- Note: there are no one-to-many relationships on the current implementation but the table have data 
