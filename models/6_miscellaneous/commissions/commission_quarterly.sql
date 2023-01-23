@@ -8,13 +8,12 @@
 
 with  quarterly_closed_amount_directors as (
       select date_trunc('quarter', closed_at)                                                      as commission_date,
-      case when fo.destination_market != 'us/ca' then 'Neil Gilbody' else 'Anthony Giampapa' END as director,
-      -- c.reports_to_lead                                                                    as lead_report,
+      case when fo.destination_market != 'us/ca/mx' then 'Neil Gilbody' else 'Anthony Giampapa' END as director,
       round(sum(subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0)) , 2)         as subtotal_closed_amount_usd
       from dbt_prod_reporting.fact_orders fo
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
-      and closed_at >='2021-01-01'
+      and closed_at >='2023-01-01'
       group by 1,2
       ),
       quarterly_target_directors as (
@@ -32,9 +31,10 @@ with  quarterly_closed_amount_directors as (
       date_add('month',2,commission_date) as commission_date,
       null::bigint as order_hubspot_deal_id,
       employee,
-      target_amount_usd, subtotal_closed_amount_usd,
+      target_amount_usd, 
+      subtotal_closed_amount_usd,
       'Quarterly Director'::text as commission_plan,
-      case when subtotal_closed_amount_usd > target_threshold then true else false end                            as quarterly_bonus_to_be_paid,
+      case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
       subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0) as percent_of_target,
       case when quarterly_bonus_to_be_paid = true and percent_of_target < 1 then (percent_of_target-0.75)/0.25
       when quarterly_bonus_to_be_paid = true and percent_of_target >=1 then percent_of_target  end as bonus_ratio,
@@ -50,7 +50,7 @@ with  quarterly_closed_amount_directors as (
       inner join {{ ref('commission_rules') }} c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fo.hubspot_owner_id
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
-      and closed_at >='2021-01-01'
+      and closed_at >='2023-01-01'
       group by 1,2
       ),
       quarterly_target_leads as (

@@ -17,12 +17,18 @@ select issc.created,
        issc.coordinates,
        issc.lat,
        issc.lon,
-       --region
+       --sub_region
        case 
             when lower(issc.alpha2_code) in ('be','lu','nl','dk','fi','no','se','ie','gb') then 'neur'
             when lower(issc.alpha2_code) in ('at','de','ch','pl') then 'ceur'
             when lower(issc.alpha2_code) in ('es','it','pt','fr') then 'seur'
             when lower(issc.alpha2_code) in ('ai','aw','bs','bb','cw','do','ag','bz','bm','bq','vg','ca','ky','cr','cu','dm','sv','gl','gp','mq','ms','an','pr','mf','pm','sx','tc','gd','gt','ht','hn','jm','mx','ni','pa','bl','kn','lc','vc','tt','vi','us') then 'na'
+            else 'row'
+            end sub_region,
+       --region
+       case 
+            when sub_region in ('neur','ceur','seur') then 'emea'
+            when sub_region = 'na' then 'na'
             else 'row'
             end region,
        --market

@@ -12,6 +12,8 @@ select
     country_name,
     continent,
     market,
+    region,
+    sub_region,
     city,
     city_latitude,
     city_longitude,

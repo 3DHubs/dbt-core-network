@@ -55,6 +55,7 @@ select distinct orders.uuid                                                     
        countries_destination.alpha2_code                                                        as destination_country_iso2,
        countries_destination.market                                                             as destination_market,
        countries_destination.region                                                             as destination_region,
+       countries_destination.sub_region                                                         as destination_sub_region,
        states_destination.state                                                                 as destination_us_state,
 
        -- Company Entity

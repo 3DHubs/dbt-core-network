@@ -8,7 +8,8 @@ select
        decode(is_external, 'true', True, 'false', False)                                      as is_papi_integration,
        case when is_external = 'true' then 'papi'
            when ql.quote_id is not null then 'quicklink' else 'shallowquicklink' end          as integration_type,
-       coalesce(external_orders.consumer_order_id,ql.request_id)                              as integration_order_id,
+       external_orders.consumer_order_id                                                      as integration_order_id,
+       ql.request_id                                                                          as integration_quote_id,
        coalesce(external_orders.consumer_order_number,qt.quote_number)                        as integration_order_number,
        external_orders.consumer_purchase_order_number                                         as integration_purchase_order_number,
        coalesce(external_orders.consumer_order_created_at,ql.created_at)                      as integration_order_created_at,

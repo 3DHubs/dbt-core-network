@@ -59,6 +59,7 @@ select
        lower(dc.continent)                                                       as continent,
        dc.market,
        dc.region,
+       dc.sub_region,
        hc.city,
        cc.city_lat                                                               as city_latitude,
        cc.city_lon                                                               as city_longitude,
