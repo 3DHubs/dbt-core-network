@@ -6,6 +6,11 @@
     )
 }}
 
+with seed_sales_targets as (
+    select * from {{ ref('seed_sales_targets') }}
+    union all
+    select * from {{ ref('seed_sales_targets_archive') }}
+)
             select
                    hubspot_id,
                    role,
@@ -19,7 +24,7 @@
                    reports_to_lead,
                    d.date,
                    own.name            as name
-            from dbt_clara_seed.seed_sales_targets s
+            from seed_sales_targets s
                      inner join data_lake.dim_dates d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
                                                           s.start_date <= d.date AND coalesce(s.end_date, '2024-01-01') > d.date
                  left join dbt_prod_core.hubspot_owners own on own.owner_id = s.hubspot_id

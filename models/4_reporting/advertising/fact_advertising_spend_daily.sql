@@ -88,7 +88,7 @@ select *,
               when campaign_market in ('DACH', 'DE', 'AT', 'CH','PL','HU','CZ','SK') then 'DACH'
               when campaign_market in ('FR') then 'FR'
               when campaign_market in ('IT') then 'IT'
-              when campaign_market in ('NEUR', 'BE', 'NL', 'BN', 'DK', 'FI', 'NO', 'SE') then 'NEUR'
+              when campaign_market in ('NEUR', 'BE', 'NL', 'BN', 'DK', 'FI', 'NO', 'SE', 'EU') then 'NEUR'
               else 'Other' end                                         as campaign_market_grouped,
        split_part(regexp_replace(campaign_name, '^-', '_', 6), '_', 4) as campaign_group_detailed,
        case

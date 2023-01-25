@@ -1,4 +1,9 @@
-with sales_target as (
+with seed_sales_targets as (
+    select * from {{ ref('seed_sales_targets') }}
+    union all
+    select * from {{ ref('seed_sales_targets_archive') }}
+),
+sales_target as (
         select
                hubspot_id,
                role,
@@ -9,7 +14,7 @@ with sales_target as (
                d.date,
                own.name           as employee,
                lead.name           as sales_lead
-        from {{ ref('seed_sales_targets') }} s
+        from seed_sales_targets s
             inner join {{ source('data_lake', 'dim_dates') }} d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
                                                       s.start_date <= d.date AND coalesce(s.end_date, '2024-01-01') > d.date
             left join {{ ref('hubspot_owners') }} own on own.owner_id = s.hubspot_id
@@ -21,7 +26,7 @@ with sales_target as (
     select hubspot_id,
            max(coalesce(s.end_date,'2100-01-01')) as  final_end_date,
            case when final_end_date < '2100-01-01' then false else true end as active
-    from {{ ref('seed_sales_targets') }} s
+    from seed_sales_targets s
     group by 1)
     select
     s.hubspot_id,

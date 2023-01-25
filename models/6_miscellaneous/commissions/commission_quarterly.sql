@@ -8,24 +8,22 @@
 
 with  quarterly_closed_amount_directors as (
       select date_trunc('quarter', closed_at)                                                      as commission_date,
-      case when fo.destination_market != 'us/ca/mx' then 'Neil Gilbody' else 'Anthony Giampapa' END as director,
-      round(sum(subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0)) , 2)         as subtotal_closed_amount_usd
+      case when fo.destination_region != 'na' then 'Neil Gilbody' else 'Anthony Giampapa' end as director,
+      round(sum(subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0)) , 2)       as subtotal_closed_amount_usd
       from dbt_prod_reporting.fact_orders fo
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
-      and closed_at >='2023-01-01'
+      and closed_at >='2022-01-01'
       group by 1,2
       ),
       quarterly_target_directors as (
       select date_trunc('quarter', cr.date)                                                           as target_date,
-      cr.hubspot_id,
-      cr.region,
       cr.name as employee,
       sum(monthly_target) as target_amount_usd,
       round(target_amount_usd*0.75) as target_threshold
       from {{ ref('commission_rules') }} cr
       where role='director'
-      group by 1,2,3,4),
+      group by 1,2),
       quarterly_directors as (
       select
       date_add('month',2,commission_date) as commission_date,
@@ -35,13 +33,50 @@ with  quarterly_closed_amount_directors as (
       subtotal_closed_amount_usd,
       'Quarterly Director'::text as commission_plan,
       case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
-      subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0) as percent_of_target,
-      case when quarterly_bonus_to_be_paid = true and percent_of_target < 1 then (percent_of_target-0.75)/0.25
-      when quarterly_bonus_to_be_paid = true and percent_of_target >=1 then percent_of_target  end as bonus_ratio,
-      coalesce((20000*bonus_ratio),1)  as commission_usd
+      ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
+      case when quarterly_bonus_to_be_paid = true then coalesce((20000*bonus),1)  end as commission_usd
 
       from quarterly_closed_amount_directors qa
-      inner join quarterly_target_directors qt on qt.employee = qa.director and qt.target_date = qa.commission_date),
+      inner join quarterly_target_directors qt on qt.employee = qa.director and qt.target_date = qa.commission_date
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      ),
+      ------------------------------ INTEGRATION LEAD ------------------------------------
+      quarterly_closed_amount_integration_lead as (
+      select date_trunc('quarter', closed_at)                                                      as commission_date,
+      case when fo.destination_region = 'na' then 'Austin Daugherty'  end as integration_lead,
+      round(sum(subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0)) , 2)       as subtotal_closed_amount_usd
+      from dbt_prod_reporting.fact_orders fo
+      where true
+      and hubspot_dealstage_mapped not in ('Closed - Canceled')
+      and closed_at >='2022-01-01'
+      and fo.destination_region = 'na'
+      group by 1,2
+      ),
+      quarterly_target_integration_lead as (
+      select date_trunc('quarter', cr.date)                                                           as target_date,
+      cr.name as employee,
+      sum(monthly_target) as target_amount_usd,
+      round(target_amount_usd*0.75) as target_threshold
+      from {{ ref('commission_rules') }} cr
+      where role='integration lead'
+      group by 1,2),
+      quarterly_integration_lead as (
+      select
+      date_add('month',2,commission_date) as commission_date,
+      null::bigint as order_hubspot_deal_id,
+      employee,
+      target_amount_usd, 
+      subtotal_closed_amount_usd,
+      'Integration Lead'::text as commission_plan,
+      case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
+      ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
+      case when quarterly_bonus_to_be_paid = true then coalesce((7500*bonus),1)  end as commission_usd
+
+      from quarterly_closed_amount_integration_lead qa
+      inner join quarterly_target_integration_lead qt on qt.employee = qa.integration_lead and qt.target_date = qa.commission_date
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      ),
+      ------------------------------ STRATEGIC LEAD ------------------------------------
       quarterly_closed_amount_leads as (
       select date_trunc('quarter', closed_at)                                                      as commission_date,
       c.reports_to_lead                                                                     as lead_report,
@@ -50,7 +85,7 @@ with  quarterly_closed_amount_directors as (
       inner join {{ ref('commission_rules') }} c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fo.hubspot_owner_id
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
-      and closed_at >='2023-01-01'
+      and closed_at >='2022-01-01'
       group by 1,2
       ),
       quarterly_target_leads as (
@@ -58,30 +93,38 @@ with  quarterly_closed_amount_directors as (
       cr.reports_to_lead,
       dr.name as employee,
       dr.role,
+      dr.region,
       sum(case when cr.role = 'strategic lead' then monthly_lead_target else monthly_target end) as target_amount_usd,
       round(target_amount_usd*0.75) as target_threshold
       from {{ ref('commission_rules') }} cr
-      inner join (select hubspot_id, name, date, role from {{ ref('commission_rules') }} where role in ('strategic lead','inside lead')) dr on dr.hubspot_id = cr.reports_to_lead and dr.date = cr.date
-      where cr.role = ('strategic lead') or dr.role='inside lead'
-      group by 1,2,3,4),
+      inner join (select hubspot_id, name, date, role, region from {{ ref('commission_rules') }} where role in ('strategic lead','inside lead','support')) dr on dr.hubspot_id = cr.reports_to_lead and dr.date = cr.date
+      where cr.role in ('strategic lead','inside lead','support')
+      group by 1,2,3,4,5),
       quarterly_leads as (
       select
        date_add('month',2,commission_date) as commission_date,
       null::bigint as order_hubspot_deal_id,
       employee,
-      target_amount_usd, subtotal_closed_amount_usd,
-      'Quarterly Leads'::text as commission_plan,
+      target_amount_usd, 
+      subtotal_closed_amount_usd,
+      'Quarterly Leads / Support'::text as commission_plan,
       case when subtotal_closed_amount_usd > target_threshold then true else false end                            as quarterly_bonus_to_be_paid,
-      subtotal_closed_amount_usd *1.0 / target_amount_usd as percent_of_target,
-      case when quarterly_bonus_to_be_paid = true and percent_of_target < 1 then (percent_of_target-0.75)/0.25
-      when quarterly_bonus_to_be_paid = true and percent_of_target >=1 then percent_of_target  end as bonus_ratio,
-      coalesce((case when role = 'inside lead' and employee = 'Dan Scahill'  then
-          case when quarterly_bonus_to_be_paid then subtotal_closed_amount_usd * 0.2 / 100 else 1 end else
-      case when role = 'inside lead' then  3000
-      when role = 'strategic lead' then 6000  *bonus_ratio end end),1)  as commission_usd
+       ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
+      coalesce(case when quarterly_bonus_to_be_paid = true 
+      and qt.role = 'inside lead' then 3000*bonus  
+      when quarterly_bonus_to_be_paid = true 
+      and qt.role = 'strategic lead' and qt.region='US' then 7500*bonus
+      when quarterly_bonus_to_be_paid = true 
+      and qt.role = 'strategic lead' and qt.region='EU' then 11000*bonus
+      when quarterly_bonus_to_be_paid = true 
+      and qt.role = 'support' and qt.region='EU' then 15000*bonus
+      when quarterly_bonus_to_be_paid = true 
+      and qt.role = 'support' and qt.region='US' then 3000*bonus  end,1)  as commission_usd
 
       from quarterly_closed_amount_leads qa
-      inner join quarterly_target_leads qt on qt.reports_to_lead = qa.lead_report and qt.target_date = qa.commission_date),
+      inner join quarterly_target_leads qt on qt.reports_to_lead = qa.lead_report and qt.target_date = qa.commission_date
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      ),
 
       ------------------------------------ QUARTERLY COMMISSIONS ----------------------------------------
 
@@ -97,7 +140,7 @@ with  quarterly_closed_amount_directors as (
       where true
       and is_strategic = true
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
-      and closed_at >='2021-01-01'
+      and closed_at >='2023-01-01'
       group by 1,2,3
       ),
       quarterly_target as (
@@ -149,7 +192,6 @@ with  quarterly_closed_amount_directors as (
       ------------------------------------ SPECIAL COMMISSIONS ----------------------------------------
 
       ------------------------------------ FINAL QUARTERLY TABLE --------------------------------------------
-
   
       select commission_date,
       order_hubspot_deal_id,
@@ -157,6 +199,13 @@ with  quarterly_closed_amount_directors as (
       commission_plan,
       commission_usd
       from quarterly_directors
+      union all
+      select commission_date,
+      order_hubspot_deal_id,
+      employee,
+      commission_plan,
+      commission_usd
+      from quarterly_integration_lead
       union all
       select commission_date,
       order_hubspot_deal_id,
