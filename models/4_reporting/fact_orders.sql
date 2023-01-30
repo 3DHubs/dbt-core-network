@@ -63,6 +63,7 @@ is_legacy,
 
 -- External Attributes
 is_papi_integration,
+is_integration,
 integration_type,
 integration_order_id, 
 integration_quote_id,
@@ -70,6 +71,9 @@ integration_order_number,
 integration_purchase_order_number,
 integration_user_id,
 integration_utm_content,
+integration_contact_is_closed_type,
+integration_company_is_closed_type,
+
 
 -- Lifecycle Dates
 created_at, -- Upload/cart

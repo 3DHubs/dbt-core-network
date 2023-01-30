@@ -138,7 +138,11 @@ select
     hs_deals.in_country_qc_status,
     hs_deals.me_team_review_results,
     hs_deals.is_delayed_due_to_customs,
-    hs_deals.pl_cross_sell_channel,
+    case when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
+    when hubspot_owner_name ~ '(PL)' then 'Direct Sales Pilot'
+    when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win' 
+    when pl_cross_sell_sales_manager_name is not null then 'Twin-Win' end as pl_cross_sell_channel,
+    case when integration_type is not null or pl_cross_sell_channel is not null then true else false end as is_integration,
 
     ---------- SOURCE: STG ORDERS RDA --------------
 

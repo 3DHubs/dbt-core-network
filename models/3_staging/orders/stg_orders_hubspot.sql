@@ -29,7 +29,7 @@ with stg as (
         hs.bdr_company_source                                                             as hubspot_company_source,
         htm.technology_id                                                                 as hubspot_technology_id,
         technologies.name                                                                 as hubspot_technology_name,
-        hs.pl_cross_sell_channel,
+        hs.pl_cross_sell_channel                                                          as hubspot_pl_cross_sell_channel,
 
         -- Dates
         hs.createdate                                                                     as hubspot_created_at,

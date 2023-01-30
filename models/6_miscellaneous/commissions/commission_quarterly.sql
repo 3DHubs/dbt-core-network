@@ -117,7 +117,7 @@ with  quarterly_closed_amount_directors as (
       when quarterly_bonus_to_be_paid = true 
       and qt.role = 'strategic lead' and qt.region='EU' then 11000*bonus
       when quarterly_bonus_to_be_paid = true 
-      and qt.role = 'support' and qt.region='EU' then 15000*bonus
+      and qt.role = 'support' and qt.region='EU' then 1500*bonus
       when quarterly_bonus_to_be_paid = true 
       and qt.role = 'support' and qt.region='US' then 3000*bonus  end,1)  as commission_usd
 
