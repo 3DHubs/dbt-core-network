@@ -59,8 +59,10 @@ select
         over (partition by hubspot_contact_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)         as first_closed_order_process_name_contact,
     first_value(destination_country_iso2)
         over ( partition by hubspot_contact_id order by closed_at asc rows between unbounded preceding and unbounded following)                        as first_submitted_order_country_iso2,
+    first_value(integration_type) 
+        over (partition by hubspot_contact_id order by created_at asc rows between unbounded preceding and unbounded following)                        as first_integration_type_contact,
     first_value(is_integration) 
-        over (partition by hubspot_contact_id order by closed_at asc rows between unbounded preceding and unbounded following)                        as is_integration_contact,
+        over (partition by hubspot_contact_id order by closed_at asc rows between unbounded preceding and unbounded following)                         as is_integration_contact,
       
 
     -- Rank Values
@@ -220,6 +222,7 @@ select orders.order_uuid,
        prep.first_closed_order_technology_contact,
        prep.first_closed_order_process_name_contact,
        prep.first_submitted_order_country_iso2,
+       prep.first_integration_type_contact,
        case when prep.is_integration_contact = true  and is_integration = true then 'direct'
             when is_integration then 'indirect' end as integration_contact_is_closed_type,
        
