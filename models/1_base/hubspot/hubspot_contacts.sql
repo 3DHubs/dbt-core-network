@@ -41,3 +41,5 @@ select nullif(property_lifecyclestage__value, '')::varchar(1024)                
        false                                                                                            as is_legacy
 
 from {{ source('ext_hubspot', 'contacts') }}
+left join {{ ref ('hubspot_spam_contacts') }} hsc on hsc.recipient = property_email__value and property_createdate__value::timestamp >='2023-01-01'
+where hsc.recipient is null or property_lifecyclestage__value = 'customer' --filtering out spam
