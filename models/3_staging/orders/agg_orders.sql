@@ -223,8 +223,8 @@ select orders.order_uuid,
        prep.first_closed_order_process_name_contact,
        prep.first_submitted_order_country_iso2,
        prep.first_integration_type_contact,
-       case when prep.is_integration_contact = true  and is_integration = true then 'direct'
-            when is_integration then 'indirect' 
+       case when prep.is_integration_contact = true  and is_integration_tmp = true then 'direct'
+            when is_integration_tmp then 'indirect' 
             when prep.is_integration_contact = true then 'indirect'
             when prep.is_integration_company = true then 'indirect' end as integration_contact_is_closed_type,
        
@@ -260,8 +260,8 @@ select orders.order_uuid,
        -- First Values
        prep.first_submitted_order_technology_company,
        prep.first_closed_order_technology_company,
-       case when prep.is_integration_company = true  and is_integration = true then 'direct'
-            when is_integration then 'indirect' 
+       case when prep.is_integration_company = true  and is_integration_tmp = true then 'direct'
+            when is_integration_tmp then 'indirect' 
             when prep.is_integration_company = true then 'indirect'
             when prep.is_integration_contact = true then 'indirect' end as integration_company_is_closed_type,
        -- Rank Values
