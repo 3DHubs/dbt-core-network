@@ -63,7 +63,7 @@ is_legacy,
 
 -- External Attributes
 is_papi_integration,
-is_integration,
+case when integration_contact_is_closed_type is not null or integration_company_is_closed_type is not null then true else is_integration end as is_integration, -- including indirect integration revenue
 integration_type,
 integration_order_id, 
 integration_quote_id,
