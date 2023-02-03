@@ -63,16 +63,16 @@ is_legacy,
 
 -- External Attributes
 is_papi_integration,
-case when integration_contact_is_closed_type is not null or integration_company_is_closed_type is not null then true else is_integration_tmp end as is_integration, -- including indirect integration revenue
-integration_type,
+case when is_integration_contact or is_integration_company then true else is_integration_tmp end as is_integration, -- including indirect integration revenue
+case when is_integration_tmp then 'Direct'
+     when is_integration then 'Indirect' end as integration_order_type,
+integration_platform_type,
 integration_order_id, 
 integration_quote_id,
 integration_order_number, 
 integration_purchase_order_number,
 integration_user_id,
 integration_utm_content,
-integration_contact_is_closed_type,
-integration_company_is_closed_type,
 
 
 -- Lifecycle Dates
@@ -231,8 +231,8 @@ closing_probability,
 qc_inspection_result,
 qc_inspection_result_latest,
 in_country_qc_status,
-case when pl_cross_sell_channel is not null then pl_cross_sell_channel
-     when is_integration then 'Indirect' end as pl_cross_sell_channel,
+pl_cross_sell_channel,
+
 
 -- Hubspot Owners
 hubspot_owner_name,

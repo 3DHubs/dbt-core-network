@@ -20,7 +20,8 @@ min(closed_sales_usd_new_customer_company)         as closed_sales_usd_new_custo
 min(total_precalc_margin_usd_new_customer_company) as total_precalc_margin_usd_new_customer_company,
 -- First Values
 min(first_submitted_order_technology_company)      as first_submitted_order_technology_company,
-min(first_closed_order_technology_company)         as first_closed_order_technology_company
+min(first_closed_order_technology_company)         as first_closed_order_technology_company,
+is_integration_company
 
 from {{ ref('agg_orders') }} agg
-group by agg.hubspot_company_id
+group by agg.hubspot_company_id, is_integration_company

@@ -27,15 +27,14 @@ select
 
     is_integration,
     is_papi_integration,
-    integration_type,
+    integration_platform_type,
     integration_order_id,
     integration_quote_id,
     integration_order_number,
     integration_purchase_order_number,
     integration_user_id,
     integration_utm_content,
-    integration_contact_is_closed_type,
-    integration_company_is_closed_type,
+    integration_order_type,
 
     subtotal_closed_amount_usd,
     subtotal_sourced_amount_usd - subtotal_sourced_cost_usd        as subtotal_sourced_precalculated_margin_usd,

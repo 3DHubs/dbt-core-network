@@ -23,9 +23,10 @@ min(first_closed_order_technology_contact) as first_closed_order_technology_cont
 min(first_closed_order_process_name_contact) as first_closed_order_process_name_contact,
 min(first_submitted_order_country_iso2) as first_submitted_order_country_iso2,
 min(first_integration_type_contact) as first_integration_type_contact,
+is_integration_contact,
 -- Averages & Medians
 avg(case when number_of_closed_orders_contact > 2 then days_from_previous_closed_order_contact end) as average_days_between_closed_orders_contact,
 median(case when number_of_closed_orders_contact > 2 then days_from_previous_closed_order_contact end) as median_days_between_closed_orders_contact
 
 from {{ ref('agg_orders') }}
-group by hubspot_contact_id
+group by hubspot_contact_id, is_integration_contact

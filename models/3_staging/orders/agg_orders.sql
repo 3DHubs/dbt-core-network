@@ -59,7 +59,7 @@ select
         over (partition by hubspot_contact_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)         as first_closed_order_process_name_contact,
     first_value(destination_country_iso2)
         over ( partition by hubspot_contact_id order by closed_at asc rows between unbounded preceding and unbounded following)                        as first_submitted_order_country_iso2,
-    first_value(integration_type) 
+    first_value(integration_platform_type) 
         over (partition by hubspot_contact_id order by created_at asc rows between unbounded preceding and unbounded following)                        as first_integration_type_contact,
     first_value(is_integration_tmp) 
         over (partition by hubspot_contact_id order by closed_at asc rows between unbounded preceding and unbounded following)                         as is_integration_contact,
@@ -223,10 +223,11 @@ select orders.order_uuid,
        prep.first_closed_order_process_name_contact,
        prep.first_submitted_order_country_iso2,
        prep.first_integration_type_contact,
-       case when prep.is_integration_contact = true  and is_integration_tmp = true then 'direct'
-            when is_integration_tmp then 'indirect' 
-            when prep.is_integration_contact = true then 'indirect'
-            when prep.is_integration_company = true then 'indirect' end as integration_contact_is_closed_type,
+       prep.is_integration_contact,
+    --    case when prep.is_integration_contact = true  and is_integration_tmp = true then 'direct'
+    --         when is_integration_tmp then 'indirect' 
+    --         when prep.is_integration_contact = true then 'indirect'
+    --         when prep.is_integration_company = true then 'indirect' end as integration_contact_is_closed_type,
        
        -- Rank Values
        prep.closed_order_number_contact,
@@ -260,10 +261,11 @@ select orders.order_uuid,
        -- First Values
        prep.first_submitted_order_technology_company,
        prep.first_closed_order_technology_company,
-       case when prep.is_integration_company = true  and is_integration_tmp = true then 'direct'
-            when is_integration_tmp then 'indirect' 
-            when prep.is_integration_company = true then 'indirect'
-            when prep.is_integration_contact = true then 'indirect' end as integration_company_is_closed_type,
+       prep.is_integration_company,
+    --    case when is_integration_tmp = true then 'direct'
+    --         when is_integration_tmp then 'indirect' 
+    --         when prep.is_integration_company = true then 'indirect'
+    --         when prep.is_integration_contact = true then 'indirect' end as integration_company_is_closed_type,
        -- Rank Values
        prep.closed_order_number_company,
        prep.days_from_previous_closed_order_company,

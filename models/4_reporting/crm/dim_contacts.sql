@@ -89,6 +89,7 @@ select base.created_at,
        agg_orders.first_closed_order_process_name_contact       as first_closed_order_process_name,
        agg_orders.average_days_between_closed_orders_contact    as average_days_between_closed_orders,
        agg_orders.median_days_between_closed_orders_contact     as median_days_between_closed_orders,
+       agg_orders.is_integration_contact                        as is_integration_contact,
 
        -- Company Aggregates
        agg_companies.inside_mql_number,
