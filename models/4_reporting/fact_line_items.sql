@@ -33,6 +33,8 @@ select     li.order_uuid,
            li.document_uuid,
            li.document_type,
            li.document_revision,
+           li.estimated_first_leg_customs_amount_usd / 100.00                         as line_item_estimated_l1_customs_amount_usd,
+           li.estimated_second_leg_customs_amount_usd / 100.00                        as line_item_estimated_l2_customs_amount_usd,
            li.is_order_quote,
            li.is_active_po,
            -- Supply Line Items Base Fields

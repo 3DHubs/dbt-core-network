@@ -338,6 +338,8 @@ second_leg_carrier_name,
 second_leg_carrier_name_mapped,
 
 -- Logistics: Estimates
+estimated_l1_customs_amount_usd,
+estimated_l2_customs_amount_usd,
 shipping_price_estimates,
 
 -- On Time Rate

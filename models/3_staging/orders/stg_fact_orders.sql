@@ -311,6 +311,8 @@ select
     logistics_business_hours.time_transit_at_cross_dock_business_minutes,
 
     -- Logistics: Estimates
+    qli.estimated_l1_customs_amount_usd,
+    qli.estimated_l2_customs_amount_usd,
     quotes.shipping_price_estimates,
 
     -------- SOURCE: STG OTR -----------

@@ -48,6 +48,8 @@ with agg_line_items as (
                    else 0 end)                                                             as other_line_items_amount,
            -- Financial (USD - Conversion based on Creation Date)        
            sum(line_item_price_amount_usd)                                                 as li_subtotal_amount_usd, -- For reference, this value shoulds match the values in orders for quotes and pos
+           sum(fli.line_item_estimated_l1_customs_amount_usd)                              as estimated_l1_customs_amount_usd,
+           sum(fli.line_item_estimated_l2_customs_amount_usd)                              as estimated_l2_customs_amount_usd,
            sum(case
                    when fli.line_item_type = 'part' then line_item_price_amount_usd
                    else 0 end)                                                             as parts_amount_usd, 

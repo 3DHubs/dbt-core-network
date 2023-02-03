@@ -82,6 +82,8 @@ select
        li.custom_tolerance,
        li.custom_tolerance_unit,
        li.general_tolerance_class,
+       li.estimated_first_leg_customs_amount_usd,
+       li.estimated_second_leg_customs_amount_usd,
        li.estimated_price_amount,
        li.estimated_price_original_amount,
        li.thickness,
