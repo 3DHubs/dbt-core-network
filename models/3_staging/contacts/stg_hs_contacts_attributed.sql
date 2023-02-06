@@ -24,7 +24,7 @@ select coalesce(page_group, 'Ungrouped')                                  as tmp
                 lower(hutk_analytics_source_data_1) in ('analytics', 'api', 'conversations')
                then 'unknown_channel_no_web_session'
            when hutk_analytics_first_url like '%utm_medium=display%' then 'display'
-           when hutk_analytics_first_url like '%utm_source=youtube%' then 'youtube'
+           when hutk_analytics_first_url like '%utm_source=youtube%' or hutk_analytics_first_url like '%utm_source=adwords_ytv%' then 'youtube'
            when hutk_analytics_source = 'organic_search' and tmp_first_page_seen_grouped = 'Homepage'
                then 'branded_organic_search'
            when hutk_analytics_source = 'direct_traffic' and
