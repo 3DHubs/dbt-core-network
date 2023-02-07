@@ -8,6 +8,7 @@ select
     founded_year,
     is_funded,
     is_strategic,
+    is_integration_company,
     country_iso2,
     country_name,
     continent,
