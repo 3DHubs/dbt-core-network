@@ -100,6 +100,7 @@ with stg as (
 
             -- Logistics Fields
             is_delayed_due_to_customs,
+            hs.is_hubs_arranged_direct_shipping,
 
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn

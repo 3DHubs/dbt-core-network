@@ -18,10 +18,9 @@
 
 select fs.order_uuid,
        fs.batch_uuid,
-       oq.company_entity_id,
        p.created                                                                                                    as batch_created_at,
        decode(p.is_partial, 'true', True, 'false', False)                                                           as is_batch_partial,
-       decode(oq.is_cross_docking, 'true', True, 'false', False)                                                    as is_cross_docking_bool,
+       sog.is_cross_docking_ind                                                                                     as is_cross_docking_bool,
        case when not is_batch_partial then p.delivered_at else null end                                             as full_delivered_at,
        listagg(case
                    when fs.shipping_leg = 'cross_docking:warehouse' then fs.carrier_name_mapped
@@ -94,5 +93,5 @@ from {{ ref('fact_shipments') }} as fs
 left join {{ source('int_service_supply', 'packages') }} as p
 on fs.batch_uuid = p.uuid
     left join {{ ref('prep_supply_orders') }} as o on p.order_uuid = o.uuid
-    left join {{ ref('prep_supply_documents') }} as oq on o.quote_uuid = oq.uuid
-group by 1, 2, 3, 4, 5, 6, 7
+    left join {{ ref('stg_orders_geo') }} as sog on fs.order_uuid = sog.order_uuid
+group by 1, 2, 3, 4, 5, 6

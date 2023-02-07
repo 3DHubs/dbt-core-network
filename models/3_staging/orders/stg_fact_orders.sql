@@ -138,6 +138,7 @@ select
     hs_deals.in_country_qc_status,
     hs_deals.me_team_review_results,
     hs_deals.is_delayed_due_to_customs,
+    hs_deals.is_hubs_arranged_direct_shipping,
     case when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
     when hubspot_owner_name ~ '(PL)' then 'Direct Sales Pilot'
     when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win' 
@@ -465,6 +466,8 @@ select
                  '3033179401', '2410602207', '2966346046', '3020615482', 
                  '2975227287', '2887063884', '2950247669', '2901736923', 
                  '2860257553', '3021663769') then dealstage.first_completed_at
+            when orders.hubspot_deal_id in ('10021955923', '10525005164') then logistics.full_delivered_at
+          -- 10021955923 was added due to the direct shipping feature, the first shipment will be recognized as directly to customer, this order before that was recognized using the completion.
           when order_shipped_at > logistics.full_delivered_at 
           then dealstage.first_completed_at
           else logistics.full_delivered_at end, dealstage.first_completed_at)              as recognized_at, -- Let's think of a way to do this better :)
