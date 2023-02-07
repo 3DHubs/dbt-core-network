@@ -4,6 +4,7 @@ select
     dc.country_iso2,
     dc.hubspot_company_id,
     dc.is_part_of_company,
+    dc.is_integration_contact,
     dc.hubspot_contact_id,
     dc.hubspot_owner_name,
     dc.hubspot_owner_primary_team_name,
