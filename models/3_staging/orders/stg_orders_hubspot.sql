@@ -50,6 +50,7 @@ with stg as (
             when hs.closedate > '2020-01-01'
                 then nullif(regexp_replace(hs.delay_liability, 'liability_', ''), '') end as delay_liability,
         hs.delay_status                                                                   as delay_status,
+        case when hcon.hs_analytics_first_url ~ 'utm_source=protolabs' then true else false end as is_integration_mql_contact,
 
         -- Owners
         hs.hubspot_owner_id,
@@ -76,31 +77,31 @@ with stg as (
         -- TEAM FIELDS
         -- Properties added by the different teams
         
-            -- Fulfillment Fields
-            rfq_type,
-            target_price as is_target_price_met,
-            match_lead_time as is_target_lead_time_met,
-            review_outcome,
-            me_team_review_results,
+        -- Fulfillment Fields
+        rfq_type,
+        target_price as is_target_price_met,
+        match_lead_time as is_target_lead_time_met,
+        review_outcome,
+        me_team_review_results,
 
-            -- Project Operation Fields
-            approved_by_services as custom_approval,
-            rejected_reason,
-            im_deal_type,
-            original_im_deal_s_order_number as original_im_order_document_number,
-            critical_to_quality_check_complete as ctq_check,
+        -- Project Operation Fields
+        approved_by_services as custom_approval,
+        rejected_reason,
+        im_deal_type,
+        original_im_deal_s_order_number as original_im_order_document_number,
+        critical_to_quality_check_complete as ctq_check,
 
-            -- Sales Fields
-            is_strategic,
-            closing_probability,
+        -- Sales Fields
+        is_strategic,
+        closing_probability,
 
-            -- Supply Fields
-            latest_qc_result as qc_inspection_result_latest,
-            in_country_qc_status,
+        -- Supply Fields
+        latest_qc_result as qc_inspection_result_latest,
+        in_country_qc_status,
 
-            -- Logistics Fields
-            is_delayed_due_to_customs,
-            hs.is_hubs_arranged_direct_shipping,
+        -- Logistics Fields
+        is_delayed_due_to_customs,
+        hs.is_hubs_arranged_direct_shipping,
 
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn

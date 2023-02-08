@@ -7,7 +7,7 @@ select
        or ql.email ~ 'mailinator' or ql.email ~ 'protolabs' then true else false end is_test,
        decode(is_external, 'true', True, 'false', False)                                      as is_papi_integration,
        case when is_external = 'true' then 'papi'
-           when ql.quote_id is not null then 'quicklink' else 'shallowquicklink' end          as integration_platform_type,
+           when ql.quote_id is not null then 'quicklink' else 'shallowlink' end               as integration_platform_type,
        external_orders.consumer_order_id                                                      as integration_order_id,
        ql.request_id                                                                          as integration_quote_id,
        coalesce(external_orders.consumer_order_number,qt.quote_number)                        as integration_order_number,

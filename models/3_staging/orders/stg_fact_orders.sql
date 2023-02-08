@@ -78,6 +78,7 @@ select
     coalesce(hs_deals.hubspot_company_id,users.hubspot_company_id) as hubspot_company_id, -- for carts falling back on user link
     hs_deals.hubspot_company_name,
     hs_deals.pl_cross_sell_company_name,
+    hs_deals.is_integration_mql_contact,
     coalesce(hs_deals.hubspot_contact_id,users.hubspot_contact_id) as hubspot_contact_id,
     hs_deals.hubspot_technology_id,
     hs_deals.hubspot_company_source,
@@ -143,7 +144,7 @@ select
     when hubspot_owner_name ~ '(PL)' then 'Direct Sales Pilot'
     when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win' 
     when pl_cross_sell_sales_manager_name is not null then 'Twin-Win' end as pl_cross_sell_channel,
-    case when integration_platform_type is not null or pl_cross_sell_channel is not null then true else false end as is_integration_tmp,
+    case when integration_platform_type is not null or pl_cross_sell_channel is not null or is_integration_mql_contact then true else false end as is_integration_tmp,
 
     ---------- SOURCE: STG ORDERS RDA --------------
 
