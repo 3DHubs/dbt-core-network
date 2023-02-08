@@ -60,8 +60,9 @@ select docs.created,
        orders.updated as order_updated_at, -- Necessary for incremental model settings in prep_line_items
        docs.uuid = orders.quote_uuid as is_order_quote,
        po.status = 'active' as is_active_po,       
-       rank() over (partition by docs.order_uuid, docs.type order by revision, docs.created desc) as revision_last_created_rank,
 
+       rank() over (partition by docs.order_uuid, docs.type order by revision, docs.created desc) as revision_last_created_rank,
+       rank() over (partition by docs.order_uuid, docs.type order by docs.updated desc)=1 as is_last_version,
        -- Boolean Fields
        {{ varchar_to_boolean('is_eligible_for_local_sourcing') }},       
        {{ varchar_to_boolean('is_local_sourcing') }},       

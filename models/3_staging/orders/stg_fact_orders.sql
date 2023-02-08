@@ -460,21 +460,8 @@ select
         coalesce(docs.order_first_submitted_at, hs_deals.hubspot_created_at) end           as submitted_at,
     submitted_at is not null                                                               as is_submitted,
     coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), cancellation_reasons.title )as cancellation_reason,
-    coalesce(logistics.full_delivered_at, dealstage.first_completed_at) is not null        as is_recognized,
-    least(case
-          when orders.hubspot_deal_id in
-                ('2934481798', '2920072973', '2914482547', '2770247355', 
-                 '3033179401', '2410602207', '2966346046', '3020615482', 
-                 '2975227287', '2887063884', '2950247669', '2901736923', 
-                 '2860257553', '3021663769') then dealstage.first_completed_at
-            when orders.hubspot_deal_id in ('10021955923', '10525005164') then logistics.full_delivered_at
-          -- 10021955923 was added due to the direct shipping feature, the first shipment will be recognized as directly to customer, this order before that was recognized using the completion.
-          when order_shipped_at > logistics.full_delivered_at 
-          then dealstage.first_completed_at
-          else logistics.full_delivered_at end, dealstage.first_completed_at)              as recognized_at, -- Let's think of a way to do this better :)
-    
-
-
+    srl.is_recognized                                                                      as is_recognized,
+    srl.recognized_at                                                                      as recognized_at,
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as subtotal_amount_usd,
     case when is_closed then subtotal_amount_usd else 0 end                                as subtotal_closed_amount_usd,
@@ -509,6 +496,7 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
     left join {{ ref ('stg_orders_disputes') }} as disputes on orders.uuid = disputes.order_uuid
     left join {{ ref ('stg_orders_users') }} as users on orders.uuid = users.order_uuid
+    left join {{ ref ('stg_recognition_logic') }} as srl on orders.uuid = srl.order_uuid
 
     -- Reporting
     left join {{ ref ('fact_discounts')}} as discounts on orders.uuid = discounts.order_uuid

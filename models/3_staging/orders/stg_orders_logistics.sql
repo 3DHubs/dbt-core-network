@@ -199,11 +199,10 @@ select distinct soq.order_uuid                                                  
 
 from {{ ref('prep_supply_documents') }} as soq
     left join {{ ref('stg_orders_geo') }} as sog on soq.order_uuid = sog.order_uuid
-    inner join {{ ref('prep_purchase_orders') }} as pos on soq.uuid = pos.uuid
     left join agg_batches as ab on soq.order_uuid = ab.order_uuid
     left join supply_cdt as cdt on cdt.order_uuid = soq.order_uuid
     left join {{ ref('prep_supply_orders') }} as o on o.uuid = soq.order_uuid
     left join agg_shipment as agg_s on soq.order_uuid = agg_s.order_uuid
     left join {{ ref('prep_supply_documents') }} as oq on oq.uuid = o.quote_uuid
 where soq.type = 'purchase_order'
-  and pos.status = 'active'
+  and soq.is_last_version
