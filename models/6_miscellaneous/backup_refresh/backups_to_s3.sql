@@ -1,10 +1,10 @@
 {{ config(
     post_hook=["
-        {{unload_backups_to_s3('fact_contribution_margin')}};
-        {{unload_backups_to_s3('fact_orders')}};
-        {{unload_backups_to_s3('dim_companies')}};
-        {{unload_backups_to_s3('dim_contacts')}};                
-        {{unload_datalake_backups_to_s3('full_order_history_events')}}
+        {{unload_backups_to_s3('dbt_backups', 'fact_contribution_margin', True)}};
+        {{unload_backups_to_s3('dbt_backups', 'fact_orders', True)}};
+        {{unload_backups_to_s3('dbt_backups', 'dim_companies', True)}};
+        {{unload_backups_to_s3('dbt_backups', 'dim_contacts', True)}};                
+        {{unload_backups_to_s3('data_lake', 'full_order_history_events', False)}}
     "],
 ) }}
 
