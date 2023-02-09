@@ -41,7 +41,7 @@ sales_target as (
     s.employee,
     reports_to_lead as sales_lead_id,
     max(monthly_target) over (partition by s.hubspot_id) as max_target,
-    case when compensation_value > then true else false end as is_ramp_up,
+    case when compensation_value > 0 then true else false end as is_ramp_up,
     dr.employee as director,
     dr.hubspot_id as director_id,
     es.active as employee_active_status
