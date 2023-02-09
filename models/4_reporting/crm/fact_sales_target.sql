@@ -13,7 +13,8 @@ sales_target as (
                reports_to_lead,
                d.date,
                own.name           as employee,
-               lead.name           as sales_lead
+               lead.name           as sales_lead,
+               compensation_value
         from seed_sales_targets s
             inner join {{ source('data_lake', 'dim_dates') }} d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
                                                       s.start_date <= d.date AND coalesce(s.end_date, '2024-01-01') > d.date
@@ -40,7 +41,7 @@ sales_target as (
     s.employee,
     reports_to_lead as sales_lead_id,
     max(monthly_target) over (partition by s.hubspot_id) as max_target,
-    case when monthly_target <> max_target then true else false end as is_ramp_up,
+    case when compensation_value > then true else false end as is_ramp_up,
     dr.employee as director,
     dr.hubspot_id as director_id,
     es.active as employee_active_status
