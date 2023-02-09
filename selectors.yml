@@ -3,10 +3,18 @@ selectors:
     description: 
         This will run ensure that DBT Run selects all models except backups.
         Otherwise, backups are triggered as an unwanted by product during the dbt run command.
-    default: "{{ target.schema != 'dbt_prod' | as_bool }}"
+    default: "{{ target.name == 'dev' | as_bool }}"
     definition:
       union:
-        - '*'
+        - method: path
+          value: models
         - exclude:
             - method: tag
               value: backup
+  - name: default_for_prod
+    description: "This is the standard selcetor for production"
+    default: "{{ target.name == 'prod' | as_bool }}"
+    definition:
+      union:
+        - method: path
+          value: models
