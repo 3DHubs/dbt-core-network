@@ -9,7 +9,7 @@
     {% set source_name_str = source_name %}
     {% set table_name_str = table_name %}
 
-    {% if target.schema != 'dbt_prod' | as_bool %}
+    {% if target.schema == 'dbt_prod' | as_bool %}
 
         {% if ref_bool == True %}
 
