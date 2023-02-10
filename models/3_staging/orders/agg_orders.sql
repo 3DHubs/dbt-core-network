@@ -103,6 +103,8 @@ select
         over (partition by hubspot_company_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)         as first_closed_order_technology_company,
     first_value(is_integration_tmp) 
         over (partition by hubspot_company_id order by closed_at asc rows between unbounded preceding and unbounded following)                         as is_integration_company,
+    first_value(is_integration_mql_contact) 
+        over (partition by hubspot_company_id order by closed_at asc rows between unbounded preceding and unbounded following)                         as first_is_integration_mql_company,
 
     -- Rank Values
     case when is_closed is true and hubspot_company_id is not null then rank() 
@@ -225,7 +227,7 @@ select orders.order_uuid,
        prep.first_closed_order_process_name_contact,
        prep.first_submitted_order_country_iso2,
        prep.first_integration_type_contact,
-       case when is_integration_company or first_is_integration_mql_contact then true 
+       case when is_integration_company or first_is_integration_mql_contact or first_is_integration_mql_company then true 
             when first_integration_type_contact is not null then true else prep.is_integration_contact end as is_integration_contact,
     --    case when prep.is_integration_contact = true  and is_integration_tmp = true then 'direct'
     --         when is_integration_tmp then 'indirect' 

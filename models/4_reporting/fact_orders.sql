@@ -63,7 +63,7 @@ is_legacy,
 
 -- External Attributes
 is_papi_integration,
-case when is_integration_contact or is_integration_company then true else is_integration_tmp end as is_integration, -- including indirect integration revenue
+case when is_integration_contact then true else is_integration_tmp end as is_integration, -- including indirect integration revenue
 case when is_integration_tmp then 'direct'
      when is_integration then 'indirect'  end as integration_order_type,
 case when integration_platform_type is null and integration_order_type = 'indirect' then 'indirect' else integration_platform_type end as integration_platform_type,
