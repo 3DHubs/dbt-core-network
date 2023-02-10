@@ -266,7 +266,7 @@ select orders.order_uuid,
        -- First Values
        prep.first_submitted_order_technology_company,
        prep.first_closed_order_technology_company,
-       prep.is_integration_company,
+       case when first_is_integration_mql_company then true else prep.is_integration_company end is_integration_company,
     --    case when is_integration_tmp = true then 'direct'
     --         when is_integration_tmp then 'indirect' 
     --         when prep.is_integration_company = true then 'indirect'
