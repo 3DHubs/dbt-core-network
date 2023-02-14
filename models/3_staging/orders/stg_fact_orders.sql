@@ -221,7 +221,7 @@ select
     docs.order_quote_lead_time as lead_time,
     docs.sourcing_window,
     docs.order_quote_price_multiplier as price_multiplier,
-    docs.order_quote_is_cross_docking as is_cross_docking,
+    geo.is_cross_docking_ind as is_cross_docking,
     docs.order_quote_is_eligible_for_cross_docking as is_eligible_for_cross_docking,
     docs.order_quote_is_local_sourcing as is_local_sourcing,
     docs.order_quote_is_eligible_for_local_sourcing as is_eligible_for_local_sourcing,
