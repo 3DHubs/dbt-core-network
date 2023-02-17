@@ -17,7 +17,7 @@ select
     asci.recipient_postal_code,
     asci.shipper_postal_code,
     coalesce(round(asci.statistical_value/ ex.rate,2),0) as statistical_value,
-    coalesce(ship.shipping_leg, asci.shipping_leg) as shipping_leg_full,
+    coalesce(asci.shipping_leg, ship.shipping_leg) as shipping_leg_full,
     asci.charge_name,
     asci.charge_category,
     asci.currency,
