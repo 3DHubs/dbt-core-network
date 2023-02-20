@@ -7,6 +7,7 @@ sales_target as (
         select
                hubspot_id,
                role,
+               first_value(role) over (partition by hubspot_id order by d.date desc rows between unbounded preceding and unbounded following) as latest_role,
                region,
                monthly_target,
                monthly_lead_target,
@@ -32,6 +33,7 @@ sales_target as (
     select
     s.hubspot_id,
     role,
+    latest_role,
     s.region,
     case when role='director' then 0 else monthly_target end as monthly_target,
     s.monthly_lead_target,
