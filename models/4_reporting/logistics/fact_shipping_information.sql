@@ -3,6 +3,7 @@
 ) }}
 
 select
+    asci.shipment_number||'-'|| ROW_NUMBER () over (PARTITION BY asci.shipment_number) as synthetic_primary_key,
     coalesce(psd.order_uuid, pso.uuid) as order_uuid,
     asci.carrier,
     asci.invoice_date,
