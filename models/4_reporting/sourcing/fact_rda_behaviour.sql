@@ -80,6 +80,7 @@ select
         round((sa.subtotal_price_amount_usd / 100.00), 2), a.auction_amount_usd
     ) as sa_amount_usd,
     sa.margin_without_discount as sa_margin,
+    sa.shipping_estimate_amount_usd,
 
     -- Bid Fields
     b.uuid as bid_uuid,

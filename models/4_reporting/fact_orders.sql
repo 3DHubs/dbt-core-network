@@ -292,6 +292,7 @@ has_winning_bid,
 winning_bid_margin,
 winning_bid_margin_usd,
 winning_bid_margin_loss_usd,
+winning_shipping_estimate_amount_usd,
 has_accepted_winning_bid,
 has_restricted_winning_bid,
 has_winning_bid_countered_on_price,
@@ -341,7 +342,6 @@ second_leg_carrier_name_mapped,
 -- Logistics: Estimates
 estimated_l1_customs_amount_usd,
 estimated_l2_customs_amount_usd,
-shipping_price_estimates,
 
 -- On Time Rate
 first_leg_buffer_value,

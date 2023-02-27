@@ -181,6 +181,7 @@ select
     rda.winning_bid_margin,
     rda.winning_bid_margin_usd,
     rda.winning_bid_margin_loss_usd,
+    rda.winning_shipping_estimate_amount_usd,
     rda.has_winning_bid,
     rda.has_accepted_winning_bid,
     rda.has_restricted_winning_bid,
@@ -315,7 +316,6 @@ select
     -- Logistics: Estimates
     qli.estimated_l1_customs_amount_usd,
     qli.estimated_l2_customs_amount_usd,
-    quotes.shipping_price_estimates,
 
     -------- SOURCE: STG OTR -----------
     -- Calculated based on cnc orders, and

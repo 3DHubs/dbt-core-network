@@ -49,6 +49,7 @@ with rda_interactions as (
            max(case when sai.is_winning_bid then sai.bid_margin end)                                 as winning_bid_margin,
            max(case when sai.is_winning_bid then sai.bid_margin_usd end)                             as winning_bid_margin_usd,
            max(case when sai.is_winning_bid then sai.bid_margin_loss_usd end)                        as winning_bid_margin_loss_usd,
+           max(case when sai.is_winning_bid then sai.shipping_estimate_amount_usd end)               as winning_shipping_estimate_amount_usd,
            bool_or(sai.bid_has_changed_prices and sai.is_winning_bid)                                as has_winning_bid_countered_on_price,
            bool_or(sai.bid_has_changed_shipping_date and sai.is_winning_bid)                         as has_winning_bid_countered_on_lead_time,
            bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
@@ -117,6 +118,7 @@ rdai.has_restricted_winning_bid,
 rdai.has_winning_bid_countered_on_price,
 rdai.has_winning_bid_countered_on_lead_time,
 rdai.has_winning_bid_countered_on_design,
+rdai.winning_shipping_estimate_amount_usd,
 
 -- SOURCE 2: Auctions Manually Cancelled
 can.auction_is_cancelled_manually,

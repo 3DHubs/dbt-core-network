@@ -56,6 +56,7 @@ with
             sa.auction_uuid,
             sa.is_automatic_rfq as is_automatically_allocated_rfq,
             sa.original_ship_by_date,
+            sa.shipping_estimate_amount_usd,
             sr.order_uuid,
             sr.auction_document_number
         from stg_supplier_auctions as sa
@@ -75,6 +76,7 @@ with
             rfq_a.is_automatically_allocated_rfq,
             rfq_a.rfq_sent_date as supplier_rfq_sent_date,
             rfq_a.original_ship_by_date,
+            rfq_a.shipping_estimate_amount_usd,
             -- Data from Suppliers
             s.name as supplier_name,
             -- Data from Bids
@@ -140,6 +142,7 @@ with
             null as is_automatically_allocated_rfq,  -- Feature only exists in new data
             supplier_rfqs.created as supplier_rfq_sent_date,
             null as original_ship_by_date,
+            null as shipping_estimate_amount_usd,
             s.name as supplier_name,
             bid_quotes.lead_time,
             round(bid_quotes.subtotal_price_amount / 100.00, 2) as rfq_bid_amount,

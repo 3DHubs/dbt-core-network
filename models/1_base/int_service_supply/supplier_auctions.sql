@@ -27,6 +27,7 @@ select supplier_id,
        -- decode(is_reorder, 'true', True, 'false', False) as is_reorder, -- PS52: column `is_reorder` renamed to `is_detected_similar`. `is_reorder` will be brought back later.
        estimated_customs_price_amount,
        estimated_customs_price_amount_usd,
+       shipping_estimate_amount_usd,
        estimated_customs_rate,
        ship_by_date as original_ship_by_date, -- Orginal ship by date without counter bids on lead time adjustments.
        shipping_added_lead_time,
