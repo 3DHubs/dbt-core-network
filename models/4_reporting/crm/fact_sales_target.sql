@@ -27,7 +27,8 @@ sales_target as (
     employee_status as (
     select hubspot_id,
            max(coalesce(s.end_date,'2100-01-01')) as  final_end_date,
-           case when final_end_date < '2100-01-01' then false else true end as active
+           case when final_end_date < '2100-01-01' then false else true end as active,
+           min(s.start_date) as start_date
     from seed_sales_targets s
     group by 1)
     select
@@ -46,7 +47,9 @@ sales_target as (
     case when compensation_value > 0 then true else false end as is_ramp_up,
     dr.employee as director,
     dr.hubspot_id as director_id,
-    es.active as employee_active_status
+    es.active as employee_active_status,
+    start_date,
+    final_end_date as end_date
 
 
     from sales_target s
