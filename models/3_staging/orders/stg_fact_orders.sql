@@ -125,6 +125,7 @@ select
     -- Check upstream model for details on the team
     hs_deals.rfq_type,
     hs_deals.review_outcome,
+    hs_deals.is_sales_priced,
     hs_deals.is_target_price_met,
     hs_deals.is_target_lead_time_met,
     hs_deals.custom_approval,

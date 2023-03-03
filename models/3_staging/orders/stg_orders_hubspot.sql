@@ -92,6 +92,7 @@ with stg as (
         critical_to_quality_check_complete as ctq_check,
 
         -- Sales Fields
+        is_sales_priced,
         is_strategic,
         closing_probability,
 
