@@ -14,7 +14,7 @@ with
             q.author_id,
             q.answered_at,
             q.answered_by_id,
-            qt.name as question_type,
+            qt.title  as question_type,
             qt.description as question_description,
             qro.description
             || ' '
