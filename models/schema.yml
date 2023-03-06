@@ -283,6 +283,7 @@ sources:
       - name: question_groups
       - name: question_types
       - name: questions
+      - name: base_question
       - name: quicklinks_tracking
       - name: quote_docusign_requests
       - name: refund_reasons
