@@ -44,7 +44,7 @@ with
             bq.answered_by_id,
             bq.type as question_type,
             bq.question_text as question_description,
-            bq.answer_text,
+            bq.answer_text as answer,
             bq.answer_attachment_uuid is not null as has_attachment
         from {{ source('int_service_supply', 'base_question') }} as bq
     )
@@ -55,7 +55,8 @@ select
         extract(minutes from (uqf.answered_at - uqf.submitted_at)) / 1440, 1
     ) as question_response_time,
     u_auth.first_name + ' ' + u_auth.last_name as author_name,
-    u_answ.first_name + ' ' + u_answ.last_name as answered_name
+    u_answ.first_name + ' ' + u_answ.last_name as answered_name,
+    u_answ.is_internal                         as answered_by_hubs
 from union_question_feature as uqf
 left join {{ ref('users') }} as u_auth on uqf.author_id = u_auth.user_id
 left join {{ ref('users') }} as u_answ on uqf.answered_by_id = u_answ.user_id
