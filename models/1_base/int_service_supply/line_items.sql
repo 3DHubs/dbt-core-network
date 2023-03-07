@@ -34,6 +34,7 @@ select
        li.id,
        li.uuid,
        li.quote_uuid,
+       li.correlation_uuid,
        li.upload_id,
        li.type,
        li.quantity,
