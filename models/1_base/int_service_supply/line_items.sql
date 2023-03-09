@@ -40,7 +40,7 @@ select
        li.quantity,
        li.auto_price_original_amount,
        li.price_amount,
-       li.price_variations,
+ --    li.price_variations,
        li.unit,
        li.custom_material_subset_name,
        li.finish_slug,
