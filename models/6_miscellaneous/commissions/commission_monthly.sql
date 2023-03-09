@@ -33,6 +33,7 @@ with deal_monthly as (
       from dbt_prod_reporting.fact_orders
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.bdr_owner_id
       where true
+      and bdr_owner_id = hubspot_owner_id
       and case
       when hubspot_dealstage_mapped <> 'Closed - Canceled' then true
       when (hubspot_dealstage_mapped = 'Closed - Canceled' and
@@ -86,6 +87,7 @@ with deal_monthly as (
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.bdr_owner_id
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
+      and bdr_owner_id = hubspot_owner_id
       and subtotal_closed_amount_usd - shipping_amount_usd > 50000
       -- Only deals that have not yet been sourced should be excluded
       and ((date_trunc('month', sourced_at) > commission_date) or (sourced_at is null))
@@ -103,6 +105,7 @@ with deal_monthly as (
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
       and has_significant_amount_gap
+      and bdr_owner_id = hubspot_owner_id
       and role = 'outside'
       group by commission_date, employee,order_hubspot_deal_id
       ),
@@ -178,6 +181,7 @@ with deal_monthly as (
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.bdr_owner_id
       where true
       and closed_at is not null
+      and bdr_owner_id = hubspot_owner_id
       and subtotal_closed_amount_usd - shipping_amount_usd > 50000
       and closed_at < commission_date
       and role = 'outside'
@@ -193,6 +197,7 @@ with deal_monthly as (
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.bdr_owner_id
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled', 'Closed - Lost')
+      and bdr_owner_id = hubspot_owner_id
       and closed_at is not null
       and has_significant_amount_gap
       and role = 'outside'
@@ -216,6 +221,7 @@ with deal_monthly as (
       where true
       and cancelled_deal_closed_three_months_prior is true
       and cancelled_at is not null
+      and bdr_owner_id = hubspot_owner_id
       )
       select commission_date,
       order_hubspot_deal_id,
@@ -225,6 +231,7 @@ with deal_monthly as (
       from monthly_cancellations
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', commission_date) and c.hubspot_id = monthly_cancellations.bdr_owner_id
       where role = 'outside'
+      and bdr_owner_id = hubspot_owner_id
       group by commission_date, employee, order_hubspot_deal_id
       ),
       ----------------------------------- RAMPING COMPENSATION _--------------------------------------
