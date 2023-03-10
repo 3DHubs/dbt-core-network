@@ -231,7 +231,6 @@ with deal_monthly as (
       from monthly_cancellations
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', commission_date) and c.hubspot_id = monthly_cancellations.bdr_owner_id
       where role = 'outside'
-      and bdr_owner_id = hubspot_owner_id
       group by commission_date, employee, order_hubspot_deal_id
       ),
       ----------------------------------- RAMPING COMPENSATION _--------------------------------------
