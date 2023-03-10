@@ -30,8 +30,8 @@ select created,
            else True
         --    else decode(is_active, 'true', True, 'false', False) -- This seems to have been dropped without communication.
            end                                                               is_active,
-       mail ~ '@(3d)?hubs.com'                                             as is_internal,
-       mail ~ '@pthubs.com'                                                as is_test,
+       mail ~ '@(3d)?hubs.com' or mail ~ '@pthubs.com'                     as is_internal,
+       mail ~ '@pthubs.com'  or mail ~ 'test@hubs.com'                     as is_test,
        rank() over (partition by hubspot_contact_id order by created desc) as rnk_desc_hubspot_contact_id    
 
 from {{ source('int_service_supply', 'users') }} users
