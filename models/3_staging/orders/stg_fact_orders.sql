@@ -414,6 +414,9 @@ select
     -- Status
     dealstage.order_status,
 
+    -- Time spent in New
+    dealstage.time_in_stage_new_business_minutes,
+
     ------ SOURCE: STG INTERACTIONS ---------
     -- The stg table is derived from the aggregation of
     -- fact_interactions which combines the sources of

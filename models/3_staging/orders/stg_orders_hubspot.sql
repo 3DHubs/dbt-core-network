@@ -56,6 +56,7 @@ with stg as (
         hs.hubspot_owner_id,
         own.name                                                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
+        own.office_location,
         trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp
         fst.sales_lead_id                                                                 as sales_lead_id,
         fst.sales_lead                                                                    as sales_lead_name,
