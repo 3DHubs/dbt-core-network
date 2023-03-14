@@ -54,31 +54,44 @@ with agg as ( select
     group by 1),
 
 fst as ( select distinct
-    supplier_id,
-    first_value(technology_name)
+    fo.supplier_id,
+    first_value(fo.technology_name)
     -- Was: first_sourced_technology
     over (
          partition by
-             supplier_id
+             fo.supplier_id
          order by
-        sourced_at asc
+        fo.sourced_at asc
          rows between unbounded preceding and unbounded following
     ) as first_technology,
-    min(trunc(sourced_at)) over (partition by supplier_id) as first_sourced_order,
-    max(trunc(sourced_at)) over (partition by supplier_id) as last_sourced_order
+    min(trunc(fo.sourced_at)) over (partition by fo.supplier_id) as first_sourced_order,
+    max(trunc(fo.sourced_at)) over (partition by fo.supplier_id) as last_sourced_order
 
-    from {{ ref('fact_orders') }} ),
+    from {{ ref('fact_orders') }} as fo ),
 
+agg_fo as (
+    select 
+        fo.supplier_id,
+        sum(case when fo.sourced_at is not null then 1 else 0 end) as orders_sourced_in_life_time,
+        sum(case when fo.derived_delivered_at is not null then 1 else 0 end) as orders_delivered_in_life_time
+    from {{ ref('fact_orders') }} as fo 
+    group by 1
+
+
+
+),
 
 
 stg_deals as (
     select
-
         fst.supplier_id, 
         fst.first_technology,
         fst.first_sourced_order,
-        fst.last_sourced_order
+        fst.last_sourced_order,
+        af.orders_sourced_in_life_time,
+        af.orders_delivered_in_life_time
     from fst
+    left join agg_fo as af on fst.supplier_id = af.supplier_id
     where fst.supplier_id >= 1
 )
 
@@ -119,6 +132,8 @@ select
     agg.first_accepted_at,
     agg.last_accepted_at,
     stg_deals.first_technology,
+    stg_deals.orders_sourced_in_life_time,
+    stg_deals.orders_delivered_in_life_time,
     stg_deals.first_sourced_order,
     stg_deals.last_sourced_order
 from {{ ref('stg_dim_suppliers') }}
