@@ -34,9 +34,11 @@ with
             technology_name,
             date_diff('days', sourced_at, recognized_at) as time_to_recognize,
             sum(subtotal_closed_amount_usd) as closed_sales,
+            sum(recognized_revenue_amount_usd) as recognized_amount,
+            recognized_amount *1.0 / nullif(closed_sales,0) as margin_leakage,
             ratio_to_report(closed_sales) over (
                 partition by technology_name, lead_time
-            ) as percent_of_total
+            )*margin_leakage as percent_of_total
         from {{ ref("fact_orders") }}
         where
             true
@@ -53,7 +55,7 @@ with
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
-            sum(subtotal_closed_amount_usd * percent_of_total) as recognized_amount
+            sum(subtotal_closed_amount_usd * percent_of_total * 0.98) as recognized_amount
         from forecast_sourced fo
         inner join
             recognized_prep rp
@@ -72,7 +74,7 @@ with
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
-            sum(subtotal_closed_amount_usd * percent_of_total) as recognized_amount
+            sum(subtotal_closed_amount_usd * percent_of_total * 0.98) as recognized_amount
         from  {{ ref("fact_orders") }} fo
         inner join
             recognized_prep rp

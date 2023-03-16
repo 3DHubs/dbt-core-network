@@ -4,5 +4,6 @@ select date,
        kpi,
        market,
        technology_name,
+       integration,
        value 
 from  {{ ref('fact_budget') }}

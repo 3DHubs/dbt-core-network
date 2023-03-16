@@ -48,6 +48,7 @@ select dealid::bigint                                                           
            when property_hubs_arranges_direct_shipping__ds___value = 'false' then false
            when property_hubs_arranges_direct_shipping__ds___value = ''
                then null end ::boolean                                                                        as is_hubs_arranged_direct_shipping,
+       case when property_was_logistics_shipping_quote_used___value = 'true' then true else false end         as is_logistics_shipping_quote_used,        
        nullif(property_closing_probability__value, '')::varchar(2048)                                         as closing_probability,
        nullif(property_latest_qc_result__value, '')::varchar(2048)                                            as latest_qc_result,
        nullif(property_in_country_qc_status__value, '')::varchar(2048)                                        as in_country_qc_status,

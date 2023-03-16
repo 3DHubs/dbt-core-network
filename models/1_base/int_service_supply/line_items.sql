@@ -3,7 +3,7 @@
         materialized='incremental',
         unique_key='uuid',
         tags=["multirefresh"],
-        post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ source('fed_service_supply', 'line_items') }} )"]
+        post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ source('int_service_supply', 'line_items') }} )"]
     )
 }}
 
@@ -93,7 +93,7 @@ select
            {% if not loop.last %},{% endif %}
        {% endfor %}
 
-from {{ source('fed_service_supply', 'line_items') }} as li
+from {{ source('int_service_supply', 'line_items') }} as li
 where true
     and li.legacy_id is null
     

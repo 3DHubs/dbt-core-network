@@ -44,7 +44,7 @@ from {{ source('int_service_supply', 'cnc_orders') }} as orders
         left join {{ ref('users') }} as users on orders.user_id = users.user_id 
 -- Filter: only orders with line items on the main quote, this removes empty carts.
 where exists (
-    select 1 from {{ source('fed_service_supply', 'line_items') }} as li
+    select 1 from {{ source('int_service_supply', 'line_items') }} as li
     where orders.quote_uuid = li.quote_uuid
 )
 -- Filters: external orders created through the PAPI integration

@@ -360,13 +360,14 @@ select
     qli.line_item_process_name as process_name,
     qli.parts_titles,
 
+
     -- Purchase Orders
     fpoli.parts_amount_usd as parts_cost_usd,
-    fpoli.shipping_amount_usd as shipping_cost_usd,    
+    fpoli.shipping_amount_usd as shipping_cost_usd,  
     fpoli.other_line_items_amount_usd as other_costs_usd,
 
     apoli.parts_amount_usd as po_active_parts_cost_usd,
-    apoli.shipping_amount_usd as po_active_shipping_cost_usd,    
+    apoli.shipping_amount_usd as po_active_shipping_cost_usd,  
     apoli.other_line_items_amount_usd as po_active_other_costs_usd,
 
     ------ SOURCE: STG REVIEWS ---------
@@ -466,25 +467,38 @@ select
     coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), cancellation_reasons.title )as cancellation_reason,
     srl.is_recognized                                                                      as is_recognized,
     srl.recognized_at                                                                      as recognized_at,
+
+       -- Technology:
+    coalesce(rda.auction_technology_id, qli.line_item_technology_id, hubspot_technology_id) as technology_id,
+    coalesce(rda.auction_technology_name, qli.line_item_technology_name,
+             hubspot_technology_name)                                                      as technology_name,
+
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as subtotal_amount_usd,
     case when is_closed then subtotal_amount_usd else 0 end                                as subtotal_closed_amount_usd,
     case when is_sourced then subtotal_amount_usd else 0 end                               as subtotal_sourced_amount_usd,
+    case when is_logistics_shipping_quote_used then qli.shipping_amount_usd 
+         when qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03
+         else rda.winning_shipping_estimate_amount_usd end                                 as beta_shipping_cost_usd,
+    case when qli.line_item_technology_name= '3DP' and date_diff('day', sourced_at, po_active_created_at) <=2 then
+    po_active_subtotal_cost_usd 
+         when qli.line_item_technology_name = 'CNC' and date_diff('day', sourced_at, po_active_created_at) <= 7 then 
+    po_active_subtotal_cost_usd else    subtotal_sourced_cost_usd     end                  as beta_subtotal_po_cost_usd,      
+    coalesce(beta_subtotal_po_cost_usd  ,0) + coalesce(shipping_cost_usd,0) + 
+    coalesce(qli.estimated_l1_customs_amount_usd,0) + coalesce(qli.estimated_l2_customs_amount_usd,0) as beta_subtotal_sourced_cost_usd,
 
     -- Suppliers:
     coalesce(docs.po_active_supplier_id, rda.auction_supplier_id)                          as supplier_id,
     coalesce(docs.po_active_supplier_name, rda.auction_supplier_name)                      as supplier_name,
     coalesce(docs.po_active_supplier_address_id, rda.auction_supplier_address_id)          as supplier_address_id,
 
-    -- Technology:
-    coalesce(rda.auction_technology_id, qli.line_item_technology_id, hubspot_technology_id) as technology_id,
-    coalesce(rda.auction_technology_name, qli.line_item_technology_name,
-             hubspot_technology_name)                                                      as technology_name,
+ 
 
     -- Commission Related:
     case when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - qli.shipping_amount_usd > 50 -- Threshold
-            and is_closed is true and rfq.has_rfq = false
-            then true when is_closed is not true then null else false end                  as has_significant_amount_gap, 
+            and is_closed is true and rfq.has_rfq = false then true
+         when hs_deals.hubspot_amount_usd = 0 then true -- discussed with finance to have $0 amount deals not commissioned. 
+         when is_closed is not true then null else false end                  as has_significant_amount_gap, 
     coalesce(interactions.has_svp_interaction or qli.has_svp_line_item,false)               as is_svp
 
 from {{ ref('prep_supply_orders') }} as orders

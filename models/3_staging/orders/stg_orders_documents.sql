@@ -133,7 +133,7 @@ with first_quote as (
      active_po as (
          select quotes.order_uuid,
                 quotes.uuid                                                                  as po_active_uuid,
-                quotes.created,
+                quotes.created                                                               as po_active_created_at, 
                 round(((subtotal_price_amount / 100.00) / rates.rate), 2)                    as po_active_subtotal_cost_usd,
                 document_number                                                              as po_active_document_number,
                 purchase_orders.supplier_id::int                                             as po_active_supplier_id, -- Used to define is_resourced field
@@ -226,6 +226,7 @@ select -- First Quote
 
        -- Active PO
        apo.po_active_uuid,
+       apo.po_active_created_at,
        apo.po_active_subtotal_cost_usd,
        apo.po_active_document_number,
        apo.po_active_company_entity,
