@@ -1,199 +1,328 @@
 supplier_id,name,business_classification,technology_name,service_level_classification
-322,3D BG Print,Evaluating,3DP,3 - so/so
-191,3D Builders,Evaluating,3DP,4 - pretty good
-286,3D Creative,Strategic,3DP,5 - awesome
-170,3D Folkes Ltd,Evaluating,3DP,5 - awesome
-334,3D Ninja,Inactive,3DP,2 - pretty bad
-158,3D People Limited,Strategic,3DP,5 - awesome
-44,3D Prototyping Studio,Challenger,3DP,4 - pretty good
-82,"3D Solutions, Inc.",Inactive,3DP,3 - so/so
-215,3D-Druck & Design,Challenger,3DP,3 - so/so
-91,3DPX,Challenger,3DP,4 - pretty good
-184,3DTomorrow,Challenger,3DP,4 - pretty good
-194,3DVerkstan,Inactive,3DP,3 - so/so
-205,3Dees Industries s.r.o.,Evaluating,3DP,4 - pretty good
-320,3T AMP,Strategic,3DP,4 - pretty good
-276,3iD,Challenger,3DP,4 - pretty good
-310,AME Group,Evaluating,3DP,4 - pretty good
-342,Alphacam,Evaluating,3DP,3 - so/so
-187,Andrea Marini,Evaluating,3DP,3 - so/so
-238,Attenborough Direct LTD,Evaluating,3DP,2 - pretty bad
-86,Automatic MFG LLC,Bottleneck,3DP,5 - awesome
-101,Autotiv Manufacturing,Challenger,3DP,4 - pretty good
-60,Baked Industries,Bottleneck,3DP,2 - pretty bad
-183,Bare Feet AB,Challenger,3DP,4 - pretty good
-43,"Black Dog Form, LLC",Inactive,3DP,3 - so/so
-88,Brandon's 3D Printing and Design,Evaluating,3DP,4 - pretty good
-312,Buildparts,Evaluating,3DP,4 - pretty good
-325,CA Models,Evaluating,3DP,4 - pretty good
-59,CL Machine Works,Challenger,3DP,4 - pretty good
-211,CREAT3D Ltd,Inactive,3DP,4 - pretty good
-163,Champion 3D,Inactive,3DP,
-159,Creabis GmbH,Strategic,3DP,4 - pretty good
-93,DI Labs,Evaluating,3DP,3 - so/so
-64,DiCAD Consulting Corp,Strategic,3DP,4 - pretty good
-195,EBK-HUNGARY LTD,Inactive,3DP,3 - so/so
-202,Edumaker Limited,Challenger,3DP,5 - awesome
-103,Engman-Taylor,Strategic,3DP,4 - pretty good
-129,"Flux Design, LLC",Inactive,3DP,3 - so/so
-212,Future Solutions V.O.F.,Inactive,3DP,3 - so/so
-324,GU 3D Print,Inactive,3DP,3 - so/so
-223,Genprofit Szolgáltató Kft.,Inactive,3DP,3 - so/so
-203,Gierl DCP GmbH,Challenger,3DP,3 - so/so
-182,Gramm GmbH,Challenger,3DP,4 - pretty good
-213,HenleyPrint3D,Evaluating,3DP,2 - pretty bad
-62,"Hydra Research, LLC",Evaluating,3DP,3 - so/so
-50,Incept 3D,Strategic,3DP,3 - so/so
-33,"Insanity Automation, LLC",Inactive,3DP,
-58,Inspired Craftwork,Evaluating,3DP,3 - so/so
-32,"JMO Technology, LLC",Evaluating,3DP,3 - so/so
-85,Jaws Tec LLC,Evaluating,3DP,3 - so/so
-166,Julien Dodokal,Challenger,3DP,3 - so/so
-299,K3D B.V.,Inactive,3DP,
-217,Kinamico s.r.o.,Challenger,3DP,4 - pretty good
-78,Knight Engineering Solutions LLC,Strategic,3DP,5 - awesome
-162,Korneel's 3D Services,Challenger,3DP,4 - pretty good
-366,Lostboyslab AB,Inactive,3DP,
-169,MOMKA Design,Evaluating,3DP,4 - pretty good
-74,MWM Technology,Bottleneck,3DP,4 - pretty good
-65,"Makelab, Inc",Inactive,3DP,3 - so/so
-35,"MakerTree 3D, LLC",Evaluating,3DP,4 - pretty good
-186,Maz3D,Evaluating,3DP,3 - so/so
-229,Metal Technics3D,Inactive,3DP,
-167,Midlands 3D Printing Ltd,Strategic,3DP,5 - awesome
-204,Midwest Prototyping,Strategic,3DP,4 - pretty good
-448,Moonshot3D,Evaluating,3DP,4 - pretty good
-209,Oceanz B.V.,Evaluating,3DP,2 - pretty bad
-196,Only3D Ltd,Evaluating,3DP,3 - so/so
-55,Onset Engineering,Strategic,3DP,4 - pretty good
-68,"Pingring Enterprises, LLC",Bottleneck,3DP,3 - so/so
-161,PlastiPrint3D Ltd,Evaluating,3DP,4 - pretty good
-198,Printing Portal,Strategic,3DP,3 - so/so
-453,Prod 3D,Evaluating,3DP,3 - so/so
-147,Prora,Strategic,3DP,4 - pretty good
-178,RENND Ltd,Challenger,3DP,4 - pretty good
-110,RMEN Additive Manufacturing,Inactive,3DP,
-315,RPM - Rapid Product Manufacturing GmbH,Evaluating,3DP,3 - so/so
-89,Re3dTech,Inactive,3DP,3 - so/so
-69,Rosenberg Industries LLC,Evaluating,3DP,3 - so/so
-108,Ryan Plummer,Inactive,3DP,3 - so/so
-102,S&G Tech Group,Strategic,3DP,4 - pretty good
-81,STS Technical Services,Bottleneck,3DP,3 - so/so
-165,Seaside 3D Ltd,Evaluating,3DP,3 - so/so
-148,SiMT,Inactive,3DP,4 - pretty good
-339,Solidfill,Evaluating,3DP,4 - pretty good
-94,Starter Design,Evaluating,3DP,3 - so/so
-172,Steelmans Broaches UK Limited,Evaluating,3DP,4 - pretty good
-38,"Storme Technologies, LLC",Bottleneck,3DP,2 - pretty bad
-434,Streamline-3D,Evaluating,3DP,4 - pretty good
-123,Tru-North Design LLC,Inactive,3DP,3 - so/so
-29,Tyler's 3D Hub LCC,Evaluating,3DP,3 - so/so
-189,V3D Printing,Challenger,3DP,4 - pretty good
-176,WILLTeQ,Evaluating,3DP,4 - pretty good
-197,WeDo3DPrinting,Evaluating,3DP,3 - so/so
-77,ZhumeisterLabs LLC,Challenger,3DP,4 - pretty good
-309,Zigg Zagg NV,Challenger,3DP,
-192,deMINIfabriek,Inactive,3DP,
-49,iFuzion LLC,Inactive,3DP,3 - so/so
-174,my3dbase GmbH,Inactive,3DP,
-116,"ACT Enterprises, LLC",Challenger,CNC,2 - pretty bad
-142,ATSE Goni Inc.,Challenger,CNC,4 - pretty good
-375,Apsis Latitude,Challenger,CNC,4 - pretty good
-264,Ashwin Precision Products Pvt Ltd,Challenger,CNC,4 - pretty good
-436,Astra Technologies,Challenger,CNC,4 - pretty good
-457,Ateliers Cerfontaine,Evaluating,CNC,
-350,Automanufacturas de Queretaro SAPI de CV,Evaluating,CNC,4 - pretty good
-439,BFW Advanced Manufacturing Limited,Challenger,CNC,4 - pretty good
-405,Beskar Steel,Evaluating,CNC,4 - pretty good
-446,Betech Kunststoffen,Evaluating,CNC,
-400,Bohao Prototypes,Challenger,CNC,4 - pretty good
-245,Boyi Prototypes,Strategic,CNC,4 - pretty good
-413,CBQ Technologies,Challenger,CNC,3 - so/so
-455,CNC Maquinados Monterrey SA de CV,Evaluating,CNC,4 - pretty good
-442,CNC Prime,Evaluating,CNC,3 - so/so
-432,Campillo y Huerta Ingenieria de Precision SA de CV (CyH),Challenger,CNC,4 - pretty good
-346,Cenhtal - Centro Herramental De Aguascalientes S.A. DE C.V.,Challenger,CNC,4 - pretty good
-415,Cohera Automations Pvt Ltd,Evaluating,CNC,4 - pretty good
-135,Cornertech Inc,Challenger,CNC,3 - so/so
-388,DWD Precision,Evaluating,CNC,4 - pretty good
-431,Design in Form,Evaluating,CNC,3 - so/so
-151,Detroit3D,Challenger,CNC,4 - pretty good
-241,Distinct Productivity Solutions,Challenger,CNC,3 - so/so
-1,"Dongguan Bole RP&M Co., Ltd",Strategic,CNC,4 - pretty good
-404,Engineered Polymers India Pvt. ltd,Challenger,CNC,4 - pretty good
-440,Excelhub Technologies,Challenger,CNC,4 - pretty good
-257,Excelon Technologies,Challenger,CNC,4 - pretty good
-397,Exonics Precision Pvt Ltd,Challenger,CNC,3 - so/so
-408,Filipe Ferreira,Challenger,CNC,4 - pretty good
-406,"Five Axis Industries, Inc.",Challenger,CNC,4 - pretty good
-401,G&T,Evaluating,CNC,3 - so/so
-427,GFS Machining Inc.,Challenger,CNC,4 - pretty good
-258,GPM,Strategic,CNC,3 - so/so
-336,GRUPO MADIVER SA DE CV,Challenger,CNC,
-454,Grupo CC Manufacturing S.A. de C.V.,Evaluating,CNC,4 - pretty good
-360,HN ZZT,Challenger,CNC,3 - so/so
-396,Halamanee Aerospace Private Limited,Challenger,CNC,4 - pretty good
-304,Hampson Industries Private Limited,Challenger,CNC,4 - pretty good
-456,Hanzatec,Evaluating,CNC,4 - pretty good
-424,"Heng Wan Precision Co., Ltd",Challenger,CNC,4 - pretty good
-412,Heromec,Challenger,CNC,4 - pretty good
-316,IHP (INTEGRACION DE HERRAMIENTAS PRODUCTIVAS SA DE CV),Challenger,CNC,4 - pretty good
-364,Imaginarium Rapid,Evaluating,CNC,3 - so/so
-416,Inspire Automotive Manufacturing,Challenger,CNC,4 - pretty good
-321,JF Manufactura,Challenger,CNC,4 - pretty good
-421,JLS Production,Evaluating,CNC,3 - so/so
-430,JSUN CNC Solutions,Challenger,CNC,4 - pretty good
-378,K-MP,Evaluating,CNC,4 - pretty good
-146,Kemal Mfg,Challenger,CNC,4 - pretty good
-445,Klift,Evaluating,CNC,4 - pretty good
-379,Kovdan,Strategic,CNC,4 - pretty good
-259,LEOKRISHTEK PRIVATE LIMITED,Strategic,CNC,4 - pretty good
-23,LTC Shenzen,Strategic,CNC,4 - pretty good
-382,Leshine,Strategic,CNC,4 - pretty good
-372,Levtech,Challenger,CNC,4 - pretty good
-429,"Liberty CNC, LLC",Challenger,CNC,4 - pretty good
-244,Longsheng,Strategic,CNC,4 - pretty good
-441,Maquinados Especiales de Presición SA de CV (MEPSA),Challenger,CNC,4 - pretty good
-369,Maquinados Y Tecnologia,Challenger,CNC,4 - pretty good
-373,Mikrotek,Challenger,CNC,4 - pretty good
-418,Moldwelt,Evaluating,CNC,4 - pretty good
-380,Neepuna Manufacturing solutions,Challenger,CNC,4 - pretty good
-236,OuMeiSi Precision,Bottleneck,CNC,3 - so/so
-249,P.R.K Ancillaries India Private Limited,Challenger,CNC,4 - pretty good
-423,Paragon Machining & Design,Challenger,CNC,4 - pretty good
-394,Paricla,Evaluating,CNC,4 - pretty good
-389,Pioneer Cuts,Challenger,CNC,4 - pretty good
-438,Poly Fluoro Ltd.,Evaluating,CNC,3 - so/so
-147,Prora,Evaluating,CNC,4 - pretty good
-265,Qualimount Engineering Pvt Ltd,Strategic,CNC,4 - pretty good
-433,RPM Solutions,Challenger,CNC,4 - pretty good
-403,Rapid Manufacturing LLC,Challenger,CNC,3 - so/so
-422,Regem,Evaluating,CNC,4 - pretty good
-153,Relic EDC LLC,Challenger,CNC,
-447,Retrotarget,Evaluating,CNC,4 - pretty good
-102,S&G Tech Group,Challenger,CNC,4 - pretty good
-452,SBG Tooling,Evaluating,CNC,4 - pretty good
-363,SC FIPA SRL,Evaluating,CNC,3 - so/so
-437,SLN Enterprises,Evaluating,CNC,4 - pretty good
-435,Santro,Evaluating,CNC,4 - pretty good
-338,Selcasting,Evaluating,CNC,4 - pretty good
-459,"Shenzhen WanDaAn Precision Technology Co., Ltd",Evaluating,CNC,
-458,"Shenzhen Xiehe Precision Machining Co.,ltd",Evaluating,CNC,
-443,Simpletech Aerospace,Evaluating,CNC,4 - pretty good
-302,Spacenex Aero Pvt Ltd,Strategic,CNC,4 - pretty good
-285,Srikrishna Industrial Works India Pvt Ltd,Strategic,CNC,4 - pretty good
-414,Stanform,Strategic,CNC,2 - pretty bad
-331,Stengmac,Evaluating,CNC,4 - pretty good
-343,Succinnova,Strategic,CNC,4 - pretty good
-139,SunPe,Strategic,CNC,4 - pretty good
-242,Team D Technologies,Challenger,CNC,3 - so/so
-449,Techno Ltd,Evaluating,CNC,4 - pretty good
-411,Tigma Precision,Challenger,CNC,4 - pretty good
-402,Toolmakers Precisie Specials,Evaluating,CNC,4 - pretty good
-395,Trimborn GmbH,Evaluating,CNC,4 - pretty good
-240,VAP Precision,Challenger,CNC,4 - pretty good
-426,Vibrant Engineering Solutions,Challenger,CNC,4 - pretty good
-407,WIBE,Evaluating,CNC,3 - so/so
-3,Xintianjian Technology,Strategic,CNC,4 - pretty good
-381,Zenoz LTD,Evaluating,CNC,2 - pretty bad
-409,Zevimetal Lda,Strategic,CNC,4 - pretty good
+37,3D Prototyping Studio,Evaluating,3DP,4 - pretty good
+79,3D3 Design and Solutions LLC,Evaluating,3DP,4 - pretty good
+8,3DPX,Strategic,3DP,5 - awesome
+81,American Additive,Evaluating,3DP,4 - pretty good
+44,Automatic MFG LLC,Challenger,3DP,4 - pretty good
+40,Autotiv Manufacturing,Bottleneck,3DP,4 - pretty good
+77,"Black Dog Form, LLC",*Offboard,3DP,4 - pretty good
+64,Brandon's 3D Printing and Design,Evaluating,3DP,4 - pretty good
+9,Gramm GmbH,Strategic,3DP,4 - pretty good
+10,Creabis GmbH,Bottleneck,3DP,4 - pretty good
+50,CL Machine Works,Evaluating,3DP,5 - awesome
+12,Korneel's 3D Services,Strategic,3DP,5 - awesome
+13,3T AMP,Strategic,3DP,5 - awesome
+14,3D People Limited,Strategic,3DP,5 - awesome
+15,3iD,Strategic,3DP,5 - awesome
+16,Midlands 3D Printing Ltd,Strategic,3DP,5 - awesome
+61,DI Labs,Evaluating,3DP,4 - pretty good
+18,Solidfill,Evaluating,3DP,2 - pretty bad
+11,DiCAD Consulting Corp,Strategic,3DP,4 - pretty good
+30,Engman-Taylor,Challenger,3DP,5 - awesome
+21,Kinamico s.r.o.,Strategic,3DP,5 - awesome
+22,3D Creative,Strategic,3DP,5 - awesome
+56,"Flux Design, LLC",Evaluating,3DP,4 - pretty good
+58,GU 3D Print,Evaluating,3DP,4 - pretty good
+31,"Hydra Research, LLC",Evaluating,3DP,4 - pretty good
+26,Prototype Projects Ltd.,Challenger,3DP,5 - awesome
+27,PlastiPrint3D Ltd,Bottleneck,3DP,3 - so/so
+28,Edumaker Limited,Bottleneck,3DP,3 - so/so
+87,iFuzion LLC,*Offboard,3DP,
+17,Incept 3D,Evaluating,3DP,4 - pretty good
+48,Inspired Craftwork,Challenger,3DP,4 - pretty good
+32,RPM - Rapid Product Manufacturing GmbH,Challenger,3DP,4 - pretty good
+33,AMP Production,Challenger,3DP,4 - pretty good
+34,EWOQE,Evaluating,3DP,3 - so/so
+35,Genprofit Szolgáltató Kft.,Evaluating,3DP,3 - so/so
+36,WILLTeQ,Challenger,3DP,4 - pretty good
+2,Jaws Tec LLC,Challenger,3DP,4 - pretty good
+38,RENND Ltd,Evaluating,3DP,3 - so/so
+39,Any-Shape,Evaluating,3DP,2 - pretty bad
+25,"JMO Technology, LLC",Evaluating,3DP,4 - pretty good
+1,Knight Engineering Solutions LLC,Strategic,3DP,5 - awesome
+42,Prora,Evaluating,3DP,2 - pretty bad
+23,"Makelab, Inc",Evaluating,3DP,3 - so/so
+43,"MakerTree 3D, LLC",Challenger,3DP,4 - pretty good
+45,Printing Portal,Strategic,3DP,5 - awesome
+3,Midwest Prototyping,Strategic,3DP,4 - pretty good
+47,HenleyPrint3D,Evaluating,3DP,3 - so/so
+4,MK Machining LLC,Strategic,3DP,5 - awesome
+49,Seaside 3D Ltd,Evaluating,3DP,2 - pretty bad
+24,Moonshot3D,Evaluating,3DP,4 - pretty good
+51,Schem3D - Eryk Jamróz,Evaluating,3DP,3 - so/so
+55,MWM Technology,Evaluating,3DP,4 - pretty good
+53,3D-Druck & Design,Challenger,3DP,3 - so/so
+54,Smart Factory,Challenger,3DP,4 - pretty good
+20,Onset Engineering,Evaluating,3DP,5 - awesome
+19,"Pingring Enterprises, LLC",Evaluating,3DP,4 - pretty good
+57,V3D Printing,Evaluating,3DP,3 - so/so
+41,Rosenberg Industries LLC,Challenger,3DP,4 - pretty good
+59,3DTomorrow,Challenger,3DP,4 - pretty good
+60,Julien Dodokal,Evaluating,3DP,4 - pretty good
+85,Ryan Plummer,*Offboard,3DP,
+62,3D BG Print,Evaluating,3DP,3 - so/so
+63,Prod 3D,Evaluating,3DP,2 - pretty bad
+52,S&G Tech Group,Challenger,3DP,4 - pretty good
+65,CREAT3D Ltd,Evaluating,3DP,3 - so/so
+66,WeDo3DPrinting,Challenger,3DP,3 - so/so
+67,MOMKA Design,Challenger,3DP,3 - so/so
+68,Future Solutions V.O.F.,,3DP,
+69,CA Models,Bottleneck,3DP,4 - pretty good
+70,3D Builders,Evaluating,3DP,2 - pretty bad
+71,Alphacam,Bottleneck,3DP,4 - pretty good
+72,Bare Feet AB,Evaluating,3DP,4 - pretty good
+73,Steelmans Broaches UK Limited,Evaluating,3DP,3 - so/so
+74,SiMT,Bottleneck,3DP,4 - pretty good
+75,AME Group,Evaluating,3DP,2 - pretty bad
+76,Andrea Marini,Evaluating,3DP,3 - so/so
+46,Starter Design,Challenger,3DP,4 - pretty good
+78,Prod 3D Strasbourg,Evaluating,3DP,3 - so/so
+6,Streamline-3D,Strategic,3DP,5 - awesome
+80,3Dees Industries s.r.o.,,3DP,
+29,STS Technical Services,Challenger,3DP,5 - awesome
+82,EBK-HUNGARY LTD,,3DP,
+83,Oceanz B.V.,,3DP,2 - pretty bad
+84,RapidCenter,,3DP,
+7,Tyler's 3D Hub LCC,Challenger,3DP,4 - pretty good
+86,Zigg Zagg NV,Evaluating,3DP,4 - pretty good
+5,ZhumeisterLabs LLC,Strategic,3DP,5 - awesome
+1,"Dongguan Bole RP&M Co., Ltd",Strategic,CNC,3 - so/so
+2,Xintianjian Technology,Strategic,CNC,5 - Awesome
+3,"Xiehe Precision Machining Co.,ltd",Challenger,CNC,4 - pretty good
+4,Qualimount Engineering Pvt Ltd,Strategic,CNC,4 - pretty good
+5,SunPe,Strategic,CNC,4 - pretty good
+6,"Heng Wan Precision Co., Ltd",Challenger,CNC,5 - Awesome
+7,Longsheng,Strategic,CNC,4 - pretty good
+8,LTC Shenzen,Strategic,CNC,4 - pretty good
+9,Leshine,Bottleneck,CNC,4 - pretty good
+10,Boyi Prototypes,Strategic,CNC,4 - pretty good
+11,Bohao Prototypes,Challenger,CNC,4 - pretty good
+12,Zevimetal Lda,Strategic,CNC,4 - pretty good
+13,Neepuna Manufacturing solutions,Evaluating,CNC,2 - pretty bad
+14,Excelhub Technologies,Strategic,CNC,4 - pretty good
+15,WIBE,Evaluating,CNC,3 - so/so
+16,SLN Enterprises,Challenger,CNC,3 - so/so
+17,SBG Tooling,Challenger,CNC,4 - pretty good
+18,Spacenex Aero Pvt Ltd,Strategic,CNC,4 - pretty good
+19,Succinnova,Challenger,CNC,4 - pretty good
+20,Srikrishna Industrial Works India Pvt Ltd,Botlleneck,CNC,3 - so/so
+21,Preci Fit Engineering,Challenger,CNC,3 - so/so
+22,Airboat Technologies Private Limited,Challenger,CNC,4 - pretty good
+23,P.R.K Ancillaries India Private Limited,Challenger,CNC,4 - pretty good
+24,AvioHeliTronics,Challenger,CNC,4 - pretty good
+25,Navigator Designs,Challenger,CNC,4 - pretty good
+26,Shouzheng Zhiyuan,Evaluating,CNC,3 - so/so
+27,Hanzatec,Bottleneck,CNC,3 - so/so
+28,Halamanee Aerospace Private Limited,Challenger,CNC,4 - pretty good
+29,Jai Ganesha Precision Engineering,Evaluating,CNC,4 - pretty good
+30,Inovit Solutions,Challenger,CNC,4 - pretty good
+31,Team D Engineering Pvt. Ltd.,Evaluating,CNC,3 - so/so
+32,LEOKRISHTEK PRIVATE LIMITED,Challenger,CNC,3 - so/so
+33,GPM,Evaluating,CNC,4 - pretty good
+34,Kemal Mfg,Challenger,CNC,4 - pretty good
+35,Jinsheng,Challenger,CNC,4 - pretty good
+36,Toolpath Solutions,Challenger,CNC,3 - so/so
+37,M-Tec Industries,Challenger,CNC,4 - pretty good
+38,Cohera Automations Pvt Ltd,Offboard,CNC,1 - aweful
+39,Engineered Polymers India Pvt. ltd,Strategic,CNC,5 - awesome
+40,HN ZZT,Challenger,CNC,3 - so/so
+41,VAP Precision,Challenger,CNC,4 - pretty good
+42,T3D LABS PVT LTD,Challenger,CNC,3 - so/so
+43,Tigma Precision,Challenger,CNC,3 - so/so
+44,RP&JM,Evaluating,CNC,3 - so/so
+45,Hampson Industries Private Limited,Challenger,CNC,4 - pretty good
+46,IHP (INTEGRACION DE HERRAMIENTAS PRODUCTIVAS SA DE CV),Evaluating,CNC,4 - pretty good
+47,Saptagiri Micro Engineering Industry,Challenger,CNC,4 - pretty good
+48,Vibrant Engineering Solutions,Challenger,CNC,4 - pretty good
+49,TMT Mechanics,Offboarded,CNC,
+50,JSUN CNC Solutions,Challenger,CNC,4 - pretty good
+51,Aerotek,Evaluating,CNC,3 - so/so
+52,Manucho Machines Pvt Ltd,Challenger,CNC,4 - pretty good
+53,RPM Solutions,Challenger,CNC,5 - awesome
+54,Levtech,Strategic,CNC,4 - pretty good
+55,Astratek Precision Manufacture,Offboarded,CNC,
+56,Sapthagiri Aerospace & Defence Pvt Ltd.,Evaluating,CNC,3 - so/so
+57,Aerotive,Challenger,CNC,3 - so/so
+58,Poly Fluoro Ltd.,Evaluating,CNC,3 - so/so
+59,Relic EDC LLC,Strategic,CNC,
+60,Mikrotek,Challenger,CNC,4 - pretty good
+61,Beskar Steel,Challenger,CNC,4 - pretty good
+62,Kallweit Manufacturing LLC,Evaluating,CNC,
+63,Cornertech Inc,Bottleneck,CNC,
+64,Maquinados Baca,Evaluating,CNC,3 - so/so
+65,Kovdan,Evaluating,CNC,3 - so/so
+66,Excelon Technologies,Challenger,CNC,4 - pretty good
+67,Simpletech Aerospace,Challenger,CNC,4 - pretty good
+68,Billet Craft Designs,Evaluating,CNC,
+69,Imaginarium Rapid,Challenger,CNC,3 - so/so
+70,Grupo CC Manufacturing S.A. de C.V.,Evaluating,CNC,4 - pretty good
+71,Aero Platina Technologies,Evaluating,CNC,3 - so/so
+72,Langeslag Metaaltechniek,Challenger,CNC,3 - so/so
+73,JF Manufactura,Evaluating,CNC,4 - pretty good
+74,Galaktika Ltd.,Evaluating,CNC,3 - so/so
+75,OuMeiSi Precision,Challenger,CNC,4 - pretty good
+76,Selcasting,Challenger,CNC,2 - pretty bad
+77,CNC La Honda,Evaluating,CNC,4 - pretty good
+78,WarnerWerks LLC,Evaluating,CNC,
+79,Ashwin Precision Products Pvt Ltd,Evaluating,CNC,3 - so/so
+80,T&M Torneado Y Mecanizado Sa De Cv,Evaluating,CNC,4 - pretty good
+81,MAX AUTO CABLES PRIVATE LIMITED,Evaluating,CNC,
+82,Stanform,Evaluating,CNC,3 - so/so
+83,HL Precision Inc,Offboarded,CNC,
+84,"48 Customs, Inc.",Evaluating,CNC,
+85,G&T,Evaluating,CNC,2 - pretty bad
+86,Filipe Eusebio Ferreira Unipessoal Lda,Challenger,CNC,4 - pretty good
+87,Daniel Machine Shop,Evaluating,CNC,
+88,"Liberty CNC, LLC",Evaluating,CNC,
+89,Distinct Productivity Solutions,Challenger,CNC,3 - so/so
+90,Techno Ltd,Evaluating,CNC,4 - pretty good
+91,Leatherneck Precision Machine and Fabrication,Evaluating,CNC,
+92,CNC Maquinados Monterrey SA de CV,Evaluating,CNC,4 - pretty good
+93,"Jaco Machine, LLC",Evaluating,CNC,
+94,Regem,Challenger,CNC,3 - so/so
+95,Cenhtal - Centro Herramental De Aguascalientes S.A. DE C.V.,Evaluating,CNC,4 - pretty good
+96,Grupo Madiver,Evaluating,CNC,4 - pretty good
+97,S&G Tech Group,,CNC,
+98,"RJS Machine Works, Inc.",,CNC,
+99,AeroTek Precision,,CNC,
+100,Monovac,Evaluating,CNC,4 - pretty good
+101,Tecnologia Aplicada en Maquinados S.A. de C.V. (TAMSA),Evaluating,CNC,3 - so/so
+102,Santro,Evaluating,CNC,3 - so/so
+103,Master Machining,,CNC,
+104,Stengmac,Challenger,CNC,4 - pretty good
+105,Microflux LLC,,CNC,
+106,J&J Maquinados,Evaluating,CNC,
+107,"Crist Instrument Co., Inc",,CNC,
+108,CodeCSR,,CNC,
+109,Garuda Aerotech,Evaluating,CNC,4 - pretty good
+110,SFS Dynamics,,CNC,
+111,Inarde,Challenger,CNC,4 - pretty good
+112,Wood and Steel Creative (José María Navarro González),Evaluating,CNC,4 - pretty good
+113,Procesos Industriales Rodolv S.A. DE C.V.,Evaluating,CNC,4 - pretty good
+114,HD Machining,,CNC,
+115,SC Perfect Seal SRL,Evaluating,CNC,4 - pretty good
+116,Tecnomaquinados de Precisión,Evaluating,CNC,4 - pretty good
+117,Precisium d.o.o.,Evaluating,CNC,4 - pretty good
+118,"ACT Enterprises, LLC",,CNC,
+119,Tag Manufacturing,,CNC,
+120,"North Coast Imagineering and Manufacture, LLC",,CNC,
+121,ATSE Goni Inc.,,CNC,
+122,Aerohead Inc.,,CNC,
+123,V&B INGENIERIA Y MAQUINADOS CNC,Evaluating,CNC,4 - pretty good
+124,TMV Machining,,CNC,
+125,"Orion Industries, S.A. de C.V.",Evaluating,CNC,4 - pretty good
+126,Sirah Polska Sp. z o.o.,Evaluating,CNC,3 - so/so
+127,Mike's Machine Shop,,CNC,
+128,PHD Machining,,CNC,
+129,5 Axis Solutions,,CNC,
+130,Sharp Box Precision,,CNC,
+131,CNC Programming Solutions,,CNC,
+132,Forma Machine LLC,,CNC,
+133,Exonics Precision Pvt Ltd,Evaluating,CNC,3 - so/so
+134,MILLWORKS Technologies Pvt Ltd.,Evaluating,CNC,4 - pretty good
+135,Mako Manufacturing,,CNC,
+136,Novelo Technologies,,CNC,
+137,Zenoz LTD,Offboarded,CNC,
+138,Protolabs,,CNC,
+139,CBQ Technologies,Evaluating,CNC,
+140,Diseño y Manufactura Integral,Evaluating,CNC,4 - pretty good
+141,Tozli Machine,,CNC,
+142,Revolution Machine LLC,,CNC,
+143,Kocher & Beck USA,,CNC,
+144,Brema,Evaluating,CNC,2 - pretty bad
+145,Jaws Tec LLC,,CNC,
+146,SUMINISTROS METAL MECANICOS,Evaluating,CNC,4 - pretty good
+147,Newton Engineering,,CNC,
+148,Detroit3D,,CNC,
+149,Elvarem OU,Evaluating,CNC,3 - so/so
+150,Kerkau Manufacturing,,CNC,
+151,Cewar,Evaluating,CNC,3 - so/so
+152,D&J Machining,,CNC,
+153,Legault Machining LLC,,CNC,
+154,Oswald Inc,,CNC,
+155,Maquinados Especiales de Presición SA de CV (MEPSA),Challenger,CNC,4 - pretty good
+156,Ward Precision Manufacturing,,CNC,
+157,3DCUT OÜ,Evaluating,CNC,3 - so/so
+158,AI Manufacturing,,CNC,
+159,Accutech Enterprises,Evaluating,CNC,
+160,Andre Lerouille,Evaluating,CNC,1
+161,Ascend Engineering,,CNC,
+162,BEG MANUFACTURING,Evaluating,CNC,4 - pretty good
+163,BGT Aerospace LLC,,CNC,
+164,BN Precision Machining,,CNC,
+165,BRC MetalWorks LLC,,CNC,
+166,Baxter Aerospace,,CNC,
+167,Betech Kunststoffen,Strategic,CNC,
+168,CNC Prime,,CNC,
+169,Cal.Co.M. Di Vivalda Ing. Pierluca,Evaluating,CNC,2 - pretty bad
+170,Chemat Sp. z o.o.,Evaluating,CNC,2 - pretty bad
+171,Choice Machine,,CNC,
+172,Consolidated Machining LLC,,CNC,
+173,DWD Precision,,CNC,
+174,Desert West CNC,,CNC,
+175,Dominik Żarczyński DTP,Evaluating,CNC,2 - pretty bad
+176,"E-PLAST MX, S.A. DE C.V.",Evaluating,CNC,4 - pretty good
+177,EMIPAGO SA DE CV,Evaluating,CNC,4 - pretty good
+178,Echelon International,,CNC,
+179,EuroHidra,Evaluating,CNC,3 - so/so
+180,Excell Manufacturing Inc.,,CNC,
+181,Express Prototype Machining,,CNC,
+182,F&A Maschinenbau GbR,Evaluating,CNC,4 - pretty good
+183,Fitzsimmons Corporation,,CNC,
+184,"Five Axis Industries, Inc.",,CNC,
+185,Fort Manufacturing,,CNC,
+186,GFS Machining Inc.,,CNC,
+187,Garcia Precision,,CNC,
+188,HP Performance Inc.,,CNC,
+189,Heromec,Evaluating,CNC,3 - so/so
+190,Husky Machining LLC,,CNC,
+191,IDMI SOLUCION SAS,Evaluating,CNC,4 - pretty good
+192,J&M CNC,,CNC,
+193,"Jiuhang Precision Co., Ltd",,CNC,
+194,K-MP,Evaluating,CNC,3 - so/so
+195,Kong Machining,,CNC,
+196,Leftwing Precision,,CNC,
+197,Lopso Insdustrial Aerospace Sa De Cv,Evaluating,CNC,4 - pretty good
+198,MAQUINADOS TECNOLOGICOS DEL CENTRO,Evaluating,CNC,4 - pretty good
+199,"MKE Machine, Inc.",,CNC,
+200,MNT Machine Inc.,,CNC,
+201,Machine Time Inc.,,CNC,
+202,Makro Machinery,,CNC,
+203,Max Precision Machine Inc.,,CNC,
+204,Mecaniek Chevalier,Evaluating,CNC,2 - pretty bad
+205,Miller Precision,,CNC,
+206,Mirfo Machine Tools SRL,Evaluating,CNC,1
+207,Morey Machine & Manufacturing,,CNC,
+208,Motor Control Technology,,CNC,
+209,Nityanand Udyog,,CNC,
+210,OPUS,Evaluating,CNC,4 - so/so
+211,Offen Design and MFG,,CNC,
+212,Paragon Machine Co.,,CNC,
+213,Phoenix Precision Machining,,CNC,
+214,Prora,Evaluating,CNC,4 - so/so
+215,Pulsar Manufacturing,,CNC,
+216,QL Precision Inc.,,CNC,
+217,Resultamper Metalomecânica,Evaluating,CNC,2 - pretty bad
+218,Retrotarget,Evaluating,CNC,3 - so/so
+219,S&S Prototype,,CNC,
+220,SERVICIOS INDUSTRIALES TIM,Evaluating,CNC,4 - pretty good
+221,SOTELO CNC PRODUCTION PRECISION S. DE R.L DE C.V,Evaluating,CNC,4 - pretty good
+222,"Satisfaction Machine Group, LLC",,CNC,
+223,Seeräuber,Evaluating,CNC,4 - pretty good
+224,Servicios y Manufactura de Partes Especiales (SYMPE),Evaluating,CNC,4 - pretty good
+225,"Sio Cnc Machining, Inc.",,CNC,
+226,Supreme Manufacturing Group,,CNC,
+227,Systomatic Inc,,CNC,
+228,TERNPLAS Kunststofftechnik,Evaluating,CNC,1
+229,TVM Precision Machining,,CNC,
+230,TVT Precision,,CNC,
+231,Testing Tylers Hubs,,CNC,
+232,Toolmakers Precisie Specials,Evaluating,CNC,1
+233,Trowbridge Engineering,,CNC,
+234,Upbuild Fabrication,,CNC,
+235,WZK Sp. z o.o.,Evaluating,CNC,1
+236,Wagler Machining LLC,,CNC,
+237,"WanDaAn Precision Technology Co., Ltd",,CNC,
+238,Xenium CNC,,CNC,
+239,Zümre Makina,,CNC,
+240,"iLam Precision, Inc.",,CNC,
