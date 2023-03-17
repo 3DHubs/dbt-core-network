@@ -130,10 +130,10 @@ with first_quote as (
 -- ACTIVE PURCHASE ORDER FIELDS
 -- This data is obtained by querying the quotes table (type PO) and filtering for status active
 
-     active_po as (
+  active_po as (
          select quotes.order_uuid,
                 quotes.uuid                                                                  as po_active_uuid,
-                quotes.created                                                               as po_active_created_at, 
+                quotes.finalized_at                                                          as po_active_finalized_at, 
                 round(((subtotal_price_amount / 100.00) / rates.rate), 2)                    as po_active_subtotal_cost_usd,
                 document_number                                                              as po_active_document_number,
                 purchase_orders.supplier_id::int                                             as po_active_supplier_id, -- Used to define is_resourced field
@@ -145,7 +145,7 @@ with first_quote as (
                     when quotes.shipping_date >= '2019-10-01'
                         then quotes.shipping_date end                                        as po_active_promised_shipping_at_by_supplier,
                 row_number() over (
-                    partition by quotes.order_uuid order by quotes.created desc)             as rn -- Noticed a few orders with 2+ active POs, this helps us guarantee uniqueness
+                    partition by quotes.order_uuid order by quotes.finalized_at desc)             as rn -- Noticed a few orders with 2+ active POs, this helps us guarantee uniqueness
          from {{ ref('prep_supply_documents') }} as quotes
     inner join {{ ref('prep_purchase_orders') }} as purchase_orders
          on quotes.uuid = purchase_orders.uuid
@@ -159,6 +159,46 @@ with first_quote as (
            and purchase_orders.status = 'active'
          {{ dbt_utils.group_by(n=11) }}
      ),
+
+
+     -- MAX PURCHASE ORDER 2 days for 3dp and 7 days for cnc after sourcing
+-- This data is obtained by querying the quotes table (type PO) and filtering for status active
+
+       production_po as (
+         select quotes.order_uuid,
+                quotes.uuid                                                                  as po_production_uuid,
+                quotes.finalized_at                                                          as po_production_finalized_at,
+                round(((subtotal_price_amount / 100.00) / rates.rate), 2)                    as po_production_subtotal_cost_usd,
+                document_number                                                              as po_production_document_number,
+                purchase_orders.supplier_id::int                                             as po_production_supplier_id, -- Used to define is_resourced field
+                purchase_orders.supplier_support_ticket_id                                   as po_production_support_ticket_id,
+                suppliers.name                                                               as po_production_supplier_name,
+                suppliers.address_id                                                         as po_production_supplier_address_id,
+                countries.name                                                               as po_production_company_entity,
+                case
+                    when quotes.shipping_date >= '2019-10-01'
+                        then quotes.shipping_date end                                        as po_production_promised_shipping_at_by_supplier,
+                date_diff('days', sourced_at, quotes.finalized_at)                           as days_after_sourcing,
+                case when quotes.technology_id = 2 and days_after_sourcing <= 2 then true
+                     when quotes.technology_id = 1 and days_after_sourcing <= 7 then true
+                     when po_first_uuid = quotes.uuid then true
+                     else false end                                                          as is_qualified_as_production,
+                case when is_qualified_as_production then  row_number() over (
+                    partition by quotes.order_uuid,is_qualified_as_production order by quotes.finalized_at desc) end         as rn 
+         from {{ ref('prep_supply_documents') }} as quotes
+    inner join {{ ref('prep_purchase_orders') }} as purchase_orders
+         on quotes.uuid = purchase_orders.uuid
+             left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
+                on rates.currency_code_to = quotes.currency_code 
+                and rates.date = trunc(quotes.finalized_at)
+             left join {{ ref('company_entities') }} as ce on quotes.company_entity_id = ce.id
+             left join {{ ref('prep_countries') }} as countries on ce.corporate_country_id = countries.country_id
+             left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
+             inner join first_po on first_po.order_uuid = quotes.order_uuid
+         where quotes.type = 'purchase_order'
+         {{ dbt_utils.group_by(n=13) }}
+     ),
+
 
      -- ALL PURCHASE ORDER FIELDS
 
@@ -226,7 +266,7 @@ select -- First Quote
 
        -- Active PO
        apo.po_active_uuid,
-       apo.po_active_created_at,
+
        apo.po_active_subtotal_cost_usd,
        apo.po_active_document_number,
        apo.po_active_company_entity,
@@ -235,6 +275,18 @@ select -- First Quote
        apo.po_active_supplier_name,
        apo.po_active_supplier_address_id,
        apo.po_active_support_ticket_id,
+
+       -- Production PO
+       ppo.po_production_uuid,
+       ppo.po_production_finalized_at,
+       ppo.po_production_subtotal_cost_usd,
+       ppo.po_production_document_number,
+       ppo.po_production_company_entity,
+       ppo.po_production_promised_shipping_at_by_supplier, -- This field has a different naming convention because is a key field
+       ppo.po_production_supplier_id,
+       ppo.po_production_supplier_name,
+       ppo.po_production_supplier_address_id,
+       ppo.po_production_support_ticket_id,
 
        -- All POs
        aapo.number_of_purchase_orders,
@@ -248,4 +300,5 @@ from first_quote as fq
          left join agg_all_quotes as aaq on fq.order_uuid = aaq.order_uuid
          left join first_po as fpo on fq.order_uuid = fpo.order_uuid
          left join active_po as apo on fq.order_uuid = apo.order_uuid and apo.rn = 1
+         left join production_po as ppo on fq.order_uuid = ppo.order_uuid and ppo.rn = 1
          left join agg_all_pos as aapo on fq.order_uuid = aapo.order_uuid

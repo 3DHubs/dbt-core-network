@@ -480,10 +480,8 @@ select
     case when is_logistics_shipping_quote_used then qli.shipping_amount_usd 
          when qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03
          else rda.winning_shipping_estimate_amount_usd end                                 as beta_shipping_cost_usd,
-    case when qli.line_item_technology_name= '3DP' and date_diff('day', sourced_at, po_active_created_at) <=2 then
-    po_active_subtotal_cost_usd 
-         when qli.line_item_technology_name = 'CNC' and date_diff('day', sourced_at, po_active_created_at) <= 7 then 
-    po_active_subtotal_cost_usd else    subtotal_sourced_cost_usd     end                  as beta_subtotal_po_cost_usd,      
+    case when po_production_finalized_at < logistics.shipped_at  then po_production_subtotal_cost_usd
+     else    subtotal_sourced_cost_usd     end                                             as beta_subtotal_po_cost_usd,      
     coalesce(beta_subtotal_po_cost_usd  ,0) + coalesce(shipping_cost_usd,0) + 
     coalesce(qli.estimated_l1_customs_amount_usd,0) + coalesce(qli.estimated_l2_customs_amount_usd,0) as beta_subtotal_sourced_cost_usd,
 
