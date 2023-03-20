@@ -44,7 +44,7 @@ select
 
 from campaign_performance_report_ranked
 
-left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as exchange_rate_spot_daily
+left join {{ ref('exchange_rate_daily') }} as exchange_rate_spot_daily
     on
         exchange_rate_spot_daily.currency_code_to = campaign_performance_report_ranked.currencycode
         and trunc(

@@ -44,7 +44,7 @@ from {{ ref('prep_supply_documents') }} as oqsl
             left join {{ ref('stg_fact_orders') }} as orders on oqsl.order_uuid = orders.order_uuid
             left join {{ ref('prep_purchase_orders') }} as spocl on spocl.uuid = oqsl.uuid
             left join {{ ref('agg_line_items') }} as ali on oqsl.uuid = ali.quote_uuid
-            left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+            left join {{ ref('exchange_rate_daily') }} as rates
                             on rates.currency_code_to = oqsl.currency_code
                             and case 
                                     -- The proper exchange rate date here before recognition is the recognition date not delivered date.

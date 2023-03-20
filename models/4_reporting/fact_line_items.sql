@@ -201,7 +201,7 @@ select     li.order_uuid,
 
             -- Joins for exchange rates
              left join {{ ref('stg_orders_dealstage') }} as order_deals on docs.order_uuid = order_deals.order_uuid
-             left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+             left join {{ ref('exchange_rate_daily') }} as rates
                              on rates.currency_code_to = docs.currency_code 
                              -- From '2022-04-01' we started using the more appropriate closing date as exchange rate date for closing values instead of quote finalized_at, this has been changed but not retroactively.
                              and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, docs.finalized_at, docs.created)) = trunc(rates.date)

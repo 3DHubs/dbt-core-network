@@ -63,7 +63,7 @@ with first_quote as (
 
              -- Joins for exchange rates
              left outer join {{ ref('stg_orders_dealstage') }} as order_deals on orders.uuid = order_deals.order_uuid
-             left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates 
+             left join {{ ref('exchange_rate_daily') }} as rates 
                 on rates.currency_code_to = quotes.currency_code
                 -- From '2022-04-01' we started using the more appropriate closing date as exchange rate date for closing values instead of quote finalized_at, this has been changed but not retroactively.
                 and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, quotes.finalized_at, quotes.created)) = trunc(rates.date)
@@ -107,7 +107,7 @@ with first_quote as (
                             case when soq.shipping_date >= '2019-10-01' then soq.shipping_date end as po_first_promised_shipping_at_by_supplier,                                                                                                                      
                             row_number() over (partition by soq.order_uuid order by finalized_at)      as rn
                      from {{ ref('prep_supply_documents') }} as soq
-                     left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
+                     left join {{ ref('exchange_rate_daily') }} as rates
                         on rates.currency_code_to = soq.currency_code 
                         and rates.date = trunc(soq.finalized_at)
                      left join {{ ref('prep_purchase_orders') }} as spocl on soq.uuid = spocl.uuid
@@ -149,7 +149,7 @@ with first_quote as (
          from {{ ref('prep_supply_documents') }} as quotes
     inner join {{ ref('prep_purchase_orders') }} as purchase_orders
          on quotes.uuid = purchase_orders.uuid
-             left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
+             left join {{ ref('exchange_rate_daily') }} as rates
                 on rates.currency_code_to = quotes.currency_code 
                 and rates.date = trunc(quotes.finalized_at)
              left join {{ ref('company_entities') }} as ce on quotes.company_entity_id = ce.id
@@ -188,7 +188,7 @@ with first_quote as (
          from {{ ref('prep_supply_documents') }} as quotes
     inner join {{ ref('prep_purchase_orders') }} as purchase_orders
          on quotes.uuid = purchase_orders.uuid
-             left join {{ source('data_lake', 'exchange_rate_spot_daily')}} as rates
+             left join  {{ ref('exchange_rate_daily') }} as rates
                 on rates.currency_code_to = quotes.currency_code 
                 and rates.date = trunc(quotes.finalized_at)
              left join {{ ref('company_entities') }} as ce on quotes.company_entity_id = ce.id

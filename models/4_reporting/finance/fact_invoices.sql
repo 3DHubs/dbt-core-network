@@ -29,7 +29,7 @@ with stg_cube_invoices_supply as (
             'supply'                                                                        as _data_source
 
         from {{ ref('prep_supply_documents') }} as invoices
-            left outer join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+            left outer join {{ ref('exchange_rate_daily') }} as rates
                 on rates.currency_code_to = invoices.currency_code and trunc(invoices.finalized_at) = trunc(rates.date)
         where true
            and invoices.type in ('invoice')

@@ -57,7 +57,7 @@ with
             {{ source("int_service_supply", "bid_reasons") }} as br
             on bbr.bid_reasons_id = br.id
         left join
-            {{ source("data_lake", "exchange_rate_spot_daily") }} as e
+            {{ ref('exchange_rate_daily') }} as e
             on e.currency_code_to = b.currency_code
             and trunc(e.date) = trunc(b.created)
     )

@@ -80,7 +80,7 @@ select _kw_report_sk,
        keywordid                                                        as keyword_id
 from keywords_performance_report_ranked
 
-         left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as rates
+         left join {{ ref('exchange_rate_daily') }} as rates
                    on rates.currency_code_to = keywords_performance_report_ranked.currency
                        and trunc(keywords_performance_report_ranked.day) = trunc(rates.date)
 

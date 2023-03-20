@@ -118,7 +118,7 @@ with
             on rfq_a.supplier_rfq_uuid = bid_quotes.supplier_rfq_uuid
         left outer join {{ ref("suppliers") }} as s on s.id = rfq_a.supplier_id
         left outer join
-            {{ source("data_lake", "exchange_rate_spot_daily") }} as rates
+            {{ ref('exchange_rate_daily') }} as rates
             on rates.currency_code_to = bid_quotes.currency_code
             and trunc(bid_quotes.created) = trunc(rates.date)
         left outer join winning_bid on bid_quotes.bid_uuid = winning_bid.uuid
@@ -179,7 +179,7 @@ with
             and supplier_bid_idx = 1
         left outer join {{ ref("suppliers") }} as s on s.id = supplier_rfqs.supplier_id
         left outer join
-            {{ source("data_lake", "exchange_rate_spot_daily") }} as rates
+            {{ ref('exchange_rate_daily') }} as rates
             on rates.currency_code_to = bid_quotes.currency_code
             and trunc(bid_quotes.created) = trunc(rates.date)
         left outer join winning_bid on bid_quotes.bid_uuid = winning_bid.uuid
