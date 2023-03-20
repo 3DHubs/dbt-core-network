@@ -266,7 +266,7 @@ select -- First Quote
 
        -- Active PO
        apo.po_active_uuid,
-
+       apo.po_active_finalized_at,
        apo.po_active_subtotal_cost_usd,
        apo.po_active_document_number,
        apo.po_active_company_entity,

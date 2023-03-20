@@ -247,6 +247,7 @@ select
 
     --Documents: Active Purchase Order
     docs.po_active_uuid,
+    docs.po_active_finalized_at,
     docs.po_active_subtotal_cost_usd,
     docs.po_active_document_number,
     docs.po_active_company_entity,

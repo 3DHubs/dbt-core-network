@@ -78,10 +78,13 @@ with disputes as (
 
      dispute_resolution as (
          with freshdesk_ticket_remake_request as (
-             select coalesce(hs.uuid, po.order_uuid, ho.uuid) as order_uuid,
+             select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, dis.order_uuid, ho.uuid, po.order_uuid) as order_uuid,
                     min(con.created_at)                       as dispute_remake_resolution_date
              from {{ ref('freshdesk_tickets') }} t
-                      left outer join {{ ref('prep_supply_orders') }} as hs on hs.hubspot_deal_id = t.hubspot_deal_id
+                      left join {{ ref('prep_supply_orders') }} as hs on hs.hubspot_deal_id = t.hubspot_deal_id
+                      left join {{ ref('prep_supply_orders') }} pso on pso.support_ticket_id = t.id
+                      left join {{ source('int_service_supply', 'disputes') }} dis on dis.customer_support_ticket_id = t.id
+                      left join {{ ref('prep_purchase_orders') }} ppo on ppo.supplier_support_ticket_id = t.id
                       left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
                       left outer join {{ ref('prep_supply_documents') }} po on po.document_number = t.derived_po_number
                       left outer join {{ ref('freshdesk_ticket_conversations') }} con on con.ticket_id = t.id

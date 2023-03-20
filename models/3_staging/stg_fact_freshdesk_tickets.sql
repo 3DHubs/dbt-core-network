@@ -5,12 +5,16 @@
        )
 }}
 
-with fdmapping as (select coalesce(hs.uuid, po.order_uuid, ho.uuid) as order_uuid, t.id
+with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_uuid, rfq.order_uuid, dis.order_uuid, ho.uuid, po.order_uuid) as order_uuid, t.id
                    from {{ ref('freshdesk_tickets') }} t
-             left outer join {{ ref('prep_supply_orders') }} as hs
-                   on hs.hubspot_deal_id = t.hubspot_deal_id
-                       left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
-                       left outer join {{ ref('prep_supply_documents') }} as po on po.document_number = t.derived_po_number
+                    left join {{ ref('prep_supply_orders') }} as hs on hs.hubspot_deal_id = t.hubspot_deal_id
+                    left join {{ ref('prep_supply_orders') }} pso on pso.support_ticket_id = t.id
+                    left join {{ ref('prep_purchase_orders') }} ppo on ppo.supplier_support_ticket_id = t.id
+                    left join {{ ref('prep_auctions_rda') }}  rda on rda.internal_support_ticket_id = t.id
+                    left join {{ source('int_service_supply', 'disputes') }} dis on dis.customer_support_ticket_id = t.id
+                    left join {{ source("int_service_supply", "supplier_rfqs") }} rfq on rfq.support_ticket_id = t.id
+                    left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
+                    left outer join {{ ref('prep_supply_documents') }} as po on po.document_number = t.derived_po_number
                    where t._is_latest),
      tickets as (select * from {{ ref('freshdesk_tickets') }} where _is_latest),
      t1 as (

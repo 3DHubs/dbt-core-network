@@ -27,6 +27,7 @@ with auctions as (select
                       decode(auctions.is_resourcing, 'true', True, 'false', False)                            as is_resourcing,
                       decode(auctions.is_internal_support_ticket_opened, 'true', True, 'false', False)        as is_internal_support_ticket_opened,
                       auctions.internal_support_ticket_opened_at,     
+                      auctions.internal_support_ticket_id,
                       -- Fields from Quotes Table (type Auction)
                       oqs.created as auction_created_at,
                       oqs.document_number,

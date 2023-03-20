@@ -10,7 +10,7 @@ select tickets.id,
        tickets.created_at,
        tickets.updated_at,
        tickets.fr_escalated,
-       nullif(regexp_substr(subject, 'C-[a-z0-9]{5,}', 1, 1, 'i'), '')      as derived_document_number,
+       nullif(regexp_substr(subject, 'C-[a-z0-9]{5,}', 1, 1, 'i'), '')      as derived_document_number, -- Kept regular expression to old format, newer tickets should be linked based on deal id or supply objects.
        nullif(trim(regexp_substr(subject, 'po-\\w+-?\\w?', 1, 1, 'i')), '') as derived_po_number,
        coalesce(
                custom_fields_cf_hubspot_id,
