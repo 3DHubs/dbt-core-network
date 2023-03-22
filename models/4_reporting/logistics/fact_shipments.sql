@@ -162,7 +162,9 @@ select
     end as is_valid_shipment,
 
     -- Tracking Aggregates
-    faam.tracking_received_by_carrier_at,
+    -- The following coalesce is intended to ensure that if no tracking data is availablen we rely on uploaded date
+    -- Received by date is available for 97% of shipments, but this is required to use the supplier otr on pick up date.
+    coalesce(faam.tracking_received_by_carrier_at, s.created) as tracking_received_by_carrier_at,
     faam.tracking_available_for_pick_up_at,
     faam.tracking_estimated_delivery,
     faam.tracking_delivered_at,
