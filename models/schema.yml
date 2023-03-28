@@ -113,10 +113,10 @@ sources:
   - name: ext_raw
     tables:
       - name: hubspot_pages
-        freshness:
-          warn_after: {count: 48, period: hour}
-          error_after: {count: 72, period: hour}
-        loaded_at_field: "date::timestamp"
+        # freshness:
+        #   warn_after: {count: 48, period: hour}
+        #   error_after: {count: 72, period: hour}
+        # loaded_at_field: "date::timestamp"
       - name: hubspot_owners
 
   - name: ext_google_ads_console
