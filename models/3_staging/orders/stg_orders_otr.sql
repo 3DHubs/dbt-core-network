@@ -39,16 +39,24 @@ select distinct orders.uuid                              as order_uuid,
                     else null
                     end                                  as is_shipped_on_time_by_supplier,
 
+                -- This code is used to give suppliers a 12 hours window after the customer promised by date to
+                -- Hand over the product to the carrier (this should be removed at a later stage).
+                case 
+                    when docs.po_active_promised_shipping_at_by_supplier is not null then
+                        dateadd(hour, 12, shipment_received_by_carrier_at)    
+                    else null
+                end as promised_shipping_at_by_supplier_pick_up_adjusted,
+                
                 case
-                    when docs.po_active_promised_shipping_at_by_supplier is null then null
+                    when promised_shipping_at_by_supplier_pick_up_adjusted is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
                          logistics.shipped_at is null
                         then null
                     when orders.status = 'canceled' then null
-                    when logistics.shipment_received_by_carrier_at > docs.po_active_promised_shipping_at_by_supplier then false
-                    when logistics.shipment_received_by_carrier_at <= docs.po_active_promised_shipping_at_by_supplier then true
+                    when logistics.shipment_received_by_carrier_at > promised_shipping_at_by_supplier_pick_up_adjusted then false
+                    when logistics.shipment_received_by_carrier_at <= promised_shipping_at_by_supplier_pick_up_adjusted then true
                     when logistics.shipment_received_by_carrier_at is null and
-                         dateadd(day, 1, docs.po_active_promised_shipping_at_by_supplier) < current_date then false
+                         dateadd(day, 1, promised_shipping_at_by_supplier_pick_up_adjusted) < current_date then false
                     else null
                     end                                  as is_picked_up_on_time_from_supplier,
 
