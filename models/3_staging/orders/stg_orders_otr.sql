@@ -43,7 +43,7 @@ select distinct orders.uuid                              as order_uuid,
                 -- Hand over the product to the carrier (this should be removed at a later stage).
                 case 
                     when docs.po_active_promised_shipping_at_by_supplier is not null then
-                        dateadd(hour, 12, shipment_received_by_carrier_at)    
+                        dateadd(hour, 12, docs.po_active_promised_shipping_at_by_supplier)    
                     else null
                 end as promised_shipping_at_by_supplier_pick_up_adjusted,
                 
