@@ -14,6 +14,18 @@ select distinct id as company_id,
                partition by id order by btyd.btyd_date desc rows between unbounded preceding and unbounded following) as alive_probability
 from {{ source('data_lake', 'btyd') }}
 where date_trunc('week', snapshot_date) = (select date_trunc('week', max(snapshot_date)) from {{ source('data_lake', 'btyd') }})
+), fact_retention as(
+
+    select *
+    from {{ ref("fact_retention") }} as fr
+    where fr.is_latest_data_point
+), fact_retention_historic as(
+
+    select fr.hubspot_company_id,
+       max(fr.re_activated_date) as last_re_activeted_date,
+       max(fr.churn_date) as last_churn_date
+    from {{ ref("fact_retention") }} as fr
+    group by 1
 )
 
 select 
@@ -113,7 +125,15 @@ select
        -- Other Fields
        indm.industry_mapped::varchar                                             as industry_mapped,
        btyd.alive_probability,
-       sct.potential_tier
+       sct.potential_tier,
+
+       -- Retention fields
+       fr.churned as is_churned,
+       fr.churn_date as churn_date,
+       fr.re_activated as is_reactiveted,
+       fr.re_activated_date as re_activated_date,
+       frh.last_re_activeted_date,
+       frh.last_churn_date
        
        
 from {{ ref('hubspot_companies') }} hc
@@ -129,4 +149,6 @@ on lower(hc.industry) = indm.industry
     left join {{ ref('hubspot_owners') }} as own_handover on own_handover.owner_id = hc.handover_owner
     left join companies_btyd as btyd on btyd.company_id = hc.hubspot_company_id
     left join {{ ref('stg_customer_tiering') }} as sct on hc.hubspot_company_id = sct.hubspot_company_id
+    left join fact_retention as fr on hc.hubspot_company_id = fr.hubspot_company_id
+    left join fact_retention_historic as frh on hc.hubspot_company_id = frh.hubspot_company_id
 where hc.hubspot_company_id >= 1
