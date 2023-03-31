@@ -48,16 +48,16 @@ with
     ),
     -- For the days that are coming and sourced sales that on average should come in the month,
     -- estimate the recognized amount that can be expected
-    forecast_recognized as (
+forecast_recognized as (
         select
             date_trunc(
-                'day', date_add('days', time_to_recognize, sourced_at)
+                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+1)), sourced_at)
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
-            sum(subtotal_closed_amount_usd * percent_of_total * 0.98) as recognized_amount
+            sum(subtotal_closed_amount_usd * coalesce(percent_of_total,1) * 0.98) as recognized_amount
         from forecast_sourced fo
-        inner join
+        left join
             recognized_prep rp
             on rp.lead_time = fo.lead_time
             and fo.technology_name = rp.technology_name
@@ -70,13 +70,13 @@ with
     recognized_actual as (
         select
             date_trunc(
-                'day', date_add('days', time_to_recognize, sourced_at)
+                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+1)), sourced_at)
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
-            sum(subtotal_closed_amount_usd * percent_of_total * 0.98) as recognized_amount
+            sum(subtotal_closed_amount_usd * coalesce(percent_of_total,1) * 0.98) as recognized_amount
         from  {{ ref("fact_orders") }} fo
-        inner join
+        left join
             recognized_prep rp
             on rp.lead_time = fo.lead_time
             and fo.technology_name = rp.technology_name
