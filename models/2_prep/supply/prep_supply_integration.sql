@@ -10,11 +10,11 @@ select
            when ql.quote_id is not null then 'quicklink' else 'shallowlink' end               as integration_platform_type,
        external_orders.consumer_order_id                                                      as integration_order_id,
        ql.request_id                                                                          as integration_quote_id,
-       coalesce(external_orders.consumer_order_number,qt.quote_number)                        as integration_order_number,
+       coalesce(external_orders.consumer_order_number,qt.pl_quote_number)                     as integration_order_number,
        external_orders.consumer_purchase_order_number                                         as integration_purchase_order_number,
        coalesce(external_orders.consumer_order_created_at,ql.created_at)                      as integration_order_created_at,
        external_orders.consumer_ship_by                                                       as integration_order_ship_by_at,
-       coalesce(qt.user_id,ql.user_id)                                                        as integration_user_id,
+       coalesce(qt.pl_user_id,ql.user_id)                                                     as integration_user_id,
        replace(qt.utm_content,'content=','')                                                  as integration_utm_content
 
 from {{ source('int_service_supply', 'cnc_order_quotes') }}  as quotes
