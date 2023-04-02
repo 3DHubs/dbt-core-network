@@ -24,9 +24,9 @@ with
                 when delta_current_previous_order is not null
                 then delta_current_previous_order > 365
                 else false
-            end as re_activated,
+            end as reactivated,
 
-            case when re_activated then fo.closed_at else null end as re_activated_date,
+            case when reactivated then fo.closed_at else null end as reactivated_date,
             rank() over (partition by fo.hubspot_company_id order by fo.closed_at, fo.order_uuid desc)
             = 1 as is_latest_data_point
 
@@ -38,8 +38,8 @@ select
     rd.hubspot_company_id,
     rd.churned,
     rd.churn_date,
-    rd.re_activated,
-    rd.re_activated_date,
+    rd.reactivated,
+    rd.reactivated_date,
     rd.is_latest_data_point
 from retention_data as rd
-where (churned or re_activated or is_latest_data_point)
+where (churned or reactivated or is_latest_data_point)

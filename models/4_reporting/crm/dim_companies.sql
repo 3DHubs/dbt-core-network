@@ -22,7 +22,7 @@ where date_trunc('week', snapshot_date) = (select date_trunc('week', max(snapsho
 ), fact_retention_historic as(
 
     select fr.hubspot_company_id,
-       max(fr.re_activated_date) as last_re_activeted_date,
+       max(fr.reactivated_date) as last_reactivated_date,
        max(fr.churn_date) as last_churn_date
     from {{ ref("fact_retention") }} as fr
     group by 1
@@ -130,9 +130,9 @@ select
        -- Retention fields
        fr.churned as is_churned,
        fr.churn_date as churn_date,
-       fr.re_activated as is_reactiveted,
-       fr.re_activated_date as re_activated_date,
-       frh.last_re_activeted_date,
+       fr.reactivated as is_reactiveted,
+       fr.reactivated_date as reactivated_date,
+       frh.last_reactivated_date,
        frh.last_churn_date
        
        
