@@ -9,28 +9,34 @@
 -- Churn is defined as a company not having closed an order in the last 365 days.
 -- Last updated: April 2, 2023.
 -- Maintained by: Daniel Salazar
+
 with
     retention_data as (
 
         select
             fo.hubspot_company_id,
             fo.closed_at,
+            fo.order_uuid,
             lag(fo.closed_at) over (
                 partition by fo.hubspot_company_id order by fo.closed_at asc
-            ) as previous_closed_at_date,
+            ) as previous_closed_at,
             lead(fo.closed_at) over (
                 partition by fo.hubspot_company_id order by fo.closed_at asc
-            ) as next_closed_at_date,
+            ) as next_closed_at,
             datediff(
-                day, fo.closed_at, coalesce(next_closed_at_date, getdate())
+                day, fo.closed_at, coalesce(next_closed_at, getdate())
             ) as delta_current_next_order,
             datediff(
-                day, previous_closed_at_date, fo.closed_at
+                day, previous_closed_at, fo.closed_at
             ) as delta_current_previous_order,
             delta_current_next_order > 365 as churned,
             case
-                when churned then dateadd(days, 365, fo.closed_at) else null
-            end as churned_at,
+
+                when delta_current_next_order > 365
+                then dateadd(days, 365, fo.closed_at)
+                else null
+            end as has_churned_at,
+
             case
                 when delta_current_previous_order is not null
                 then delta_current_previous_order > 365
@@ -40,28 +46,52 @@ with
             case when reactivated then fo.closed_at else null end as reactivated_at,
             rank() over (
                 partition by fo.hubspot_company_id
-                order by fo.closed_at, fo.order_uuid desc
-            )
-            = 1 as is_latest_data_point,
 
-            rank() over (
-                partition by fo.hubspot_company_id
                 order by fo.closed_at, fo.order_uuid asc
             )
-            = 1 as is_first_data_point
+            = 1 as first_data_point
 
         from {{ ref("fact_orders") }} as fo
         where true and fo.closed_at is not null
+    ),
+    combine_first_activation_first_churn as (
+
+        select
+            rd.closed_at,
+            rd.hubspot_company_id,
+            rd.has_churned_at,
+            rd.reactivated,
+            rd.reactivated_at,
+            lag(rd.has_churned_at) over (
+                partition by rd.hubspot_company_id order by rd.closed_at desc
+            ) as next_churned_at,
+            case
+                when rd.first_data_point then rd.closed_at else null
+            end as activated_at,
+            rd.first_data_point
+        from retention_data as rd
+        where (rd.churned or rd.reactivated or rd.first_data_point)
+        order by rd.closed_at desc
     )
 
 select
-    case when is_first_data_point then rd.closed_at else null end as activated_at,
-    rd.hubspot_company_id,
-    rd.churned,
-    rd.churned_at,
-    rd.reactivated,
-    rd.reactivated_at,
-    rd.is_latest_data_point,
-    rd.is_first_data_point
-from retention_data as rd
-where (churned or reactivated or is_latest_data_point or is_first_data_point)
+
+    cfafc.hubspot_company_id,
+    cfafc.activated_at,
+    cfafc.reactivated,
+    cfafc.reactivated_at,
+    coalesce(cfafc.has_churned_at, cfafc.next_churned_at) as churned_at,
+    churned_at is not null as churned,
+    rank() over (
+        partition by cfafc.hubspot_company_id
+        order by coalesce(cfafc.reactivated_at, cfafc.activated_at) desc
+    )
+    = 1 as is_latest_data_point,
+    rank() over (
+        partition by cfafc.hubspot_company_id
+        order by coalesce(cfafc.reactivated_at, cfafc.activated_at) asc
+    ) as activation_count
+from combine_first_activation_first_churn as cfafc
+where
+    (cfafc.reactivated or cfafc.first_data_point)
+
