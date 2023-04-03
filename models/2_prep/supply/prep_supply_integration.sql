@@ -7,7 +7,8 @@ select
        or ql.email ~ 'mailinator' or ql.email ~ 'protolabs' or ql.email ~ '@(3d)?hubs.com' then true else false end is_test,
        decode(is_external, 'true', True, 'false', False)                                      as is_papi_integration,
        case when is_external = 'true' then 'papi'
-           when ql.quote_id is not null then 'quicklink' else 'shallowlink' end               as integration_platform_type,
+           when ql.quote_id is not null then 'quicklink'
+           when qt.utm_campaign = 'plQuicklink' then 'quicklink' else 'shallowlink' end       as integration_platform_type,
        external_orders.consumer_order_id                                                      as integration_order_id,
        ql.request_id                                                                          as integration_quote_id,
        coalesce(external_orders.consumer_order_number,qt.pl_quote_number)                     as integration_order_number,
@@ -21,6 +22,6 @@ from {{ source('int_service_supply', 'cnc_order_quotes') }}  as quotes
        inner join {{ source('int_service_supply', 'cnc_orders') }} as orders on orders.quote_uuid = quotes.uuid
        left join {{ source('int_service_supply', 'external_orders') }} as external_orders on orders.uuid = external_orders.uuid
        left join {{ source('int_service_supply', 'quicklinks_tracking') }}  qt on qt.order_uuid = orders.uuid
-       left join fed_publicapi.quick_link ql on ql.quote_id = quotes.uuid
+       left join fed_publicapi.quick_link ql on ql.quote_id = quotes.uuid and created_at < '2023-04-01' -- switched to quicklinks_tracking after April
        where (ql.quote_id is not null or
            is_external='true' or qt.order_uuid is not null)
