@@ -133,7 +133,14 @@ select
        fr.reactivated as is_reactiveted,
        fr.reactivated_at as reactivated_at,
        frh.last_reactivated_at,
-       frh.last_churned_at
+       frh.last_churned_at,
+       rfm.recency,
+       rfm.frequency,
+       rfm.monetary,
+       rfm.r_score,
+       rfm.f_score,
+       rfm.m_score,
+       rfm.rfm_segment
        
        
 from {{ ref('hubspot_companies') }} hc
@@ -142,6 +149,7 @@ on lower(hc.industry) = indm.industry
     left join {{ ref('stg_companies_dimensions') }} as adc on hc.hubspot_company_id = adc.hubspot_company_id
     left join {{ ref('agg_contacts_company') }} as acc on hc.hubspot_company_id = acc.hubspot_company_id
     left join {{ ref('agg_orders_companies') }} as agg_orders on hc.hubspot_company_id = agg_orders.hubspot_company_id
+    left join {{ ref('agg_orders_companies_rfm') }} as rfm on hc.hubspot_company_id = rfm.hubspot_company_id
     left join {{ ref('prep_countries') }} as dc on lower(coalesce(hc.country,adc.country_iso2)) = lower(dc.alpha2_code) or lower(coalesce(hc.country,adc.country_iso2)) = lower(dc.name)
     left join city_coordinates as cc on cc.city = lower(hc.city) and cc.country_id = dc.country_id 
     left join {{ ref('hubspot_owners') }} as own on own.owner_id::bigint = hc.hubspot_owner_id::bigint
