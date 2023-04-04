@@ -1,8 +1,7 @@
 select hubspot_company_id,
         -- Calculate aov
         (select sum(closed_sales_usd_company) / sum(number_of_closed_orders_company)
-         from {{ ref('agg_orders_companies') }}
-         where hubspot_company_id is not null)                           as aov,
+         from {{ ref('agg_orders_companies') }})                         as aov,
 
         -- RFM input
         datediff(day, recent_closed_order_at_company, getdate())         as recency,
