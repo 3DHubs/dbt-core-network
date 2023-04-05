@@ -44,4 +44,4 @@ select hubspot_company_id,
             when r_score <= 2 and f_score <= 2 and m_score <= 2 then 'Low Value Churn'
             end                                                          as rfm_segment
  from {{ ref('agg_orders_companies') }}
- where recent_closed_order_at_company is not null
+ where recent_closed_order_at_company is not null and monetary is not null
