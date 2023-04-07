@@ -142,6 +142,7 @@ agg.became_customer_at_company,
 agg.created_order_is_from_new_company,
 agg.closed_order_is_from_new_customer_company,
 agg.closed_order_number_company,
+agg.closed_project_number_company,
 agg.days_from_previous_closed_order_company,
 agg.first_bdr_owner_at_company,
 
