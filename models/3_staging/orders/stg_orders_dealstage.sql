@@ -38,7 +38,8 @@ with hubspot_dealstage_history as (
     dfm_im_time as (
     select deal_id, 
        next_changed_at as im_deal_sourced_after_dfm_at,
-       time_in_stage_minutes as time_in_stage_dfm_minutes
+       time_in_stage_minutes as time_in_stage_dfm_minutes,
+       rank() over (partition by deal_id order by changed_at, next_changed_at, primary_key asc ) as rnk
        from {{ ref('hubspot_deal_dealstage_history') }}
        where true 
        --and deal_id='11774251862'
@@ -87,10 +88,10 @@ select orders.uuid                                                              
 from {{ ref ('prep_supply_orders') }} as orders
          left join {{ ref ('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
          left join hubspot_dealstage_history as hdh on orders.hubspot_deal_id = hdh.deal_id
-         left join hubspot_dealstage_history_new as hdhn on orders.hubspot_deal_id = hdhn.deal_id and rnk=1
+         left join hubspot_dealstage_history_new as hdhn on orders.hubspot_deal_id = hdhn.deal_id and hdhn.rnk=1
          left join {{ ref('business_hours') }} start_business_hour on start_business_hour.date_hour = date_trunc('hour',changed_at_local)  and start_business_hour.is_business_hour = false
          left join {{ ref('business_hours') }} end_business_hour on end_business_hour.date_hour = date_trunc('hour',next_changed_at_local)  and end_business_hour.is_business_hour = false
-         left join dfm_im_time dit on dit.deal_id = orders.hubspot_deal_id
+         left join dfm_im_time dit on dit.deal_id = orders.hubspot_deal_id and dit.rnk=1
          left join supply_order_events as soe on orders.uuid = soe.order_uuid
          left join {{ ref ('seed_order_status') }} as order_status on orders.status = order_status.supply_status_value
          left join {{ ref ('stg_orders_hubspot') }} as stg_hubspot on orders.hubspot_deal_id = stg_hubspot.hubspot_deal_id
