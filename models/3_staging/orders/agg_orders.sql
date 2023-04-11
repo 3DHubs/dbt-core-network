@@ -109,7 +109,7 @@ select
     -- Rank Values
     case when is_closed is true and hubspot_company_id is not null then rank() 
         over (partition by hubspot_company_id order by closed_at asc) end                                                                              as closed_order_number_company,
-    case when is_closed then rank() over (partition by hubspot_company_id order by cast(closed_at as date) asc) else null end                          as closed_project_number_company,    
+    case when is_closed then dense_rank() over (partition by hubspot_company_id order by cast(closed_at as date) asc) else null end                    as closed_project_number_company,    
         
     -- Other Date Fields
     case when hubspot_company_id is not null then round(extract(minutes from (closed_at - lag(closed_at)

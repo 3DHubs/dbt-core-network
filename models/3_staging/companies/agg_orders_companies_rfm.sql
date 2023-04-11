@@ -5,7 +5,7 @@ select hubspot_company_id,
 
         -- RFM input
         datediff(day, recent_closed_order_at_company, getdate())         as recency,
-        number_of_closed_orders_company                                  as frequency,
+        number_of_closed_projects_company                                as frequency,
         closed_sales_usd_company / number_of_closed_orders_company       as monetary,
 
         -- R score
