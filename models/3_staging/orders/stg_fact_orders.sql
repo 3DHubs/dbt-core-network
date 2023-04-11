@@ -479,12 +479,13 @@ select
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as subtotal_amount_usd,
     case when is_closed then subtotal_amount_usd else 0 end                                as subtotal_closed_amount_usd,
     case when is_sourced then subtotal_amount_usd else 0 end                               as subtotal_sourced_amount_usd,
-    case when is_logistics_shipping_quote_used then qli.shipping_amount_usd 
-         when qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03
-         else rda.winning_shipping_estimate_amount_usd end                                 as beta_shipping_cost_usd,
+    case when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03 
+         else qli.shipping_amount_usd end                                                  as beta_prep_shipping_cost_usd, 
+    case when rda.winning_shipping_estimate_amount_usd is not null  
+         then coalesce(rda.winning_shipping_estimate_amount_usd,0) + coalesce(beta_prep_shipping_cost_usd,0) end as beta_shipping_cost_usd,
     case when po_production_finalized_at < logistics.shipped_at  then po_production_subtotal_cost_usd
-     else    subtotal_sourced_cost_usd     end                                             as beta_subtotal_po_cost_usd,      
-    coalesce(beta_subtotal_po_cost_usd  ,0) + coalesce(shipping_cost_usd,0) + 
+          else  subtotal_sourced_cost_usd  end                                             as beta_subtotal_po_cost_usd,    
+    coalesce(beta_subtotal_po_cost_usd,0) + coalesce(beta_shipping_cost_usd,0) + 
     coalesce(qli.estimated_l1_customs_amount_usd,0) + coalesce(qli.estimated_l2_customs_amount_usd,0) as beta_subtotal_sourced_cost_usd,
 
     -- Suppliers:
