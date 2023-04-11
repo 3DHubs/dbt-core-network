@@ -34,6 +34,18 @@ with hubspot_dealstage_history as (
         where dealstage_mapped = 'New'
         and next_dealstage is not null
 ),
+    -- Logic to calculate time spent in DFM for IM orders
+    dfm_im_time as (
+    select deal_id, 
+       next_changed_at as im_deal_sourced_after_dfm_at,
+       time_in_stage_minutes as time_in_stage_dfm_minutes
+       from {{ ref('hubspot_deal_dealstage_history') }}
+       where true 
+       --and deal_id='11774251862'
+       and dealstage_mapped = 'Won - Needs sourcing' 
+       and next_dealstage='Won - In production'),
+
+
      -- Only used for completion at the moment (Aug, 2021)
      supply_order_events as (
          select order_uuid,
@@ -65,6 +77,9 @@ select orders.uuid                                                              
        coalesce(end_business_hour.business_hour,next_changed_at_local)  as next_changed_at_local_business_hour,
        {{ business_minutes_between('changed_at_local_business_hour', 'next_changed_at_local_business_hour') }} as time_in_stage_new_business_minutes,
        
+       -- DFM time IM
+      im_deal_sourced_after_DFM_at,
+      time_in_stage_dfm_minutes,
 
        -- Status
        coalesce(order_status.mapped_value, stg_hubspot.hubspot_status_mapped) as order_status
@@ -75,6 +90,7 @@ from {{ ref ('prep_supply_orders') }} as orders
          left join hubspot_dealstage_history_new as hdhn on orders.hubspot_deal_id = hdhn.deal_id and rnk=1
          left join {{ ref('business_hours') }} start_business_hour on start_business_hour.date_hour = date_trunc('hour',changed_at_local)  and start_business_hour.is_business_hour = false
          left join {{ ref('business_hours') }} end_business_hour on end_business_hour.date_hour = date_trunc('hour',next_changed_at_local)  and end_business_hour.is_business_hour = false
+         left join dfm_im_time dit on dit.deal_id = orders.hubspot_deal_id
          left join supply_order_events as soe on orders.uuid = soe.order_uuid
          left join {{ ref ('seed_order_status') }} as order_status on orders.status = order_status.supply_status_value
          left join {{ ref ('stg_orders_hubspot') }} as stg_hubspot on orders.hubspot_deal_id = stg_hubspot.hubspot_deal_id

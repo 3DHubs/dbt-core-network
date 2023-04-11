@@ -420,6 +420,11 @@ select
     -- Time spent in New
     dealstage.time_in_stage_new_business_minutes,
 
+    -- Time spent in DFM for IM
+    case when hubspot_technology_name = 'IM' then  dealstage.im_deal_sourced_after_dfm_at end as im_deal_sourced_after_dfm_at,
+    case when hubspot_technology_name = 'IM' then  dealstage.time_in_stage_dfm_minutes end as time_in_stage_dfm_minutes,
+ 
+
     ------ SOURCE: STG INTERACTIONS ---------
     -- The stg table is derived from the aggregation of
     -- fact_interactions which combines the sources of

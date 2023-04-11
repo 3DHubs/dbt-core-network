@@ -80,6 +80,7 @@ created_at, -- Upload/cart
 submitted_at, -- Quote request
 hubspot_owner_assigned_date,
 time_in_stage_new_business_minutes,
+time_in_stage_dfm_minutes,
 first_time_quote_sent_at,
 first_time_response_at,
 hubspot_first_technical_review_ongoing_at,
