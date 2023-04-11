@@ -72,6 +72,7 @@ select dealid::bigint                                                           
        nullif(property_protolabs_cross_sell_company__value, '')::varchar(2048)                                as pl_cross_sell_company_name,
        nullif(property_protolabs_cross_sell_salesperson__value, '')::varchar(2048)                            as pl_cross_sell_sales_manager_name,
        nullif(property_pl_cross_sell_channel__value, '')::varchar(2048)                                       as pl_cross_sell_channel,
+       nullif(property_business_development_manager__value, '')::varchar(2048)                                as pl_business_development_manager_name,
        case when property_sales_priced__value = 'true' then true else false end                               as is_sales_priced
 from {{ source('ext_hubspot', 'deals') }}  as ehd
          left join {{ source('ext_hubspot', 'deals__associations__associatedcompanyids') }}  as ehdacomp

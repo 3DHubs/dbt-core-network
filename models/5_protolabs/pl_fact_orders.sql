@@ -22,7 +22,7 @@ select
     pl_cross_sell_sales_manager_name,
     pl_cross_sell_company_name,
     pl_cross_sell_channel,
-
+    pl_business_development_manager_name,
 
 
     is_integration,

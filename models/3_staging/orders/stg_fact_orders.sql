@@ -120,6 +120,7 @@ select
     hs_deals.hubspot_im_project_manager_id,
     hs_deals.hubspot_im_project_manager_name,
     hs_deals.pl_cross_sell_sales_manager_name,
+    hs_deals.pl_business_development_manager_name,
 
     -- HS Deals: Properties Requested by Teams
     -- Check upstream model for details on the team

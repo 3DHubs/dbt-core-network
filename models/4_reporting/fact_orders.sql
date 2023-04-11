@@ -255,6 +255,7 @@ hubspot_sourcing_owner_name,
 hubspot_im_project_manager_name,
 sales_lead_name,
 pl_cross_sell_sales_manager_name,
+pl_business_development_manager_name,
 
 -- Line Items
 number_of_part_line_items,
