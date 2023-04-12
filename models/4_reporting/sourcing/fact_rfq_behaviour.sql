@@ -24,6 +24,15 @@ with
         group by 1
 
     ),
+    freshdesk_rfq_value as (
+        select order_uuid,
+        requester_email_domain,
+        value as quality_value_score
+        from {{ ref("fact_freshdesk_tickets") }}
+        where
+            "group" in ('Injection Molding EU/RoW', 'Injection Molding US/CA')
+            and value is not null
+    ),
     -- Data from Bids (RFQ)
     supplier_rfq_bids as (
         select
@@ -38,8 +47,7 @@ with
             bids.ship_by_date,
             md5(bids.supplier_id || bids.auction_uuid) as supplier_rfq_uuid,
             row_number() over (
-                partition by bids.uuid, supplier_id
-                order by bids.created asc
+                partition by bids.uuid, supplier_id order by bids.created asc
             ) as supplier_bid_idx
         from {{ ref("prep_bids") }} as bids
         inner join  -- Inner Join to Filter on RFQ
@@ -76,7 +84,7 @@ with
             rfq_a.rfq_sent_date as supplier_rfq_sent_date,
             rfq_a.original_ship_by_date,
             -- Data from Suppliers
-            s.name as supplier_name,
+            sds.supplier_name as supplier_name,
             -- Data from Bids
             bid_quotes.lead_time,
             round(bid_quotes.subtotal_price_amount / 100.00, 2) as rfq_bid_amount,
@@ -110,18 +118,22 @@ with
                 else null
             end as supplier_win_rate,
             -- Data Source
-            'Supplier-Auctions' as data_source
+            'Supplier-Auctions' as data_source,
+            -- RFQ quality score for IM deals
+            frv.requester_email_domain,
+            quality_value_score
 
         from supplier_rfq_auctions as rfq_a
         left outer join
             supplier_rfq_bids as bid_quotes
             on rfq_a.supplier_rfq_uuid = bid_quotes.supplier_rfq_uuid
-        left outer join {{ ref("suppliers") }} as s on s.id = rfq_a.supplier_id
+        left outer join {{ ref("stg_dim_suppliers") }} as sds on sds.supplier_id = rfq_a.supplier_id
         left outer join
-            {{ ref('exchange_rate_daily') }} as rates
+            {{ ref("exchange_rate_daily") }} as rates
             on rates.currency_code_to = bid_quotes.currency_code
             and trunc(bid_quotes.created) = trunc(rates.date)
         left outer join winning_bid on bid_quotes.bid_uuid = winning_bid.uuid
+        left outer join freshdesk_rfq_value frv on frv.order_uuid =  rfq_a.order_uuid and frv.requester_email_domain = sds.supplier_email_domain
     ),
 
     -- -------- SOURCE: 2. SUPPLIER RFQs ----------------------
@@ -169,7 +181,9 @@ with
                 then 0
                 else null
             end as supplier_win_rate,
-            'supplier_rfqs' as data_source
+            'supplier_rfqs' as data_source,
+            null as requester_email_domain,
+            null as quality_value_score
 
         from {{ source("int_service_supply", "supplier_rfqs") }} as supplier_rfqs
         left outer join
@@ -179,7 +193,7 @@ with
             and supplier_bid_idx = 1
         left outer join {{ ref("suppliers") }} as s on s.id = supplier_rfqs.supplier_id
         left outer join
-            {{ ref('exchange_rate_daily') }} as rates
+            {{ ref("exchange_rate_daily") }} as rates
             on rates.currency_code_to = bid_quotes.currency_code
             and trunc(bid_quotes.created) = trunc(rates.date)
         left outer join winning_bid on bid_quotes.bid_uuid = winning_bid.uuid

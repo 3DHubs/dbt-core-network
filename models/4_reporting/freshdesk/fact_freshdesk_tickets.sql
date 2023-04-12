@@ -67,7 +67,7 @@ with frt_prep as (
                     datediff('hour', first_response_start_date, first_response_reply_date) as first_response_time_in_hours
              from frt_transform
          )
-select ft.ticket_id,
+select distinct ft.ticket_id,
         ft.order_uuid,
         ft.subject,
         ft.created_date,
@@ -98,6 +98,9 @@ select ft.ticket_id,
         ft.customer_satisfaction_feedback,
         ft.linked_ticket_id,
         ft.is_primary_ticket,
+        ft.requester_email,
+        ft.requester_email_domain,
+        ft.value,
         -- Only populating first_response attributes for tickets that were not involved in a merge
         case when fme.ticket_id is null then frt.first_response_start_date end    first_response_start_date,
         case when fme.ticket_id is null then frt.first_response_reply_date end    first_response_reply_date,
