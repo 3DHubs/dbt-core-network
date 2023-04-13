@@ -74,7 +74,7 @@ with stg as (
         pm.owner_id                                                                       as hubspot_im_project_manager_id,
         pm.name                                                                           as hubspot_im_project_manager_name,
         hs.pl_cross_sell_sales_manager_name,
-        hs.pl_business_development_manager_name,
+        pl_bdm.name                                                                       as pl_business_development_manager_name,
 
         -- TEAM FIELDS
         -- Properties added by the different teams
@@ -130,6 +130,8 @@ with stg as (
             on so.owner_id = hs.sourcing_owner
         left join {{ ref ('hubspot_owners') }} as pm
             on pm.owner_id = hs.im_pm
+        left join {{ ref ('hubspot_owners') }} as pl_bdm
+            on pl_bdm.owner_id = hs.pl_business_development_manager_id
         left join {{ref('fact_sales_target') }} as fst
                 on fst.hubspot_id = hs.hubspot_owner_id and fst.target_date::date = coalesce(date_trunc('month',hs.closedate),'2022-01-01') 
         left join {{ ref('seed_hubspot_technology_mapping') }} as htm
