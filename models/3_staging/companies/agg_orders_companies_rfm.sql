@@ -34,14 +34,14 @@ select hubspot_company_id,
 
         -- Segmentation
         case
-            when r_score > 2 and f_score > 2 and m_score > 2 then 'Core Value'
-            when r_score > 2 and f_score > 2 and m_score <= 2 then 'Small Regular'
-            when r_score > 2 and f_score <= 2 and m_score > 2 then 'Core Development'
-            when r_score > 2 and f_score <= 2 and m_score <= 2 then 'Basic Development'
-            when r_score <= 2 and f_score > 2 and m_score > 2 then 'Core Maintenance'
-            when r_score <= 2 and f_score > 2 and m_score <= 2 then 'Basic Maintenance'
-            when r_score <= 2 and f_score <= 2 and m_score > 2 then 'Core Churn'
-            when r_score <= 2 and f_score <= 2 and m_score <= 2 then 'Low Value Churn'
+            when r_score > 2 and f_score > 2 and m_score > 2 then '1 Core Value'
+            when r_score > 2 and f_score > 2 and m_score <= 2 then '4 Small Regular'
+            when r_score > 2 and f_score <= 2 and m_score > 2 then '2 Core Development'
+            when r_score > 2 and f_score <= 2 and m_score <= 2 then '6 Basic Development'
+            when r_score <= 2 and f_score > 2 and m_score > 2 then '3 Core Maintenance'
+            when r_score <= 2 and f_score > 2 and m_score <= 2 then '7 Basic Maintenance'
+            when r_score <= 2 and f_score <= 2 and m_score > 2 then '5 Core Churn'
+            when r_score <= 2 and f_score <= 2 and m_score <= 2 then '8 Low Value Churn'
             end                                                          as rfm_segment
  from {{ ref('agg_orders_companies') }}
  where recent_closed_order_at_company is not null and monetary is not null
