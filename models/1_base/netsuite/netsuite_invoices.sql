@@ -5,7 +5,7 @@ with stg_line_items_netsuite as (
     select custbodyquotenumber as quote_uuid,
            tranid              as netsuite_transaction_id,
            sum(case
-                   when item__name = 'Shipping' then nvl(itemlist.amount * quantity, 0)
+                   when item__name = 'Shipping' then nvl(itemlist.amount, 0)
                    else 0 end) as order_shipping_revenue
     from {{ source('ext_netsuite', 'transaction') }} as tran
                 left join {{ ref('netsuite_line_items') }} itemlist
