@@ -87,15 +87,15 @@ supplier_id,name,business_classification,technology_name,service_level_classific
 86,Zigg Zagg NV,Evaluating,3DP,4 - pretty good
 5,ZhumeisterLabs LLC,Strategic,3DP,5 - awesome
 1,"Dongguan Bole RP&M Co., Ltd",Strategic,CNC,3 - so/so
-2,Xintianjian Technology,Strategic,CNC,5 - Awesome
+2,Xintianjian Technology,Strategic,CNC,4 - pretty good
 3,"Xiehe Precision Machining Co.,ltd",Challenger,CNC,4 - pretty good
 4,Qualimount Engineering Pvt Ltd,Strategic,CNC,4 - pretty good
-5,SunPe,Strategic,CNC,4 - pretty good
-6,"Heng Wan Precision Co., Ltd",Challenger,CNC,5 - Awesome
-7,Longsheng,Strategic,CNC,4 - pretty good
+5,SunPe,Strategic,CNC,5 - awesome
+6,"Heng Wan Precision Co., Ltd",Challenger,CNC,4 - pretty good
+7,Longsheng,Strategic,CNC,3 - so/so
 8,LTC Shenzen,Strategic,CNC,4 - pretty good
 9,Leshine,Bottleneck,CNC,4 - pretty good
-10,Boyi Prototypes,Strategic,CNC,4 - pretty good
+10,Boyi Prototypes,Strategic,CNC,5 - awesome
 11,Bohao Prototypes,Challenger,CNC,4 - pretty good
 12,Zevimetal Lda,Strategic,CNC,4 - pretty good
 13,Neepuna Manufacturing solutions,Evaluating,CNC,2 - pretty bad
@@ -111,16 +111,16 @@ supplier_id,name,business_classification,technology_name,service_level_classific
 23,P.R.K Ancillaries India Private Limited,Challenger,CNC,4 - pretty good
 24,AvioHeliTronics,Challenger,CNC,4 - pretty good
 25,Navigator Designs,Challenger,CNC,4 - pretty good
-26,Shouzheng Zhiyuan,Evaluating,CNC,3 - so/so
+26,Shouzheng Zhiyuan,Evaluating,CNC,2 - pretty bad
 27,Hanzatec,Bottleneck,CNC,3 - so/so
 28,Halamanee Aerospace Private Limited,Challenger,CNC,4 - pretty good
 29,Jai Ganesha Precision Engineering,Evaluating,CNC,4 - pretty good
 30,Inovit Solutions,Challenger,CNC,4 - pretty good
 31,Team D Engineering Pvt. Ltd.,Evaluating,CNC,3 - so/so
 32,LEOKRISHTEK PRIVATE LIMITED,Challenger,CNC,3 - so/so
-33,GPM,Evaluating,CNC,4 - pretty good
+33,GPM,Evaluating,CNC,3 - so/so
 34,Kemal Mfg,Challenger,CNC,4 - pretty good
-35,Jinsheng,Challenger,CNC,4 - pretty good
+35,Jinsheng,Challenger,CNC,5 - awesome
 36,Toolpath Solutions,Challenger,CNC,3 - so/so
 37,M-Tec Industries,Challenger,CNC,4 - pretty good
 38,Cohera Automations Pvt Ltd,Offboard,CNC,1 - aweful
@@ -245,7 +245,7 @@ supplier_id,name,business_classification,technology_name,service_level_classific
 157,3DCUT OÜ,Evaluating,CNC,3 - so/so
 158,AI Manufacturing,,CNC,
 159,Accutech Enterprises,Evaluating,CNC,
-160,Andre Lerouille,Evaluating,CNC,1
+160,Andre Lerouille,Evaluating,CNC,1 - aweful
 161,Ascend Engineering,,CNC,
 162,BEG MANUFACTURING,Evaluating,CNC,4 - pretty good
 163,BGT Aerospace LLC,,CNC,
@@ -291,7 +291,7 @@ supplier_id,name,business_classification,technology_name,service_level_classific
 203,Max Precision Machine Inc.,,CNC,
 204,Mecaniek Chevalier,Evaluating,CNC,2 - pretty bad
 205,Miller Precision,,CNC,
-206,Mirfo Machine Tools SRL,Evaluating,CNC,1
+206,Mirfo Machine Tools SRL,Evaluating,CNC,1 - aweful
 207,Morey Machine & Manufacturing,,CNC,
 208,Motor Control Technology,,CNC,
 209,Nityanand Udyog,,CNC,
@@ -313,16 +313,18 @@ supplier_id,name,business_classification,technology_name,service_level_classific
 225,"Sio Cnc Machining, Inc.",,CNC,
 226,Supreme Manufacturing Group,,CNC,
 227,Systomatic Inc,,CNC,
-228,TERNPLAS Kunststofftechnik,Evaluating,CNC,1
+228,TERNPLAS Kunststofftechnik,Evaluating,CNC,1 - aweful
 229,TVM Precision Machining,,CNC,
 230,TVT Precision,,CNC,
 231,Testing Tylers Hubs,,CNC,
-232,Toolmakers Precisie Specials,Evaluating,CNC,1
+232,Toolmakers Precisie Specials,Evaluating,CNC,1 - aweful
 233,Trowbridge Engineering,,CNC,
 234,Upbuild Fabrication,,CNC,
-235,WZK Sp. z o.o.,Evaluating,CNC,1
+235,WZK Sp. z o.o.,Evaluating,CNC,1 - aweful
 236,Wagler Machining LLC,,CNC,
 237,"WanDaAn Precision Technology Co., Ltd",,CNC,
 238,Xenium CNC,,CNC,
 239,Zümre Makina,,CNC,
 240,"iLam Precision, Inc.",,CNC,
+344,Zenith Precision,Offboarded,CNC,4 - pretty good
+702,"Ningfeng Hardware Co., Ltd",Challenger,CNC,4 - pretty good
