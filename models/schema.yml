@@ -197,6 +197,7 @@ sources:
   - name: int_service_supply
     tables:
       - name: addresses
+      - name: anonymous_user_carts
       - name: auctions
         freshness:
           warn_after: {count: 12, period: hour}
