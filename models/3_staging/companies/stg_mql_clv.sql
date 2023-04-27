@@ -6,6 +6,7 @@ with
             advertising_account_id,
             became_customer_at,
             became_mql_at,
+            advertising_click_date,
             first_closed_order_technology,
             coalesce(
                 case
@@ -65,6 +66,7 @@ select
     dc.contact_type,
     advertising_gclid,
     advertising_account_id,
+    advertising_click_date,
     clv.clv_90d,
     coalesce(predicted_proba, 0.10) as is_customer_prediction,
     is_customer_prediction * clv_90d as cpa_price
