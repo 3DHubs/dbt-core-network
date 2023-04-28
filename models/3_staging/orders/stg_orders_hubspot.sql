@@ -19,7 +19,7 @@ with stg as (
         hs.pipeline                                                                       as hubspot_pipeline,
 
         -- Foreign Fields
-        hcon.associatedcompanyid                                                          as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
+        hcon.hs_company_id                                                                as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
         case
            when hcon.email ~ '@(3d)?hubs.com' then true else false end                    as hubspot_contact_email_from_hubs,
         hs.hs_latest_associated_company_id                                                as original_hubspot_company_id, --JG: Kept for reference
@@ -50,7 +50,7 @@ with stg as (
             when hs.closedate > '2020-01-01'
                 then nullif(regexp_replace(hs.delay_liability, 'liability_', ''), '') end as delay_liability,
         hs.delay_status                                                                   as delay_status,
-        case when hcon.hs_analytics_first_url ~ 'utm_source=protolabs' then true else false end as is_integration_mql_contact,
+        case when hcon.hutk_analytics_first_url ~ 'utm_source=protolabs' then true else false end as is_integration_mql_contact,
 
         -- Owners
         hs.hubspot_owner_id,
@@ -95,7 +95,7 @@ with stg as (
 
         -- Sales Fields
         is_sales_priced,
-        is_strategic,
+        hs.is_strategic,
         closing_probability,
 
         -- Supply Fields
@@ -138,10 +138,10 @@ with stg as (
             on hs.technologies = htm.hubspot_technology
         left join {{ ref ('technologies') }} as technologies
             on htm.technology_id = technologies.technology_id
-        left join {{ ref('hubspot_contacts') }} as hcon
+        left join {{ ref('stg_hs_contacts_attributed_prep') }} as hcon
             on hs.hs_latest_associated_contact_id = hcon.contact_id
         left join {{ ref('hubspot_companies') }} as hcom 
-            on hcon.associatedcompanyid = hcom.hubspot_company_id)
+            on hcon.hs_company_id = hcom.hubspot_company_id)
 select *
 from stg
 where rn = 1
