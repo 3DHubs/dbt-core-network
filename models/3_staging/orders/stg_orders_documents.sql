@@ -53,6 +53,7 @@ with first_quote as (
                 quotes.is_eligible_for_cross_docking                             as order_quote_is_eligible_for_cross_docking,
                 quotes.is_eligible_for_local_sourcing                            as order_quote_is_eligible_for_local_sourcing,
                 quotes.is_local_sourcing                                         as order_quote_is_local_sourcing,
+                quotes.chargeable_shipping_weight_estimate_kg                    as chargeable_shipping_weight_estimate_kg,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
                 quotes.currency_code                                             as order_quote_source_currency,
                 (1/rates.rate)                                                    as exchange_rate_at_closing,
@@ -238,6 +239,7 @@ select -- First Quote
        end as sourcing_window,
 
        oq.cross_docking_added_lead_time,
+       oq.chargeable_shipping_weight_estimate_kg,
        oq.order_quote_is_cross_docking,
        oq.order_quote_is_eligible_for_cross_docking,
        oq.order_quote_is_local_sourcing,

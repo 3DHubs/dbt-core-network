@@ -184,6 +184,8 @@ select
     rda.winning_bid_margin_usd,
     rda.winning_bid_margin_loss_usd,
     rda.winning_shipping_estimate_amount_usd,
+    rda.winning_l1_shipping_margin_amount_usd,
+    rda.l1_shipping_estimate_source,
     rda.has_winning_bid,
     rda.has_accepted_winning_bid,
     rda.has_restricted_winning_bid,
@@ -312,6 +314,7 @@ select
     logistics.estimated_delivery_to_cross_dock_at,
     logistics.estimated_delivery_to_customer_at,
     logistics.delivered_to_cross_dock_at,
+    docs.chargeable_shipping_weight_estimate_kg,
 
     -- Logsitics: Time spent at cross dock
     logistics_business_hours.time_transit_at_cross_dock_business_minutes,

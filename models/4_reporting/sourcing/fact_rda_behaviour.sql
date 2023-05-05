@@ -81,6 +81,9 @@ select
     ) as sa_amount_usd,
     sa.margin_without_discount as sa_margin,
    round((sa.shipping_estimate_amount_usd / 100.00), 2) as shipping_estimate_amount_usd,
+   round((sa.l1_shipping_margin_amount_usd / 100.00), 2) as l1_shipping_margin_amount_usd,
+   round((sa.dhl_shipping_price_estimate_amount_usd / 100.00), 2) as dhl_shipping_price_estimate_amount_usd,
+
 
     -- Bid Fields
     b.uuid as bid_uuid,

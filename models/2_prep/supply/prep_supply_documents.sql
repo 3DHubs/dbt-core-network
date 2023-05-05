@@ -54,7 +54,7 @@ select docs.created,
        docs.customer_edited_at,
        docs.technical_drawing_anonymization_started_at,
        docs.split_off_from_quote_uuid,
-       
+       docs.chargeable_shipping_weight_estimate_kg,
        -- Key Fields for Filtering
        orders.updated as order_updated_at, -- Necessary for incremental model settings in prep_line_items
        docs.uuid = orders.quote_uuid as is_order_quote,

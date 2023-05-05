@@ -341,6 +341,7 @@ is_eligible_for_local_sourcing,
 number_of_batches,
 has_consistent_shipping_info,
 is_hubs_arranged_direct_shipping,
+chargeable_shipping_weight_estimate_kg,
 
 -- Logistics: First leg and second leg carriers
 first_leg_carrier_name,

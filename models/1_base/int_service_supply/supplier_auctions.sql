@@ -31,6 +31,8 @@ select supplier_id,
        estimated_customs_rate,
        ship_by_date as original_ship_by_date, -- Orginal ship by date without counter bids on lead time adjustments.
        shipping_added_lead_time,
+       dhl_shipping_price_estimate_amount_usd,
+       l1_shipping_margin_amount_usd,
        {% for boolean_field in boolean_fields %}
            {{ varchar_to_boolean(boolean_field) }}
            {% if not loop.last %},{% endif %}
