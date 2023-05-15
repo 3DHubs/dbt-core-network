@@ -144,6 +144,7 @@ sources:
       - name: marketing_share_of_voice
       - name: marketing_youtube
       - name: hr_bamboo_employees
+      - name: sdr_commissions
 
   - name: ext_hubspot
     tables:
