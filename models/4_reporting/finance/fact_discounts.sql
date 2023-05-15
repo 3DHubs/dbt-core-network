@@ -46,5 +46,5 @@ from {{ ref('prep_line_items') }} l
          inner join supply_orders so on so.quote_uuid = l.quote_uuid
          inner join {{ ref('discounts') }} d on d.id = l.discount_id
          left join  {{ ref('discount_codes') }} dc on dc.id = l.discount_code_id
-         left join  {{ ref('users') }} u on u.user_id = dc.author_id
+         left join  {{ ref('prep_users') }} u on u.user_id = dc.author_id
 where l.type='discount'

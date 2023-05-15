@@ -196,8 +196,8 @@ select     li.order_uuid,
 
              -- Complaints 
              left join {{ ref ('complaints')}} c on c.line_item_uuid = li.uuid
-             left join {{ ref('users') }} u on u.user_id = c.created_by_user_id
-             left join {{ ref('users') }} ur on ur.user_id = c.reviewed_by_user_id
+             left join {{ ref('prep_users') }} u on u.user_id = c.created_by_user_id
+             left join {{ ref('prep_users') }} ur on ur.user_id = c.reviewed_by_user_id
 
             -- Joins for exchange rates
              left join {{ ref('stg_orders_dealstage') }} as order_deals on docs.order_uuid = order_deals.order_uuid

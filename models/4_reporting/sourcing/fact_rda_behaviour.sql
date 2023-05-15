@@ -43,6 +43,8 @@ with
             case
                 when response_type = 'rejected' then null else b.margin_without_discount
             end as margin_without_discount,
+            b.estimated_first_leg_customs_amount_usd,
+            b.estimated_second_leg_customs_amount_usd,
             br.title,
             b.explanation,
             b.bid_loss_reason,
@@ -109,6 +111,8 @@ select
     end as has_multiple_supplier_counter_bids_on_price,
     b.design_modification_text as design_modification_text,
     case when b.uuid = a.winning_bid_uuid then true else false end as is_winning_bid,
+    b.estimated_first_leg_customs_amount_usd as bid_estimated_first_leg_customs_amount_usd,
+    b.estimated_second_leg_customs_amount_usd as bid_estimated_second_leg_customs_amount_usd,
 
     -- Auction Fields
     sa.auction_uuid as auction_uuid,

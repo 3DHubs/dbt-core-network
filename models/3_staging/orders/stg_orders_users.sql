@@ -6,4 +6,4 @@ select
     coalesce(hcon.associatedcompanyid, users.hubspot_company_id)    as hubspot_company_id
 from {{ ref('prep_supply_orders') }} as orders
 left join {{ ref('hubspot_contacts') }} as hcon on hcon.first_cart_uuid = orders.uuid and rnk_asc_cart = 1
-left join {{ ref('users') }} as users on users.user_id = orders.user_id and is_internal = false -- to exclude admin created quotes
+left join {{ ref('prep_users') }} as users on users.user_id = orders.user_id and is_internal = false -- to exclude admin created quotes

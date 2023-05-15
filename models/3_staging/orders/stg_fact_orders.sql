@@ -320,8 +320,8 @@ select
     logistics_business_hours.time_transit_at_cross_dock_business_minutes,
 
     -- Logistics: Estimates
-    qli.estimated_l1_customs_amount_usd,
-    qli.estimated_l2_customs_amount_usd,
+    rda.winning_bid_estimated_first_leg_customs_amount_usd as estimated_l1_customs_amount_usd,
+    rda.winning_bid_estimated_second_leg_customs_amount_usd estimated_l2_customs_amount_usd,
 
     -------- SOURCE: STG OTR -----------
     -- Calculated based on cnc orders, and
@@ -493,7 +493,7 @@ select
     case when po_production_finalized_at < logistics.shipped_at  then po_production_subtotal_cost_usd
           else  subtotal_sourced_cost_usd  end                                             as beta_subtotal_po_cost_usd,    
     coalesce(beta_subtotal_po_cost_usd,0) + coalesce(beta_shipping_cost_usd,0) + 
-    coalesce(qli.estimated_l1_customs_amount_usd,0) + coalesce(qli.estimated_l2_customs_amount_usd,0) as beta_subtotal_sourced_cost_usd,
+    coalesce(rda.winning_bid_estimated_first_leg_customs_amount_usd ,0) + coalesce(rda.winning_bid_estimated_second_leg_customs_amount_usd,0) as beta_subtotal_sourced_cost_usd,
 
     -- Suppliers:
     coalesce(docs.po_active_supplier_id, rda.auction_supplier_id)                          as supplier_id,

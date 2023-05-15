@@ -28,8 +28,8 @@ with stg_states as (
                              then initcap(sa.last_name)
                          else sa.last_name end)                                                 last_name_clean,
                 coalesce(nullif(first_name_clean || ' ' || last_name_clean, ''), 'Customer') as full_name,
-                su.mail                                                                      as supplier_email,
-                split_part(su.mail, '@', 2)                                                  as supplier_email_domain,
+                su.email                                                                      as supplier_email,
+                split_part(su.email, '@', 2)                                                  as supplier_email_domain,
                 s.is_suspended                                                               as is_suspended,
                 s.is_accepting_auctions                                                      as is_able_to_accept_auctions,
                 s.allow_for_rfq                                                              as is_eligible_for_rfq,
@@ -58,7 +58,7 @@ with stg_states as (
          on sa.address_id = s.address_id
              left outer join {{ ref('prep_countries') }} c on c.country_id = sa.country_id
              left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
-             left outer join {{ ref('users') }} as su on ssu.user_id = su.user_id
+             left outer join {{ ref('prep_users') }} as su on ssu.user_id = su.user_id
              left join stg_states as states on states.address_id = s.address_id
          where supplier_email !~ '@(3d)?hubs.com' 
          or s.id=494 --JG 300622 requested by Arnoldas to include internal supplier id

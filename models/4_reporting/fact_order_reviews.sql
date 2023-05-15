@@ -15,7 +15,7 @@ select a1.id,
        u.first_name + ' ' + u.last_name reviewed_by
 from {{ ref('order_review_answers') }} a1
          inner join {{ source('int_service_supply', 'order_review_questions') }} q1 on q1.id = a1.question_id and a1.question_id in (1, 3)
-         left join {{ ref('users') }}  u on u.user_id = a1.user_id
+         left join {{ ref('prep_users') }}  u on u.user_id = a1.user_id
          left join {{ ref('order_review_answers') }}  a2
                    on a2.order_uuid = a1.order_uuid and a1.user_id = a2.user_id and a2.question_id in (2, 4)
          left join {{ source('int_service_supply', 'order_review_questions') }} q2 on q2.id = a2.question_id

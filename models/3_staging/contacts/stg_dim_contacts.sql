@@ -70,7 +70,7 @@ select con.created_at                                             as created_at,
            teams.invite_status                                        as team_invite_status,                                                            
            case when teams.team_name is not null and (team_invite_status = 'accepted' or team_invite_status is null)  
            then true else false end                                   as is_team_member,
-           users.created                                              as platform_user_created_at
+           users.created_at                                           as platform_user_created_at
     from {{ ref('stg_hs_contacts_attributed') }} as con
              left join {{ ref('stg_contacts_mqls') }} as mql on  con.contact_id = mql.contact_id
              left join {{ ref('agg_orders_contacts') }} as agg_orders on con.contact_id = agg_orders.hubspot_contact_id
@@ -79,4 +79,4 @@ select con.created_at                                             as created_at,
                              on own.owner_id::bigint = con.hubspot_owner_id::bigint
              left join {{ ref('hubspot_owners') }} bdr on bdr.owner_id = con.bdr_owner_id
              left join {{ ref('stg_contacts_teams') }} teams on teams.hubspot_contact_id = con.contact_id
-             left join {{ ref ('users')}} users on users.hubspot_contact_id = con.contact_id and users.hubspot_contact_id is not null and rnk_desc_hubspot_contact_id = 1
+             left join {{ ref('prep_users')}} users on users.hubspot_contact_id = con.contact_id and users.hubspot_contact_id is not null and rnk_desc_hubspot_contact_id = 1

@@ -58,5 +58,5 @@ select
     u_answ.first_name + ' ' + u_answ.last_name as answered_name,
     u_answ.is_internal                         as answered_by_hubs
 from union_question_feature as uqf
-left join {{ ref('users') }} as u_auth on uqf.author_id = u_auth.user_id
-left join {{ ref('users') }} as u_answ on uqf.answered_by_id = u_answ.user_id
+left join {{ ref('prep_users') }} as u_auth on uqf.author_id = u_auth.user_id
+left join {{ ref('prep_users') }} as u_answ on uqf.answered_by_id = u_answ.user_id

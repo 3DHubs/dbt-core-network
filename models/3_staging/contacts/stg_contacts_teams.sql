@@ -15,10 +15,10 @@ with stg_invite_accepted as (
                                   min(ti.created) as created,
                                   max(ti.status)  as status
                            from {{ ref('team_invites') }}  ti
-                                    inner join {{ ref('users') }} u on u.mail = ti.email
+                                    inner join {{ ref('prep_users') }} u on u.email = ti.email
                                     left join {{ source('int_service_supply', 'teams') }}  t on t.id = ti.team_id
                            where status in ('Pending', 'Revoked')
-                             and email not in (select email from stg_invite_accepted)  and ti.rnk_desc_email = 1
+                             and ti.email not in (select email from stg_invite_accepted)  and ti.rnk_desc_email = 1
                            group by 1, 2, 3, 4)
 -- Aggregate all users that are added to a team / invited to a team
 select u.hubspot_contact_id,
@@ -28,10 +28,10 @@ select u.hubspot_contact_id,
        coalesce(min(stg_a.created), min(stg_os.created))   as invited_at, -- added min to avoid users with same hubspot contact id that were both invited as user, example 370382101
        coalesce(min(stg_a.updated))                      as invite_accepted_at,
        lower(coalesce(min(stg_a.status), min(stg_os.status))) as invite_status
-from {{ ref('users') }} u
+from {{ ref('prep_users') }} u
          left join {{ source('int_service_supply', 'team_users') }} tu on tu.user_id = u.user_id
          left join {{ source('int_service_supply', 'teams') }} t on t.id = tu.team_id
-         left join stg_invite_accepted stg_a on stg_a.email = u.mail
+         left join stg_invite_accepted stg_a on stg_a.email = u.email
          left join stg_other_invites stg_os on stg_os.hubspot_contact_id = u.hubspot_contact_id
 where u.hubspot_contact_id is not null
   and u.hubspot_contact_id <> 0

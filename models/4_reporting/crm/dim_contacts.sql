@@ -67,7 +67,7 @@ select base.created_at,
        base.became_lead_at_contact                              as became_lead_at,
        base.became_mql_at_contact                               as became_mql_at,
        base.mql_technology                                      as mql_technology,
-       agg_companies.mql_type,
+       base.mql_type,
        base.became_sql_at_contact                               as became_sql_at,
        -- Order Aggregates
        agg_orders.became_opportunity_at_contact                 as became_opportunity_at,
