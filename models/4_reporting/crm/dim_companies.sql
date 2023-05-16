@@ -109,6 +109,7 @@ select
        agg_orders.recent_closed_order_at_company                                 as recent_closed_order_at,
        agg_orders.number_of_submitted_orders_company                             as number_of_submitted_orders, -- New Field (1st Sept 2021)
        agg_orders.number_of_closed_orders_company                                as number_of_closed_orders,    -- New Field (1st Sept 2021)
+       agg_orders.number_of_closed_projects_company                              as number_of_closed_projects,
        agg_orders.closed_sales_usd_company                                       as closed_sales_usd,           -- New Field (1st Sept 2021)
        agg_orders.closed_sales_usd_new_customer_company                          as closed_sales_usd_new_customer,
        agg_orders.total_precalc_margin_usd_new_customer_company                  as precalc_margin_usd_new_customer,
