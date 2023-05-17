@@ -11,6 +11,7 @@ select
     closed_at,
     sourced_at,
     technology_name,
+    process_name,
     destination_region,
     destination_sub_region,
     destination_market,

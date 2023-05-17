@@ -45,6 +45,8 @@ with
             bids.supplier_id,
             bids.accepted_ship_by_date,
             bids.ship_by_date,
+            bids.estimated_first_leg_customs_amount_usd as bid_estimated_first_leg_customs_amount_usd,
+            bids.estimated_second_leg_customs_amount_usd as bid_estimated_second_leg_customs_amount_usd,
             md5(bids.supplier_id || bids.auction_uuid) as supplier_rfq_uuid,
             row_number() over (
                 partition by bids.uuid, supplier_id order by bids.created asc
@@ -96,6 +98,8 @@ with
             bid_quotes.placed_at as supplier_rfq_responded_date,
             bid_quotes.accepted_ship_by_date,
             bid_quotes.ship_by_date,
+            bid_quotes.bid_estimated_first_leg_customs_amount_usd,
+            bid_quotes.bid_estimated_second_leg_customs_amount_usd,
             case
                 when bid_quotes.placed_at is not null
                 then
@@ -163,7 +167,8 @@ with
             bid_quotes.placed_at as supplier_rfq_responded_date,
             bid_quotes.accepted_ship_by_date,
             bid_quotes.ship_by_date,
-
+            null as bid_estimated_first_leg_customs_amount_usd,
+            null as bid_estimated_second_leg_customs_amount_usd,
             case
                 when bid_quotes.placed_at is not null
                 then
