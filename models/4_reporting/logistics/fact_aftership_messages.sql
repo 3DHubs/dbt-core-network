@@ -22,7 +22,7 @@ with fact_aftership_messages_bv as (
            exa.msg__tracking_number                           as carrier_tracking_number, -- EXA EXt Aftership
            exa.msg__courier_tracking_link                     as carrier_tracking_link,
            timestamptz(exa.msg__expected_delivery)::timestamp as tracking_latest_expected_delivery,
-           timestamptz(exam.created_at)::timestamp            as tracking_message_received_at,
+           timestamptz(exam.checkpoint_time)::timestamp            as tracking_message_received_at,
            exam.city                                          as tracking_shipment_city,  -- EXAM EXt Aftership Messages
            exam.country_name                                  as tracking_shipment_country_name,
            exam.location                                      as tracking_shipment_location,
@@ -45,7 +45,7 @@ with fact_aftership_messages_bv as (
                 exa.msg__tracking_number                           as carrier_tracking_number,
                 exa.msg__courier_tracking_link                     as carrier_tracking_link,
                 timestamptz(exa.msg__expected_delivery)::timestamp as tracking_latest_expected_delivery,
-                timestamptz(exam.created_at)::timestamp            as tracking_message_received_at,
+                timestamptz(exam.checkpoint_time)::timestamp            as tracking_message_received_at,
                 exam.city                                          as tracking_shipment_city, -- EXAM EXt Aftership Messages
                 exam.country_name                                  as tracking_shipment_country_name,
                 exam.location                                      as tracking_shipment_location,
