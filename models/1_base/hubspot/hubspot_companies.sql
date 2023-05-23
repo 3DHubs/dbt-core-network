@@ -18,7 +18,8 @@ select hc.property_createdate__value                                            
        trunc(hc.property_hubspot_owner_assigneddate__value)::date                    as hubspot_owner_assigned_date,
        (TIMESTAMP 'epoch' + nullif(hc.property_added_as_strategic__value, '') / 1000 *
                             INTERVAL '1 second')::timestamp without time zone        as became_strategic_date,
-       nullif(hc.property_account_category__value, '')::character varying            as account_category,
+       null as account_category,
+       --nullif(hc.property_account_category__value, '')::character varying            as account_category,
        (TIMESTAMP 'epoch' + nullif(hc.property_added_as_ae__value, '') / 1000 *
                             INTERVAL '1 second')::timestamp without time zone        as became_ae_account_date,
        hc.property_hs_lead_status__value::character varying                          as hs_lead_status,
@@ -55,14 +56,17 @@ select hc.property_createdate__value                                            
            when hc.property_strategic__value = 'false'
                then false end ::boolean                                              as strategic,
        nullif(hc.property_inside_sales_owner__value, '')                             as inside_sales_owner,
-       nullif(hc.property_handover_owner__value, '')                                 as handover_owner,
+      NULL                                as handover_owner,     
+     -- nullif(hc.property_handover_owner__value, '')                                 as handover_owner,
        hc.property_notes_last_updated__value                                         as notes_last_updated_at,
        hc.property_notes_last_contacted__value                                       as notes_last_contacted_at,
-       case
-           when hc.property_outbound_handover__value = 'true' then true
-           when hc.property_outbound_handover__value = 'false'
-               then false end ::boolean                                              as is_outbound_handover,
-       (TIMESTAMP 'epoch' + nullif(hc.property_outbound_handover_date__value, '') / 1000 *
-                            INTERVAL '1 second')::timestamp without time zone        as outbound_handover_date,
+    null    as is_outbound_handover,
+    --    case
+    --        when hc.property_outbound_handover__value = 'true' then true
+    --        when hc.property_outbound_handover__value = 'false'
+    -- --            then false end ::boolean                                              as is_outbound_handover,
+    --    (TIMESTAMP 'epoch' + nullif(hc.property_outbound_handover_date__value, '') / 1000 *
+    --                         INTERVAL '1 second')::timestamp without time zone        as 
+                            null as outbound_handover_date,
        0                                                                             as is_deleted
 from {{ source('ext_hubspot', 'companies') }} hc
