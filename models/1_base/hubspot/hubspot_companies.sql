@@ -96,12 +96,12 @@ select
         when hc.property_outbound_handover__value = 'false'
         then false
     end::boolean as is_outbound_handover,
-    -- (
-    --     timestamp 'epoch'
-    --     + nullif(hc.property_outbound_handover_date__value, '')
-    --     / 1000
-    --     * interval '1 second'
-    -- )::timestamp without time zone 
-    null as outbound_handover_date,
+    (
+        timestamp 'epoch'
+        + nullif(hc.property_outbound_handover_date__value, '')
+        / 1000
+        * interval '1 second'
+    )::timestamp without time zone
+     as outbound_handover_date,
     0 as is_deleted
 from {{ source("ext_hubspot", "companies") }} hc
