@@ -9,7 +9,7 @@ select date,
        {{ dbt_utils.get_url_host(field='url') }} as host,
        url,
        case when len({{ dbt_utils.get_url_path(field='url') }})  < 2 then '/' else '/' + {{ dbt_utils.get_url_path(field='url') }} + '/' end as pages,
-       coalesce(spg.page_group, spgs.page_group, 'Ungrouped')                                       page_group,
+       coalesce(spg.page_group, 'Ungrouped')                                                     as page_group,
        case when len(split_part(pages, '/', 2)) = 2 then replace(split_part(pages, '/', 2),'js','en') else 'en' end as language,
        sum(entrances)                                                                            as entrances,
        sum(pageviews)                                                                            as pageviews,
@@ -20,8 +20,6 @@ select date,
 from {{ref('hubspot_pages')}} hp
          left join  {{ref('seed_seo_page_groups')}} spg
                    on spg.page = lower(case when len({{ dbt_utils.get_url_path(field='url') }})  < 2 then '/' else '/' + {{ dbt_utils.get_url_path(field='url') }} + '/' end )
-         left join  {{ref('seed_seo_page_groups')}} spgs
-                   on spgs.page = lower(case when urlsplit(url, 'path') = '/' then '/' else urlsplit(url, 'path') + '/' end)
 
 where url <> ''
 and
