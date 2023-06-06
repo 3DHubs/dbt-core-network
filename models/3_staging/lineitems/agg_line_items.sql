@@ -76,6 +76,7 @@ with agg_line_items as (
            bool_or(coalesce(fli.has_custom_material_subset, false))                        as has_custom_material_subset,
            bool_or(coalesce(fli.has_custom_finish, false))                                 as has_custom_finish,
            bool_or(coalesce(fli.is_cosmetic, false))                                       as has_cosmetic_surface_finish,
+           bool_or(coalesce(fli.is_vqced, false))                                          as has_vqc_line_item,
            bool_or(coalesce(so.is_expedited, false))                                       as is_expedited_shipping,
            bool_or(case
                        when lower(line_item_title) like ('%svp required%') then true

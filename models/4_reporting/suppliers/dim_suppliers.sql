@@ -105,6 +105,7 @@ select
     stg_dim_suppliers.is_suspended,
     stg_dim_suppliers.is_able_to_accept_auctions,
     stg_dim_suppliers.is_eligible_for_rfq,
+    stg_dim_suppliers.is_eligible_for_vqc,
     stg_dim_suppliers.currency_code,
     stg_dim_suppliers.unit_preference,
     stg_dim_suppliers.monthly_order_value_target,

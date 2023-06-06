@@ -272,6 +272,7 @@ has_technical_drawings,
 has_custom_material_subset,
 has_custom_finish,
 parts_titles,
+is_vqced,
 
 -- RDA (Reverse Dutch Auction)
 auction_document_number,

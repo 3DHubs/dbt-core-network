@@ -16,6 +16,7 @@ select id,
        monthly_order_value_target,
        tax_number_2,
        default_shipping_carrier_id,
+       case when is_eligible_for_virtual_quality_control = 'true' then True else False end as is_eligible_for_vqc,
        decode(suspended, 'false', False, 'true', True)          as is_suspended,
        decode(accepts_auctions, 'false', False, 'true', True)   as is_accepting_auctions,
        {% for boolean_field in boolean_fields %}

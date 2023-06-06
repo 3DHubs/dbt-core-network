@@ -366,6 +366,7 @@ select
     qli.parts_titles,
 
 
+
     -- Purchase Orders
     fpoli.parts_amount_usd as parts_cost_usd,
     fpoli.shipping_amount_usd as shipping_cost_usd,  
@@ -374,6 +375,7 @@ select
     apoli.parts_amount_usd as po_active_parts_cost_usd,
     apoli.shipping_amount_usd as po_active_shipping_cost_usd,  
     apoli.other_line_items_amount_usd as po_active_other_costs_usd,
+    apoli.has_vqc_line_item as is_vqced,
 
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews

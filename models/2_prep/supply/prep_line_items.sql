@@ -3,6 +3,7 @@
 -- characteristics of the document (quote or purchase orders) the line item belongs to. 
 
 
+
 select  
 
     -- Fields from Documents
@@ -21,6 +22,7 @@ select
 from {{ ref('line_items') }} as li
  
 inner join {{ ref('prep_supply_documents') }} as docs on li.quote_uuid = docs.uuid
+
 where true
     -- Filter: only interested until now on the main quote and purchase orders
     and (is_order_quote or docs.type = 'purchase_order')    

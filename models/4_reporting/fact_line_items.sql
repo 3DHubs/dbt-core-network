@@ -26,7 +26,16 @@ with part_dimensional_attributes as (
         and type = 'part'
         and upload_properties is not null
         and is_order_quote
-    )
+    ),
+ vqc as (
+    select li.uuid, 
+        min(livqc.file_uuid) as livqc_file, 
+        case when livqc_file is not null then true else false end as is_vqced
+    from {{ ref('line_items') }} as li
+    left join {{ source('int_service_supply', 'line_item_virtual_quality_control_part_photos') }} as livqc on li.uuid = livqc.line_item_uuid  
+    group by li.uuid
+)
+
     
 select     li.order_uuid,
            -- Document fields
@@ -80,10 +89,11 @@ select     li.order_uuid,
            li.infill,
            li.layer_height,
            li.is_cosmetic,
+           vqc.is_vqced,
 
            -- Tolerances
            t.name                                                                       as tiered_tolerance,
-           li.general_tolerance_class                                                 as general_tolerance,
+           li.general_tolerance_class                                                   as general_tolerance,
            li.custom_tolerance,
            li.custom_tolerance_unit,
 
@@ -139,7 +149,7 @@ select     li.order_uuid,
            pdf.part_volume_cm3,
            round(pdf.part_volume_cm3 * li.quantity)                                   as line_item_total_volume_cm3,
            round(coalesce(msub.density * pdf.part_volume_cm3, li.weight_in_grams), 1) as part_weight_g,
-           round(coalesce(part_weight_g, li.weight_in_grams) * li.quantity, 1)      as line_item_weight_g,
+           round(coalesce(part_weight_g, li.weight_in_grams) * li.quantity, 1)        as line_item_weight_g,
 
            -- Amount Fields
            case
@@ -208,4 +218,5 @@ select     li.order_uuid,
 
              -- Other Joins
              left join part_dimensional_attributes pdf on pdf.id = li.id
+             left join vqc on li.uuid = vqc.uuid
              left join {{ ref('tolerances') }} t on t.id = li.tolerance_id      
