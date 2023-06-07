@@ -51,7 +51,7 @@ select fs.order_uuid,
        case
            when is_cross_docking_bool then MIN(case
                                                    when fs.shipping_leg = 'cross_docking:customer'
-                                                       then fs.shipment_created_at
+                                                       then least(fs.shipment_created_at,fs.tracking_received_by_carrier_at)  -- to account for late label creation date timestamps)
                                                    else Null end)
            else MIN(fs.shipment_created_at) end                                                                     as label_created_to_customer_at,
        case
