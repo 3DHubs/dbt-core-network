@@ -20,7 +20,7 @@ select
     coalesce(round(asci.statistical_value/ ex.rate,2),0) as statistical_value,
     coalesce(asci.shipping_leg, ship.shipping_leg) as shipping_leg_full,
     asci.charge_name,
-    asci.charge_category,
+    lower(asci.charge_category) as charge_category,
     asci.currency,
     asci.charge_amount as source_currency_charge_amount,
     asci.total_amount as source_currency_total_amount,
