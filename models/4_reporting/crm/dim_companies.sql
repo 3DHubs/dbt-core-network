@@ -57,6 +57,9 @@ select
        hc.notes_last_contacted_at                                                as last_contacted_at,
        hc.is_outbound_handover,
        hc.outbound_handover_date,
+       hc.us_sales_account_draft_date,
+       hc.us_sales_account_draft_winning_bid,
+       hc.us_sales_account_draft_total_bid,
 
        -- Source: Hubspot Owners
        own.name                                                                  as hubspot_owner_name,

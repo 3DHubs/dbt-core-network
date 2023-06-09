@@ -103,5 +103,14 @@ select
         * interval '1 second'
     )::timestamp without time zone
      as outbound_handover_date,
+    nullif(hc.property_winning_auction_bid__value__double, '')::int as us_sales_account_draft_winning_bid,
+    nullif(hc.property_total_auction_bid__value, '')::int as us_sales_account_draft_total_bid,
+    (
+        timestamp 'epoch'
+        + nullif(hc.property_auction_date__value, '')
+        / 1000
+        * interval '1 second'
+    )::timestamp without time zone
+     as us_sales_account_draft_date,
     0 as is_deleted
 from {{ source("ext_hubspot", "companies") }} hc
