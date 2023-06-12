@@ -1,20 +1,56 @@
-{{ config(
-    tags=["multirefresh"]
-) }}
+{{ config(tags=["multirefresh"]) }}
 
 select
     line_item_uuid,
     order_uuid,
     line_item_type,
+
+    line_item_price_amount_usd,
+    line_item_cost_usd,
+    line_item_price_amount_source_currency,
+    created_date,
+    line_item_number,
+    technology_id,
+    material_id,
+    material_subset_id,
+    process_id,
+    material_color_id,
+    branded_material_id,
+    custom_material_subset_name,
+    has_custom_material_subset,
+    custom_surface_finish_name,
+    has_custom_finish,
+    lead_time_options,
+    quantity,
+    has_threads,
+    general_tolerance,
+    custom_tolerance,
+    custom_tolerance_unit,
+    technology_name,
+    material_name,
+    material_type_name,
+    material_subset_name,
+    material_color_name,
+    process_name,
+    branded_material_name,
+    surface_finish_name,
+    cosmetic_type,
+    has_surface_finish_issue,
+    part_depth_cm,
+    part_width_cm,
+    part_height_cm,
+    part_bounding_box_volume_cm3,
+    line_item_total_bounding_box_volume_cm3,
+    part_volume_cm3,
+    line_item_total_volume_cm3,
+
     is_complaint,
     complaint_is_valid,
     complaint_created_at,
     complaint_resolution_at,
     dispute_created_at,
     complaint_liability,
-    complaint_type,
-    line_item_price_amount_usd,
-    line_item_cost_usd
-    from {{ ref('fact_quote_line_items') }}
-    where created_date >= '2019-01-01'
+    complaint_type
 
+from {{ ref("fact_quote_line_items") }}
+where created_date >= '2019-01-01'
