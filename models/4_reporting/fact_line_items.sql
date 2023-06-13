@@ -10,6 +10,7 @@
 -- contains data about line items from different documents, the model fact_quote_line_items downstream is filtered
 -- to include only line items from the main quote of the order.
  
+ 
 with part_dimensional_attributes as (
         select li.id,
            round(nullif(json_extract_path_text(li.upload_properties, 'volume', 'value', true), '')::float / 1000,
