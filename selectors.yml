@@ -8,6 +8,8 @@ selectors:
       union:
         - method: path
           value: models
+        - method: path
+          value: seeds
         - exclude:
             - method: tag
               value: backup
