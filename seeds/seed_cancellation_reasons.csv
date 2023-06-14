@@ -1,0 +1,61 @@
+reason,reason_mapped
+Custom specifications cannot be met,Custom specifications cannot be met
+Specs not within our Capabilities: material / colour,Custom specifications cannot be met
+Specs not within our Capabilities: other,Custom specifications cannot be met
+Unavailable technical requirements,Custom specifications cannot be met
+Customer requested cancellation,Customer requested cancellation
+No reason given,Customer requested cancellation
+Produced In-house,Customer requested cancellation
+Project abandoned,Customer requested cancellation
+Requested by Customer,Customer requested cancellation
+Dimensions too big,Dimensions too big
+Parts too large,Dimensions too big
+Dimensions too small,Dimensions too small
+Parts too small,Dimensions too small
+Failed quote QC,Failed quote QC
+Lead time,Lead time cannot be met
+Lead time cannot be met,Lead time cannot be met
+Lead Time Change Not Accepted,Lead time cannot be met
+Legal/Terms of Sale violation,Legal/Terms of Sale violation
+Terms of Sale Violation (IP),Legal/Terms of Sale violation
+Terms of Sale Violation (Weapon),Legal/Terms of Sale violation
+Local sourcing required and unavailable,Local sourcing required and unavailable
+Machining Suggestion Not Accepted,Manufacturing suggestions not accepted
+Manufacturing suggestions not accepted,Manufacturing suggestions not accepted
+MP requested cancellation,MP requested cancellation
+New order created,New order created
+New request submitted instead,New order created
+Competition - Lead time,Other / General
+Competition - Price,Other / General
+Needed more quality assurance,Other / General
+"No purchase intent, just researching",Other / General
+Other / General,Other / General
+Price increase not accepted,Price increase not accepted
+Price too high,Price increase not accepted
+Unable to complete production due to unresponsive customer,Unable to complete production due to unresponsive customer
+Unable to re-source with same MP,Unable to re-source with same MP
+Unable to resource with same MP,Unable to re-source with same MP
+(3DP) Unable to Print (Suggest SLA/Material Jetting),Unusable files/Design cannot be manufactured
+(3DP) Unable to Print (Suggest SLS/MJF),Unusable files/Design cannot be manufactured
+File errors,Unusable files/Design cannot be manufactured
+Geometry Errors - 3DP,Unusable files/Design cannot be manufactured
+Geometry Errors - CNC,Unusable files/Design cannot be manufactured
+Unusable files/Design cannot be manufactured,Unusable files/Design cannot be manufactured
+Custom request - RFQ required,Custom request - RFQ required
+custom_request_rfq_required,Custom request - RFQ required
+Quote request archived and order cancelled,Quote request archived and order cancelled
+Design cannot be manufactured,Unusable files/Design cannot be manufactured
+custom_specifications_cannot_be_met,Unusable files/Design cannot be manufactured
+customer_requested_cancellation,Customer requested cancellation
+dimensions_big,Dimensions too big
+lack_of_capacity_capability_5_axis,Unusable files/Design cannot be manufactured
+lack_of_capacity_capability_edm,Unusable files/Design cannot be manufactured
+legal_terms_of_sale_violation,Legal/Terms of Sale violation
+local_sourcing_required,Local sourcing required and unavailable
+manufacturing_suggestions_denied,Manufacturing suggestions not accepted
+mp_requested_cancellation,MP requested cancellation
+price_increase_denied,Price increase not accepted
+price_increase_not_accepted,Price increase not accepted
+unable_to_meet_lead_time,Lead time cannot be met
+unable_to_print,Unusable files/Design cannot be manufactured
+unusable_files_design_cannot_be_manufactured,Unusable files/Design cannot be manufactured

@@ -476,7 +476,8 @@ select
     case when order_quote_status = 'cart' then null else -- In June 2021 some carts started being created in HS
         coalesce(docs.order_first_submitted_at, hs_deals.hubspot_created_at) end           as submitted_at,
     submitted_at is not null                                                               as is_submitted,
-    coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), cancellation_reasons.title )as cancellation_reason,
+    coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), pcr.title )                 as cancellation_reason,
+    coalesce(nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.reason_mapped, cancellation_reason)  as cancellation_reason_mapped,
     srl.is_recognized                                                                      as is_recognized,
     srl.recognized_at                                                                      as recognized_at,
 
@@ -544,7 +545,8 @@ from {{ ref('prep_supply_orders') }} as orders
 
     -- Service Supply
     left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
-    left join {{ source('int_service_supply', 'cancellation_reasons') }} as cancellation_reasons on orders.cancellation_reason_id = cancellation_reasons.id
+    left join {{ ref('prep_cancellation_reasons') }} as pcr on orders.cancellation_reason_id = pcr.id
+
 
 where true
   and orders.legacy_order_id is null -- We take legacy orders from data_lake.legacy_orders table as source of truth in a later stage

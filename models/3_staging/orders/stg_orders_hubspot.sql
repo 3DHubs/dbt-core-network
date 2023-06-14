@@ -45,6 +45,7 @@ with stg as (
         nullif(hs.review_type, '')                                                        as in_review_type,
         nullif(hs.closed_lost_reason, '')                                                 as hubspot_closed_lost_reason,
         nullif(hs.cancellation_reason, '')                                                as hubspot_cancellation_reason,
+        scr.reason_mapped                                                                 as hubspot_cancellation_reason_mapped,
         hs.qc_inspection_result                                                           as qc_inspection_result,
         case
             when hs.closedate > '2020-01-01'
@@ -141,7 +142,12 @@ with stg as (
         left join {{ ref('stg_hs_contacts_attributed_prep') }} as hcon
             on hs.hs_latest_associated_contact_id = hcon.contact_id
         left join {{ ref('hubspot_companies') }} as hcom 
-            on hcon.hs_company_id = hcom.hubspot_company_id)
+            on hcon.hs_company_id = hcom.hubspot_company_id
+        left join {{ ref('seed_cancellation_reasons') }} scr 
+            on lower(scr.reason) = lower(hs.cancellation_reason)
+        )
+        
+        
 select *
 from stg
 where rn = 1

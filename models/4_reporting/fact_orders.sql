@@ -119,6 +119,7 @@ order_status,
 exists_in_hubspot,
 is_resourced,
 cancellation_reason,
+cancellation_reason_mapped,
 is_recognized,
 is_quality_disputed,
 
