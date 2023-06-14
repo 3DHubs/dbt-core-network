@@ -83,7 +83,9 @@ select orders.uuid                                                              
       time_in_stage_dfm_minutes,
 
        -- Status
-       coalesce(order_status.mapped_value, stg_hubspot.hubspot_status_mapped) as order_status
+       case when stg_hubspot.hubspot_status_mapped = 'lost' and order_status.mapped_value='canceled'  then stg_hubspot.hubspot_status_mapped
+       else
+       coalesce(order_status.mapped_value, stg_hubspot.hubspot_status_mapped) end as order_status
 
 from {{ ref ('prep_supply_orders') }} as orders
          left join {{ ref ('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
