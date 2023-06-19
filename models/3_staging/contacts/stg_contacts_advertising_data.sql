@@ -39,7 +39,7 @@ select  dcps.hubspot_contact_id,
             else null end                                                                 as advertising_adgroup_id,
         trunc(
                 coalesce(cpc.date, dcps.hutk_analytics_first_visit_timestamp::timestamp)) as advertising_click_date,
-        lower(coalesce(cpc.device, nullif(json_extract_path_text(dcps.first_page_seen_query, 'device'),
+        lower(coalesce(cpc.device, nullif({{dbt_utils.get_url_parameter('hutk_analytics_first_url', 'device') }},
                                             '')))                                           as stg_device,
         case
             when stg_device similar to '%desktop%|%computer%|c' then 'Desktop'

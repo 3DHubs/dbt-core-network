@@ -39,8 +39,7 @@ select coalesce(page_group, 'Ungrouped')                                  as tmp
            when channel not like 'unknown_channel%' then hutk_analytics_first_page end    as first_page_seen,
        case
            when channel not like 'unknown_channel%' then substring(nullif(regexp_substr(hutk_analytics_first_url, '\\?.*'), ''),
-                                                   2) end                 as first_page_seen_query,
-       nullif(query_to_json(first_page_seen_query), '')       as first_page_seen_query_tmp,
+                                                   2)                                 end as first_page_seen_query,
        case
            when channel not like 'unknown_channel%' then hutk_analytics_source_data_1 end as channel_drilldown1,
        case
