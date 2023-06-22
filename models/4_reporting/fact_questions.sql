@@ -56,7 +56,8 @@ select
     ) as question_response_time,
     u_auth.first_name + ' ' + u_auth.last_name as author_name,
     u_answ.first_name + ' ' + u_answ.last_name as answered_name,
-    u_answ.is_internal                         as answered_by_hubs
+    u_answ.is_internal                         as answered_by_hubs,
+    u_answ.email                                as answered_email
 from union_question_feature as uqf
 left join {{ ref('prep_users') }} as u_auth on uqf.author_id = u_auth.user_id
 left join {{ ref('prep_users') }} as u_answ on uqf.answered_by_id = u_answ.user_id
