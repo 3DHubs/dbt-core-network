@@ -57,6 +57,7 @@ select base.created_at,
        -- Advertising Fields
        ad.advertising_gclid,
        ad.advertising_msclkid,
+       ad.advertising_source,
        ad.advertising_click_date,
        ad.advertising_click_device,
        ad.advertising_account_id,

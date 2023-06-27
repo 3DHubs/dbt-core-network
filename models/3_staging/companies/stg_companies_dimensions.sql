@@ -18,7 +18,7 @@ with attributable_contacts_numbered as (
            advertising_msclkid,
            advertising_click_date,
            advertising_click_device,
-           utm_source as advertising_source,
+           advertising_source,
            advertising_account_id,
            advertising_campaign_id,
            advertising_adgroup_id,
