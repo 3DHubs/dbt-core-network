@@ -45,7 +45,6 @@ sources:
       - name: supply_cross_docking_tracking_details_20200911
       - name: legacy_orders
       - name: legacy_mqls
-      - name: freshdesk_groups_legacy_20200401
       - name: dim_dates
 
   - name: ext_google_analytics
@@ -344,6 +343,25 @@ sources:
       - name: users_roles
       - name: virtual_quality_control_order_packaging_photos
 
+  - name: ext_freshdesk
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
+    loaded_at_field: load_timestamp
+    tables:
+      - name: freshdesk_agents
+      - name: freshdesk_companies
+      - name: freshdesk_contacts
+      - name: freshdesk_groups
+      - name: freshdesk_surveys
+      - name: freshdesk_survey_results
+      - name: freshdesk_ticket_conversations
+      - name: freshdesk_tickets
+      - name: freshdesk_tickets_groups_backup_20200401
+        freshness: null  # Ignoring freshness for this data source
+      - name: freshdesk_groups_legacy_20200401
+        freshness: null  # Ignoring freshness for this data source
+
   - name: landing
     freshness:
       warn_after: {count: 24, period: hour}
@@ -351,16 +369,6 @@ sources:
     loaded_at_field: load_timestamp
     tables:
       - name: hubspot_deals_dealstage_history_20201125
-        freshness: null  # Ignoring freshness for this data source
-      - name: freshdesk_agents_landing
-      - name: freshdesk_companies_landing
-      - name: freshdesk_contacts_landing
-      - name: freshdesk_groups_landing
-      - name: freshdesk_surveys_landing
-      - name: freshdesk_survey_results_landing
-      - name: freshdesk_ticket_conversations_landing
-      - name: freshdesk_tickets_landing
-      - name: freshdesk_tickets_groups_backup_20200401
         freshness: null  # Ignoring freshness for this data source
 
 #########

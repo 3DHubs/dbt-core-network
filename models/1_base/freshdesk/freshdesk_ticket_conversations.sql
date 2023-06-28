@@ -2,7 +2,7 @@
 with ticket_conversations as (
     select *,
            row_number() over (partition by id order by updated_at desc, load_timestamp desc nulls last) as rn
-    from {{ source('landing', 'freshdesk_ticket_conversations_landing') }}
+    from {{ source('ext_freshdesk', 'freshdesk_ticket_conversations') }}
 )
 select tc.id,
        tc.incoming,

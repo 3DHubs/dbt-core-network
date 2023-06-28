@@ -1,6 +1,6 @@
 with companies as (select *,
                           row_number() over (partition by id order by load_timestamp desc nulls last) as rn
-                   from {{ source('landing', 'freshdesk_companies_landing') }} )
+                   from {{ source('ext_freshdesk', 'freshdesk_companies') }} )
 select companies.id,
        companies.name,
        companies.description,

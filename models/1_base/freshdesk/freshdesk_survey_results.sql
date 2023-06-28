@@ -2,7 +2,7 @@ with survey_results as (
     select *,
            row_number() over (partition by id, survey_id, user_id order by load_timestamp desc) as rn
 
-    from {{ source('landing', 'freshdesk_survey_results_landing') }}
+    from {{ source('ext_freshdesk', 'freshdesk_survey_results') }}
 )
 select id,
        survey_id,

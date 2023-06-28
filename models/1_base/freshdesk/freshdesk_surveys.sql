@@ -1,7 +1,7 @@
 with surveys as (
     select *,
            row_number() over (partition by id, value_id order by load_timestamp nulls last) as rn
-    from {{ source('landing', 'freshdesk_surveys_landing') }}
+    from {{ source('ext_freshdesk', 'freshdesk_surveys') }}
 )
 select id,
        title,
