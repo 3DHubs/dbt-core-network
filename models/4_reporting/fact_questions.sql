@@ -15,7 +15,7 @@ with
             q.answered_at,
             q.answered_by_id,
             q.title  as question_type,
-            qt.description as question_description,
+            NULL as question_description,
             qro.description
             || ' '
             || qr.value
@@ -25,7 +25,6 @@ with
             false as has_attachment
 
         from {{ source('int_service_supply', 'questions') }} as q
-        left join {{ source('int_service_supply', 'question_types') }} as qt on q.question_type_id = qt.id
         left join {{ source('int_service_supply', 'replies') }} as qr on q.uuid = qr.question_uuid
         left join {{ source('int_service_supply', 'reply_options') }} as qro on qr.reply_option_id = qro.id
         where decode(qr.is_correct, 'true', true, 'false', false)
