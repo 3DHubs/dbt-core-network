@@ -27,6 +27,7 @@ with delay_aggregates as (
 select distinct orders.uuid                              as order_uuid,
 
                 case
+                    when docs.po_active_promised_shipping_at_by_supplier > getdate() then null
                     when docs.po_active_promised_shipping_at_by_supplier is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
                          logistics.shipped_at is null
@@ -48,6 +49,7 @@ select distinct orders.uuid                              as order_uuid,
                 end as promised_shipping_at_by_supplier_pick_up_adjusted,
                 
                 case
+                    when promised_shipping_at_by_supplier_pick_up_adjusted > getdate() then null
                     when promised_shipping_at_by_supplier_pick_up_adjusted is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
                          logistics.shipped_at is null
@@ -61,6 +63,7 @@ select distinct orders.uuid                              as order_uuid,
                     end                                  as is_picked_up_on_time_from_supplier,
 
                 case
+                    when orders.promised_shipping_date > getdate() then null
                     when orders.promised_shipping_date is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
                          logistics.shipped_to_customer_at is null then null

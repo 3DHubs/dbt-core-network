@@ -29,7 +29,8 @@ with stg as (
         hs.bdr_company_source                                                             as hubspot_company_source,
         htm.technology_id                                                                 as hubspot_technology_id,
         technologies.name                                                                 as hubspot_technology_name,
-        hs.pl_cross_sell_channel                                                          as hubspot_pl_cross_sell_channel,
+        case when hcon.hutk_analytics_first_url ~ 'utm_campaign=protolabssales' then 'Sales Referral' 
+             else hs.pl_cross_sell_channel  end                                           as hubspot_pl_cross_sell_channel,
 
         -- Dates
         hs.createdate                                                                     as hubspot_created_at,
@@ -51,9 +52,9 @@ with stg as (
             when hs.closedate > '2020-01-01'
                 then nullif(regexp_replace(hs.delay_liability, 'liability_', ''), '') end as delay_liability,
         hs.delay_status                                                                   as delay_status,
-        case when hcon.hutk_analytics_first_url ~ 'utm_source=protolabs' then true else false end as is_integration_mql_contact,
+        case when hcon.hutk_analytics_first_url ~ 'utm_source=protolabs'  or hcon.hutk_analytics_first_url ~ 'utm_campaign=protolabssales' then true else false end as is_integration_mql_contact,
 
-        -- Owners
+        -- Owners       
         hs.hubspot_owner_id,
         own.name                                                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
