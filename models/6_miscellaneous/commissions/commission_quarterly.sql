@@ -110,7 +110,7 @@ with  quarterly_closed_amount_directors as (
       case when subtotal_closed_amount_usd > target_threshold then true else false end                            as quarterly_bonus_to_be_paid,
        ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
       coalesce(case when quarterly_bonus_to_be_paid = true 
-      and qt.role = 'inside lead' then 3000*bonus  
+      and qt.role = 'inside lead' then 4000*bonus  
       when quarterly_bonus_to_be_paid = true 
       and qt.role = 'strategic lead' and qt.region='US' then 7500*bonus
       when quarterly_bonus_to_be_paid = true 
