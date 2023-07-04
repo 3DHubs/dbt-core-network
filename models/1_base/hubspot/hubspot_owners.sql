@@ -27,5 +27,5 @@ select
        is_current,
 	   coalesce(location,'Amsterdam') as location,
        case when location <> 'Chicago' then 'Amsterdam' else 'Chicago' end as office_location 
-	from {{ ref('hubspot_owners_federated') }} ho 
+	from {{ ref('hubspot_owners_base') }} ho 
 	left join employees hr on (ho.first_name = hr.first_name and ho.last_name = hr.last_name) or hr.email = ho.email

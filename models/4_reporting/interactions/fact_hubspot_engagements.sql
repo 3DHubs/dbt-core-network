@@ -5,7 +5,7 @@
 }}
 
 with hubspot_engagements as (
-    select * from {{ source('data_lake', 'hubspot_engagements') }}
+    select * from {{ source('ext_hubspot', 'hubspot_engagements') }}
 ),
 
 stg_associations as (

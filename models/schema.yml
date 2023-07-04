@@ -1,43 +1,39 @@
 version: 2
 
-
 ###########
 # SOURCES #
 ###########
 
 sources:
-
   - name: adwords
     tables:
       - name: click_performance_reports
 
   - name: data_lake
-    tags: ['data_lake']
+    tags: ["data_lake"]
     tables:
       - name: full_order_history_events
-      - name: hubspot_engagements
-        loaded_at_field: load_timestamp
       - name: hubspot_email_wall_submissions_20210423
       - name: legacy_contacts
       - name: exchange_rate_spot_daily
         freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
         loaded_at_field: date
       - name: btyd
         freshness:
-          warn_after: {count: 7, period: day}
-          error_after: {count: 14, period: day}
+          warn_after: { count: 7, period: day }
+          error_after: { count: 14, period: day }
         loaded_at_field: snapshot_date
       - name: customer_tiering
         freshness:
-            warn_after: {count: 1, period: day}
-            error_after: {count: 2, period: day}
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
         loaded_at_field: snapshot_at
       - name: mql_conversion_pred
         freshness:
-          warn_after: {count: 2, period: day}
-          error_after: {count: 3, period: day}
+          warn_after: { count: 2, period: day }
+          error_after: { count: 3, period: day }
         loaded_at_field: model_executed_at
       - name: supply_countries_markets_mapping
       - name: static_seo_page_group
@@ -51,8 +47,8 @@ sources:
     tables:
       - name: search_console
         freshness:
-          warn_after: {count: 5, period: day}
-          error_after: {count: 6, period: day}
+          warn_after: { count: 5, period: day }
+          error_after: { count: 6, period: day }
         loaded_at_field: "date::timestamp"
 
   - name: dbt_backups
@@ -61,7 +57,7 @@ sources:
       - name: backup_fact_orders
       - name: backup_full_order_history_events
       - name: backup_dim_companies
-      - name: backup_dim_contacts   
+      - name: backup_dim_contacts
 
   - name: ext_adwords
     tables:
@@ -74,17 +70,17 @@ sources:
 
   - name: ext_aftership_bv
     freshness:
-      warn_after: {count: 12, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: { count: 12, period: hour }
+      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: data
       - name: data__msg__checkpoints
-    
+
   - name: ext_aftership_llc
     freshness:
-      warn_after: {count: 12, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: { count: 12, period: hour }
+      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: data
@@ -92,8 +88,8 @@ sources:
 
   - name: ext_bing
     freshness:
-      warn_after: {count: 12, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: { count: 12, period: hour }
+      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: accounts
@@ -104,8 +100,8 @@ sources:
 
   - name: ext_hubspot_webhooks
     freshness:
-      warn_after: {count: 12, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: { count: 12, period: hour }
+      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: data
@@ -114,19 +110,10 @@ sources:
     tables:
       - name: quick_link
 
-  - name: ext_raw
-    tables:
-      - name: hubspot_pages
-        freshness:
-          warn_after: {count: 48, period: hour}
-          error_after: {count: 72, period: hour}
-        loaded_at_field: "date::timestamp"
-      - name: hubspot_owners
-
   - name: ext_google_ads_console
     freshness:
-      warn_after: {count: 12, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: { count: 12, period: hour }
+      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: accounts
@@ -149,32 +136,47 @@ sources:
     tables:
       - name: contacts
         freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
       - name: companies
         freshness:
-          warn_after: {count: 24, period: hour} 
-          error_after: {count: 48, period: hour}
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
+      - name: hubspot_engagements
+        freshness:
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
+        loaded_at_field: load_timestamp
       - name: campaigns
       - name: deals
         freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
       - name: deals__associations__associatedcompanyids
       - name: deals__associations__associatedvids
       - name: email_events
         freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
-           
+      - name: hubspot_pages
+        freshness:
+          warn_after: { count: 48, period: hour }
+          error_after: { count: 72, period: hour }
+        loaded_at_field: "date::timestamp"
+      - name: hubspot_owners
+        freshness:
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
+        loaded_at_field: "load_timestamp"
+
   - name: ext_netsuite
     freshness:
-      warn_after: {count: 12, period: hour}
-      error_after: {count: 24, period: hour}
+      warn_after: { count: 12, period: hour }
+      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: currencyrate
@@ -190,9 +192,9 @@ sources:
     tables:
       - name: automated_shipping_customs_information
 
-#   - name: fed_service_supply
-#    tables:
-#      - name: line_items
+  #   - name: fed_service_supply
+  #    tables:
+  #      - name: line_items
 
   - name: int_service_supply
     tables:
@@ -200,39 +202,39 @@ sources:
       - name: anonymous_user_carts
       - name: auctions
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: started_at      
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: started_at
       - name: new_bids
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: placed_at     
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: placed_at
       - name: bids
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: placed_at       
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: placed_at
       - name: new_bids_bid_reasons
       - name: bid_reasons
       - name: billing_requests
         freshness:
-          warn_after: {count: 31, period: day}
-          error_after: {count: 33, period: day}
-        loaded_at_field: created            
+          warn_after: { count: 31, period: day }
+          error_after: { count: 33, period: day }
+        loaded_at_field: created
       - name: branded_materials
       - name: cancellation_reasons
       - name: cnc_order_parts_inspection_attachments
       - name: cnc_orders
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
         loaded_at_field: created
       - name: cnc_order_quotes
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: created       
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: created
       - name: company_entities
       - name: complaint_reasons
       - name: complaint_type_reasons
@@ -240,31 +242,31 @@ sources:
       - name: complaint_types
       - name: complaints
         freshness:
-          warn_after: {count: 4, period: day}
-          error_after: {count: 7, period: day}
-        loaded_at_field: created      
+          warn_after: { count: 4, period: day }
+          error_after: { count: 7, period: day }
+        loaded_at_field: created
       - name: countries
-      - name: currencies      
+      - name: currencies
       - name: discount_codes
-      - name: discounts  
+      - name: discounts
       - name: dispute_issues
       - name: dispute_line_items
       - name: dispute_line_items_issues
       - name: disputes
         freshness:
-          warn_after: {count: 4, period: day}
-          error_after: {count: 7, period: day}
-        loaded_at_field: created      
+          warn_after: { count: 4, period: day }
+          error_after: { count: 7, period: day }
+        loaded_at_field: created
       - name: external_orders
         freshness: null # To be added when more volume
-        loaded_at_field: created      
+        loaded_at_field: created
       - name: financial_settings
-      - name: lead_time_tiers  
+      - name: lead_time_tiers
       - name: line_items
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: created   
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: created
       - name: line_item_virtual_quality_control_part_photos
       - name: matching_scores
       - name: material_colors
@@ -278,22 +280,22 @@ sources:
       - name: order_change_requests
       - name: order_delays
         freshness:
-          warn_after: {count: 2, period: day}
-          error_after: {count: 4, period: day}
-        loaded_at_field: created      
+          warn_after: { count: 2, period: day }
+          error_after: { count: 4, period: day }
+        loaded_at_field: created
       - name: order_history_events
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: created      
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: created
       - name: order_review_answers
       - name: order_review_questions
       - name: packages
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: created      
-      - name: package_line_items   
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: created
+      - name: package_line_items
       - name: processes
       - name: purchase_orders
       - name: question_groups
@@ -307,21 +309,21 @@ sources:
       - name: refunds
       - name: replies
       - name: reply_options
-      - name: roles      
+      - name: roles
       - name: shipments
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: created      
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: created
       - name: shipping_carriers
       - name: shipping_options
       - name: shipping_labels
       - name: supplier_auction_line_items
       - name: supplier_auctions
         freshness:
-          warn_after: {count: 12, period: hour}
-          error_after: {count: 24, period: hour}
-        loaded_at_field: assigned_at      
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: assigned_at
       - name: supplier_finishes
       - name: supplier_processes
       - name: supplier_rfqs
@@ -336,9 +338,9 @@ sources:
       - name: tolerances
       - name: transactions
         freshness:
-          warn_after: {count: 24, period: hour}
-          error_after: {count: 48, period: hour}
-        loaded_at_field: created      
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
+        loaded_at_field: created
       - name: users
       - name: users_roles
       - name: virtual_quality_control_order_packaging_photos
@@ -364,8 +366,8 @@ sources:
 
   - name: landing
     freshness:
-      warn_after: {count: 24, period: hour}
-      error_after: {count: 48, period: hour}
+      warn_after: { count: 24, period: hour }
+      error_after: { count: 48, period: hour }
     loaded_at_field: load_timestamp
     tables:
       - name: hubspot_deals_dealstage_history_20201125
