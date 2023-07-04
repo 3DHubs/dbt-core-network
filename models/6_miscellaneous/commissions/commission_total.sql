@@ -15,7 +15,7 @@ with all_commissions as (
       from all_commissions
       left join dbt_prod_core.hubspot_owners own on own.name = all_commissions.employee and own.is_current is true
       where true
-      and employee is not null
+      --and employee is not null
       and commission_date is not null
       and commission_usd <> 0
       order by commission_date desc, employee
