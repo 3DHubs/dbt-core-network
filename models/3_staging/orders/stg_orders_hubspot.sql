@@ -75,7 +75,8 @@ with stg as (
         so.name                                                                           as hubspot_sourcing_owner_name,
         pm.owner_id                                                                       as hubspot_im_project_manager_id,
         pm.name                                                                           as hubspot_im_project_manager_name,
-        hs.pl_cross_sell_sales_manager_name,
+        hs.pl_sales_rep_name,
+        hs.pl_sales_rep_manager,
         pl_bdm.name                                                                       as pl_business_development_manager_name,
 
         -- TEAM FIELDS

@@ -119,7 +119,8 @@ select
     hs_deals.sales_lead_name,
     hs_deals.hubspot_im_project_manager_id,
     hs_deals.hubspot_im_project_manager_name,
-    hs_deals.pl_cross_sell_sales_manager_name,
+    hs_deals.pl_sales_rep_name,
+    hs_deals.pl_sales_rep_manager,
     hs_deals.pl_business_development_manager_name,
 
     -- HS Deals: Properties Requested by Teams
@@ -145,7 +146,7 @@ select
     case when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
     when hubspot_owner_name ~ '(PL)' then 'Direct Sales Pilot'
     when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win' 
-    when pl_cross_sell_sales_manager_name is not null then 'Twin-Win' end as pl_cross_sell_channel,
+    when pl_sales_rep_name is not null then 'Twin-Win' end as pl_cross_sell_channel,
     case when integration_platform_type is not null or pl_cross_sell_channel is not null then true else false end as is_integration_tmp,
 
     ---------- SOURCE: STG ORDERS RDA --------------

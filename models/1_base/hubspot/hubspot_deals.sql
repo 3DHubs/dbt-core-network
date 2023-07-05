@@ -123,7 +123,10 @@ select
     ) as pl_cross_sell_company_name,
     nullif(property_protolabs_cross_sell_salesperson__value, '')::varchar(
         2048
-    ) as pl_cross_sell_sales_manager_name,
+    ) as pl_sales_rep_name,
+      nullif(property_protolabs_cross_sell_sales_manager__value, '')::varchar(
+        2048
+    ) as pl_sales_rep_manager,
     nullif(property_pl_cross_sell_channel__value, '')::varchar(
         2048
     ) as pl_cross_sell_channel,

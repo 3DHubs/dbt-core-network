@@ -20,7 +20,8 @@ select
     im_deal_type,
     lead_time,
     hubspot_owner_name,
-    pl_cross_sell_sales_manager_name,
+    pl_sales_rep_name,
+    pl_sales_rep_manager
     pl_cross_sell_company_name,
     pl_cross_sell_channel,
     pl_business_development_manager_name,
@@ -42,6 +43,8 @@ select
     subtotal_sourced_cost_usd,
     subtotal_sourced_amount_usd,
     shipping_amount_usd,
+    hubspot_estimated_close_amount_usd,
+    subtotal_amount_usd,
 
     --on time attributes
     order_shipped_at,
