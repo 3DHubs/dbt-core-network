@@ -21,7 +21,7 @@ select
     lead_time,
     hubspot_owner_name,
     pl_sales_rep_name,
-    pl_sales_rep_manager as pl_sales_rep_manager_name, 
+    pl_sales_rep_manager_name, 
     pl_cross_sell_company_name,
     pl_cross_sell_channel,
     pl_business_development_manager_name,

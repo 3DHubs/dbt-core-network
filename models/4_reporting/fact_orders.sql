@@ -257,7 +257,7 @@ hubspot_sourcing_owner_name,
 hubspot_im_project_manager_name,
 sales_lead_name,
 pl_sales_rep_name,
-pl_sales_rep_manager,
+pl_sales_rep_manager_name,
 pl_business_development_manager_name,
 
 -- Line Items

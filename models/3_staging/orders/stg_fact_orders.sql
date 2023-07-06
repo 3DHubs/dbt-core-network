@@ -120,7 +120,7 @@ select
     hs_deals.hubspot_im_project_manager_id,
     hs_deals.hubspot_im_project_manager_name,
     hs_deals.pl_sales_rep_name,
-    hs_deals.pl_sales_rep_manager,
+    hs_deals.pl_sales_rep_manager_name,
     hs_deals.pl_business_development_manager_name,
 
     -- HS Deals: Properties Requested by Teams
