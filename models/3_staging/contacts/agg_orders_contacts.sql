@@ -17,6 +17,8 @@ min(number_of_closed_orders_contact) as number_of_closed_orders_contact,
 min(closed_sales_usd_contact) as closed_sales_usd_contact,
 min(closed_sales_usd_new_customer_contact) as closed_sales_usd_new_customer_contact,
 min(total_precalc_margin_usd_new_customer_contact) as total_precalc_margin_usd_new_customer_contact,
+min(total_precalc_margin_usd_contact_90d) as total_precalc_margin_usd_contact_90d,
+min(total_precalc_margin_usd_contact_24m) as total_precalc_margin_usd_contact_24m,
 -- First Values
 min(first_submitted_order_technology_contact) as first_submitted_order_technology_contact,
 min(first_closed_order_technology_contact) as first_closed_order_technology_contact,
