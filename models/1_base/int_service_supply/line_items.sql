@@ -15,9 +15,6 @@
     "has_part_marking",
     "should_quote_manually",
     "has_technical_drawings",
-    "requires_specific_gate_position",
-    "requires_specific_parting_line",
-    "requires_rapid_tooling",
     "is_visible_to_supplier",
     "is_cosmetic"
     ]

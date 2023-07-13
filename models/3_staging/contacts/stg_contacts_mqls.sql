@@ -28,7 +28,9 @@ with legacy as (
                became_cart_date) as mql_date,
                technology_name as mql_technology,
                case when mql_date >= '2022-01-01' then 
-               case when integration_platform_type is not null then integration_platform_type 
+               case when lower(hc.hs_analytics_first_url) ~ 'shallow' then 'shallowlink'
+                    when lower(hc.hs_analytics_first_url) ~ 'quicklink' then 'quicklink'
+                    when integration_platform_type is not null then integration_platform_type 
                     when opportunity.hubspot_contact_id is not null  then 'cart'  
                     when empty_cart.hubspot_contact_id is not null then 'empty_cart' else 'subscriber' end else 'legacy' end as mql_type
     from {{ ref('stg_hs_contacts_union_legacy') }} hc
