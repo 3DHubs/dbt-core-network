@@ -70,6 +70,7 @@ select docs.created,
        {{ varchar_to_boolean('is_admin') }},       
        {{ varchar_to_boolean('tax_category_override') }},
        {{ varchar_to_boolean('is_admin_only') }},
+       {{ varchar_to_boolean('requires_local_production') }},
        {{ varchar_to_boolean('is_instant_payment') }}                     
 
 from {{ source('int_service_supply', 'cnc_order_quotes') }} as docs

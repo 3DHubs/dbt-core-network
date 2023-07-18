@@ -65,6 +65,7 @@ select distinct
     -- Destination (Based on Contact Shipping Address)
     addresses_destination.company_name as destination_company_name,
     addresses_destination.locality as destination_city,
+    addresses_destination.postal_code as destination_postal_code,
     addresses_destination.lat as destination_latitude,
     addresses_destination.lon as destination_longitude,
     countries_destination.name as destination_country,

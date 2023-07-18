@@ -1,0 +1,22 @@
+[sqlfluff]
+templater = dbt
+dialect = redshift
+exclude_rules = RF06, ST06
+warnings = RF04
+max_line_length = 150
+
+[sqlfluff:layout:type:alias_expression]
+spacing_before = align
+align_within = select_clause
+align_scope = bracketed
+
+[sqlfluff:indentation]
+indented_joins = True
+
+[sqlfluff:templater:jinja]
+load_macros_from_path = macros
+apply_dbt_builtins = True
+
+[sqlfluff:rules:layout.long_lines]
+ignore_comment_lines = True
+ignore_comment_clauses = True

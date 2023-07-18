@@ -231,6 +231,7 @@ select
     docs.order_quote_is_eligible_for_cross_docking as is_eligible_for_cross_docking,
     docs.order_quote_is_local_sourcing as is_local_sourcing,
     docs.order_quote_is_eligible_for_local_sourcing as is_eligible_for_local_sourcing,
+    docs.order_quote_requires_local_production as requires_local_production,
 
     --Finance related exchange rates
     docs.order_quote_source_currency,
@@ -352,12 +353,12 @@ select
     qli.total_weight_grams,
     qli.total_bounding_box_volume_cm3,
     qli.total_volume_cm3,
-    qli.number_of_expedited_shipping_line_items,
     qli.has_customer_note,
     qli.has_technical_drawings,
     qli.has_custom_material_subset,
     qli.has_custom_finish,
     qli.parts_amount_usd,
+    qli.shipping_amount,
     qli.shipping_amount_usd,    
     qli.discount_cost_usd,
     qli.other_line_items_amount_usd as other_amount_usd,
@@ -365,8 +366,13 @@ select
     qli.line_item_process_id as process_id,
     qli.line_item_process_name as process_name,
     qli.parts_titles,
-
-
+    
+    -- RND exclusive Fields
+    qli.parts_max_depth_cm,
+    qli.parts_max_heigth_cm,
+    qli.parts_max_width_cm,
+    qli.is_supply_or_smart_rfq,
+    qli.total_smallest_bounding_box_volume_cm3,
 
     -- Purchase Orders
     fpoli.parts_amount_usd as parts_cost_usd,
@@ -395,6 +401,7 @@ select
     geo.destination_longitude,
     geo.destination_country,
     geo.destination_country_iso2,
+    geo.destination_postal_code,
     geo.destination_market,
     geo.destination_region,
     geo.destination_sub_region,
@@ -541,7 +548,6 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('agg_line_items') }} as apoli on docs.po_active_uuid = apoli.quote_uuid -- Agg Active POs        
 
     -- Data Lake
-    left join {{ ref ('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
     left join {{ ref ('prep_supply_integration') }} as integration on orders.uuid = integration.order_uuid
 
     -- Service Supply

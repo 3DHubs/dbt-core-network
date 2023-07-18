@@ -14,14 +14,22 @@
 with part_dimensional_attributes as (
         select li.id,
            round(nullif(json_extract_path_text(li.upload_properties, 'volume', 'value', true), '')::float / 1000,
-                 1)                                                 as part_volume_cm3,
+                 6)                                                 as upload_part_volume_cm3, -- prefix to make origin explicit
            round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'depth', true),
-                        '')::float / 10, 1)                         as part_depth_cm,
+                        '')::float / 10, 6)                         as part_depth_cm,
            round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'width', true),
-                        '')::float / 10, 1)                         as part_width_cm,
+                        '')::float / 10, 6)                         as part_width_cm,
            round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'height', true),
-                        '')::float / 10, 1)                         as part_height_cm,
-           round(part_depth_cm * part_width_cm * part_height_cm, 1) as part_bounding_box_volume_cm3
+                        '')::float / 10, 6)                         as part_height_cm,
+           round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'depth', true),
+                        '')::float / 10, 6)                         as smallest_bounding_box_depth_cm,
+           round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'width', true),
+                        '')::float / 10, 6)                         as smallest_bounding_box_width_cm,
+           round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'height', true),
+                        '')::float / 10, 6)                         as smallest_bounding_box_height_cm,                        
+           round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_bounding_box_volume_cm3,
+           round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_smallest_bounding_box_volume_cm3
+
         from {{ ref('prep_line_items')}} as li
         where true
         and type = 'part'
@@ -144,13 +152,16 @@ select     li.order_uuid,
            pdf.part_width_cm,
            pdf.part_height_cm,
            pdf.part_bounding_box_volume_cm3,
-           round(pdf.part_bounding_box_volume_cm3 * li.quantity, 1)                   as line_item_total_bounding_box_volume_cm3,
-           pdf.part_volume_cm3,
-           round(pdf.part_volume_cm3 * li.quantity)                                   as line_item_total_volume_cm3,
-           round(coalesce(msub.density * pdf.part_volume_cm3, li.weight_in_grams), 1) as part_weight_g,
-           round(coalesce(part_weight_g, li.weight_in_grams) * li.quantity, 1)        as line_item_weight_g,
+           pdf.part_smallest_bounding_box_volume_cm3,
+           round(coalesce(pdf.upload_part_volume_cm3, (li.weight_in_grams/msub.density)), 6) as part_volume_cm3,           
+           round(coalesce(msub.density * pdf.upload_part_volume_cm3, li.weight_in_grams), 6) as part_weight_g,           
+           round(pdf.part_bounding_box_volume_cm3 * li.quantity, 6)                   as line_item_total_bounding_box_volume_cm3,
+           round(pdf.part_smallest_bounding_box_volume_cm3 * li.quantity, 6)          as line_item_total_smallest_bounding_box_volume_cm3,           
+           round(part_volume_cm3 * li.quantity, 6)                                    as line_item_total_volume_cm3,
+           round(part_weight_g * li.quantity, 6)                                      as line_item_weight_g,
 
            -- Amount Fields
+           li.auto_price_amount,
            case
            --          If price amount is given always use this as it is the manually set amount
            when li.price_amount is not null then

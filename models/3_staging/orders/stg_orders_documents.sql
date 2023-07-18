@@ -53,10 +53,11 @@ with first_quote as (
                 quotes.is_eligible_for_cross_docking                             as order_quote_is_eligible_for_cross_docking,
                 quotes.is_eligible_for_local_sourcing                            as order_quote_is_eligible_for_local_sourcing,
                 quotes.is_local_sourcing                                         as order_quote_is_local_sourcing,
+                coalesce(quotes.requires_local_production, false)                as order_quote_requires_local_production,
                 quotes.chargeable_shipping_weight_estimate_kg                    as chargeable_shipping_weight_estimate_kg,
                 round(((quotes.subtotal_price_amount / 100.00) / rates.rate), 2) as order_quote_amount_usd,
                 quotes.currency_code                                             as order_quote_source_currency,
-                (1/rates.rate)                                                    as exchange_rate_at_closing,
+                (1/rates.rate)                                                   as exchange_rate_at_closing,
                 quotes.price_multiplier                                          as order_quote_price_multiplier,
                 quotes.cross_docking_added_lead_time
          from {{ ref('prep_supply_orders') }} as orders
@@ -244,6 +245,7 @@ select -- First Quote
        oq.order_quote_is_eligible_for_cross_docking,
        oq.order_quote_is_local_sourcing,
        oq.order_quote_is_eligible_for_local_sourcing,
+       oq.order_quote_requires_local_production,
 
        oq.order_quote_amount_usd,
        oq.order_quote_source_currency,
