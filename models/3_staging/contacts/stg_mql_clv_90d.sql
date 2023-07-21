@@ -68,7 +68,7 @@ select
     advertising_account_id,
     advertising_click_date,
     clv.clv_90d,
-    coalesce(predicted_proba, 0.10) as is_customer_prediction,
+    coalesce(predicted_proba*0.81, 0.0001) as is_customer_prediction,
     is_customer_prediction * clv_90d as cpa_price
 from contacts dc
 left join
