@@ -10,12 +10,14 @@ with business_days as (
 select dd.date,
        bd.days as business_days,
        case when weekend_flag is false and holiday_flag is false then true else false end as is_business_day,
+       case when weekend_flag is false and holiday_flag_us is false then true else false end as is_business_day_us,
        b.month,
        b.integration,
        b.kpi,
        b.market,
        b.technology_name,
-       case when is_business_day then b.value *1.0 / bd.days else 0 end  as value 
+       case when is_business_day then b.value *1.0 / bd.days else 0 end  as value
+       
 
 FROM
 data_lake.dim_dates dd
