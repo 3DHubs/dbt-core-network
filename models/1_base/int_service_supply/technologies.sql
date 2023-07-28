@@ -1,8 +1,6 @@
 {% set boolean_fields = [
         "has_threads",
         "has_tolerances",
-        "has_parting_lines",
-        "has_rapid_tooling",
     ]
 %}
 
