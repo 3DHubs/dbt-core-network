@@ -1,9 +1,13 @@
 -----------------------------
---     SDR Commissions     --
+-- SDR Commissions --
 -----------------------------
--- This model calculates the available bonus per supplier per quarter. 
--- When an SDR leaves the job, the bonus for that quarter is 0. 
--- XiaoHan Li 20230511
+-- This model calculates the available bonus per supplier per quarter.
+-- A supplier is considered onboarded when their account is created.
+-- The bonus is only applicable over the supplier's performance in the first 4 quarters.
+-- The start of the 4-quarter period is the calendar quarter when the supplier was onboarded.
+-- When an SDR leaves the job, the bonus for that quarter is 0.
+-- XiaoHan Li 20230801
+
 
 with seed_file_data as (
     select
@@ -30,14 +34,12 @@ with seed_file_data as (
     determine_commission_dates as (
         select tsf.*,
             ds.supplier_name,
-            ds.create_date::date,                       -- Creation date of the supplier
+            ds.create_date::date                                                  as supplier_created_date, -- Creation date of the supplier
             case
                 when tsf.supplier_id = 291 then '2022-10-12'::date
-                else ds.first_sourced_order end                             as first_sourced_order_at,
+                else ds.first_sourced_order end                                   as first_sourced_order_at,
 
-            TO_DATE(TO_CHAR(date_part(year, first_sourced_order_at), '0000') || '-' ||
-                    TO_CHAR(date_part(quarter, first_sourced_order_at) * 3 - 2, '00') || '-01',
-                    ' YYYY- MM- DD')                                        as commission_start_at,  -- First day of the Commission start quarter
+            date_trunc('quarter', supplier_created_date)::date                    as commission_start_at,  -- First day of the Commission start quarter, based on creation date of supplier
             date_add('day', -1, date_add('Month', 12, commission_start_at))::date as commission_end_at -- Last day of the Commission end quarter
         from transformed_seed_file as tsf
             left join {{ ref('dim_suppliers') }} as ds on tsf.supplier_id = ds.supplier_id
@@ -54,11 +56,10 @@ with seed_file_data as (
         and dcd.supplier_id is not null
         and fo.sourced_at >= dcd.commission_start_at  -- Only the amount sourced during the commission period is calculated
         and fo.sourced_at <= dcd.commission_end_at    -- Only the amount sourced during the commission period is calculated
-        -- to do: include SDR end date
         group by 1, 2, 3
     )
 
-select row_number() over (ORDER BY ssa.sourced_quarter asc)                          AS prim_key,
+select row_number() over (ORDER BY ssa.sourced_quarter asc)                          as prim_key,
         dcd.supplier_id,
         dcd.supplier_name,
         ssa.sourced_quarter,
@@ -67,13 +68,13 @@ select row_number() over (ORDER BY ssa.sourced_quarter asc)                     
         dcd.sdr_looker_email,
         dcd.sdr_start_at,
         dcd.sdr_end_at,
-        dcd.create_date as supplier_created_date,
+        dcd.supplier_created_date,
         dcd.first_sourced_order_at,
         dcd.commission_start_at,
         dcd.commission_end_at,
         ssa.sourced_quarter < commission_end_at                                       as eligible_for_bonus,  -- Bonus only available before commission end period
-        case when ssa.sourced_quarter = dcd.commission_start_at then 50 else 0 end    as onboarding_bonus,    -- One time onboarding bonus at commission start quarter
-        
+        dcd.commission_start_at = date_trunc('quarter', current_date)::date           as new_supplier_this_quarter,
+        case when new_supplier_this_quarter is true then 50 else 0 end                as onboarding_bonus, -- One time onboarding bonus at commission start quarter
         -- Calculate quarterly engagement bonus
         case when eligible_for_bonus then
             case when date_part('year', ssa.sourced_quarter) = 2022 then 
@@ -105,14 +106,9 @@ select row_number() over (ORDER BY ssa.sourced_quarter asc)                     
             end
         else 0 
         end                                                                            as payout_availability,
-        
+
         -- Calculate quarterly total bonus available for payout
         case when eligible_for_bonus then total_locked_bonus * payout_availability else 0 end as unlocked_bonus, 
-
-        case when eligible_for_bonus then onboarding_bonus + 600 else 0 end           as potential_bonus,
-        case when ssa.sourced_quarter = dcd.commission_start_at then 1 else 0 end     as sdr_new_suppliers_this_quarter,
-        case when dcd.first_sourced_order_at is null then 1 else 0 end                as sdr_new_suppliers_not_yet_sourced,
-        case when dcd.first_sourced_order_at is not null then 1 else 0 end            as sdr_new_suppliers,
-        case when eligible_for_bonus then 1 else 0 end                                as sdr_suppliers_eligible_for_bonus
+        case when eligible_for_bonus then onboarding_bonus + 600 else 0 end            as potential_bonus
 from determine_commission_dates as dcd
     left join supplier_sourced_amounts as ssa on dcd.supplier_id = ssa.supplier_id

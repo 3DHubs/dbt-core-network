@@ -374,6 +374,7 @@ has_technical_review,
 
 -- Delays
 delay_liability,
+delay_reason,
 delay_status,
 has_delay_notifications,
 number_of_delays,

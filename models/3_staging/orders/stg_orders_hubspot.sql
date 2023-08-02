@@ -51,6 +51,9 @@ with stg as (
         case
             when hs.closedate > '2020-01-01'
                 then nullif(regexp_replace(hs.delay_liability, 'liability_', ''), '') end as delay_liability,
+        case
+            when hs.closedate > '2020-01-01'
+                then nullif(regexp_replace(hs.delay_reason, 'delay_reason_', ''), '') end as delay_reason,    
         hs.delay_status                                                                   as delay_status,
         case when hcon.hutk_analytics_first_url ~ 'utm_source=protolabs'  or hcon.hutk_analytics_first_url ~ 'utm_campaign=protolabssales' then true else false end as is_integration_mql_contact,
 

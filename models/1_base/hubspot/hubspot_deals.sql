@@ -29,6 +29,7 @@ select
     nullif(property_sales_engineer__value, '')::int as sales_engineer,
     nullif(property_bdr_assigned__value, '')::int as bdr_assigned,
     nullif(property_delay_liability__value, '')::varchar(124) as delay_liability,
+    nullif(property_delay_reason__value, '')::varchar(124) as delay_reason,
     nullif(property_in_review_reason__value, '')::varchar(124) as in_review_reason,
     nullif(property_cancellation_reason__value, '')::varchar(
         124

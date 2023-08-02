@@ -1,3 +1,15 @@
+--------------------------------
+---     RFM Segmentation     ---
+--------------------------------
+
+-- Created by: XiaoHan Li 20230403
+-- This model assigns RFM scores to each company, to achieve segmentation based on customer behaviour.
+-- I segmented our customer base into 4 groups and 8 segments.
+-- 4 Groups: Regular / Maintenance / Development / Churn
+-- 8 Segments: the 4 groups each split into 2 based on AOV.
+-- I defined the segmentation criteria for the RFM scores based on my initial business assessment.
+-- Empirical feedback could be considered to re-shape the criteria if necessary.
+
 select hubspot_company_id,
         -- Calculate aov
         (select sum(closed_sales_usd_company) / sum(number_of_closed_orders_company)
