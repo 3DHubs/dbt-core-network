@@ -16,7 +16,13 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
                     left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
                     left outer join {{ ref('prep_supply_documents') }} as po on po.document_number = t.derived_po_number
                    where t._is_latest),
-     tickets as (select * from {{ ref('freshdesk_tickets') }} where _is_latest),
+    tickets as (select * from {{ ref('freshdesk_tickets') }} where _is_latest),
+    frt_ticket_date_prep as (
+        select id, min(stats_status_updated_at) as first_response_start_status_open_at
+        from {{ source('ext_freshdesk', 'freshdesk_tickets') }}
+        where status = 2
+        group by 1
+        ),
      t1 as (
          select ft.id,
                 ft.created_at,
@@ -80,6 +86,7 @@ select t.id                                                                  as 
        custom_fields_cf_3d_hubs_tag                                          as ticket_tag_3d_hubs,
        t.first_stats_first_responded_at                                      as first_response_date,
        t.first_stats_resolved_at                                             as resolved_date,
+       ftdp.first_response_start_status_open_at,
        datediff('day', t.first_created_at, t.first_stats_resolved_at)        as num_days_to_resolution,
        datediff('day', t.first_created_at, t.first_stats_first_responded_at) as num_days_to_first_response,
        fsr.id                                                                as survey_result_id,
@@ -123,3 +130,4 @@ from uniqs t
          left outer join fdmapping fdmapping on t.id = fdmapping.id
          left outer join freshdesk_survey_results fsr on fsr.ticket_id = t.id and rn = 1
          left outer join agents afsr on fsr.agent_id = afsr.id
+         left outer join frt_ticket_date_prep ftdp on ftdp.id = t.id
