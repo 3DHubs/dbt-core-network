@@ -151,6 +151,9 @@ select     li.order_uuid,
            pdf.part_depth_cm,
            pdf.part_width_cm,
            pdf.part_height_cm,
+           case when pdf.part_depth_cm >= part_width_cm and pdf.part_depth_cm >= pdf.part_height_cm then pdf.part_depth_cm
+                when pdf.part_width_cm >= pdf.part_depth_cm and pdf.part_width_cm >= pdf.part_height_cm then pdf.part_width_cm
+                else pdf.part_height_cm end as part_longest_dimension,
            pdf.part_bounding_box_volume_cm3,
            pdf.part_smallest_bounding_box_volume_cm3,
            round(coalesce(pdf.upload_part_volume_cm3, (li.weight_in_grams/msub.density)), 6) as part_volume_cm3,           
