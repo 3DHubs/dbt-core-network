@@ -8,7 +8,7 @@ with hubspot_dealstage_union as
                     deal_id,
                     dealstage_mapped,
                     changed_at
-             from {{source('landing','hubspot_deals_dealstage_history_20201125')}}
+             from {{source('ext_hubspot','hubspot_deals_dealstage_history_20201125')}}
              where changed_at < '2020-06-09'
              union
              select __sdc_primary_key                                             as primary_key,

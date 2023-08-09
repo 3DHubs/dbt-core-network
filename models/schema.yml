@@ -13,7 +13,6 @@ sources:
     tags: ["data_lake"]
     tables:
       - name: full_order_history_events
-      - name: hubspot_email_wall_submissions_20210423
       - name: legacy_contacts
       - name: exchange_rate_spot_daily
         freshness:
@@ -43,7 +42,7 @@ sources:
       - name: legacy_mqls
       - name: dim_dates
 
-  - name: ext_google_analytics
+  - name: ext_google_search
     tables:
       - name: search_console
         freshness:
@@ -157,6 +156,7 @@ sources:
         loaded_at_field: _sdc_received_at
       - name: deals__associations__associatedcompanyids
       - name: deals__associations__associatedvids
+      - name: hubspot_deals_dealstage_history_20201125
       - name: email_events
         freshness:
           warn_after: { count: 24, period: hour }
@@ -362,15 +362,6 @@ sources:
       - name: freshdesk_tickets_groups_backup_20200401
         freshness: null  # Ignoring freshness for this data source
       - name: freshdesk_groups_legacy_20200401
-        freshness: null  # Ignoring freshness for this data source
-
-  - name: landing
-    freshness:
-      warn_after: { count: 24, period: hour }
-      error_after: { count: 48, period: hour }
-    loaded_at_field: load_timestamp
-    tables:
-      - name: hubspot_deals_dealstage_history_20201125
         freshness: null  # Ignoring freshness for this data source
 
 #########
