@@ -152,6 +152,6 @@ left join
     on clv.first_closed_order_technology = dc.mql_technology
     and clv.region = dc.region
     and clv.cohort = 1
-    and became_mql_at >= '2021-01-01'
+    and became_mql_at >= '2021-01-01' and became_mql_at < date_add('days',-2,getdate())
 
 order by 1
