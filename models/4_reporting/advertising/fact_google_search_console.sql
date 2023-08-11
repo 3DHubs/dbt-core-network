@@ -44,7 +44,7 @@ stg_join_w_country as (
            gsc.url || gsc.keywords               as target_id
     from stg_gsc_data as gsc
              left join {{ref('seed_countries_mapping')}} as scmm on scmm.country_iso3 = gsc.country_iso3
-             left join {{ref('seed_seo_page_groups')}} as spg on spg.page = lower(gsc.url)
+             left join {{ref('seed_seo_page_groups')}} as spg on lower(spg.page) = lower(case when len({{ dbt_utils.get_url_path(field='gsc.url') }})  < 2 then '/' else replace(('/' + {{ dbt_utils.get_url_path(field='gsc.url') }} + '/'),'//','/') end)
 ),
 stg_join_w_seo_targets as (
     select gsc_country.*,
