@@ -70,10 +70,46 @@ with  quarterly_closed_amount_directors as (
       'Integration Lead'::text as commission_plan,
       case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
       ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
-      case when quarterly_bonus_to_be_paid = true then coalesce((7500*bonus),1)  end as commission_usd
+      case when quarterly_bonus_to_be_paid = true then coalesce((7000*bonus),1)  end as commission_usd
 
       from quarterly_closed_amount_integration_lead qa
       inner join quarterly_target_integration_lead qt on qt.employee = qa.integration_lead and qt.target_date = qa.commission_date
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      ),
+      ------------------------------ TECHNICAL SALES MANAGER ------------------------------------
+      quarterly_closed_amount_technical_manager as (
+      select date_trunc('quarter', closed_at)                                                      as commission_date,
+      case when fo.destination_region != 'na' then 'Philippe Tarjan'  end as technical_manager,
+      round(sum(subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0)) , 2)       as subtotal_closed_amount_usd
+      from dbt_prod_reporting.fact_orders fo
+      where true
+      and hubspot_dealstage_mapped not in ('Closed - Canceled')
+      and closed_at >='2022-01-01'
+      and fo.destination_region != 'na'
+      group by 1,2
+      ),
+      quarterly_target_technical_manager as (
+      select date_trunc('quarter', cr.date)                                                           as target_date,
+      cr.name as employee,
+      sum(monthly_target) as target_amount_usd,
+      round(target_amount_usd*0.75) as target_threshold
+      from {{ ref('commission_rules') }} cr
+      where role='technical manager'
+      group by 1,2),
+      quarterly_technical_manager as (
+      select
+      date_add('month',2,commission_date) as commission_date,
+      null::bigint as order_hubspot_deal_id,
+      employee,
+      target_amount_usd, 
+      subtotal_closed_amount_usd,
+      'Technical Sales Manager'::text as commission_plan,
+      case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
+      ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
+      case when quarterly_bonus_to_be_paid = true then coalesce((15000*bonus),1)  end as commission_usd
+
+      from quarterly_closed_amount_technical_manager qa
+      inner join quarterly_target_technical_manager qt on qt.employee = qa.technical_manager and qt.target_date = qa.commission_date
       left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
       ),
       ------------------------------ STRATEGIC LEAD ------------------------------------
@@ -114,7 +150,7 @@ with  quarterly_closed_amount_directors as (
       when quarterly_bonus_to_be_paid = true 
       and qt.role = 'strategic lead' and qt.region='US' then 7500*bonus
       when quarterly_bonus_to_be_paid = true 
-      and qt.role = 'strategic lead' and qt.region='EU' then 11000*bonus
+      and qt.role = 'strategic lead' and qt.region='EU' then 7500*bonus
       when quarterly_bonus_to_be_paid = true 
       and qt.role = 'support' and qt.region='EU' then 1500*bonus
       when quarterly_bonus_to_be_paid = true 
@@ -205,6 +241,13 @@ with  quarterly_closed_amount_directors as (
       commission_plan,
       commission_usd
       from quarterly_integration_lead
+      union all
+      select commission_date,
+      order_hubspot_deal_id,
+      employee,
+      commission_plan,
+      commission_usd
+      from quarterly_technical_manager
       union all
       select commission_date,
       order_hubspot_deal_id,
