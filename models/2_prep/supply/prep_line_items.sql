@@ -1,8 +1,13 @@
+{{
+  config(
+    materialized='table'
+  )
+}}
+
+
 -- This model queries from int_service_supply.line_items and considerably filters the data to improve the performance of models downstream.
 -- Furthermore this model is combined with a few selected fields from supply_documents (cnc_order_quotes) to facilitate identifying the 
 -- characteristics of the document (quote or purchase orders) the line item belongs to. 
-
-
 
 select  
 
