@@ -19,7 +19,7 @@ select date,
 
 from {{ref('hubspot_pages')}} hp
          left join  {{ref('seed_seo_page_groups')}} spg
-                   on spg.page = lower(case when len({{ dbt_utils.get_url_path(field='url') }})  < 2 then '/' else '/' + {{ dbt_utils.get_url_path(field='url') }} + '/' end )
+                   on lower(spg.page) = lower(case when len({{ dbt_utils.get_url_path(field='url') }})  < 2 then '/' else '/' + {{ dbt_utils.get_url_path(field='url') }} + '/' end )
 
 where url <> ''
 and
