@@ -1,14 +1,18 @@
 -- Lock table due to failures with concurrent queries, serializable isolation error.
 
- {{
+{% if target.name == 'prod' %}
+{{ 
+    config(
+        pre_hook="lock {{this}}"
+        ) 
+}}
+{% else %}
+{{
     config(
         post_hook = "analyze {{ this }}",
         tags=["multirefresh"]
     )
-}}
-
-{% if target.name == 'prod' %}
-  {{ config(pre_hook="lock {{this}}") }}
+}}  
 {% endif %}
 
 -- This model queries from the underlying line items model which is already filtered to include only line items
