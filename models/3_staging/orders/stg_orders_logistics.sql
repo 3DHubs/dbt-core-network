@@ -38,7 +38,7 @@ with supply_cdt as (
                 min(fp.delivered_to_crossdock_at) as shipment_delivered_to_crossdock_at,
                 
                 min(fp.label_created_to_customer_at) as shipment_shipped_to_customer_at,
-                min(fp.carrier_received_shipment_to_customer_at) as carrier_received_shipment_to_customer,
+                min(fp.carrier_received_shipment_to_customer_at) as carrier_received_shipment_to_customer_at,
                 min(fp.provided_estimate_delivery_to_customer_at) as estimated_delivery_to_customer_at,
                 min(fp.delivered_to_customer_at) as shipment_delivered_to_customer_at,
 
@@ -108,15 +108,15 @@ select distinct soq.order_uuid                                                  
                 case
                     when is_cross_docking_ind is false then null
                     when is_cross_docking_ind and
-                         ab.shipment_shipped_to_crossdock_at > ab.shipment_delivered_to_crossdock_at then false
+                         ab.carrier_received_shipment_to_crossdock_at > ab.shipment_delivered_to_crossdock_at then false
                     else true end                                                                                           as has_shipment_delivered_to_crossdock_date_consecutive,
 
                 -- Delivery dates always depend on courier data so it doesn't make sense to compare them, only compare to when the shipment is created
                 case
                     when is_cross_docking_ind is false and
-                         ab.shipment_shipped_to_customer_at > ab.shipment_delivered_to_customer_at then false
+                         ab.carrier_received_shipment_to_customer_at > ab.shipment_delivered_to_customer_at then false
                     when is_cross_docking_ind and
-                         ab.shipment_shipped_to_crossdock_at > ab.shipment_delivered_to_customer_at
+                         ab.carrier_received_shipment_to_crossdock_at > ab.shipment_delivered_to_customer_at
                         then false
                     else true 
                 end                                                                                                          as has_shipment_delivered_to_customer_date_consecutive,
@@ -124,24 +124,24 @@ select distinct soq.order_uuid                                                  
                 -- Main Consistency Field
                 case
                     when is_cross_docking_ind is false and
-                         shipment_shipped_to_customer_at > shipment_delivered_to_customer_at then false
+                         carrier_received_shipment_to_customer_at > shipment_delivered_to_customer_at then false
                     when is_cross_docking_ind and
-                         ab.shipment_shipped_to_crossdock_at > ab.shipment_delivered_to_customer_at
+                         ab.carrier_received_shipment_to_crossdock_at > ab.shipment_delivered_to_customer_at
                         then false
                     when is_cross_docking_ind and
-                         ab.shipment_shipped_to_crossdock_at > ab.shipment_delivered_to_crossdock_at
+                         ab.carrier_received_shipment_to_crossdock_at > ab.shipment_delivered_to_crossdock_at
                         then false
                     when is_cross_docking_ind and
-                         ab.shipment_shipped_to_crossdock_at > ab.shipment_shipped_to_customer_at
+                         ab.carrier_received_shipment_to_crossdock_at > ab.carrier_received_shipment_to_customer_at
                         then false
                     when is_cross_docking_ind and
-                         ab.shipment_delivered_to_crossdock_at > ab.shipment_shipped_to_customer_at
+                         ab.shipment_delivered_to_crossdock_at > ab.carrier_received_shipment_to_customer_at
                         then false
                     when is_cross_docking_ind and
                          ab.shipment_delivered_to_crossdock_at > ab.shipment_delivered_to_customer_at
                         then false
                     when is_cross_docking_ind and
-                         ab.shipment_shipped_to_customer_at > ab.shipment_delivered_to_customer_at
+                         ab.carrier_received_shipment_to_customer_at > ab.shipment_delivered_to_customer_at
                         then false
                     else true end                                                                  as has_consistent_shipping_info,
 
@@ -151,30 +151,27 @@ select distinct soq.order_uuid                                                  
                 case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_at
                     when is_cross_docking_ind = false then ab.shipment_shipped_to_customer_at
-                    when is_cross_docking_ind then ab.shipment_shipped_to_crossdock_at end         as shipped_at_raw,
+                    when is_cross_docking_ind then ab.shipment_shipped_to_crossdock_at end         as shipped_at_label_created_raw,
                 case
-                    when date_trunc('day', shipped_at_raw) >= '2019-10-01' then shipped_at_raw end as shipped_at,
+                    when date_trunc('day', shipped_at_label_created_raw) >= '2019-10-01' then shipped_at_label_created_raw end as shipment_label_created_at,
                 
                 case
-                    when is_cross_docking_ind = false then ab.carrier_received_shipment_to_customer
+                    when cdt.order_uuid is not null then cdt.cdtd_shipped_at
+                    when is_cross_docking_ind = false then ab.carrier_received_shipment_to_customer_at
                     when is_cross_docking_ind then ab.carrier_received_shipment_to_crossdock_at
-                end                                                                                 as shipment_received_by_carrier_at,
+                end                                                                                 as shipped_at_raw,
+                case when shipped_at_raw::date >= '2019-10-01' then shipped_at_raw end as shipped_at,
                 
                 case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_from_cross_dock_at
-                    when is_cross_docking_ind then ab.shipment_shipped_to_customer_at
+                    when is_cross_docking_ind then ab.carrier_received_shipment_to_customer_at
                     else shipped_at_raw 
                 end                                                                                  as shipped_to_customer_at,
 
                 case
-                    when is_cross_docking_ind then ab.carrier_received_shipment_to_customer
-                    else shipment_received_by_carrier_at
-                end                                                                                 as shipment_to_customer_received_by_carrier_at,
-
-                case
                     when cdt.order_uuid is not null then cdt.cdtd_shipped_from_cross_dock_at
                     when is_cross_docking_ind
-                        then ab.shipment_shipped_to_customer_at end                                as shipped_from_cross_dock_at,
+                        then ab.carrier_received_shipment_to_customer_at end                                as shipped_from_cross_dock_at,
 
                 ----- Delivery Dates -----
                 --------------------------

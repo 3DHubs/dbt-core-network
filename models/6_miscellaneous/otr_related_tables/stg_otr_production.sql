@@ -103,10 +103,10 @@ select
     'Supplier pick up discrepancy' as otr_sub_typ,
     'Tracking Number' as related_document_type,
     '' as related_record,
-    sol.shipped_at as start_date,
-    sol.shipment_received_by_carrier_at as end_date,
+    sol.shipment_label_created_at as start_date,
+    sol.shipped_at as end_date,
     date_diff(
-        'minute', sol.shipped_at, sol.shipment_received_by_carrier_at
+        'minute', sol.shipment_label_created_at, sol.shipped_at
     )/60.0 as hours_in_type,
     hours_in_type as hours_late,
     case

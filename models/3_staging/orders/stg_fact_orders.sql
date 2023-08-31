@@ -307,8 +307,7 @@ select
     logistics.shipped_at as order_shipped_at, -- Prefix to avoid ambiguous field
     logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
-    logistics.shipment_received_by_carrier_at,
-    logistics.shipment_to_customer_received_by_carrier_at,
+    logistics.shipment_label_created_at,
 
     -- Logistics: Delivery Dates
     logistics.delivered_at,
@@ -331,9 +330,7 @@ select
     -- the stg tables of documents & logistics
 
     otr.is_shipped_on_time_by_supplier,
-    otr.is_picked_up_on_time_from_supplier,
     otr.is_shipped_on_time_to_customer,
-    otr.is_pick_up_on_time_to_customer,
     otr.shipping_to_customer_delay_days,
     otr.shipping_by_supplier_delay_days,
     -- Delay Notifications

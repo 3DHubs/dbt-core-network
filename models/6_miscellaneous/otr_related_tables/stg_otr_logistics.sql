@@ -13,10 +13,10 @@ select
     'Transit time to cross dock' otr_process,
     'Tracking Number' as related_document_type,
     '' as related_record,
-    sfo.shipment_received_by_carrier_at as start_date,
+    sfo.order_shipped_at as start_date,
     sfo.delivered_to_cross_dock_at as end_date,
     date_diff(
-        'minute', sfo.shipment_received_by_carrier_at, sfo.delivered_to_cross_dock_at
+        'minute', sfo.order_shipped_at, sfo.delivered_to_cross_dock_at
     )
     / 60.0 as hours_in_type,
     hours_in_type - sfo.first_leg_buffer_value * 24.0 as hours_late,
