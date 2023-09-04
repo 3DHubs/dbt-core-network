@@ -93,9 +93,12 @@ auction_started_at,
 auction_finished_at,
 sourced_at,
 order_shipped_at,
+localized_order_shipped_at,
 shipped_to_customer_at,
 promised_shipping_at_to_customer, -- From order quote
+localized_promised_shipping_at_to_customer,
 promised_shipping_at_by_supplier, -- From active PO
+localized_promised_shipping_at_by_supplier,
 estimated_delivery_to_cross_dock_at,
 delivered_to_cross_dock_at,
 shipped_from_cross_dock_at,

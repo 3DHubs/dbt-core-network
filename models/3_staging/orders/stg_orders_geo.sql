@@ -36,6 +36,7 @@ select distinct
     countries_origin.name as origin_country,
     addresses_origin.lat as origin_latitude,
     addresses_origin.lon as origin_longitude,
+    addresses_origin.timezone as origin_timezone,
     countries_origin.market as origin_market,
     countries_origin.region as origin_region,
 
@@ -68,6 +69,7 @@ select distinct
     addresses_destination.postal_code as destination_postal_code,
     addresses_destination.lat as destination_latitude,
     addresses_destination.lon as destination_longitude,
+    addresses_destination.timezone as destination_timezone,
     countries_destination.name as destination_country,
     countries_destination.alpha2_code as destination_country_iso2,
     countries_destination.market as destination_market,

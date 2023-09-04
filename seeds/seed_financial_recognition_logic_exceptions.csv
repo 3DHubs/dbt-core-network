@@ -15,33 +15,17 @@ d0460127-4a6d-4a4e-91ea-e80674989c1c,2020-11-16 11:01:00,"Orders which still fol
 f3349de5-d3c4-4939-b517-dba785fdf47d,2020-11-20 11:01:00,"Orders which still followed the old recognition logic, recognized upon completion instead of delivery, agreed upon by Bram Straathof."
 66d35246-6a9f-4488-9979-6ef9fa66a65d,2022-10-26 23:37:07,"Orders for which direct shipping was organized, with historic logic they should follow upon first shipment delivery but instead with the new logic they follow upon completion, therefore to maintain historic values this ensures that the order is recognized upon first shipment delivery, agreed upon by Bram Straathof"
 78870d13-ef33-46ca-8719-cbea76008482,2022-11-11 10:58:00,"Orders for which direct shipping was organized, with historic logic they should follow upon first shipment delivery but instead with the new logic they follow upon completion, therefore to maintain historic values this ensures that the order is recognized upon first shipment delivery, agreed upon by Bram Straathof"
-63811ab2-8545-4496-abab-2fdc34d3fd78,2021-09-07 00:00:00,"Change from label creation date to pick up ship date"
-ca542314-bb73-4955-a6a4-a93d036d8356,2021-09-07 00:00:00,"Change from label creation date to pick up ship date"
-2276dad3-8b05-4382-bf2c-71f55be47bd4,2021-04-29 00:00:00,"Change from label creation date to pick up ship date"
-d1b526ce-6d49-4d15-8da8-88fd1ceceff6,2020-11-27 00:00:00,"Change from label creation date to pick up ship date"
-6065172,2023-07-31 00:00:00,"Change from label creation date to pick up ship date"
-5359479,2023-06-20 00:00:00,"Change from label creation date to pick up ship date"
-5359475,2023-06-20 00:00:00,"Change from label creation date to pick up ship date"
-92196ae7-f60a-40c2-a79f-5c19ac382242,2023-07-31 00:00:00,"Change from label creation date to pick up ship date"
-1992984,2022-01-07 00:00:00,"Change from label creation date to pick up ship date"
-344559,2021-04-29 00:00:00,"Change from label creation date to pick up ship date"
-1629869,2022-01-10 00:00:00,"Change from label creation date to pick up ship date"
-c260f8eb-7ce7-4226-8897-7dc075cb0b70,2023-03-02 00:00:00,"Change from label creation date to pick up ship date"
-c9f89308-a1d9-4689-b528-6b21c61be646,2022-03-28 00:00:00,"Change from label creation date to pick up ship date"
-6efe78bd-5628-40c2-a8ea-31fc56703ecf,2021-08-27 00:00:00,"Change from label creation date to pick up ship date"
-a09a1cf2-d30c-430d-9bc1-a161cf42d6bb,2021-03-29 00:00:00,"Change from label creation date to pick up ship date"
-5364082,2023-06-20 00:00:00,"Change from label creation date to pick up ship date"
-cdf418d8-eb27-4f66-9f4b-22af6d27cb54,2021-11-29 00:00:00,"Change from label creation date to pick up ship date"
-b131d48d-7549-427a-ae48-eba287c3b857,2021-03-29 00:00:00,"Change from label creation date to pick up ship date"
-1371881,2021-09-07 00:00:00,"Change from label creation date to pick up ship date"
-65d2fdc0-afe1-452e-bc81-3fd5a28b39e1,2022-01-10 00:00:00,"Change from label creation date to pick up ship date"
-05c69a27-c728-4e03-9a06-eafd8d160d9b,2023-06-20 00:00:00,"Change from label creation date to pick up ship date"
-7c8d6e7d-4ea0-4d4b-8062-eaef5c73f864,2022-01-07 00:00:00,"Change from label creation date to pick up ship date"
-9e43fb68-1c51-4cdc-8d99-994c949f46ff,2023-04-18 00:00:00,"Change from label creation date to pick up ship date"
-864ae222-290f-4682-9c07-bc59dca8f5d6,2023-04-18 00:00:00,"Change from label creation date to pick up ship date"
-16226b09-9cba-4cc3-b086-b1c8d3b53620,2023-04-18 00:00:00,"Change from label creation date to pick up ship date"
-c64806cd-e12d-4ac5-acb5-8214af2587d0,2023-04-18 00:00:00,"Change from label creation date to pick up ship date"
-d4c93e20-a5df-4277-8e83-4c3f6c20210c,2022-10-11 00:00:00,"Change from label creation date to pick up ship date"
-8baf8e5e-7928-4d3a-ae9a-6735a3861d06,2020-11-27 00:00:00,"Change from label creation date to pick up ship date"
-3851609,2022-10-11 00:00:00,"Change from label creation date to pick up ship date"
-5041676,2023-03-03 00:00:00,"Change from label creation date to pick up ship date"
+05977f71-b2b5-4fa0-9338-4e9f3d7e7ad9,2022-01-10 00:00:00,'Change from label creation date to pick up ship date'
+156aaf07-6976-4a38-b489-39b6b2aa2ee2,2023-06-20 00:00:00,'Change from label creation date to pick up ship date'
+414bcc58-2475-4104-b06f-9653e80e2847,2021-11-29 00:00:00,'Change from label creation date to pick up ship date'
+42714b45-1d7c-4d58-93f4-7d1005ade59b,2023-07-31 00:00:00,'Change from label creation date to pick up ship date'
+65f6034d-fb93-4c9e-a714-c5dab41b58ee,2021-03-29 00:00:00,'Change from label creation date to pick up ship date'
+8672ccf3-382c-417f-b936-332715a1f925,2022-01-07 00:00:00,'Change from label creation date to pick up ship date'
+9f89e120-160e-47f2-84ab-76db2c5d8556,2023-03-02 00:00:00,'Change from label creation date to pick up ship date'
+b40c2ec6-6d2a-46e3-b200-ce93fabed0be,2021-08-27 00:00:00,'Change from label creation date to pick up ship date'
+bdbf9140-bf2b-4553-8416-ebc69442349d,2021-09-07 00:00:00,'Change from label creation date to pick up ship date'
+bf784f45-26bd-4a0e-8d28-49f5a2ddd8d7,2022-03-28 00:00:00,'Change from label creation date to pick up ship date'
+c20c53e0-30e2-47ff-acc9-16a953dbdabf,2023-04-18 00:00:00,'Change from label creation date to pick up ship date'
+d306531d-dbd6-4c9e-ba69-345829f8b950,2022-10-11 00:00:00,'Change from label creation date to pick up ship date'
+db389531-a926-4b39-a991-31fd245b2584,2021-04-29 00:00:00,'Change from label creation date to pick up ship date'
+f2441fee-ef2e-47fe-b760-9942888b0db2,2020-11-27 00:00:00,'Change from label creation date to pick up ship date'

@@ -42,6 +42,7 @@ select
     case
         when orders.promised_shipping_date > '2019-10-01'
             then orders.promised_shipping_date end                                         as promised_shipping_at_to_customer,
+    convert_timezone(destination_timezone, promised_shipping_at_to_customer)               as localized_promised_shipping_at_to_customer,
     orders.completed_at,
 
     -- Orders: Other Fields
@@ -259,6 +260,7 @@ select
     docs.po_active_company_entity,
     docs.po_active_support_ticket_id,
     docs.po_active_promised_shipping_at_by_supplier as promised_shipping_at_by_supplier,
+    convert_timezone(origin_timezone, po_active_promised_shipping_at_by_supplier)               as localized_promised_shipping_at_by_supplier,
 
     --Documents: All Purchase Orders
     docs.number_of_purchase_orders,
@@ -305,6 +307,7 @@ select
 
     -- Logistics: Shipping Dates
     logistics.shipped_at as order_shipped_at, -- Prefix to avoid ambiguous field
+    convert_timezone(origin_timezone, logistics.shipped_at)               as localized_order_shipped_at,
     logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
     logistics.shipment_label_created_at,
