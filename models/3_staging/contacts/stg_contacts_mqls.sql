@@ -3,7 +3,7 @@ with legacy as (
             first_upload_at
             from {{ source('data_lake', 'legacy_mqls') }}
     ),
-    opportunity as (
+    cart as (
             select 
             hubspot_contact_id, 
             created_at as became_cart_date,
@@ -12,8 +12,22 @@ with legacy as (
             rank() over (partition by hubspot_contact_id order by created_at asc) as rnk_asc_hubspot_contact_id    
              
             from {{ ref('fact_orders') }}
+    ),  
+    deleted_cart as (
+        select distinct
+        contact_id
+        from {{ ref('stg_hs_contacts_attributed_prep') }} contacts
+        where first_cart_uuid not in (
+        select uuid from {{ ref('prep_supply_orders') }})
     ),    
-    empty_cart as (
+    empty_cart_1 as (
+        select distinct
+        contact_id
+        from {{ ref('stg_hs_contacts_attributed_prep') }} contacts
+        where first_cart_uuid not in (
+        select uuid from {{ source('int_service_supply', 'cnc_orders') }})
+    ),    
+    empty_cart_2 as (
         select distinct
         users.hubspot_contact_id
         from {{ source('int_service_supply', 'cnc_orders') }} orders
@@ -31,12 +45,16 @@ with legacy as (
                case when lower(hc.hutk_analytics_first_url) ~ 'shallow' then 'shallowlink'
                     when lower(hc.hutk_analytics_first_url) ~ 'quicklink' then 'quicklink'
                     when integration_platform_type is not null then integration_platform_type 
-                    when opportunity.hubspot_contact_id is not null  then 'cart'  
-                    when empty_cart.hubspot_contact_id is not null then 'empty_cart' else 'subscriber' end else 'legacy' end as mql_type
+                    when cart.hubspot_contact_id is not null  then 'cart'  
+                    when deleted_cart.contact_id is not null then 'deleted_cart'
+                    when empty_cart_1.contact_id is not null then 'empty_cart'
+                    when empty_cart_2.hubspot_contact_id is not null then 'empty_cart' else 'unknown_cart_details' end else 'legacy' end as mql_type
     from {{ ref('stg_hs_contacts_attributed_prep') }} hc
             left join legacy on legacy.email = hc.email
-            left join opportunity on opportunity.hubspot_contact_id = hc.contact_id and rnk_asc_hubspot_contact_id = 1
-            left join empty_cart on empty_cart.hubspot_contact_id = hc.contact_id
+            left join cart on cart.hubspot_contact_id = hc.contact_id and rnk_asc_hubspot_contact_id = 1
+            left join deleted_cart on deleted_cart.contact_id = hc.contact_id
+            left join empty_cart_1 on empty_cart_1.contact_id = hc.contact_id
+            left join empty_cart_2 on empty_cart_2.hubspot_contact_id = hc.contact_id
             -- This code could be reconsidered end of year to remove empty carts and subscribers as mql type from the total. This was reverted in May after talking to Merrit. 
             -- where least( 
             --    legacy.first_upload_at,
