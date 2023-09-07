@@ -54,6 +54,8 @@ select base.created_at,
        base.team_invite_status,
        base.is_team_member,
        base.platform_user_created_at,
+       -- Salesforce fields
+       base.salesforce_18_digit_id,
        -- Advertising Fields
        ad.advertising_gclid,
        ad.advertising_msclkid,

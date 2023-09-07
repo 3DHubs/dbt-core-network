@@ -38,7 +38,8 @@ select nullif(property_lifecyclestage__value, '')::varchar(1024)                
        nullif(property_phone__value, '')::varchar(64)                                                   as phone,
        nullif(property_anonymous_order_uuid__value, '')::varchar(512)                                   as first_cart_uuid,
        rank() over (partition by first_cart_uuid order by createdate, contact_id)                       as rnk_asc_cart,     
-       false                                                                                            as is_legacy
+       false                                                                                            as is_legacy,
+       nullif(property_sf_18_digit_id__value, '')::varchar(1024)                                        as sf_18_digit_id
 
 from {{ source('ext_hubspot', 'contacts') }}
 left join {{ ref ('hubspot_spam_contacts') }} hsc on hsc.recipient = property_email__value and property_createdate__value::timestamp >='2023-01-01'

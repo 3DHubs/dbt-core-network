@@ -35,7 +35,8 @@ with hc as (
            lead_source as contact_source, 
            jobtitle,
            is_legacy,
-           first_cart_uuid
+           first_cart_uuid,
+           sf_18_digit_id
     from {{ ref('stg_hs_contacts_union_legacy') }} hc
     left join {{ ref('prep_countries') }} dc on (lower(dc.name) = lower(hc.country) or lower(dc.alpha2_code) = lower(hc.country))
 )
@@ -85,6 +86,7 @@ select hc.contact_id,
        hc.contact_source,
        hc.jobtitle,
        is_legacy,
+       hc.sf_18_digit_id,
        hc.first_cart_uuid,
        case
            when lower(hutk_analytics_source) ~ 'offline' and

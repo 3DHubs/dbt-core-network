@@ -6,6 +6,7 @@ select
     dc.is_part_of_company,
     dc.is_integration_contact,
     dc.hubspot_contact_id,
+    dc.salesforce_18_digit_id,
     dc.hubspot_owner_name,
     dc.hubspot_owner_primary_team_name,
     dc.last_contacted_at,
