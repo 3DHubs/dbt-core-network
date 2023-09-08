@@ -110,4 +110,5 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('prep_supply_buffers')}}  as buffers on docs.sourced_at::date = buffers.date and 
     case when logistics.origin_country not in ('United States', 'China', 'India', 'Mexico') then 'Row' else logistics.origin_country end = buffers.supplier_country and logistics.cross_dock_country = buffers.crossdock_country
     left join delay_aggregates as dagg on orders.uuid = dagg.order_uuid
-    left join delay_pred dp on dp.order_uuid = orders.uuid
+    left join delay_pred dp on dp.order_uuid = orders.uuid and dp.row=1
+
