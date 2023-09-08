@@ -343,6 +343,8 @@ select
     otr.first_delay_created_at,
     -- Buffer Value
     otr.first_leg_buffer_value,
+    -- Delay Probability
+    otr.delay_probability,
 
     -------- SOURCE: AGG ORDERS LINE ITEMS --------
 
