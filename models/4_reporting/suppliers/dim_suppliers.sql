@@ -120,6 +120,7 @@ select
     stg_dim_suppliers.address,
     stg_dim_suppliers.longitude,
     stg_dim_suppliers.latitude,
+    stg_dim_suppliers.timezone,
     agg.sa_supplier_id,
     agg.first_seen_at,
     agg.last_seen_at,

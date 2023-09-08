@@ -46,6 +46,7 @@ with stg_states as (
                 sa.address_line1 || ' ' || coalesce(sa.address_line2, ' ')                   as address,
                 sa.lon                                                                       as longitude,
                 sa.lat                                                                       as latitude,
+                sa.timezone                                                                  as timezone,
                 case when country_name = 'United States' then 'US'
                      when country_name = 'Mexico' then 'Mexico'
                      when country_name = 'India' THEN 'India'
@@ -90,6 +91,7 @@ select supplier_id,
        address,
        longitude,
        latitude,
-       state
+       state,
+       timezone
 from t2
 where rn = 1
