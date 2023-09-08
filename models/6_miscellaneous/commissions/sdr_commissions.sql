@@ -45,11 +45,16 @@ with seed_file_data as (
             left join {{ ref('dim_suppliers') }} as ds on tsf.supplier_id = ds.supplier_id
     ),
 
-    supplier_sourced_amounts as (
+    supplier_sourced_amounts as ( select
+                                      supplier_id,
+                                      supplier_name,
+                                      sourced_quarter,
+                                      sum(quarterly_sourced_revenue) quarterly_sourced_revenue
+                                  from (
         select fo.supplier_id,
             fo.supplier_name,
             date_trunc('quarter', fo.sourced_at)::date as sourced_quarter,
-            sum(fo.subtotal_sourced_amount_usd)  as quaterly_sourced_revenue -- Sourced amount per supplier per quarter eligible for commission
+            sum(fo.subtotal_sourced_amount_usd)  as quarterly_sourced_revenue -- Sourced amount per supplier per quarter eligible for commission
         from {{ ref('fact_orders') }} as fo
             left join determine_commission_dates as dcd on fo.supplier_id = dcd.supplier_id
         where fo.sourced_at is not null
@@ -57,13 +62,21 @@ with seed_file_data as (
         and fo.sourced_at >= dcd.commission_start_at  -- Only the amount sourced during the commission period is calculated
         and fo.sourced_at <= dcd.commission_end_at    -- Only the amount sourced during the commission period is calculated
         group by 1, 2, 3
+        union all
+        select supplier_id,
+               supplier_name,
+               commission_start_at as sourced_quarter,
+               0 as quarterly_sourced_revenue
+            from determine_commission_dates)
+                                           group by 1,2,3
+
     )
 
 select row_number() over (ORDER BY ssa.sourced_quarter asc)                          as prim_key,
         dcd.supplier_id,
         dcd.supplier_name,
         ssa.sourced_quarter,
-        ssa.quaterly_sourced_revenue,
+        ssa.quarterly_sourced_revenue,
         dcd.sdr_owner,
         dcd.sdr_looker_email,
         dcd.sdr_start_at,
@@ -73,24 +86,23 @@ select row_number() over (ORDER BY ssa.sourced_quarter asc)                     
         dcd.commission_start_at,
         dcd.commission_end_at,
         ssa.sourced_quarter < commission_end_at                                       as eligible_for_bonus,  -- Bonus only available before commission end period
-        dcd.commission_start_at = date_trunc('quarter', current_date)::date           as new_supplier_this_quarter,
-        case when new_supplier_this_quarter is true then 50 else 0 end                as onboarding_bonus, -- One time onboarding bonus at commission start quarter
+        case when dcd.commission_start_at = sourced_quarter then 50 else 0 end                as onboarding_bonus, -- One time onboarding bonus at commission start quarter
         -- Calculate quarterly engagement bonus
         case when eligible_for_bonus then
-            case when date_part('year', ssa.sourced_quarter) = 2022 then 
-                    case when ssa.quaterly_sourced_revenue >= 60000 then 200
-                        when ssa.quaterly_sourced_revenue >= 30000 then 100
+            case when date_part('year', ssa.sourced_quarter) = 2022 then
+                    case when ssa.quarterly_sourced_revenue >= 60000 then 200
+                        when ssa.quarterly_sourced_revenue >= 30000 then 100
                         else 0
                     end
                  when date_part('year', ssa.sourced_quarter) >= 2023 then
-                    case when ssa.quaterly_sourced_revenue > 30000 then 600
-                        when ssa.quaterly_sourced_revenue > 20000 then 300
-                        when ssa.quaterly_sourced_revenue > 10000 then 200
-                        when ssa.quaterly_sourced_revenue > 5000  then 100
+                    case when ssa.quarterly_sourced_revenue > 30000 then 600
+                        when ssa.quarterly_sourced_revenue > 20000 then 300
+                        when ssa.quarterly_sourced_revenue > 10000 then 200
+                        when ssa.quarterly_sourced_revenue > 5000  then 100
                         else 0
                     end
             end
-        else 0 
+        else 0
         end                                                                            as engagement_bonus,
 
         -- Calculate quarterly total bonus
@@ -104,11 +116,12 @@ select row_number() over (ORDER BY ssa.sourced_quarter asc)                     
                         when date_trunc('quarter', dcd.sdr_end_at) <= date_trunc('quarter', ssa.sourced_quarter) then 0
                     end
             end
-        else 0 
+        else 0
         end                                                                            as payout_availability,
 
         -- Calculate quarterly total bonus available for payout
-        case when eligible_for_bonus then total_locked_bonus * payout_availability else 0 end as unlocked_bonus, 
+        case when eligible_for_bonus then total_locked_bonus * payout_availability else 0 end as unlocked_bonus,
         case when eligible_for_bonus then onboarding_bonus + 600 else 0 end            as potential_bonus
 from determine_commission_dates as dcd
     left join supplier_sourced_amounts as ssa on dcd.supplier_id = ssa.supplier_id
+    order by 2
