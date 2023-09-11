@@ -38,7 +38,8 @@ with  quarterly_closed_amount_directors as (
 
       from quarterly_closed_amount_directors qa
       inner join quarterly_target_directors qt on qt.employee = qa.director and qt.target_date = qa.commission_date
-      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  (case when ROUND(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) > 1.5 then 1.5
+          else round(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) end)
       ),
       ------------------------------ INTEGRATION LEAD ------------------------------------
       quarterly_closed_amount_integration_lead as (
@@ -55,7 +56,7 @@ with  quarterly_closed_amount_directors as (
       quarterly_target_integration_lead as (
       select date_trunc('quarter', cr.date)                                                           as target_date,
       cr.name as employee,
-      sum(monthly_target) as target_amount_usd,
+      sum(monthly_lead_target) as target_amount_usd,
       round(target_amount_usd*0.75) as target_threshold
       from {{ ref('commission_rules') }} cr
       where role='integration lead'
@@ -74,7 +75,8 @@ with  quarterly_closed_amount_directors as (
 
       from quarterly_closed_amount_integration_lead qa
       inner join quarterly_target_integration_lead qt on qt.employee = qa.integration_lead and qt.target_date = qa.commission_date
-      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  (case when ROUND(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) > 1.5 then 1.5
+          else ROUND(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) end) 
       ),
       ------------------------------ TECHNICAL SALES MANAGER ------------------------------------
       quarterly_closed_amount_technical_manager as (
@@ -91,7 +93,7 @@ with  quarterly_closed_amount_directors as (
       quarterly_target_technical_manager as (
       select date_trunc('quarter', cr.date)                                                           as target_date,
       cr.name as employee,
-      sum(monthly_target) as target_amount_usd,
+      sum(monthly_lead_target) as target_amount_usd,
       round(target_amount_usd*0.75) as target_threshold
       from {{ ref('commission_rules') }} cr
       where role='technical manager'
@@ -110,7 +112,8 @@ with  quarterly_closed_amount_directors as (
 
       from quarterly_closed_amount_technical_manager qa
       inner join quarterly_target_technical_manager qt on qt.employee = qa.technical_manager and qt.target_date = qa.commission_date
-      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  (case when ROUND(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) > 1.5 then 1.5
+          else ROUND(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) end) 
       ),
       ------------------------------ STRATEGIC LEAD ------------------------------------
       quarterly_closed_amount_leads as (
@@ -158,7 +161,8 @@ with  quarterly_closed_amount_directors as (
 
       from quarterly_closed_amount_leads qa
       inner join quarterly_target_leads qt on qt.reports_to_lead = qa.lead_report and qt.target_date = qa.commission_date
-      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 
+      left join {{ ref('seed_sales_targets_staffel') }} on on_target =  (case when ROUND(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) > 1.5 then 1.5
+          else ROUND(ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5,2) end) 
       ),
 
       ------------------------------------ QUARTERLY COMMISSIONS ----------------------------------------
