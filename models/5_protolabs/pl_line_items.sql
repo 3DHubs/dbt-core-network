@@ -48,6 +48,7 @@ select
     complaint_is_valid,
     complaint_created_at,
     complaint_resolution_at,
+    complaint_is_conformity_issue,
     dispute_created_at,
     complaint_liability,
     complaint_type
