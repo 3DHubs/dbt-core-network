@@ -83,6 +83,7 @@ forecast_recognized as (
         where
             date_trunc('month', date_add('days', time_to_recognize, sourced_at))
             = date_trunc('month', getdate())
+            and subtotal_closed_amount_usd < 50000
         group by 1,2,3
     )
         select *

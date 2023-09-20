@@ -10,6 +10,8 @@ select
     submitted_at,
     closed_at,
     sourced_at,
+    delivered_at,
+    derived_delivered_at,
     technology_name,
     process_name,
     destination_region,
