@@ -449,6 +449,10 @@ select
     interactions.number_of_interactions,
     interactions.number_of_outgoing_emails,
     interactions.number_of_incoming_emails,
+    interactions.number_of_interactions_fd,
+    interactions.number_of_outgoing_emails_fd,
+    interactions.number_of_incoming_emails_fd,
+    interactions.number_of_notes_fd,
 
     ------ SOURCE: STG ORDER DISPUTES ---------
     -- Data from Disputes and Dispute Resolution

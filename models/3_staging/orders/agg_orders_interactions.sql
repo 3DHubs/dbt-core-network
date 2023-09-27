@@ -15,6 +15,8 @@
 select distinct
     interactions.hubspot_deal_id,
     count(distinct interactions.interaction_id) as number_of_interactions,
+    count(distinct case when interactions.source = 'Freshdesk' then interactions.interaction_id end) as number_of_interactions_fd,
+
     count(distinct
         case
             when
@@ -23,10 +25,31 @@ select distinct
     ) as number_of_outgoing_emails,
     count(distinct
         case
+            when interactions.source = 'Freshdesk' and
+                interactions.interaction_type_mapped = 'Outgoing Email' then  interaction_id
+        end
+    ) as number_of_outgoing_emails_fd,
+
+    count(distinct
+        case
             when
                 interactions.interaction_type_mapped = 'Incoming Email' then  interaction_id
         end
     ) as number_of_incoming_emails,
+    count(distinct
+        case
+            when interactions.source = 'Freshdesk' and
+                interactions.interaction_type_mapped = 'Incoming Email' then  interaction_id
+        end
+    ) as number_of_incoming_emails_fd,
+
+    count(distinct
+        case
+            when interactions.source = 'Freshdesk' and
+                interactions.interaction_type_mapped = 'Note' then  interaction_id
+        end
+    ) as number_of_notes_fd,
+
     bool_or(
         coalesce(lower(
              engagements.task_subject

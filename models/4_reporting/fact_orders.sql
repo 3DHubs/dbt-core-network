@@ -394,6 +394,10 @@ first_dispute_resolution_type,
 number_of_interactions,
 number_of_outgoing_emails,
 number_of_incoming_emails,
+number_of_interactions_fd,
+number_of_outgoing_emails_fd,
+number_of_incoming_emails_fd,
+number_of_notes_fd,
 
 -- Freshdesk
 change_request_status,
