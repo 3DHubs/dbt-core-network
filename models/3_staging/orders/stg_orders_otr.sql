@@ -57,7 +57,7 @@ select distinct orders.uuid                              as order_uuid,
                 end as promised_shipping_at_by_supplier_pick_up_adjusted,
                 
                 case
-                    when promised_shipping_at_by_supplier_pick_up_adjusted > getdate() then null
+                    when po_active_promised_shipping_at_by_supplier >= getdate() then null
                     when promised_shipping_at_by_supplier_pick_up_adjusted is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
                          logistics.shipped_at is null
