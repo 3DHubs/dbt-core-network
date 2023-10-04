@@ -31,7 +31,7 @@ with  quarterly_closed_amount_directors as (
       employee,
       target_amount_usd, 
       subtotal_closed_amount_usd,
-      'Quarterly Director'::text as commission_plan,
+      'Quarterly Director/TSM'::text as commission_plan,
       case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
       ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
       case when quarterly_bonus_to_be_paid = true then coalesce((20000*bonus),1)  end as commission_usd
@@ -68,7 +68,7 @@ with  quarterly_closed_amount_directors as (
       employee,
       target_amount_usd, 
       subtotal_closed_amount_usd,
-      'Integration Lead'::text as commission_plan,
+      'Quarterly Integration Lead'::text as commission_plan,
       case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
       ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
       case when quarterly_bonus_to_be_paid = true then coalesce((7000*bonus),1)  end as commission_usd
@@ -105,7 +105,7 @@ with  quarterly_closed_amount_directors as (
       employee,
       target_amount_usd, 
       subtotal_closed_amount_usd,
-      'Technical Sales Manager'::text as commission_plan,
+      'Quarterly Director/TSM'::text as commission_plan,
       case when subtotal_closed_amount_usd > target_threshold then true else false end as quarterly_bonus_to_be_paid,
       ROUND((subtotal_closed_amount_usd *1.0 / nullif(target_amount_usd,0))/5,2) * 5 as percent_of_target,
       case when quarterly_bonus_to_be_paid = true then coalesce((15000*bonus),1)  end as commission_usd
