@@ -57,7 +57,7 @@ select distinct orders.uuid                              as order_uuid,
                 end as promised_shipping_at_by_supplier_pick_up_adjusted,
                 
                 case
-                    when po_active_promised_shipping_at_by_supplier >= getdate() then null
+                    when dateadd(day, 1, po_active_promised_shipping_at_by_supplier) > getdate() then null
                     when promised_shipping_at_by_supplier_pick_up_adjusted is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
                          logistics.shipped_at is null
@@ -66,12 +66,12 @@ select distinct orders.uuid                              as order_uuid,
                     when logistics.shipped_at > promised_shipping_at_by_supplier_pick_up_adjusted then false
                     when logistics.shipped_at <= promised_shipping_at_by_supplier_pick_up_adjusted then true
                     when logistics.shipped_at is null and
-                         dateadd(day, 1, promised_shipping_at_by_supplier_pick_up_adjusted) < current_date then false
+                         dateadd(day, 1, promised_shipping_at_by_supplier_pick_up_adjusted) < getdate() then false
                     else null
                     end                                  as is_shipped_on_time_by_supplier, -- Switched to as main calculation in July 2023
 
                 case
-                    when orders.promised_shipping_date > getdate() then null
+                    when dateadd(day, 1, orders.promised_shipping_date) > getdate() then null
                     when orders.promised_shipping_date is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
                          logistics.shipped_to_customer_at is null then null
@@ -79,8 +79,7 @@ select distinct orders.uuid                              as order_uuid,
                     when hs.delay_reason = 'customer_requested_hold' and logistics.shipped_to_customer_at > orders.promised_shipping_date  then null
                     when logistics.shipped_to_customer_at > orders.promised_shipping_date then false
                     when logistics.shipped_to_customer_at <= orders.promised_shipping_date then true
-                    when logistics.shipped_to_customer_at is null and
-                         dateadd(day, 1, orders.promised_shipping_date) < current_date
+                    when logistics.shipped_to_customer_at is null and dateadd(day, 1, orders.promised_shipping_date) < getdate()
                         then false
                     else null
                     end                                  as is_shipped_on_time_to_customer,
