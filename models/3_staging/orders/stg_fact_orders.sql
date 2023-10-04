@@ -245,6 +245,7 @@ select
     docs.number_of_quote_versions,
     docs.has_admin_created_quote,
     docs.has_manual_quote_review,
+    docs.has_request_review,
 
     --Documents: First Purchase Order
     docs.po_first_uuid,

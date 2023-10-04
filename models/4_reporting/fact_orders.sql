@@ -137,6 +137,7 @@ quote_first_created_by_admin,
 number_of_quote_versions,
 has_admin_created_quote,
 has_manual_quote_review,
+has_request_review,
 
 -- Company Attributes
 hubspot_company_name,

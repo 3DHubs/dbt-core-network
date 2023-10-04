@@ -85,7 +85,8 @@ with first_quote as (
                         else 0 end)                               as                      has_non_locked_quote_review,
                 case
                     when has_admin_created_quote = true or has_non_locked_quote_review > 0 then true
-                    else false end                                                        has_manual_quote_review
+                    else false end                                                        has_manual_quote_review,
+                case when  has_non_locked_quote_review > 0 then true else false end as has_request_review
          from {{ ref('prep_supply_documents') }}
          where type = 'quote'
          group by 1
@@ -257,6 +258,7 @@ select -- First Quote
        aaq.number_of_quote_versions,
        aaq.has_admin_created_quote,
        aaq.has_manual_quote_review,
+       aaq.has_request_review,
 
        -- First PO
        fpo.po_first_uuid,
