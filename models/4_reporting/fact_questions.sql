@@ -33,7 +33,7 @@ with
 
         -- open questions
         select
-            bq.uuid,
+            max(bq.uuid) uuid,
             bq.order_uuid,
             bq.line_item_uuid,
             bq.status,
@@ -46,6 +46,7 @@ with
             bq.answer_text as answer,
             bq.answer_attachment_uuid is not null as has_attachment
         from {{ source('int_service_supply', 'base_question') }} as bq
+        group by 2,3,4,5,6,7,8,9,10,11,12
     )
 
 select
