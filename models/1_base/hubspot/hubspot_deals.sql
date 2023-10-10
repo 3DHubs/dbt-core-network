@@ -136,7 +136,9 @@ select
     ) as pl_business_development_manager_id,
     case
         when property_sales_priced__value = 'true' then true else false
-    end as is_sales_priced
+    end as is_sales_priced,
+    nullif(property_tracking_number__value, '')::varchar(124) as hubspot_tracking_number,
+    nullif(property_tracking_link__value, '')::varchar(124) as hubspot_tracking_link
 from deals as ehd
 left join
     (

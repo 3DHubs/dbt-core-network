@@ -77,13 +77,29 @@ with
             ) as tracking_delivered_at
         from {{ ref("fact_aftership_messages") }} as fam
         group by 1
-    )
+    ),
+    hubspot_tracking_info as 
+    ( 
+        select 
+        orders.hubspot_deal_id,
+        orders.uuid,
+        hubspot_deals.hubspot_tracking_number as tracking_number,
+        hubspot_deals.hubspot_tracking_link as tracking_link
+        
+    from {{ ref('prep_supply_orders') }} as orders 
+    left join {{ ref('hubspot_deals') }} as hubspot_deals on orders.hubspot_deal_id = hubspot_deals.deal_id
+    ),
 
+fact_shipments as
+
+(
+ 
 select
     -- Identifiers
     s.order_uuid,
     s.package_uuid as batch_uuid,
-    s.tracking_number,
+    coalesce(s.tracking_number,hubspot_tracking_info.tracking_number) as tracking_number,
+    hubspot_tracking_info.tracking_link,
 
     -- Dates
     s.created as shipment_created_at,
@@ -196,4 +212,90 @@ left join {{ ref("stg_orders_geo") }} as sog on s.order_uuid = sog.order_uuid
 left join
     {{ ref("prep_supply_integration") }} as integration
     on integration.order_uuid = s.order_uuid
+left join
+    hubspot_tracking_info
+    on s.order_uuid = hubspot_tracking_info.uuid
+
 where integration.is_test is not true
+),
+
+not_matched_hubspot as (
+    select hti.*
+    from hubspot_tracking_info hti
+    left join fact_shipments fs on hti.uuid = fs.order_uuid
+    where fs.order_uuid is null
+),
+
+complete_fact_shipments as (
+select order_uuid,
+       batch_uuid,
+       tracking_number,
+       tracking_link,
+       shipment_created_at,
+       shipment_delivered_at,
+       shipment_estimated_delivery_at,
+       carrier_name_mapped,
+       carrier_name,
+       tracking_url,
+       shipment_status,
+       tracking_last_message_received_at,
+       tracking_last_status,
+       tracking_last_message,
+       is_platform_label,
+       adjusted_shipping_leg,
+       shipping_leg,
+       origin_country,
+       destination_country,
+       destination_region,
+       has_logistics_message_alert,
+       number_logistics_message_alerts,
+       has_tracking_status_alert,
+       number_tracking_status_alerts,
+       is_valid_shipment,
+       tracking_received_by_carrier_at,
+       tracking_available_for_pick_up_at,
+       tracking_estimated_delivery,
+       tracking_delivered_at,
+       days_since_last_message_update,
+       is_first_shipment_of_leg
+       from fact_shipments
+union
+select 
+       uuid,
+       null as batch_uuid,
+       tracking_number,
+       tracking_link,
+       null as shipment_created_at,
+       null as shipment_delivered_at,
+       null as shipment_estimated_delivery_at,
+       null as carrier_name_mapped,
+       null as carrier_name,
+       null as tracking_url,
+       null as shipment_status,
+       null as tracking_last_message_received_at,
+       null as tracking_last_status,
+       null as tracking_last_message,
+       null as is_platform_label,
+       null as adjusted_shipping_leg,
+       null as shipping_leg,
+       null as origin_country,
+       null as destination_country,
+       null as destination_region,
+       null as has_logistics_message_alert,
+       null as number_logistics_message_alerts,
+       null as has_tracking_status_alert,
+       null as number_tracking_status_alerts,
+       null as is_valid_shipment,
+       null as tracking_received_by_carrier_at,
+       null as tracking_available_for_pick_up_at,
+       null as tracking_estimated_delivery,
+       null as tracking_delivered_at,
+       null as days_since_last_message_update,
+       null as is_first_shipment_of_leg
+       from not_matched_hubspot
+       where lower(not_matched_hubspot.tracking_number) like '%freight%'
+
+)
+
+select * from complete_fact_shipments
+
