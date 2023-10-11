@@ -36,10 +36,10 @@
 
 
 {% macro back_up_to_datalake(source_name, table_name, ref_bool=True) -%}
-    -- Code adjustment ensures that code only runs in prod not in dev
-    -- Source name examples: dbt_prod_reporting or datalake
-    -- Table name is the table you would like to back up
-    -- ref inidicates if the table comes from a source or reference
+    /* Code adjustment ensures that code only runs in prod not in dev
+    Source name examples: dbt_prod_reporting or datalake
+    Table name is the table you would like to back up
+    ref inidicates if the table comes from a source or reference */
 
     {% if target.schema == 'dbt_prod' | as_bool %}
 
@@ -51,14 +51,12 @@
 
             drop table if exists {{ source('dbt_backups', backup_table_name_str) }};
             create table {{ source('dbt_backups', backup_table_name_str) }} as
-            select getdate() as backup_date, * from {{ref(table_name_str)}};
-
+            select getdate() as backup_date, * from {{ref(table_name_str)}}
         {% else %}
 
             drop table if exists {{ source('dbt_backups', backup_table_name_str) }};
             create table {{ source('dbt_backups', backup_table_name_str) }} as
-            select getdate() as backup_date, * from {{ source(source_name_str, table_name_str) }};
-
+            select getdate() as backup_date, * from {{ source(source_name_str, table_name_str) }}
         {% endif %}
 
     {% else %}
