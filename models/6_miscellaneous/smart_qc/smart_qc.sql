@@ -204,7 +204,7 @@ WHERE
     AND ( fact_orders.order_shipped_at  ) >= ((DATEADD(month,-12, DATE_TRUNC('quarter', DATE_TRUNC('quarter', DATE_TRUNC('day',GETDATE()))) )))
     AND (fact_line_items.line_item_type ) = 'part'
     and should_qc_bool = 'true'
-    and where (lower(smart_qc.country_code) in ('cn', 'in') or lower(smart_qc.continent) = 'eu')
+    and (lower(smart_qc.country_code) in ('cn', 'in') or lower(smart_qc.continent) = 'eu')
 
 
 GROUP BY
