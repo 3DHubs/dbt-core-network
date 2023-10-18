@@ -189,6 +189,7 @@ select
     rda.winning_shipping_estimate_amount_usd,
     rda.winning_l1_shipping_margin_amount_usd,
     rda.l1_shipping_estimate_source,
+    rda.winning_bid_original_ship_by_date as original_shipping_at_by_supplier,
     rda.has_winning_bid,
     rda.has_accepted_winning_bid,
     rda.has_restricted_winning_bid,

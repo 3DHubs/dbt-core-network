@@ -118,7 +118,7 @@ select
        agg_orders.total_precalc_margin_usd_new_customer_company                  as precalc_margin_usd_new_customer,
        agg_orders.first_submitted_order_technology_company                       as first_submitted_order_technology,
        agg_orders.first_closed_order_technology_company                          as first_closed_order_technology,
-       agg_orders.is_integration_company                                         as is_integration_company,
+       nvl(agg_orders.is_integration_company,false)                              as is_integration_company,
 
        -- Aggregates from Contacts
        acc.number_of_inside_mqls,
