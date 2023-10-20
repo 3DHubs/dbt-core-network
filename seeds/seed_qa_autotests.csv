@@ -41,3 +41,6 @@ date,scope,autotests_qty,autotests_skipped,avg_run_duration
 2023/10/09,FE,67,23,10.8
 2023/10/09,Supply,75,26,12.5
 2023/10/09,MR,0,0,0.0
+2023/10/16,FE,68,23,9.97
+2023/10/16,Supply,75,26,10.6
+2023/10/16,MR,0,0,0.0
