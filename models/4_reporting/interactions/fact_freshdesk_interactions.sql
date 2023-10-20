@@ -10,12 +10,14 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                 support_email,
                 nullif(regexp_substr(con.from_email, '\\w+@\\w+\\.\\w+', 1, 1), '') as from_email,
                 case
+                    when agent_name = 'Dev Ops' then 'Dev Ops'
                     when con.source = 2 and con.category = 6 then 'agent reply'/*  */
                     when con.private then 'note'
                     when con.category = 3 then 'agent reply'
                     else 'customer reply' end                                       as interaction_type,
                 case when interaction_type = 'agent reply' then 1 else 0 end        as agent_interaction_count,
-                con.private::int                                                    as internal_interaction_count,
+                case when con.private is true and agent_name != 'Dev Ops' then 1 
+                    else 0 end                                                      as internal_interaction_count,
                 con.incoming::int                                                   as customer_interaction_count,
                 false                                                               as /*  */is_first_interaction,
                 t.ticket_tag_3d_hubs                                                as ticket_tag,
@@ -39,12 +41,14 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                 support_email,
                 nullif(regexp_substr(con.from_email, '\\w+@\\w+\\.\\w+', 1, 1), '') as from_email,
                 case
+                    when agent_name = 'Dev Ops' then 'Dev Ops'
                     when con.source = 2 and con.category = 6 then 'agent reply'
                     when con.private then 'note'
                     when con.category = 3 then 'agent reply'
                     else 'customer reply' end                                       as interaction_type,
                 case when interaction_type = 'agent reply' then 1 else 0 end        as agent_interaction_count,
-                con.private::int                                                    as internal_interaction_count,
+                case when con.private is true and agent_name != 'Dev Ops' then 1 
+                    else 0 end                                                      as internal_interaction_count,
                 con.incoming::int                                                   as customer_interaction_count,
                 false                                                               as is_first_interaction,
                 t.ticket_tag_3d_hubs                                                as ticket_tag,
