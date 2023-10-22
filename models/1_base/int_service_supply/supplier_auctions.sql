@@ -9,7 +9,7 @@
     ]
 %}
 
-select supplier_id,
+select distinct supplier_id,
        auction_uuid,
        assigned_at,
        last_seen_at,
