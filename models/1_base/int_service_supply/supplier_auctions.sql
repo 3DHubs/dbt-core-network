@@ -1,3 +1,8 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
 {% set boolean_fields = [
     "is_dismissed",
     "is_automated_shipping_available",
