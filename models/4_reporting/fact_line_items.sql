@@ -60,7 +60,7 @@ select     li.order_uuid,
            li.li_updated_at,
            li.id                                                                      as line_item_id,
            case when li.type = 'part' then
-           row_number() over (partition by li.quote_uuid, li.type order by li.id asc)
+           row_number() over (partition by li.quote_uuid, li.type order by li.title,li.id asc)
            else null end                                                              as line_item_number,
            li.uuid                                                                    as line_item_uuid,
            li.quote_uuid,
