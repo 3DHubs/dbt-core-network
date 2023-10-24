@@ -1,8 +1,3 @@
-{{
-    config(
-        materialized='table'
-    )
-}}
 {% set boolean_fields = [
     "is_dismissed",
     "is_automated_shipping_available",
@@ -14,7 +9,7 @@
     ]
 %}
 
-select distinct supplier_id,
+select supplier_id,
        auction_uuid,
        assigned_at,
        last_seen_at,
