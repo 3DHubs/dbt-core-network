@@ -31,9 +31,8 @@ select
     nullif(property_delay_liability__value, '')::varchar(124) as delay_liability,
     nullif(property_delay_reason__value, '')::varchar(124) as delay_reason,
     nullif(property_in_review_reason__value, '')::varchar(124) as in_review_reason,
-    nullif(property_cancellation_reason__value, '')::varchar(
-        124
-    ) as cancellation_reason,
+    nullif(property_cancellation_reason__value, '')::varchar(124) as cancellation_reason,
+    nullif(property_mp_concerning_actions__value, '')::varchar(124) as mp_concerning_actions,
     (
         timestamp 'epoch'
         + property_first_time_quote_sent_date__value / 1000 * interval '1 second'

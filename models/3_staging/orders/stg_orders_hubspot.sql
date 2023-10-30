@@ -98,6 +98,7 @@ with stg as (
         im_deal_type,
         original_im_deal_s_order_number as original_im_order_document_number,
         critical_to_quality_check_complete as ctq_check,
+        hs.mp_concerning_actions,
 
         -- Sales Fields
         is_sales_priced,

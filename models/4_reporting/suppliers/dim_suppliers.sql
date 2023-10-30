@@ -73,7 +73,8 @@ agg_fo as (
     select 
         fo.supplier_id,
         sum(case when fo.sourced_at is not null then 1 else 0 end) as orders_sourced_in_life_time,
-        sum(case when fo.derived_delivered_at is not null then 1 else 0 end) as orders_delivered_in_life_time
+        sum(case when fo.derived_delivered_at is not null then 1 else 0 end) as orders_delivered_in_life_time,
+        sum(case when fo.mp_concerning_actions is not null then 1 else 0 end) as concerning_actions_in_life_time
     from {{ ref('fact_orders') }} as fo 
     group by 1
 
@@ -89,7 +90,8 @@ stg_deals as (
         fst.first_sourced_order,
         fst.last_sourced_order,
         af.orders_sourced_in_life_time,
-        af.orders_delivered_in_life_time
+        af.orders_delivered_in_life_time,
+        af.concerning_actions_in_life_time
     from fst
     left join agg_fo as af on fst.supplier_id = af.supplier_id
     where fst.supplier_id >= 1
@@ -136,6 +138,7 @@ select
     stg_deals.first_technology,
     stg_deals.orders_sourced_in_life_time,
     stg_deals.orders_delivered_in_life_time,
+    stg_deals.concerning_actions_in_life_time,
     stg_deals.first_sourced_order,
     stg_deals.last_sourced_order
 from {{ ref('stg_dim_suppliers') }}

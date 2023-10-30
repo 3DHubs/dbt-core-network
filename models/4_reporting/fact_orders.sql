@@ -246,6 +246,7 @@ qc_inspection_result,
 qc_inspection_result_latest,
 in_country_qc_status,
 pl_cross_sell_channel,
+mp_concerning_actions,
 
 
 -- Hubspot Owners
