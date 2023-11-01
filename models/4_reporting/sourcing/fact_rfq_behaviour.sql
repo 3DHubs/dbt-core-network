@@ -16,14 +16,6 @@ with
         from {{ ref("supplier_auctions") }}
 
     ),
-    winning_bid as (
-        select oqsl.parent_uuid as uuid
-        from {{ ref("prep_supply_documents") }} oqsl
-        inner join {{ ref("prep_purchase_orders") }} spocl on oqsl.uuid = spocl.uuid
-        where oqsl.type = 'purchase_order' and spocl.status = 'active'
-        group by 1
-
-    ),
     freshdesk_rfq_value as (
         select order_uuid,
         requester_email_domain,
@@ -32,6 +24,15 @@ with
         where
             "group" in ('Injection Molding EU/RoW', 'Injection Molding US/CA')
             and value is not null
+    ),
+    -- applicable to orders before July 2023
+     winning_bid_legacy as ( 
+        select oqsl.parent_uuid as uuid
+        from {{ ref("prep_supply_documents") }} oqsl
+        inner join {{ ref("prep_purchase_orders") }} spocl on oqsl.uuid = spocl.uuid
+        where oqsl.type = 'purchase_order' and spocl.status = 'active'
+        group by 1
+
     ),
     -- Data from Bids (RFQ)
     supplier_rfq_bids as (
@@ -42,6 +43,7 @@ with
             bids.lead_time,
             bids.placed_at,
             bids.uuid as bid_uuid,
+            case when bids.uuid = coalesce(auctions.winner_bid_uuid,winning_bid_legacy.uuid) then true else false end as is_winning_bid,
             bids.supplier_id,
             bids.accepted_ship_by_date,
             bids.ship_by_date,
@@ -55,6 +57,8 @@ with
         inner join  -- Inner Join to Filter on RFQ
             {{ ref("prep_auctions_rfq") }} as auctions
             on auctions.order_quotes_uuid = bids.auction_uuid
+        left join winning_bid_legacy
+            on winning_bid_legacy.uuid = bids.uuid
     ),
 
     -- Data from Supplier-Auctions (RFQ) + Auctions (RFQ)
@@ -71,10 +75,10 @@ with
         from stg_supplier_auctions as sa
         inner join  -- Inner Join to Filter on RFQ
             {{ ref("prep_auctions_rfq") }} sr on sr.order_quotes_uuid = sa.auction_uuid
-    ),
+    )
 
     -- Combines Supplier-Auctions + Bid Data + Others
-    supplier_rfq_auction_interactions as (
+
         select
             -- Data from Supplier-Auctions (RFQ)
             rfq_a.supplier_rfq_uuid as supplier_rfq_uuid,
@@ -94,7 +98,7 @@ with
             round(
                 ((bid_quotes.subtotal_price_amount / 100.00) / rates.rate), 2
             )::decimal(15, 2) as rfq_bid_amount_usd,
-            case when winning_bid.uuid > 0 then true else false end as is_winning_bid,
+            bid_quotes.is_winning_bid,
             bid_quotes.placed_at as supplier_rfq_responded_date,
             bid_quotes.accepted_ship_by_date,
             bid_quotes.ship_by_date,
@@ -136,81 +140,7 @@ with
             {{ ref("exchange_rate_daily") }} as rates
             on rates.currency_code_to = bid_quotes.currency_code
             and trunc(bid_quotes.created) = trunc(rates.date)
-        left outer join winning_bid on bid_quotes.bid_uuid = winning_bid.uuid
         left outer join freshdesk_rfq_value frv on frv.order_uuid =  rfq_a.order_uuid and frv.requester_email_domain = sds.supplier_email_domain
-    ),
+    
 
-    -- -------- SOURCE: 2. SUPPLIER RFQs ----------------------
-    -- Query old supplier RFQs - these are orders that were RFQ'ed before we automated
-    -- the RFQ process (and also started creating an auction for supplier RFQs)
-    -- Supplier_rfqs only allows 1 RFQ request per supplier (per order) when in
-    -- reality an order can have mulitple RFQ requests from the same order
-    -- so this is the supplier RFQ table is only used to collect historical data.
-    supplier_rfqs as (
-        select
-            supplier_rfqs.id::varchar as supplier_rfq_uuid,
-            supplier_rfqs.order_uuid,
-            null as auction_uuid,
-            null as auction_document_number,
-            supplier_rfqs.supplier_id,
-            null as is_automatically_allocated_rfq,  -- Feature only exists in new data
-            supplier_rfqs.created as supplier_rfq_sent_date,
-            null as original_ship_by_date,
-            s.name as supplier_name,
-            bid_quotes.lead_time,
-            round(bid_quotes.subtotal_price_amount / 100.00, 2) as rfq_bid_amount,
-            bid_quotes.currency_code as rfq_bid_amount_currency,
-            round(
-                ((bid_quotes.subtotal_price_amount / 100.00) / rates.rate), 2
-            )::decimal(15, 2) as rfq_bid_amount_usd,
-            case when winning_bid.uuid > 0 then true else false end as is_winning_bid,
-            bid_quotes.placed_at as supplier_rfq_responded_date,
-            bid_quotes.accepted_ship_by_date,
-            bid_quotes.ship_by_date,
-            null as bid_estimated_first_leg_customs_amount_usd,
-            null as bid_estimated_second_leg_customs_amount_usd,
-            case
-                when bid_quotes.placed_at is not null
-                then
-                    rank() over (
-                        partition by supplier_rfqs.order_uuid, supplier_rfqs.supplier_id
-                        order by
-                            is_winning_bid desc,
-                            coalesce(bid_quotes.placed_at, '2000-01-01') desc
-                    )
-            end as win_rate_rank,
-            case
-                when win_rate_rank = 1 and is_winning_bid
-                then 1
-                when win_rate_rank = 1
-                then 0
-                else null
-            end as supplier_win_rate,
-            'supplier_rfqs' as data_source,
-            null as requester_email_domain,
-            null as quality_value_score
 
-        from {{ source("int_service_supply", "supplier_rfqs") }} as supplier_rfqs
-        left outer join
-            supplier_rfq_bids as bid_quotes
-            on supplier_rfqs.order_uuid = bid_quotes.bid_uuid
-            and bid_quotes.supplier_id = supplier_rfqs.supplier_id
-            and supplier_bid_idx = 1
-        left outer join {{ ref("suppliers") }} as s on s.id = supplier_rfqs.supplier_id
-        left outer join
-            {{ ref("exchange_rate_daily") }} as rates
-            on rates.currency_code_to = bid_quotes.currency_code
-            and trunc(bid_quotes.created) = trunc(rates.date)
-        left outer join winning_bid on bid_quotes.bid_uuid = winning_bid.uuid
-    )
-
--- -------- MAIN QUERY --------------
--- Union rfq supplier auctions and supplier rfqs to get an overview of all RFQs sent
-select *
-from supplier_rfq_auction_interactions
-
-union all
-
-select *
-from supplier_rfqs
-where order_uuid not in (select order_uuid from supplier_rfq_auction_interactions)

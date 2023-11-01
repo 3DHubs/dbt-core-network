@@ -33,5 +33,5 @@ select dcu.hubspot_contact_id,
 
 from {{ ref('stg_dim_contacts') }} as dcu
 
-where channel in ('paid_search', 'branded_paid_search')
+where channel in ('paid_search', 'branded_paid_search','youtube')
 

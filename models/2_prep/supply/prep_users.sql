@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 -- Ideally this model gets moved to prep_users.
 
 with user_role_mapping as (
@@ -16,7 +22,7 @@ select
     row_number() over (partition by email order by created desc, updated desc)  as rnk_desc_comp
     from  {{ ref('addresses') }} 
 )
-select created as created_at,
+select distinct created as created_at,
        updated,
        deleted,
        users.user_id,
