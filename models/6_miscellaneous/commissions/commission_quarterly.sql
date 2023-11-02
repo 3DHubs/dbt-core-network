@@ -190,7 +190,7 @@ with  quarterly_closed_amount_directors as (
       sum(monthly_target) as target_amount_usd,
       round(target_amount_usd*0.75) as target_threshold
       from {{ ref('commission_rules') }}
-      where role in ('strategic','strategic lead')
+      where role in ('strategic','strategic lead','technical manager','integration lead')
       group by 1,2,3,4),
       quarterly_strategic_prep as (
       select
