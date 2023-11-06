@@ -39,7 +39,7 @@ with
         select
             bids.created,
             bids.currency_code,
-            bids.subtotal_price_amount,
+            case when bids.response_type = 'rejected' then null else bids.subtotal_price_amount end as subtotal_price_amount,
             bids.lead_time,
             bids.placed_at,
             bids.uuid as bid_uuid,
