@@ -39,11 +39,12 @@ with
         select
             bids.created,
             bids.currency_code,
+            bids.response_type,
             case when bids.response_type = 'rejected' then null else bids.subtotal_price_amount end as subtotal_price_amount,
             bids.lead_time,
             bids.placed_at,
             bids.uuid as bid_uuid,
-            case when bids.uuid = coalesce(auctions.winner_bid_uuid,winning_bid_legacy.uuid) then true else false end as is_winning_bid,
+            case when bids.uuid = coalesce(auctions.winner_bid_uuid,winning_bid_legacy.uuid) then true else false end as is_winning_bid_prep,
             bids.supplier_id,
             bids.accepted_ship_by_date,
             bids.ship_by_date,
@@ -98,30 +99,27 @@ with
             round(
                 ((bid_quotes.subtotal_price_amount / 100.00) / rates.rate), 2
             )::decimal(15, 2) as rfq_bid_amount_usd,
-            bid_quotes.is_winning_bid,
+            coalesce(bid_quotes.is_winning_bid_prep,false) as is_winning_bid,
             bid_quotes.placed_at as supplier_rfq_responded_date,
+            bid_quotes.response_type,
             bid_quotes.accepted_ship_by_date,
             bid_quotes.ship_by_date,
             bid_quotes.bid_estimated_first_leg_customs_amount_usd,
             bid_quotes.bid_estimated_second_leg_customs_amount_usd,
-            case
-                when bid_quotes.placed_at is not null
-                then
-                    rank() over (
+            rank() over (
                         partition by rfq_a.order_uuid, rfq_a.supplier_id
                         -- prepares logic to get per order the unique responses of a
                         -- supplier
                         order by
-                            is_winning_bid desc,
+                            is_winning_bid desc, response_type,
                             coalesce(bid_quotes.placed_at, '2000-01-01') desc
-                    )
-            end as win_rate_rank,
+                    ) as win_rate_rank,
             case
                 when win_rate_rank = 1 and is_winning_bid
                 then 1
                 -- the winning bid counts positive and 1 other bid per order per
                 -- supplier counts negative to the win rate
-                when win_rate_rank = 1
+                when win_rate_rank = 1 and response_type = 'countered'
                 then 0
                 else null
             end as supplier_win_rate,
@@ -129,8 +127,14 @@ with
             'Supplier-Auctions' as data_source,
             -- RFQ quality score for IM deals
             frv.requester_email_domain,
-            quality_value_score
-
+            quality_value_score,
+            first_value(is_winning_bid) over (partition by rfq_a.auction_uuid order by is_winning_bid desc rows between unbounded preceding and unbounded following)        as has_winning_bid_on_auction,
+            first_value(bid_quotes.lead_time) over (partition by rfq_a.auction_uuid order by is_winning_bid desc rows between unbounded preceding and unbounded following)        as winning_bid_lead_time,
+            first_value(rfq_bid_amount_usd) over (partition by rfq_a.auction_uuid order by is_winning_bid desc rows between unbounded preceding and unbounded following)        as winning_bid_amount_usd,
+            case when has_winning_bid_on_auction then rfq_bid_amount_usd*1.0/nullif(winning_bid_amount_usd,0) end as bid_amount_percent_of_winning_bid,
+            case when has_winning_bid_on_auction then lead_time*1.0/nullif(winning_bid_lead_time,0) end as leadtime_percent_of_winning_bid,
+            case when has_winning_bid_on_auction then count(case when response_type='countered' then auction_uuid end) over (partition by auction_uuid) end  as number_of_counter_bids_in_auction
+           
         from supplier_rfq_auctions as rfq_a
         left outer join
             supplier_rfq_bids as bid_quotes
