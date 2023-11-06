@@ -20,12 +20,21 @@ select
     decode(auctions.is_internal_support_ticket_opened, 'true', True, 'false', False) as is_internal_support_ticket_opened,
     auctions.internal_support_ticket_opened_at,     
     auctions.internal_support_ticket_id,
-    --Quotes Fields
+    -- Quotes Fields
     psd.created as auction_created_at,
     psd.updated as auction_updated_at,
     psd.deleted as auction_deleted_at,
     psd.document_number as auction_document_number,
-    psd.technology_id
+    psd.technology_id,
+    case when auction_type = 'RDA' then round((psd.subtotal_price_amount / 100.00), 2)
+        when auction_type = 'RFQ' then null end as auction_amount_usd,
+    -- Winning Bid Supplier Info
+    suppliers.id as auction_supplier_id,
+    suppliers.address_id as auction_supplier_address_id,
+    suppliers.name as auction_supplier_name,
+    
 
 from {{ source('int_service_supply', 'auctions') }} as auctions
     inner join {{ ref('prep_supply_documents') }} as psd on auctions.uuid = psd.uuid
+    left join {{ ref ('prep_bids')}} as bids on coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid) = bids.uuid
+    left join {{ ref('suppliers') }} as suppliers on bids.supplier_id = suppliers.id
