@@ -15,10 +15,10 @@ with stg_states as (
     on lower(states.state) = lower(replace (us_states.administrative_area, 'US-', ''))
 ),
      t1 as (
-         select s.id                                                                         as supplier_id,
-                s.created                                                                    as create_date,
+         select s.supplier_id,
+                s.create_date,
                 s.address_id,
-                s.name                                                                       as supplier_name,
+                s.supplier_name,
                 trim(case
                          when upper(sa.first_name) = sa.first_name or lower(sa.first_name) = sa.first_name
                              then initcap(sa.first_name)
@@ -28,11 +28,11 @@ with stg_states as (
                              then initcap(sa.last_name)
                          else sa.last_name end)                                                 last_name_clean,
                 coalesce(nullif(first_name_clean || ' ' || last_name_clean, ''), 'Customer') as full_name,
-                su.email                                                                      as supplier_email,
-                split_part(su.email, '@', 2)                                                  as supplier_email_domain,
-                s.is_suspended                                                               as is_suspended,
-                s.is_accepting_auctions                                                      as is_able_to_accept_auctions,
-                s.allow_for_rfq                                                              as is_eligible_for_rfq,
+                s.supplier_email,
+                s.supplier_email_domain,
+                s.is_suspended,
+                s.is_able_to_accept_auctions,
+                s.is_eligible_for_rfq,
                 s.is_eligible_for_vqc,
                 s.currency_code,
                 s.unit_preference,
@@ -55,16 +55,14 @@ with stg_states as (
                      when is_in_european_union THEN 'Europe'
                      else 'RoW' end                                                         as region,
                 states.state
-         from {{ ref('suppliers') }} s
+         from {{ ref('prep_suppliers') }} s
                 left outer join {{ ref('addresses') }} sa
          on sa.address_id = s.address_id
              left outer join {{ ref('prep_countries') }} c on c.country_id = sa.country_id
-             left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
-             left outer join {{ ref('prep_users') }} as su on ssu.user_id = su.user_id
              left join stg_states as states on states.address_id = s.address_id
-         where supplier_email !~ '@(3d)?hubs.com' 
-         or s.id=494 --JG 300622 requested by Arnoldas to include internal supplier id
-         or s.id=19 -- requested by Matt to include internal account Shak IM RFQ
+         where (not is_test_supplier)
+         or s.supplier_id=494 --JG 300622 requested by Arnoldas to include internal supplier id
+         or s.supplier_id=19 -- requested by Matt to include internal account Shak IM RFQ
          ), 
      t2 as (select *, row_number() over (partition by supplier_id order by create_date desc nulls last) as rn from t1)
 select supplier_id,
