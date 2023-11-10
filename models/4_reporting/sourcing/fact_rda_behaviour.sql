@@ -132,7 +132,15 @@ select
     -- original ship by date.
     sa.original_ship_by_date,
     b.accepted_ship_by_date,  -- ship by date accepted by supplier.
-    b.ship_by_date     -- accepted ship by date + if counterbid + sourcing time and non business day adjustments.
+    b.ship_by_date,     -- accepted ship by date + if counterbid + sourcing time and non business day adjustments.
+    row_number() over (
+                partition by order_uuid
+                order by is_winning_bid desc, finished_at asc
+            ) as first_auction_winning_bid,
+    row_number() over (
+            partition by order_uuid
+            order by is_winning_bid desc, finished_at desc
+        ) as last_auction_winning_bid
 from stg_supplier_auctions as sa
 -- Filter for only RDA Auctions
 inner join {{ ref("prep_auctions_rda") }} as a on a.auction_uuid = sa.auction_uuid
