@@ -63,7 +63,10 @@ select
     number_of_price_counterbids,
     has_winning_bid_countered_on_design,
     has_winning_bid_countered_on_lead_time,
-    has_winning_bid_countered_on_price
+    has_winning_bid_countered_on_price,
+
+    --hubspot atteibutes
+    review_outcome
 
 from  {{ ref('fact_orders') }}
 where created_at >= '2019-01-01'

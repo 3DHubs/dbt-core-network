@@ -46,6 +46,7 @@ sources:
       - name: legacy_orders
       - name: legacy_mqls
       - name: dim_dates
+      - name: nps_scores
 
   - name: ext_google_search
     tables:
