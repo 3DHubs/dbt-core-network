@@ -112,5 +112,11 @@ select
         * interval '1 second'
     )::timestamp without time zone
      as us_sales_account_draft_date,
-    0 as is_deleted
+    0 as is_deleted,
+    case
+        when hc.property_ultra_strategic__value = 'true'
+        then true
+        when hc.property_ultra_strategic__value = 'false'
+        then false
+    end::boolean as ultra_strategic
 from {{ source("ext_hubspot", "companies") }} hc

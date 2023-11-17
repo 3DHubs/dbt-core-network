@@ -103,6 +103,7 @@ with stg as (
         -- Sales Fields
         is_sales_priced,
         hs.is_strategic,
+        hs.is_ultra_strategic as is_priority_deal,
         closing_probability,
 
         -- Supply Fields

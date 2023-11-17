@@ -138,6 +138,7 @@ select
     hs_deals.original_im_order_document_number,
     hs_deals.ctq_check,
     hs_deals.is_strategic,
+    hs_deals.is_priority_deal,
     hs_deals.closing_probability,
     hs_deals.qc_inspection_result,
     hs_deals.qc_inspection_result_latest,

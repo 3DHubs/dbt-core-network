@@ -51,6 +51,7 @@ select
        hc.tier, --JG unclear what this tier means
        hc.is_qualified,
        hc.strategic as is_strategic,
+       hc.ultra_strategic as is_priority_account,
        hc.became_strategic_date,
        hc.hubspot_owner_assigned_date,
        hc.notes_last_updated_at                                                  as last_activity_at,
