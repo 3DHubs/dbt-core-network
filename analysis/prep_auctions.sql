@@ -1,4 +1,21 @@
-select
+with
+     winning_bid_legacy as (
+        select psd.parent_uuid as uuid
+        from {{ ref('prep_supply_documents') }} psd
+        inner join {{ ref('prep_purchase_orders') }} ppo on psd.uuid = ppo.uuid
+        where psd.type = 'purchase_order' and ppo.status = 'active'
+        group by 1
+    ),
+
+    supplier_rfq_winning_bid_legacy as (
+        select
+            bids.auction_uuid,
+            bids.uuid as winning_bid_uuid
+        from {{ ref('prep_bids') }} as bids
+        inner join winning_bid_legacy on winning_bid_legacy.uuid = bids.uuid
+    )
+    
+    select
     -- Primary Key
     auctions.uuid  as auction_uuid,
     -- Foreign Keys
@@ -28,13 +45,14 @@ select
     psd.technology_id,
     case when auction_type = 'RDA' then round((psd.subtotal_price_amount / 100.00), 2)
         when auction_type = 'RFQ' then null end as auction_amount_usd,
-    -- Winning Bid Supplier Info
-    suppliers.id as auction_supplier_id,
-    suppliers.address_id as auction_supplier_address_id,
-    suppliers.name as auction_supplier_name,
-    
+    -- Winning Bid
+    coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.winning_bid_uuid) as winning_bid_uuid,
+    -- Multiple Auctions Per Order
+    row_number() over (partition by psd.order_uuid order by auctions.started_at desc nulls last) as recency_idx,
+    row_number() over (partition by psd.order_uuid, case when winning_bid_uuid is not null then 1 else 0 end
+        order by auctions.started_at asc nulls last) =1 and winning_bid_uuid is not null as first_successful_auction,
+    decode(recency_idx, 1, True, False) as is_latest_order_auction
 
 from {{ source('int_service_supply', 'auctions') }} as auctions
     inner join {{ ref('prep_supply_documents') }} as psd on auctions.uuid = psd.uuid
-    left join {{ ref ('prep_bids')}} as bids on coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid) = bids.uuid
-    left join {{ ref('suppliers') }} as suppliers on bids.supplier_id = suppliers.id
+    left join supplier_rfq_winning_bid_legacy srl on srl.auction_uuid = auctions.uuid
