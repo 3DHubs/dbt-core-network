@@ -13,7 +13,7 @@
                     when su.email !~ '@(3d)?hubs.com' then false else true
                 end                                                                          as is_test_supplier,
                 case
-                    when su.email !~ '%@protolabs%' then false else true 
+                    when su.email ~ '%@protolabs%' then false else true 
                 end                                                                          as is_protolabs,
                 case
                     when su.email !~ '.*anonymized*.' then false else true 
