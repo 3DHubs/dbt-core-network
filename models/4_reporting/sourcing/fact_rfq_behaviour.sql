@@ -19,11 +19,12 @@ with
     freshdesk_rfq_value as (
         select order_uuid,
         requester_email_domain,
-        value as quality_value_score
+        avg(value*1.0) as quality_value_score
         from {{ ref("fact_freshdesk_tickets") }}
         where
             "group" in ('Injection Molding EU/RoW', 'Injection Molding US/CA')
             and value is not null
+        group by 1,2
     ),
     -- applicable to orders before July 2023
      winning_bid_legacy as ( 
@@ -52,7 +53,7 @@ with
             bids.estimated_second_leg_customs_amount_usd as bid_estimated_second_leg_customs_amount_usd,
             md5(bids.supplier_id || bids.auction_uuid) as supplier_rfq_uuid,
             row_number() over (
-                partition by bids.uuid, supplier_id order by bids.created asc
+                partition by bids.auction_uuid, supplier_id order by bids.is_active desc, bids.placed_at desc, bids.updated desc
             ) as supplier_bid_idx
         from {{ ref("prep_bids") }} as bids
         inner join  -- Inner Join to Filter on RFQ
@@ -138,7 +139,7 @@ with
         from supplier_rfq_auctions as rfq_a
         left outer join
             supplier_rfq_bids as bid_quotes
-            on rfq_a.supplier_rfq_uuid = bid_quotes.supplier_rfq_uuid
+            on rfq_a.supplier_rfq_uuid = bid_quotes.supplier_rfq_uuid and bid_quotes.supplier_bid_idx =1
         left outer join {{ ref("stg_dim_suppliers") }} as sds on sds.supplier_id = rfq_a.supplier_id
         left outer join
             {{ ref("exchange_rate_daily") }} as rates
