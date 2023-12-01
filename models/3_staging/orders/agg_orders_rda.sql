@@ -46,6 +46,9 @@ with rda_interactions as (
            bool_or(sai.is_winning_bid and sai.response_type = 'accepted')                            as has_accepted_winning_bid,
            bool_or(sai.sa_is_restricted)                                                             as has_restricted_suppliers,
            bool_or(sai.is_winning_bid and sai.sa_is_restricted)                                      as has_restricted_winning_bid,
+           max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then sa_supplier_id end) as supplier_id,
+           max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then supplier_name end)  as supplier_name,
+           max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then supplier_address_id end) as supplier_address_id,
            max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then sai.bid_margin end)                                 as winning_bid_margin,
            max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then sai.bid_margin_usd end)                             as winning_bid_margin_usd,
            max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then sai.bid_margin_loss_usd end)                        as winning_bid_margin_loss_usd,
@@ -89,9 +92,9 @@ cancelled_auctions as (
     select distinct a.order_uuid,
         true as auction_is_cancelled_manually,
         c.min_created as auction_cancelled_manually_at
-    from {{ ref('prep_auctions_rda') }} a
-            left join canceled c on c.order_uuid = a.order_uuid
-    where a.status = 'canceled'
+    from {{ ref('prep_auctions') }} a
+            left join canceled c on c.order_uuid = a.order_uuid 
+    where a.status = 'canceled' and not a.is_rfq
     and a.order_uuid not in (select order_uuid from rejected)   
 ), 
 
@@ -112,6 +115,9 @@ select
 case when auctions.finished_at is not null then true else false end as is_rda_sourced,
 
 -- SOURCE 1: Adds fields from the rda interactions CTE
+rdai.supplier_id,
+rdai.supplier_name,
+rdai.supplier_address_id,
 rdai.number_of_rda_auctions,
 rdai.number_of_supplier_auctions_assigned,
 rdai.number_of_supplier_auctions_seen,
@@ -161,15 +167,12 @@ auctions.auction_created_at,
 auctions.started_at                        as auction_started_at,
 auctions.finished_at                       as auction_finished_at,
 auctions.technology_id                     as auction_technology_id,
-auctions.document_number                   as auction_document_number,
+auctions.auction_document_number,
 auctions.is_accepted_manually              as auction_is_accepted_manually,
 auctions.is_internal_support_ticket_opened as auction_is_reviewed_manually,
 auctions.internal_support_ticket_opened_at as auction_support_ticket_opened_at,
 auctions.winning_bid_uuid,
-auctions.auction_supplier_id,
-auctions.auction_supplier_name,
-auctions.auction_supplier_address_id,
-auctions.auction_technology_name,
+auctions.technology_name,
 
 -- SOURCE 4: Eligibility Sample
 -- Product Feature that determines the number of suppliers that are eligible, preferred and local for a given quote.
@@ -177,8 +180,9 @@ es.number_of_eligible_suppliers,
 es.number_of_eligible_preferred_suppliers,
 es.number_of_eligible_local_suppliers
 
-from {{ ref('prep_auctions_rda') }} as auctions
+from {{ ref('prep_auctions') }} as auctions
     left join rda_interactions as rdai on auctions.order_uuid = rdai.order_uuid
     left join cancelled_auctions as can on auctions.order_uuid = can.order_uuid
     left join eligibility_sample as es on auctions.order_uuid = es.order_uuid
 where auctions.is_latest_order_auction
+and not auctions.is_rfq

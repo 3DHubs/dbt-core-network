@@ -96,7 +96,7 @@ left join {{ ref("agg_orders_rda") }} as rda on orders.uuid = rda.order_uuid
 left join
     {{ ref("addresses") }} as addresses_origin
     on addresses_origin.address_id
-    = coalesce(docs.po_active_supplier_address_id, rda.auction_supplier_address_id)
+    = coalesce(docs.po_active_supplier_address_id, rda.supplier_address_id)
 left join
     {{ ref("prep_countries") }} as countries_origin
     on countries_origin.country_id = addresses_origin.country_id

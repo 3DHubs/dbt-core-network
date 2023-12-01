@@ -68,6 +68,8 @@ select
     -- Supplier Auction Fields
     sa.sa_uuid as sa_uuid,
     sa.supplier_id as sa_supplier_id,
+    suppliers.address_id as supplier_address_id,
+    suppliers.name as supplier_name,
     sa.assigned_at as sa_assigned_at,
     row_number() over (
         partition by sa.auction_uuid order by sa_assigned_at
@@ -116,12 +118,12 @@ select
 
     -- Auction Fields
     sa.auction_uuid as auction_uuid,
-    a.auction_created_at as auction_created_at,
+    a.auction_created_at,
     a.order_uuid as order_uuid,
     a.winning_bid_uuid as auction_winning_bid_uuid,
     a.status as auction_status,
     a.finished_at as auction_finished_at,
-    a.auction_document_number as auction_document_number,
+    a.auction_document_number,
     a.base_margin_without_discount as auction_base_margin,
     a.recency_idx as auction_round,
 
@@ -143,8 +145,9 @@ select
         ) as last_auction_winning_bid
 from stg_supplier_auctions as sa
 -- Filter for only RDA Auctions
-inner join {{ ref("prep_auctions_rda") }} as a on a.auction_uuid = sa.auction_uuid
+inner join {{ ref("prep_auctions") }} as a on a.auction_uuid = sa.auction_uuid and not a.is_rfq
 left join bids as b on b.sa_uuid = sa.sa_uuid and b.rn = 1
+left join {{ ref('suppliers') }} as suppliers on b.supplier_id = suppliers.id
 -- To get 1st counter bid on price of supplier that is followed by a newer bid (to
 -- identify negotiation winnings)
 left join

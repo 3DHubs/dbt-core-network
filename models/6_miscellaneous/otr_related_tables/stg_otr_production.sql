@@ -145,6 +145,6 @@ select
     'The originally allocated production time excluding counterbid, sourcing time and non business day adjustment' as notes
 from {{ ref('fact_orders') }} as fo
 left join {{ ref('fact_rda_behaviour') }} as frb on fo.order_uuid = frb.order_uuid and frb.is_winning_bid
-left join {{ ref('prep_auctions_rda') }} as par on frb.auction_uuid = par.auction_uuid and par.first_successful_auction
+left join {{ ref('prep_auctions') }} as par on frb.auction_uuid = par.auction_uuid and par.first_successful_auction and not par.is_rfq
 left join {{ ref('stg_orders_documents') }} as sod on fo.order_uuid = sod.order_uuid
 where case when frb.auction_uuid is not null then par.first_successful_auction and frb.is_winning_bid else True end

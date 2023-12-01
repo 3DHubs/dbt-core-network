@@ -17,7 +17,7 @@ select
         docs.revision         as document_revision,
         bids.auction_uuid,
         bids.supplier_id,
-        md5(supplier_id || auction_uuid) as supplier_rfq_uuid,
+        md5(supplier_id || bids.auction_uuid) as supplier_rfq_uuid,
         -- Line Item Fields
         li.estimated_first_leg_customs_amount_usd / 100.00                         as line_item_estimated_l1_customs_amount_usd,
         li.estimated_second_leg_customs_amount_usd / 100.00                        as line_item_estimated_l2_customs_amount_usd,
@@ -115,7 +115,7 @@ select
     from {{ ref('line_items') }} as li
              left join {{ ref('prep_supply_documents') }} as docs on docs.uuid = li.quote_uuid
              inner join {{ ref('prep_bids')}} as bids on bids.uuid = docs.uuid           
-             inner join {{ ref('prep_auctions_rfq')}} as auction_rfq on auction_rfq.order_quotes_uuid = bids.auction_uuid            
+             inner join {{ ref('prep_auctions')}} as auction_rfq on auction_rfq.auction_uuid = bids.auction_uuid and auction_rfq.is_rfq      
 
              -- Materials Processes and Finishes
              left join {{ ref('materials') }} as mat on mat.material_id = li.material_id

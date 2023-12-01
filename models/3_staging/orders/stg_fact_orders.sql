@@ -503,7 +503,7 @@ select
 
        -- Technology:
     coalesce(rda.auction_technology_id, qli.line_item_technology_id, hubspot_technology_id) as technology_id,
-    coalesce(rda.auction_technology_name, qli.line_item_technology_name,
+    coalesce(rda.technology_name, qli.line_item_technology_name,
              hubspot_technology_name)                                                      as technology_name,
 
     -- Financial:
@@ -519,9 +519,9 @@ select
     coalesce(rda.first_winning_bid_estimated_first_leg_customs_amount_usd ,rfq.winning_bid_estimated_first_leg_customs_amount_usd, 0) + coalesce(rda.first_winning_bid_estimated_second_leg_customs_amount_usd,rfq.winning_bid_estimated_second_leg_customs_amount_usd,0) as beta_subtotal_sourced_cost_usd,
 
     -- Suppliers:
-    coalesce(docs.po_active_supplier_id, rda.auction_supplier_id)                          as supplier_id,
-    coalesce(docs.po_active_supplier_name, rda.auction_supplier_name)                      as supplier_name,
-    coalesce(docs.po_active_supplier_address_id, rda.auction_supplier_address_id)          as supplier_address_id,
+    coalesce(docs.po_active_supplier_id, rda.supplier_id)                          as supplier_id,
+    coalesce(docs.po_active_supplier_name, rda.supplier_name)                      as supplier_name,
+    coalesce(docs.po_active_supplier_address_id, rda.supplier_address_id)          as supplier_address_id,
 
  
 

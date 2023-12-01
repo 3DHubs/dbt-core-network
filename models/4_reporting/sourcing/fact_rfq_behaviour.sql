@@ -44,7 +44,7 @@ with
             bids.lead_time,
             bids.placed_at,
             bids.uuid as bid_uuid,
-            case when bids.uuid = coalesce(auctions.winner_bid_uuid,winning_bid_legacy.uuid) then true else false end as is_winning_bid_prep,
+            case when bids.uuid = coalesce(auctions.winning_bid_uuid,winning_bid_legacy.uuid) then true else false end as is_winning_bid_prep,
             bids.supplier_id,
             bids.accepted_ship_by_date,
             bids.ship_by_date,
@@ -56,8 +56,8 @@ with
             ) as supplier_bid_idx
         from {{ ref("prep_bids") }} as bids
         inner join  -- Inner Join to Filter on RFQ
-            {{ ref("prep_auctions_rfq") }} as auctions
-            on auctions.order_quotes_uuid = bids.auction_uuid
+            {{ ref("prep_auctions") }} as auctions
+            on auctions.auction_uuid = bids.auction_uuid and auctions.is_rfq
         left join winning_bid_legacy
             on winning_bid_legacy.uuid = bids.uuid
     ),
@@ -75,7 +75,7 @@ with
             sr.auction_document_number
         from stg_supplier_auctions as sa
         inner join  -- Inner Join to Filter on RFQ
-            {{ ref("prep_auctions_rfq") }} sr on sr.order_quotes_uuid = sa.auction_uuid
+            {{ ref("prep_auctions") }} sr on sr.auction_uuid = sa.auction_uuid and sr.is_rfq
     )
 
     -- Combines Supplier-Auctions + Bid Data + Others

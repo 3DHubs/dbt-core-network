@@ -10,7 +10,7 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
                     left join {{ ref('prep_supply_orders') }} as hs on hs.hubspot_deal_id = t.hubspot_deal_id
                     left join {{ ref('prep_supply_orders') }} pso on pso.support_ticket_id = t.id
                     left join {{ ref('prep_purchase_orders') }} ppo on ppo.supplier_support_ticket_id = t.id
-                    left join {{ ref('prep_auctions_rda') }}  rda on rda.internal_support_ticket_id = t.id
+                    left join {{ ref('prep_auctions') }}  rda on rda.internal_support_ticket_id = t.id and not rda.is_rfq
                     left join {{ source('int_service_supply', 'disputes') }} dis on dis.customer_support_ticket_id = t.id
                     left join {{ source("int_service_supply", "supplier_rfqs") }} rfq on rfq.support_ticket_id = t.id
                     left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
