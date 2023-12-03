@@ -51,7 +51,7 @@ with
 forecast_recognized as (
         select
             date_trunc(
-                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+1)), sourced_at)
+                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+7)), sourced_at)
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
@@ -70,7 +70,7 @@ forecast_recognized as (
     recognized_actual as (
         select
             date_trunc(
-                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+1)), sourced_at)
+                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+7)), sourced_at)
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
@@ -84,10 +84,28 @@ forecast_recognized as (
             date_trunc('month', date_add('days', time_to_recognize, sourced_at))
             = date_trunc('month', getdate())
             and subtotal_closed_amount_usd < 50000
+            and percent_of_total > 0
         group by 1,2,3
-    )
+    ),
+    -- take actuals for 50K+ deals when recognized
+    fiftyk_plus as (
+        select 
+            fcm.recognized_date as estimated_recognized_at,
+            fo.lead_time,
+            fo.technology_name,
+            coalesce(sum(case when (fcm.type = 'revenue') then fcm.amount_usd else null end), 0) as recognized_amount
+
+        from {{ ref("fact_orders") }}  fo
+    left join {{ ref("fact_contribution_margin") }} fcm ON fo.order_uuid = fcm.order_uuid
+    where date_trunc('month',recognized_date) =  date_trunc('month', getdate())
+    and recognized_date < getdate()
+    and subtotal_closed_amount_usd > 50000
+    group by 1,2,3)
         select *
         from recognized_actual
         union all
         select *
         from forecast_recognized
+        union all
+        select *
+        from fiftyk_plus
