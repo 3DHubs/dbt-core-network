@@ -21,6 +21,7 @@ select
        docs.is_active_po,
        docs.updated          as doc_updated_at,
        docs.order_updated_at as order_updated_at,
+       docs.shipping_address_id,
     -- Line Item Fields
        li.*
 

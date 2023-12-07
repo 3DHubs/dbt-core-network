@@ -18,9 +18,6 @@ select
         bids.auction_uuid,
         bids.supplier_id,
         md5(supplier_id || bids.auction_uuid) as supplier_rfq_uuid,
-        -- Line Item Fields
-        li.estimated_first_leg_customs_amount_usd / 100.00                         as line_item_estimated_l1_customs_amount_usd,
-        li.estimated_second_leg_customs_amount_usd / 100.00                        as line_item_estimated_l2_customs_amount_usd,
 
         -- Supply Line Items Base Fields
         li.created                                                                 as created_date,

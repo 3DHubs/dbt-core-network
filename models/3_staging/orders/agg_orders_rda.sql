@@ -24,7 +24,9 @@
 
 with rda_interactions as ( 
     select sai.order_uuid,
-           count(distinct auction_uuid)                                                              as number_of_rda_auctions,
+           bool_or(case when pa.auction_type = 'RDA' then true else false end)                       as is_first_auction_rda_sourced,
+           bool_or(is_rda_sourced)                                                                   as is_rda_sourced,
+           count(distinct sai.auction_uuid)                                                          as number_of_rda_auctions,
            count(*)                                                                                  as number_of_supplier_auctions_assigned,
            -- Auctions Seen
            count(distinct (case when sa_first_seen_at is not null then sa_uuid end))                 as number_of_supplier_auctions_seen,
@@ -72,6 +74,7 @@ with rda_interactions as (
            bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
 
     from {{ ref('fact_rda_behaviour') }} as sai
+    left join {{ ref('prep_auctions')}} as pa on sai.auction_uuid = pa.auction_uuid and first_successful_auction
     group by 1
 
     -- SOURCE 2: Auctions Cancelled Manually
@@ -112,8 +115,8 @@ select
 -------------------- Step 2 --------------------------
 ------------- Combine Data Sources  ------------------
 
-case when auctions.finished_at is not null then true else false end as is_rda_sourced,
-
+rdai.is_first_auction_rda_sourced, 
+rdai.is_rda_sourced,
 -- SOURCE 1: Adds fields from the rda interactions CTE
 rdai.supplier_id,
 rdai.supplier_name,
@@ -184,5 +187,4 @@ from {{ ref('prep_auctions') }} as auctions
     left join rda_interactions as rdai on auctions.order_uuid = rdai.order_uuid
     left join cancelled_auctions as can on auctions.order_uuid = can.order_uuid
     left join eligibility_sample as es on auctions.order_uuid = es.order_uuid
-where auctions.is_latest_order_auction
-and not auctions.is_rfq
+where auctions.is_latest_rda_order_auction

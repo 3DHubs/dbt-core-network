@@ -92,8 +92,7 @@ agg_part_line_items as (
 
         -- Financial (USD - Conversion based on Creation Date)
         sum(line_item_price_amount_usd)                                          as parts_amount_usd,
-        sum(line_item_estimated_l1_customs_amount_usd)                           as estimated_l1_customs_amount_usd,
-        sum(line_item_estimated_l2_customs_amount_usd)                           as estimated_l2_customs_amount_usd,
+        sum(line_item_estimated_l1_customs_amount_usd_no_winning_bid)            as estimated_l1_customs_amount_usd_no_winning_bid,
 
         -- Boolean Aggregates
         bool_or(coalesce(has_customer_note, false))                                               as has_customer_note,
@@ -183,8 +182,7 @@ select
     apli.total_smallest_bounding_box_volume_cm3,
     apli.parts_amount,
     apli.parts_amount_usd,
-    apli.estimated_l1_customs_amount_usd,
-    apli.estimated_l2_customs_amount_usd,
+    apli.estimated_l1_customs_amount_usd_no_winning_bid,
     apli.has_customer_note,
     apli.has_technical_drawings,
     apli.has_custom_material_subset,

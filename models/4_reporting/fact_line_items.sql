@@ -51,8 +51,6 @@ select     li.order_uuid,
            li.document_uuid,
            li.document_type,
            li.document_revision,
-           li.estimated_first_leg_customs_amount_usd / 100.00                         as line_item_estimated_l1_customs_amount_usd,
-           li.estimated_second_leg_customs_amount_usd / 100.00                        as line_item_estimated_l2_customs_amount_usd,
            li.is_order_quote,
            li.is_active_po,
            -- Supply Line Items Base Fields
@@ -197,7 +195,8 @@ select     li.order_uuid,
            
            docs.currency_code                                                          as line_item_price_amount_source_currency,
            -- These amount fields are only manually inserted, nowadays only unit_price_amount is populated and the price_amount is calculated from the quantity
-           coalesce(li.unit_price_amount, li.price_amount) is not null                 as line_item_price_amount_manually_edited
+           coalesce(li.unit_price_amount, li.price_amount) is not null                 as line_item_price_amount_manually_edited,
+           line_item_price_amount_usd * lic.estimated_l1_customs_rate                  as line_item_estimated_l1_customs_amount_usd_no_winning_bid
 
     from {{ ref('prep_line_items') }} as li
              left join {{ ref('prep_supply_documents') }} as docs on docs.uuid = li.quote_uuid
@@ -232,4 +231,5 @@ select     li.order_uuid,
              -- Other Joins
              left join part_dimensional_attributes pdf on pdf.id = li.id
              left join vqc on li.uuid = vqc.uuid
-             left join {{ ref('tolerances') }} t on t.id = li.tolerance_id      
+             left join {{ ref('tolerances') }} t on t.id = li.tolerance_id  
+             left join {{ ref('stg_line_items_customs')}} lic on lic.uuid = li.uuid    

@@ -51,6 +51,10 @@ with
     row_number() over (partition by psd.order_uuid, case when coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null then 1 else 0 end
         order by auctions.started_at asc nulls last) =1 and coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null as first_successful_auction,
     decode(recency_idx, 1, True, False) as is_latest_order_auction,
+    row_number() over (partition by psd.order_uuid, auction_type  order by auctions.started_at desc nulls last) as recency_idx_auction_type,
+    case when auction_type='RDA' then decode(recency_idx_auction_type, 1, True, False) end as is_latest_rda_order_auction,
+    case when is_latest_rda_order_auction and is_latest_order_auction and winner_bid_uuid is not null then true else false end as is_rda_sourced,
+     
     -- Technology Name
     technologies.name as technology_name
 

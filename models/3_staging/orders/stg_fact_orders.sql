@@ -512,11 +512,13 @@ select
     case when is_sourced then subtotal_amount_usd else 0 end                               as subtotal_sourced_amount_usd,
     case when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03 
          else qli.shipping_amount_usd end                                                  as beta_prep_shipping_cost_usd, 
-    coalesce(rda.first_winning_shipping_estimate_amount_usd,0) + coalesce(beta_prep_shipping_cost_usd,0)  as beta_shipping_cost_usd,
-    case when po_production_finalized_at < coalesce(logistics.shipped_at,'2100-01-01') and coalesce(rda.is_rda_sourced, false) = false  then po_production_subtotal_cost_usd
+    coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_shipping_estimate_amount_usd end,0) + coalesce(beta_prep_shipping_cost_usd,0)  as beta_shipping_cost_usd,
+    case when po_production_finalized_at < coalesce(logistics.shipped_at,'2100-01-01') and coalesce(rda.is_first_auction_rda_sourced, false) = false  then po_production_subtotal_cost_usd
           else  subtotal_sourced_cost_usd  end                                             as beta_subtotal_po_cost_usd,    
     coalesce(beta_subtotal_po_cost_usd,0) + coalesce(beta_shipping_cost_usd,0) + 
-    coalesce(rda.first_winning_bid_estimated_first_leg_customs_amount_usd ,rfq.winning_bid_estimated_first_leg_customs_amount_usd, 0) + coalesce(rda.first_winning_bid_estimated_second_leg_customs_amount_usd,rfq.winning_bid_estimated_second_leg_customs_amount_usd,0) as beta_subtotal_sourced_cost_usd,
+    coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_first_leg_customs_amount_usd 
+                  when not is_rfq_automatically_sourced then apoli.estimated_l1_customs_amount_usd_no_winning_bid else rfq.winning_bid_estimated_first_leg_customs_amount_usd end , 0) 
+    + coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_second_leg_customs_amount_usd else rfq.winning_bid_estimated_second_leg_customs_amount_usd end,0) as beta_subtotal_sourced_cost_usd,
 
     -- Suppliers:
     coalesce(docs.po_active_supplier_id, rda.supplier_id)                          as supplier_id,
