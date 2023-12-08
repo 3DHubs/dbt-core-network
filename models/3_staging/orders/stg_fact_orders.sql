@@ -414,7 +414,7 @@ select
     geo.destination_region,
     geo.destination_sub_region,
     geo.destination_us_state,
-    geo.company_entity,
+    coalesce(geo.company_entity,po_active_company_entity) as company_entity, --Request by Bram S to fall back for nulls.
     geo.origin_country,
     geo.origin_latitude,
     geo.origin_longitude,
