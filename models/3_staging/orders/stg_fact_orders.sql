@@ -330,8 +330,9 @@ select
     logistics_business_hours.time_transit_at_cross_dock_business_minutes,
 
     -- Logistics: Estimates
-    coalesce(rda.winning_bid_estimated_first_leg_customs_amount_usd ,rfq.winning_bid_estimated_first_leg_customs_amount_usd) as estimated_l1_customs_amount_usd,
-    coalesce(rda.winning_bid_estimated_second_leg_customs_amount_usd ,rfq.winning_bid_estimated_second_leg_customs_amount_usd) as  estimated_l2_customs_amount_usd,
+        coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_first_leg_customs_amount_usd 
+                  when not is_rfq_automatically_sourced then apoli.estimated_l1_customs_amount_usd_no_winning_bid else rfq.winning_bid_estimated_first_leg_customs_amount_usd end , 0)  as estimated_l1_customs_amount_usd,
+    coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_second_leg_customs_amount_usd else rfq.winning_bid_estimated_second_leg_customs_amount_usd end,0) as  estimated_l2_customs_amount_usd,
 
     -------- SOURCE: STG OTR -----------
     -- Calculated based on cnc orders, and
@@ -516,9 +517,7 @@ select
     case when po_production_finalized_at < coalesce(logistics.shipped_at,'2100-01-01') and coalesce(rda.is_first_auction_rda_sourced, false) = false  then po_production_subtotal_cost_usd
           else  subtotal_sourced_cost_usd  end                                             as beta_subtotal_po_cost_usd,    
     coalesce(beta_subtotal_po_cost_usd,0) + coalesce(beta_shipping_cost_usd,0) + 
-    coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_first_leg_customs_amount_usd 
-                  when not is_rfq_automatically_sourced then apoli.estimated_l1_customs_amount_usd_no_winning_bid else rfq.winning_bid_estimated_first_leg_customs_amount_usd end , 0) 
-    + coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_second_leg_customs_amount_usd else rfq.winning_bid_estimated_second_leg_customs_amount_usd end,0) as beta_subtotal_sourced_cost_usd,
+    estimated_l1_customs_amount_usd + estimated_l2_customs_amount_usd as beta_subtotal_sourced_cost_usd,
 
     -- Suppliers:
     coalesce(docs.po_active_supplier_id, rda.supplier_id)                          as supplier_id,
