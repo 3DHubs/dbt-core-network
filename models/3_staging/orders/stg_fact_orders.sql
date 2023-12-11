@@ -374,11 +374,11 @@ select
     qli.line_item_process_id as process_id,
     qli.line_item_process_name as process_name,
     qli.parts_titles,
-    
-    -- RND exclusive Fields
     qli.parts_max_depth_cm,
     qli.parts_max_heigth_cm,
     qli.parts_max_width_cm,
+    
+    -- RND exclusive Fields
     qli.is_supply_or_smart_rfq,
     qli.total_smallest_bounding_box_volume_cm3,
 
