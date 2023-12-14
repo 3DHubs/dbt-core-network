@@ -45,6 +45,7 @@ with first_quote as (
          select orders.uuid                                                      as order_uuid,
                 quotes.document_number                                           as order_quote_document_number,
                 quotes.status                                                    as order_quote_status, -- Used to filter out carts
+                quotes.is_admin                                                  as order_quote_is_admin,
                 quotes.created                                                   as order_quote_created_at,
                 quotes.submitted_at                                              as order_quote_submitted_at,
                 quotes.finalized_at                                              as order_quote_finalised_at,
@@ -229,6 +230,7 @@ select -- First Quote
        -- Order Quote
        oq.order_quote_document_number,
        oq.order_quote_status,     -- Used to filter out carts
+       oq.order_quote_is_admin,
        oq.order_quote_created_at, -- This is actually not in fact deals?
        oq.order_quote_submitted_at,
        oq.order_quote_finalised_at,

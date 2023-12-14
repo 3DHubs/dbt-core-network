@@ -134,6 +134,7 @@ po_active_document_number,
 -- Quotes
 order_quote_document_number,
 order_quote_status,
+order_quote_is_admin,
 quote_first_created_by_admin,
 number_of_quote_versions,
 has_admin_created_quote,

@@ -227,6 +227,7 @@ select
     -- Active/Won Quote if submitted, else First
     docs.order_quote_document_number,
     docs.order_quote_status,
+    docs.order_quote_is_admin,
     docs.order_quote_created_at,
     docs.order_quote_submitted_at,
     docs.order_quote_finalised_at,
