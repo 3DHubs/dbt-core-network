@@ -83,12 +83,8 @@ select distinct orders.uuid                              as order_uuid,
                         then false
                     else null
                     end                                  as is_shipped_on_time_to_customer,
-
-                round(extract(minutes from (logistics.shipped_to_customer_at - orders.promised_shipping_date)) / 1440,
-                      1)                                 as shipping_to_customer_delay_days,
-
-                round(extract(minutes from (logistics.shipped_at - promised_shipping_at_by_supplier_pick_up_adjusted)) / 1440,
-                      1)                                 as shipping_by_supplier_delay_days,
+                    round(date_diff('minutes',orders.promised_shipping_date,logistics.shipped_to_customer_at )*1.0/1440,1) as shipping_to_customer_delay_days,
+                    round(date_diff('minutes',promised_shipping_at_by_supplier_pick_up_adjusted,logistics.shipped_at )*1.0/1440,1) as shipping_by_supplier_delay_days,
 
                 -- Delay Notification Feature Aggregates
                 dagg.has_delay_notifications,

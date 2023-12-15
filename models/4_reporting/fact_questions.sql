@@ -50,10 +50,7 @@ with
     )
 
 select
-    uqf.*,
-    round(
-        extract(minutes from (uqf.answered_at - uqf.submitted_at)) / 1440, 1
-    ) as question_response_time,
+    uqf.*,round(date_diff('minutes',uqf.submitted_at,uqf.answered_at )*1.0/1440,1) as question_response_time,
     u_auth.first_name + ' ' + u_auth.last_name as author_name,
     u_answ.first_name + ' ' + u_answ.last_name as answered_name,
     u_answ.is_internal                         as answered_by_hubs,

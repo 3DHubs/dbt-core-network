@@ -72,8 +72,8 @@ select
 
     -- Other Date Fields
     lag(closed_at) over (partition by hubspot_contact_id order by closed_at)                                                                           as previous_closed_order_at_contact,
-    case when hubspot_contact_id is not null then round(extract(minutes from (closed_at - lag(closed_at)
-        over (partition by hubspot_contact_id order by closed_at asc))) / 1440, 1) end                                                                 as days_from_previous_closed_order_contact,
+    round( date_diff('minutes',  case when hubspot_contact_id is not null then lag(closed_at)
+        over (partition by hubspot_contact_id order by closed_at asc) end ,closed_at) *1.0/1440,1)                                                     as days_from_previous_closed_order_contact,
 
 -- COMPANY FIELDS
 
@@ -112,8 +112,8 @@ select
     case when is_closed then dense_rank() over (partition by hubspot_company_id order by cast(closed_at as date) asc) else null end                    as closed_project_number_company,    
         
     -- Other Date Fields
-    case when hubspot_company_id is not null then round(extract(minutes from (closed_at - lag(closed_at)
-        over (partition by hubspot_company_id order by closed_at asc))) / 1440, 1) end                                                                 as days_from_previous_closed_order_company,
+    round( date_diff('minutes',  case when hubspot_company_id is not null then lag(closed_at)
+        over (partition by hubspot_company_id order by closed_at asc) end ,closed_at) *1.0/1440,1)                                                     as days_from_previous_closed_order_company,
     case when hubspot_company_id is not null then min(case when bdr_owner_name is not null then closed_at end) 
         over (partition by hubspot_company_id) end                                                                                                     as first_bdr_owner_at_company
 ,
