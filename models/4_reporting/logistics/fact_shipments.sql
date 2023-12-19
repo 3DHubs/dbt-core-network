@@ -56,6 +56,8 @@ with
                         fam.tracking_status = 'In Transit'
                         or fam.tracking_status = 'Acceptance scan'
                         or fam.tracking_status = 'Arrival scan'
+                        or fam.tracking_status = 'Arrived at destination country'
+                        or fam.tracking_status = 'Departure Scan'
                     then fam.tracking_message_received_at
                     else null
                 end

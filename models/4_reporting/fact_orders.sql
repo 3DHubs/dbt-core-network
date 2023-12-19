@@ -73,6 +73,8 @@ integration_order_number,
 integration_purchase_order_number,
 integration_user_id,
 integration_utm_content,
+number_of_orders_per_integration_order,
+is_multi_line_papi_integration,
 
 
 -- Lifecycle Dates
@@ -296,6 +298,7 @@ auction_is_cancelled_manually,
 auction_cancelled_manually_at,
 auction_support_ticket_opened_at,
 is_rda_sourced,
+is_first_auction_rda_sourced,
 is_eligible_for_restriction,
 has_restricted_suppliers,
 number_of_rda_auctions,

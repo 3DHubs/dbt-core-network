@@ -24,6 +24,8 @@ select
     dc.utm_source,
     dc.utm_term,
     dc.utm_medium,
+    dc.channel,
+    dc.channel_grouped,
     dc.became_mql_at,
     dc.mql_technology,
     dc.mql_type,

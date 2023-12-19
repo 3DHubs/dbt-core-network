@@ -63,6 +63,8 @@ select
     integration.integration_purchase_order_number,    
     integration.integration_user_id,
     integration.integration_utm_content, -- JG may be removed after campaign 2022-12-01 PL shallow quicklink
+    integration.number_of_orders_per_integration_order,
+    integration.is_multi_line_papi_integration,
 
     
     
@@ -158,6 +160,8 @@ select
 
     -- RDA: Auction Fields
     coalesce(rda.is_rda_sourced, false) as is_rda_sourced,
+    case when rfq.is_rfq_automatically_sourced or rda.is_rda_sourced then true else false end as has_winning_bid, 
+    rda.is_first_auction_rda_sourced,
     rda.auction_uuid,
     rda.auction_status,
     rda.auction_created_at,
@@ -193,7 +197,6 @@ select
     rda.winning_l1_shipping_margin_amount_usd,
     rda.l1_shipping_estimate_source,
     rda.winning_bid_original_ship_by_date as original_shipping_at_by_supplier,
-    rda.has_winning_bid,
     rda.has_accepted_winning_bid,
     rda.has_restricted_winning_bid,
     rda.has_winning_bid_countered_on_price,
