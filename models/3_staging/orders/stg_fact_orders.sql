@@ -156,7 +156,12 @@ select
     when pl_sales_rep_name is not null then 'Twin-Win' end as pl_cross_sell_channel,
     case when integration_platform_type is not null or pl_cross_sell_channel is not null then true else false end as is_integration_tmp,
 
-    ---------- SOURCE: STG ORDERS RDA --------------
+    ---------- SOURCE: Auctions --------------
+
+    -- Generic Auction Fields
+    auc.has_winning_bid_any_auction,
+    auc.number_of_auctions,
+    auc.number_of_auction_cancellations,
 
     -- RDA: Auction Fields
     coalesce(rda.is_rda_sourced, false) as is_rda_sourced,
@@ -503,6 +508,8 @@ select
     submitted_at is not null                                                               as is_submitted,
     coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), pcr.title )                 as cancellation_reason,
     coalesce(nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.reason_mapped, cancellation_reason)  as cancellation_reason_mapped,
+    case when cancellation_reason_mapped in ('MP requested cancellation','Lead time cannot be met','Unusable files/Design cannot be manufactured')
+         then 1 else coalesce(auc.number_of_auction_cancellations,0) end                   as number_of_cancellations,
     srl.is_recognized                                                                      as is_recognized,
     srl.recognized_at                                                                      as recognized_at,
 
@@ -518,7 +525,7 @@ select
     case when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03 
          else qli.shipping_amount_usd end                                                  as beta_prep_shipping_cost_usd, 
     coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_shipping_estimate_amount_usd end,0) + coalesce(beta_prep_shipping_cost_usd,0)  as beta_shipping_cost_usd,
-    case when po_production_finalized_at < coalesce(logistics.shipped_at,'2100-01-01') and coalesce(rda.is_first_auction_rda_sourced, false) = false  then po_production_subtotal_cost_usd
+    case when po_production_finalized_at < coalesce(logistics.shipped_at,'2100-01-01') and coalesce(auc.has_winning_bid_any_auction, false) = false  then po_production_subtotal_cost_usd
           else  subtotal_sourced_cost_usd  end                                             as beta_subtotal_po_cost_usd,    
     coalesce(beta_subtotal_po_cost_usd,0) + coalesce(beta_shipping_cost_usd,0) + 
     estimated_l1_customs_amount_usd + estimated_l2_customs_amount_usd as beta_subtotal_sourced_cost_usd,
@@ -558,6 +565,7 @@ from {{ ref('prep_supply_orders') }} as orders
     -- Aggregates
     left join {{ ref ('agg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
     left join {{ ref ('agg_orders_rfq') }} as rfq on orders.uuid = rfq.order_uuid
+    left join {{ ref ('agg_orders_auctions')}} as auc on orders.uuid = auc.order_uuid
     left join {{ ref ('agg_orders_technical_reviews') }} as reviews on orders.uuid = reviews.order_uuid
     left join {{ ref ('agg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
     left join {{ ref ('agg_line_items') }} as qli on orders.quote_uuid = qli.quote_uuid -- Agg Order-Quotes

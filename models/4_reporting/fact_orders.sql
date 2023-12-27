@@ -126,6 +126,7 @@ exists_in_hubspot,
 is_resourced,
 cancellation_reason,
 cancellation_reason_mapped,
+number_of_cancellations,
 is_recognized,
 is_quality_disputed,
 
@@ -288,6 +289,11 @@ parts_max_width_cm,
 greatest(parts_max_depth_cm, parts_max_heigth_cm, parts_max_width_cm ) as max_part_size,
 parts_titles,
 is_vqced,
+
+-- Generic Auction fields (RDA + RFQ)
+has_winning_bid_any_auction,
+number_of_auctions,
+number_of_auction_cancellations,
 
 -- RDA (Reverse Dutch Auction)
 auction_document_number,
