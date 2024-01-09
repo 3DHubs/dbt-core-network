@@ -26,7 +26,7 @@ with seed_sales_targets as (
                    own.name            as name
             from seed_sales_targets s
                      inner join data_lake.dim_dates d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
-                                                          s.start_date <= d.date AND coalesce(s.end_date, '2024-01-01') > d.date
+                                                          s.start_date <= d.date AND coalesce(s.end_date, '2025-01-01') > d.date
                  left join dbt_prod_core.hubspot_owners own on own.owner_id = s.hubspot_id
             where day = 1 --and own.name = 'Philippe Tarjan'
             order by date
