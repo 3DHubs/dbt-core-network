@@ -111,6 +111,8 @@ select
     nullif(property_original_im_deal_s_order_number__value, '')::varchar(
         2048
     ) as original_im_deal_s_order_number,
+    nullif(property_im_post_sales_value_score__value, '')::varchar(128) as im_post_sales_value_score,
+    nullif(property_im_post_sales_concerning_actions__value, '')::varchar(128) as im_post_sales_concerning_actions,
     nullif(property_critical_to_quality_check_complete__value, '')::varchar(
         2048
     ) as critical_to_quality_check_complete,

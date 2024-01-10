@@ -137,6 +137,8 @@ select
     hs_deals.custom_approval,
     hs_deals.rejected_reason,
     hs_deals.im_deal_type,
+    hs_deals.im_post_sales_value_score,
+    hs_deals.im_post_sales_concerning_actions,
     hs_deals.original_im_order_document_number,
     hs_deals.ctq_check,
     hs_deals.is_strategic,
