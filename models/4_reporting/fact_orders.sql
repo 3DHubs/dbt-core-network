@@ -185,19 +185,19 @@ subtotal_closed_amount_usd,
 subtotal_sourced_amount_usd,
 hubspot_amount_usd,
 hubspot_estimated_close_amount_usd,
-beta_shipping_cost_usd,
+shipping_cost_usd,
 
 -- Amounts PO (USD):
-subtotal_sourced_cost_usd, -- From First PO
-beta_subtotal_sourced_cost_usd,
+subtotal_sourced_cost_usd,
+po_first_sourced_cost_usd,
 parts_cost_usd,
-shipping_cost_usd,
+po_first_shipping_cost_usd,
 other_costs_usd,
 po_active_subtotal_cost_usd,
 po_active_parts_cost_usd,
 po_active_shipping_cost_usd,
 po_active_other_costs_usd,
-beta_subtotal_po_cost_usd,
+subtotal_po_cost_usd,
 
 -- Amounts CM1 (USD)
 cogs_amount_usd,

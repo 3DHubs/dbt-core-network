@@ -222,9 +222,9 @@ select orders.order_uuid,
             over ( partition by orders.hubspot_contact_id)                                                                                              as closed_sales_usd_new_customer_contact,
        sum(case when is_closed and closed_order_is_from_new_customer_contact then (subtotal_sourced_amount_usd - subtotal_sourced_cost_usd) end)
             over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_new_customer_contact,
-       sum(case when orders.closed_at < date_add('days',90, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - subtotal_sourced_cost_usd) end)
+       sum(case when orders.closed_at < date_add('days',90, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - po_first_sourced_cost_usd) end)
         over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_contact_90d,
-       sum(case when orders.closed_at < date_add('months',24, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - subtotal_sourced_cost_usd) end)
+       sum(case when orders.closed_at < date_add('months',24, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - po_first_sourced_cost_usd) end)
         over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_contact_24m,
        -- First Values
        prep.first_submitted_order_technology_contact,

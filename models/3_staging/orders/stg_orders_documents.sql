@@ -106,7 +106,7 @@ with first_quote as (
                             finalized_at                                                           as sourced_at,
                             spocl.supplier_id::int                                                 as po_first_supplier_id,
                             supplier_support_ticket_id                                             as po_first_support_ticket_id,
-                            round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as subtotal_sourced_cost_usd,
+                            round(((subtotal_price_amount / 100.00) / rates.rate), 2)              as po_first_sourced_cost_usd,
                             (1/rates.rate)                                                         as exchange_rate_at_sourcing,
                             case when soq.shipping_date >= '2019-10-01' then soq.shipping_date end as po_first_promised_shipping_at_by_supplier,                                                                                                                      
                             row_number() over (partition by soq.order_uuid order by finalized_at)      as rn
@@ -124,7 +124,7 @@ with first_quote as (
                 sourced_at,  -- Used to define sourced_date                
                 po_first_supplier_id, -- Used to define is_resourced
                 po_first_support_ticket_id,
-                subtotal_sourced_cost_usd,
+                po_first_sourced_cost_usd,
                 exchange_rate_at_sourcing,
                 po_first_promised_shipping_at_by_supplier
          from rn
@@ -264,7 +264,7 @@ select -- First Quote
 
        -- First PO
        fpo.po_first_uuid,
-       fpo.subtotal_sourced_cost_usd,
+       fpo.po_first_sourced_cost_usd,
        fpo.exchange_rate_at_sourcing,
        fpo.sourced_at,
        fpo.sourced_at is not null as is_sourced,

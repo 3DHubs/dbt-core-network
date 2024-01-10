@@ -36,7 +36,7 @@ with
             c.region,
             count(distinct c.hubspot_contact_id) as cohort_size,
             coalesce(
-                sum((subtotal_sourced_amount_usd - subtotal_sourced_cost_usd)), 0
+                sum((subtotal_sourced_amount_usd - po_first_sourced_cost_usd)), 0
             ) as precalculated_margin,
             precalculated_margin * 1.0 / cohort_size * 0.93 as clv_90d
 

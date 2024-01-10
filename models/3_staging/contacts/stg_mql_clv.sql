@@ -36,15 +36,15 @@ with
                     dcom.region,
                     count(distinct(fo.hubspot_contact_id)) active_contacts,
                     coalesce(
-                        sum((subtotal_sourced_amount_usd - subtotal_sourced_cost_usd)),
+                        sum((subtotal_sourced_amount_usd - po_first_sourced_cost_usd)),
                         0
                     ) as precalculated_margin
-                from dbt_prod_reporting.fact_orders as fo
+                from {{ ref("fact_orders") }} as fo
                 left join
-                    dbt_prod_reporting.dim_contacts as dc
+                    {{ ref("dim_contacts") }}  as dc
                     on fo.hubspot_contact_id = dc.hubspot_contact_id
                 left join
-                    dbt_prod_reporting.dim_contacts as dcom
+                    {{ ref("dim_contacts") }}  as dcom
                     on dc.hubspot_contact_id = dcom.hubspot_contact_id
                 where
                     dcom.channel_grouped <> 'outbound'
