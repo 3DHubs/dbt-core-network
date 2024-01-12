@@ -6,14 +6,14 @@ select
     dealstage.first_completed_at,  -- Used for a definition
     coalesce(logistics.full_delivered_at, dealstage.first_completed_at)
     is not null as is_recognized,
+    coalesce(sfrle.recognized_at,  
     least(
-        case
-            when sfrle.order_uuid is not null then sfrle.recognized_at
+    case
             when order_shipped_at > logistics.full_delivered_at then dealstage.first_completed_at
             else logistics.full_delivered_at
         end,
         dealstage.first_completed_at
-    ) as recognized_at
+    )) as recognized_at
 from {{ ref('prep_supply_orders') }} as orders
 left join
     {{ ref('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
