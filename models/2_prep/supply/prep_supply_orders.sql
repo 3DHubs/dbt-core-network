@@ -43,7 +43,7 @@ from {{ source('int_service_supply', 'cnc_orders') }} as orders
         left join {{ ref('prep_supply_integration') }} as pse on orders.uuid = pse.order_uuid 
         left join {{ ref('prep_users') }} as users on orders.user_id = users.user_id 
         left join {{ source('int_service_supply', 'anonymous_user_carts') }} auc on orders.uuid = auc.order_uuid and ( auc.anonymous_user_email = 'test@hubs.com' or  auc.anonymous_user_email ~ '@pthubs.com')
-
+        left join {{ ref('seed_financial_recognition_logic_exceptions')}} sfr on orders.uuid = sfr.order_uuid
 -- Filter: only orders with line items on the main quote, this removes empty carts.
 where exists (
     select 1 from {{ source('int_service_supply', 'line_items') }} as li
@@ -53,7 +53,7 @@ where exists (
 and pse.is_test is not true
 
 -- Filters: to exclude internal test traffic
-and users.is_test is not true
+-- and (users.is_test is not true or sfr.order_uuid is not null)
 
 -- Filters: to exclude internal anonymous tests with the email test@hubs.com
 and auc.anonymous_user_email is null
