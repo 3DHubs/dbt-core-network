@@ -20,9 +20,8 @@ select issc.created,
             end sub_region,
        --region
        case 
-            when sub_region in ('neur','ceur','seur') then 'emea'
             when sub_region = 'na' then 'na'
-            else 'row'
+            else 'emea'
             end region,
        --market
        case when lower(issc.alpha2_code) in ('be','lu','nl') then 'benelux'
