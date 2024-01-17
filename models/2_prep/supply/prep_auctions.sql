@@ -45,6 +45,7 @@ with
     case when auction_type = 'RDA' then round((psd.subtotal_price_amount / 100.00), 2)
         when auction_type = 'RFQ' then null end as auction_amount_usd,
     -- Winning Bid
+    srl.prep_winning_bid_uuid as srl_prep_winning_bid_uuid,
     coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) as winning_bid_uuid,
     -- Multiple Auctions Per Order
     row_number() over (partition by psd.order_uuid order by auctions.started_at desc nulls last) as recency_idx,
@@ -59,6 +60,6 @@ with
     technologies.name as technology_name
 
 from {{ source('int_service_supply', 'auctions') }} as auctions
-    inner join {{ ref('prep_supply_documents') }} as psd on auctions.uuid = psd.uuid
+    inner join {{ ref('prep_supply_documents') }} as psd on auctions.uuid = psd.uuid and psd.deleted is null
     left join supplier_rfq_winning_bid_legacy srl on srl.auction_uuid = auctions.uuid
     left join {{ ref ('technologies') }} as technologies on psd.technology_id = technologies.technology_id

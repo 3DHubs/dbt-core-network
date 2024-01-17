@@ -26,15 +26,6 @@ with
             and value is not null
         group by 1,2
     ),
-    -- applicable to orders before July 2023
-     winning_bid_legacy as ( 
-        select oqsl.parent_uuid as uuid
-        from {{ ref("prep_supply_documents") }} oqsl
-        inner join {{ ref("prep_purchase_orders") }} spocl on oqsl.uuid = spocl.uuid
-        where oqsl.type = 'purchase_order' and spocl.status = 'active'
-        group by 1
-
-    ),
     -- Data from Bids (RFQ)
     supplier_rfq_bids as (
         select
@@ -45,7 +36,7 @@ with
             bids.lead_time,
             bids.placed_at,
             bids.uuid as bid_uuid,
-            case when bids.uuid = coalesce(auctions.winning_bid_uuid,winning_bid_legacy.uuid) then true else false end as is_winning_bid_prep,
+            case when bids.uuid = coalesce(auctions.winning_bid_uuid,srl_prep_winning_bid_uuid) then true else false end as is_winning_bid_prep,
             bids.supplier_id,
             bids.accepted_ship_by_date,
             bids.ship_by_date,
@@ -59,8 +50,6 @@ with
         inner join  -- Inner Join to Filter on RFQ
             {{ ref("prep_auctions") }} as auctions
             on auctions.auction_uuid = bids.auction_uuid and auctions.is_rfq
-        left join winning_bid_legacy
-            on winning_bid_legacy.uuid = bids.uuid
     ),
 
     -- Data from Supplier-Auctions (RFQ) + Auctions (RFQ)
@@ -124,8 +113,6 @@ with
                 then 0
                 else null
             end as supplier_win_rate,
-            -- Data Source
-            'Supplier-Auctions' as data_source,
             -- RFQ quality score for IM deals
             frv.requester_email_domain,
             quality_value_score,

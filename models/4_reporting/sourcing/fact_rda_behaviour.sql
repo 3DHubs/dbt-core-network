@@ -45,7 +45,7 @@ with
             end as margin_without_discount,
             b.estimated_first_leg_customs_amount_usd,
             b.estimated_second_leg_customs_amount_usd,
-            br.title,
+            b.title,
             b.explanation,
             b.bid_loss_reason,
             b.bid_version,
@@ -54,10 +54,6 @@ with
                 order by b.is_active desc, b.placed_at desc, b.updated desc
             ) as rn
         from {{ ref("prep_bids") }} as b
-        left join {{ ref("bids_bid_reasons") }} as bbr on b.uuid = bbr.bid_uuid
-        left join
-            {{ source("int_service_supply", "bid_reasons") }} as br
-            on bbr.bid_reasons_id = br.id
         left join
             {{ ref('exchange_rate_daily') }} as e
             on e.currency_code_to = b.currency_code

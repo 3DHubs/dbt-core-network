@@ -19,6 +19,7 @@ select
     bids.currency_code,
     bids.description,
     bids.lead_time,
+    br.title,
     round(
         (old_bids.estimated_first_leg_customs_amount_usd / 100.00), 2
     ) as estimated_first_leg_customs_amount_usd,
@@ -52,3 +53,7 @@ select
 from {{ source("int_service_supply", "new_bids") }} as bids
 left join
     {{ source("int_service_supply", "bids") }} as old_bids on bids.uuid = old_bids.uuid
+left join 
+    {{ ref("bids_bid_reasons") }} as bbr on bids.uuid = bbr.bid_uuid
+left join
+    {{ source("int_service_supply", "bid_reasons") }} as br on bbr.bid_reasons_id = br.id
