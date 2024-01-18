@@ -8,11 +8,11 @@ select
        oqsl.document_number                                                                  as po_document_number,      
        spocl.status                                                                          as po_control_status, -- Used on filter on fact_cost_of_goods_sold
        -- Recognition Date
-        case
+       case
         when orders.first_completed_at <= current_date and po_finalized_at <= current_date then date_trunc('day',
                                                                                                         greatest(po_finalized_at, orders.first_completed_at))
         else null end   as cost_recognized_at_sept_2020,
-        case
+        coalesce(sfrce.recognized_at, case
             when orders.po_active_uuid is null then null
             when cost_recognized_at_sept_2020 < '2020-10-01' then cost_recognized_at_sept_2020
             when po_finalized_at <= orders.recognized_at then 
@@ -25,7 +25,7 @@ select
                     when po_finalized_at < '2020-10-01' then '2020-10-01'
                     else po_finalized_at 
                 end
-        else null end                                                                        as cost_recognized_at,
+        else null end )                                                                    as cost_recognized_at,
         case when cost_recognized_at is not null then True else False end                  as cogs_is_recognized,
         rates.rate                                                                         as exchange_rate_po,
 
@@ -53,6 +53,7 @@ from {{ ref('prep_supply_documents') }} as oqsl
                                     when oqsl.created <= osl.delivered_at then trunc(osl.delivered_at)
                                     else trunc(oqsl.created) 
                                 end = trunc(rates.date)
+            left join {{ ref('seed_financial_recognition_cogs_exceptions') }} as sfrce  on oqsl.document_number  = sfrce.source_document_number
 
                                 
 where oqsl.type in ('purchase_order'))

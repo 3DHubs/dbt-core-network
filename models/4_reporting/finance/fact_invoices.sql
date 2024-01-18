@@ -83,7 +83,7 @@ with stg_cube_invoices_supply as (
             when invoices.invoice_created_date <= orders.first_completed_at then orders.first_completed_at
             when invoices.invoice_created_date > orders.first_completed_at then invoices.invoice_created_date
             else null end                                                                                       as revenue_recognized_at_legacy,
-        date_trunc('day',  
+        coalesce(seed.recognized_at, date_trunc('day',  
             case
                 when invoices.invoice_status = 'processing' then null
                 when revenue_recognized_at_legacy < '2020-10-01' then revenue_recognized_at_legacy
@@ -99,8 +99,9 @@ with stg_cube_invoices_supply as (
                     end
             else null 
             end
-        )                                                                                                       as revenue_recognized_at,
+        ))                                                                                                       as revenue_recognized_at,
         case when revenue_recognized_at is not null then True else False end                                     as revenue_is_recognized,
         orders.exchange_rate_at_closing
      from stg_invoices_unionized as invoices
      left outer join {{ ref('stg_fact_orders') }} as orders on orders.order_uuid = invoices.order_uuid
+     left join {{ ref('seed_financial_recognition_invoice_exceptions')}} as seed on seed.source_document_number = invoices.invoice_document_number

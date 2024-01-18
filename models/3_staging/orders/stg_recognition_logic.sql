@@ -20,5 +20,5 @@ left join
 left join
     {{ ref('stg_orders_dealstage') }} as dealstage on orders.uuid = dealstage.order_uuid
 left join
-    {{ ref('seed_financial_recognition_logic_exceptions') }} as sfrle
+    {{ ref('seed_financial_recognition_revenue_exceptions') }} as sfrle
     on orders.uuid = sfrle.order_uuid
