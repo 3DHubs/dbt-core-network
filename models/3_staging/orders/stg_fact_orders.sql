@@ -249,6 +249,9 @@ select
     docs.order_quote_is_local_sourcing as is_local_sourcing,
     docs.order_quote_is_eligible_for_local_sourcing as is_eligible_for_local_sourcing,
     docs.order_quote_requires_local_production as requires_local_production,
+    docs.rfq_quote_application as rfq_quote_application,
+    docs.rfq_quote_note as rfq_quote_note,
+    docs.rfq_quote_delivered_by as rfq_quote_delivered_by,
 
     --Finance related exchange rates
     docs.order_quote_source_currency,

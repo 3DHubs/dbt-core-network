@@ -60,10 +60,13 @@ with first_quote as (
                 quotes.currency_code                                             as order_quote_source_currency,
                 (1/rates.rate)                                                   as exchange_rate_at_closing,
                 quotes.price_multiplier                                          as order_quote_price_multiplier,
+                sales_rfqs.application                                           as rfq_quote_application,
+                sales_rfqs.details                                               as rfq_quote_note,
+                sales_rfqs.delivered_by                                          as rfq_quote_delivered_by,
                 quotes.cross_docking_added_lead_time
          from {{ ref('prep_supply_orders') }} as orders
              left join {{ ref('prep_supply_documents') }} as quotes on orders.quote_uuid = quotes.uuid
-
+             left join {{ ref('sales_rfqs') }} as sales_rfqs on orders.quote_uuid = sales_rfqs.quote_uuid
              -- Joins for exchange rates
              left outer join {{ ref('stg_orders_dealstage') }} as order_deals on orders.uuid = order_deals.order_uuid
              left join {{ ref('exchange_rate_daily') }} as rates 
@@ -254,6 +257,10 @@ select -- First Quote
        oq.order_quote_source_currency,
        oq.exchange_rate_at_closing,
        oq.order_quote_price_multiplier,
+
+       oq.rfq_quote_application,
+       oq.rfq_quote_note,
+       oq.rfq_quote_delivered_by,
 
        -- All Quotes
        aaq.order_first_submitted_at,

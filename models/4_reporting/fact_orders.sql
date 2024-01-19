@@ -138,11 +138,15 @@ po_active_document_number,
 order_quote_document_number,
 order_quote_status,
 order_quote_is_admin,
+rfq_quote_note,
+rfq_quote_application,
+rfq_quote_delivered_by,
 quote_first_created_by_admin,
 number_of_quote_versions,
 has_admin_created_quote,
 has_manual_quote_review,
 has_request_review,
+
 
 -- Company Attributes
 hubspot_company_name,

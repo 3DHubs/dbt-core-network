@@ -317,6 +317,7 @@ sources:
       - name: replies
       - name: reply_options
       - name: roles
+      - name: sales_rfqs
       - name: shipments
         freshness:
           warn_after: { count: 12, period: hour }
