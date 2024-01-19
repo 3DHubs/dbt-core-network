@@ -99,9 +99,9 @@ select
     b_1.bid_amount_usd as bid_original_amount_usd,
     b.margin_without_discount as bid_margin,
     b_1.margin_without_discount as bid_original_margin,
-    (ali.li_subtotal_amount_usd - ali.discount_cost_usd)
+    (a.li_subtotal_amount_usd - a.discount_cost_usd)
     * b.margin_without_discount as bid_margin_usd,
-    (ali.li_subtotal_amount_usd - ali.discount_cost_usd) * (
+    (a.li_subtotal_amount_usd - a.discount_cost_usd) * (
         a.base_margin_without_discount - b.margin_without_discount
     ) as bid_margin_loss_usd,
     case
@@ -124,7 +124,7 @@ select
     a.recency_idx as auction_round,
 
     -- Order Level Fields
-    (ali.li_subtotal_amount_usd - ali.discount_cost_usd) as auction_quote_amount_usd,
+    a.auction_quote_amount_usd,
 
     -- sourcing time fields:
     -- original ship by date.
@@ -154,4 +154,3 @@ left join
     and b_1.has_changed_prices
     and b_1.bid_amount_usd <> b.bid_amount_usd
     and b.bid_amount_usd > 0
-left join {{ ref("agg_line_items") }} as ali on a.quote_uuid = ali.quote_uuid

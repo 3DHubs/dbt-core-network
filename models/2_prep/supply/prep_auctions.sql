@@ -44,6 +44,10 @@ with
     psd.technology_id,
     case when auction_type = 'RDA' then round((psd.subtotal_price_amount / 100.00), 2)
         when auction_type = 'RFQ' then null end as auction_amount_usd,
+    -- Order Level Fields
+    ali.li_subtotal_amount_usd,
+    ali.discount_cost_usd,
+    (ali.li_subtotal_amount_usd - ali.discount_cost_usd) as auction_quote_amount_usd,
     -- Winning Bid
     srl.prep_winning_bid_uuid as srl_prep_winning_bid_uuid,
     coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) as winning_bid_uuid,
@@ -63,3 +67,4 @@ from {{ source('int_service_supply', 'auctions') }} as auctions
     inner join {{ ref('prep_supply_documents') }} as psd on auctions.uuid = psd.uuid and psd.deleted is null
     left join supplier_rfq_winning_bid_legacy srl on srl.auction_uuid = auctions.uuid
     left join {{ ref ('technologies') }} as technologies on psd.technology_id = technologies.technology_id
+    left join {{ ref("agg_line_items") }} as ali on psd.parent_uuid = ali.quote_uuid
