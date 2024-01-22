@@ -110,6 +110,8 @@ select
     stg_dim_suppliers.is_eligible_for_vqc,
     stg_dim_suppliers.currency_code,
     stg_dim_suppliers.unit_preference,
+    stg_dim_suppliers.last_sign_in_at,
+    stg_dim_suppliers.last_sign_in_at_days_ago,
     stg_dim_suppliers.monthly_order_value_target,
     stg_dim_suppliers.country_id,
     initcap(stg_dim_suppliers.country_name) as country_name,

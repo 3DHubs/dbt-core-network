@@ -23,7 +23,9 @@
                 s.is_eligible_for_vqc,
                 s.currency_code,
                 s.unit_preference,
-                s.monthly_order_value_target
+                s.monthly_order_value_target,
+                su.last_sign_in_at,
+                su.last_sign_in_at_days_ago
          from {{ ref('suppliers') }} s
              left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
              left outer join {{ ref('prep_users') }} as su on ssu.user_id = su.user_id
@@ -45,6 +47,8 @@ select supplier_id,
        is_eligible_for_vqc,
        currency_code,
        unit_preference,
+       last_sign_in_at,
+       last_sign_in_at_days_ago,
        monthly_order_value_target
 from unique_suppliers
 where rn = 1
