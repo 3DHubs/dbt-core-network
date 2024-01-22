@@ -5,11 +5,11 @@ select
     ow.email as email,
     initcap(ow.first_name) as "first_name",
     replace(initcap(ow.last_name), ' Pl', '')
-    + case when email ~ 'protolabs' then ' (PL)' else '' end as last_name,
+    + case when lower(t.name::varchar) ~ 'protolabs' then ' (PL)' else '' end as last_name,
     initcap(first_name)
     + ' '
     + replace(initcap(ow.last_name), ' Pl', '')
-    + case when email ~ 'protolabs' then ' (PL)' else '' end as name,
+    + case when lower(t.name::varchar) ~ 'protolabs' then ' (PL)' else '' end as name,
     ow.user_id as user_id,
     ow.created_at as created_at,
     ow.updated_at as updated_at,

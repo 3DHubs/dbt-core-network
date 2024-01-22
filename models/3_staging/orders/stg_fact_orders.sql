@@ -153,7 +153,6 @@ select
     hs_deals.mp_concerning_actions,
     hs_deals.is_logistics_shipping_quote_used,
     case when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
-    when hubspot_owner_name ~ '(PL)' then 'Direct Sales Pilot'
     when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win' 
     when pl_sales_rep_name is not null then 'Twin-Win' end as pl_cross_sell_channel,
     case when integration_platform_type is not null or pl_cross_sell_channel is not null then true else false end as is_integration_tmp,
