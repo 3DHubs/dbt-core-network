@@ -115,13 +115,6 @@ sources:
     tables:
       - name: quick_link
 
-  - name: fed_fulfilment
-    tables:
-      - name: questions
-      - name: replies
-      - name: reply_options
-      - name: open_questions      
-
   - name: ext_google_ads_console
     freshness:
       warn_after: { count: 12, period: hour }

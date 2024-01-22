@@ -19,12 +19,14 @@ with
             qro.description
             || ' '
             || qr.value
-            || qr.unit as answer,
+            || qr.unit
+            || ' '
+            || qr.is_correct as answer,
             false as has_attachment
 
-        from {{ ref('questions') }} as q
-        left join {{ ref('replies') }} as qr on q.uuid = qr.question_uuid
-        left join {{ ref('reply_options') }} as qro on qr.reply_option_id = qro.id
+        from {{ source('int_service_supply', 'questions') }} as q
+        left join {{ source('int_service_supply', 'replies') }} as qr on q.uuid = qr.question_uuid
+        left join {{ source('int_service_supply', 'reply_options') }} as qro on qr.reply_option_id = qro.id
         where decode(qr.is_correct, 'true', true, 'false', false)
 
         union all
@@ -39,11 +41,11 @@ with
             bq.author_id,
             bq.answered_at,
             bq.answered_by_id,
-            'open_question' as question_type,
+            bq.type as question_type,
             bq.question_text as question_description,
             bq.answer_text as answer,
             bq.answer_attachment_uuid is not null as has_attachment
-        from {{ ref('open_questions') }} as bq
+        from {{ source('int_service_supply', 'base_question') }} as bq
         group by 2,3,4,5,6,7,8,9,10,11,12
     )
 
