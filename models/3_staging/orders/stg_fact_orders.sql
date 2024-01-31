@@ -52,6 +52,10 @@ select
     -- Product Features
     orders.is_eligible_for_restriction,
 
+    -- Platform data
+    users.platform_user_id,
+    case when length(users.platform_user_id) > 16 then true else false end as is_anonymous_cart,
+
     ---------- SOURCE: SUPPLY EXTERNAL ORDERS --------------
 
     -- External Orders: Main fields

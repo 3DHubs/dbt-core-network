@@ -44,6 +44,7 @@ select
     
     -- Counts
     count(order_uuid) over (partition by hubspot_contact_id)                                                                                           as number_of_orders_contact,
+    count(order_uuid) over (partition by platform_user_id)                                                                                             as number_of_carts_platform_user_id,
     count(case when is_submitted then order_uuid end) over (partition by hubspot_contact_id)                                                           as number_of_submitted_orders_contact,
     count(case when is_closed then order_uuid end) over (partition by hubspot_contact_id)                                                              as number_of_closed_orders_contact,
 
@@ -198,6 +199,7 @@ from serie_three_created
 select orders.order_uuid,
        orders.hubspot_contact_id,
        orders.hubspot_company_id,
+       orders.platform_user_id,
 
     --- CONTACT BASED FIELDS ---
         -- Lifecycle
@@ -213,6 +215,7 @@ select orders.order_uuid,
        prep.created_order_is_from_new_contact,
        prep.closed_order_is_from_new_customer_contact,
        -- Counts
+       case when prep.number_of_closed_orders_contact > 0 then null else number_of_carts_platform_user_id end as number_of_carts_without_closed_carts_platform_user_id,
        prep.number_of_orders_contact,
        prep.number_of_submitted_orders_contact,
        prep.number_of_closed_orders_contact,

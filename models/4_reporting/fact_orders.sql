@@ -176,6 +176,12 @@ agg.created_order_is_from_new_client,
 agg.closed_order_is_from_new_customer_client,
 agg.closed_order_number_client,
 
+-- Plaform Attributes
+orders.is_anonymous_cart,
+orders.platform_user_id,
+agg.number_of_carts_without_closed_carts_platform_user_id,
+
+
 -- Supplier Attributes
 supplier_name,
 
@@ -455,3 +461,4 @@ left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
 left join {{ ref('agg_orders_cm1') }} as agg_cm1 on agg_cm1.order_uuid = orders.order_uuid
 left join {{ ref('stg_fact_reorders') }} as original on original.reorder_order_uuid = orders.order_uuid
 left join {{ ref('stg_order_greenhubs') }} as gh on orders.order_uuid = gh.order_uuid
+where coalesce(number_of_carts_without_closed_carts_platform_user_id,1)  < 30 or subtotal_sourced_amount_usd >0 --removal of bot carts
