@@ -47,12 +47,10 @@ with seed_file_data as (
 
     supplier_sourced_amounts as ( select
                                       supplier_id,
-                                      supplier_name,
                                       sourced_quarter,
                                       sum(quarterly_sourced_revenue) quarterly_sourced_revenue
                                   from (
         select fo.supplier_id,
-            fo.supplier_name,
             date_trunc('quarter', fo.sourced_at)::date as sourced_quarter,
             sum(fo.subtotal_sourced_amount_usd)  as quarterly_sourced_revenue -- Sourced amount per supplier per quarter eligible for commission
         from {{ ref('fact_orders') }} as fo
@@ -61,14 +59,13 @@ with seed_file_data as (
         and dcd.supplier_id is not null
         and fo.sourced_at >= dcd.commission_start_at  -- Only the amount sourced during the commission period is calculated
         and fo.sourced_at <= dcd.commission_end_at    -- Only the amount sourced during the commission period is calculated
-        group by 1, 2, 3
+        group by 1, 2
         union all
         select supplier_id,
-               supplier_name,
                commission_start_at as sourced_quarter,
                0 as quarterly_sourced_revenue
             from determine_commission_dates)
-                                           group by 1,2,3
+                                           group by 1,2
 
     )
 

@@ -540,8 +540,6 @@ select
 
     -- Suppliers:
     coalesce(docs.po_active_supplier_id, rda.supplier_id)                          as supplier_id,
-    coalesce(docs.po_active_supplier_name, rda.supplier_name)                      as supplier_name,
-    coalesce(docs.po_active_supplier_address_id, rda.supplier_address_id)          as supplier_address_id,
 
  
 

@@ -182,9 +182,6 @@ orders.platform_user_id,
 agg.number_of_carts_without_closed_carts_platform_user_id,
 
 
--- Supplier Attributes
-supplier_name,
-
 -- Amounts Quote (USD):
 parts_amount_usd, -- "order_quote_" fields are derived from line items
 shipping_amount_usd,    

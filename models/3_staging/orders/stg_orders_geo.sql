@@ -93,10 +93,10 @@ left join
 -- Origin Related (Supplier)
 left join {{ ref("stg_orders_documents") }} as docs on orders.uuid = docs.order_uuid
 left join {{ ref("agg_orders_rda") }} as rda on orders.uuid = rda.order_uuid
+left join {{ ref('suppliers') }} as s on s.id = coalesce(docs.po_active_supplier_id, rda.supplier_id)
 left join
     {{ ref("addresses") }} as addresses_origin
-    on addresses_origin.address_id
-    = coalesce(docs.po_active_supplier_address_id, rda.supplier_address_id)
+    on addresses_origin.address_id = s.address_id
 left join
     {{ ref("prep_countries") }} as countries_origin
     on countries_origin.country_id = addresses_origin.country_id
