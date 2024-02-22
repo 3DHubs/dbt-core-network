@@ -28,6 +28,7 @@ with complete_orders as (
 select  
 
     order_uuid,
+    project_uuid,
 
 -- CONTACT FIELDS
 
@@ -129,7 +130,13 @@ select
     coalesce(datediff('month', became_customer_at_client, closed_at) = 0, false)                                                                       as closed_order_is_from_new_customer_client,
 
         -- Rank Values
-    case when is_closed is true and hubspot_contact_id is not null then rank() over (partition by coalesce(hubspot_company_id,hubspot_contact_id) order by closed_at asc) end       as closed_order_number_client
+    case when is_closed is true and hubspot_contact_id is not null then rank() over (partition by coalesce(hubspot_company_id,hubspot_contact_id) order by closed_at asc) end       as closed_order_number_client,
+
+
+-- PROJECT FIELDS
+
+    case when closed_at = (min(closed_at) over (partition by project_uuid)) then sum(subtotal_amount_usd) over (partition by project_uuid) else null end   as project_amount_usd,
+    case when closed_at = (min(closed_at) over (partition by project_uuid)) then count(order_uuid) over (partition by project_uuid) else null end          as project_order_count
 
 from complete_orders
 
@@ -197,6 +204,7 @@ select order_uuid,
 from serie_three_created
 )
 select orders.order_uuid,
+       orders.project_uuid,
        orders.hubspot_contact_id,
        orders.hubspot_company_id,
        orders.platform_user_id,
@@ -249,6 +257,7 @@ select orders.order_uuid,
        prep.previous_closed_order_at_contact,
        prep.days_from_previous_closed_order_contact,
 
+    
     --- COMPANY BASED FIELDS ---
        -- Lifecycle
        prep.became_opportunity_at_company,
@@ -292,7 +301,12 @@ select orders.order_uuid,
        became_customer_at_client,
        created_order_is_from_new_client,
        closed_order_is_from_new_customer_client,
-       closed_order_number_client
+       closed_order_number_client,
+
+    ---PROJECT BASED FIELDS -- 
+
+       project_amount_usd,
+       project_order_count
 
 
 from complete_orders as orders

@@ -36,6 +36,7 @@ select
     orders.quote_uuid                                                                      as order_quote_uuid,
     orders.reorder_original_order_uuid,
     orders.billing_request_id                                                              as billing_id, -- This is the key used to indenitfy when the order was paid out and under which billing month
+    case when dealstage.closed_at is not null then md5(concat(concat('project', coalesce(hs_deals.hubspot_contact_id,users.hubspot_contact_id)),dealstage.closed_at::date)) end as project_uuid,
 
     -- Orders: Dates
     orders.created                                                                         as created_at,

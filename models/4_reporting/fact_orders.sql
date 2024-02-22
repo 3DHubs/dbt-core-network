@@ -28,6 +28,7 @@ select
 orders.order_uuid,
 order_hubspot_deal_id,
 document_number,
+orders.project_uuid,
 
 -- Foreign Keys
 order_quote_uuid,
@@ -181,6 +182,9 @@ orders.is_anonymous_cart,
 orders.platform_user_id,
 agg.number_of_carts_without_closed_carts_platform_user_id,
 
+-- Project Attributes 
+agg.project_amount_usd,
+agg.project_order_count,
 
 -- Amounts Quote (USD):
 parts_amount_usd, -- "order_quote_" fields are derived from line items
