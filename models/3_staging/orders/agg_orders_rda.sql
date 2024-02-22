@@ -25,7 +25,7 @@
 with rda_interactions as ( 
     select sai.order_uuid,
            bool_or(case when pa.auction_type = 'RDA' then true else false end)                       as is_first_auction_rda_sourced,
-           bool_or(is_rda_sourced)                                                                   as is_rda_sourced,
+           bool_or(pa.is_rda_sourced)                                                                as is_rda_sourced,
            count(distinct sai.auction_uuid)                                                          as number_of_rda_auctions,
            count(*)                                                                                  as number_of_supplier_auctions_assigned,
            -- Auctions Seen
@@ -71,8 +71,9 @@ with rda_interactions as (
            bool_or(sai.bid_has_changed_shipping_date and sai.is_winning_bid)                         as has_winning_bid_countered_on_lead_time,
            bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
 
-    from {{ ref('fact_rda_behaviour') }} as sai
-    left join {{ ref('prep_auctions')}} as pa on sai.auction_uuid = pa.auction_uuid and first_successful_auction
+    from {{ ref('fact_auction_behaviour') }} as sai
+    left join {{ ref('prep_auctions')}} as pa on sai.auction_uuid = pa.auction_uuid and pa.first_successful_auction
+    where not sai.is_rfq
     group by 1
 
     -- SOURCE 2: Auctions Cancelled Manually

@@ -39,14 +39,14 @@ select
     datediff('minute', start_date, end_date) / 60.0 as hours_in_type,
     0 as hours_late,
     'This is additional sourcing time due to the RFQ process failing and the order being placed on the RDA.' as notes
-from {{ ref("fact_rda_behaviour") }} as frb
+from {{ ref("fact_auction_behaviour") }} as frb
 left join {{ ref("stg_orders_dealstage") }} as sod on frb.order_uuid = sod.order_uuid
 left join {{ ref("prep_auctions") }} as parfq on frb.order_uuid = parfq.order_uuid and parfq.is_rfq
 left join {{ ref("prep_auctions") }} as parda on frb.auction_uuid = parda.auction_uuid and not parda.is_rfq
 
 where 
     parfq.auction_created_at < frb.auction_created_at
-    and frb.is_winning_bid
+    and frb.is_winning_bid and not frb.is_rfq
     and parda.first_successful_auction
     and parfq.is_rfq
 group by 1, 2, 3, 4, 5
@@ -67,9 +67,9 @@ select
     / 60.0 as hours_in_type,
     hours_in_type as hours_late,
     'This is the adjustment as a result of a counterbid on lead time.' as notes
-from {{ ref("fact_rda_behaviour") }} as frb
+from {{ ref("fact_auction_behaviour") }} as frb
 left join {{ ref("prep_auctions") }} as par on frb.auction_uuid = par.auction_uuid and not par.is_rfq 
-where frb.is_winning_bid and par.first_successful_auction
+where frb.is_winning_bid and par.first_successful_auction and not frb.is_rfq
 
 -- union
 
@@ -90,9 +90,9 @@ where frb.is_winning_bid and par.first_successful_auction
 --     end as hours_in_type,
 --     hours_in_type as hours_late,
 --     'This is an ajustment occurs to account for the sourcing time after a counterbid is accepted after the closing of the sourcing window.'as notes
--- from {{ ref("fact_rda_behaviour") }} as frb
+-- from {{ ref("fact_auction_behaviour") }} as frb
 -- left join {{ ref("prep_auctions") }} as par on frb.auction_uuid = par.auction_uuid and not par.is_rfq
--- where frb.is_winning_bid and par.first_successful_auction
+-- where frb.is_winning_bid and par.first_successful_auction and not frb.is_rfq
 
 -- union
 
@@ -114,6 +114,6 @@ where frb.is_winning_bid and par.first_successful_auction
 --     end as hours_in_type,
 --     hours_in_type as hours_late,
 --     'This is an ajustment occurs to prevent the supplier promised by date of falling on a weekend in the event of a counterbid.' as notes
--- from {{ ref("fact_rda_behaviour") }} as frb
+-- from {{ ref("fact_auction_behaviour") }} as frb
 -- left join {{ ref("prep_auctions") }} as par on frb.auction_uuid = par.auction_uuid and not par.is_rfq
--- where frb.is_winning_bid and par.first_successful_auction
+-- where frb.is_winning_bid and par.first_successful_auction and not frb.is_rfq

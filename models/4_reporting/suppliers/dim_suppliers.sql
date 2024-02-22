@@ -49,8 +49,8 @@ with agg as ( select
             end
     )
     ) as last_accepted_at
-    from {{ ref('fact_rda_behaviour') }}
-    where sa_supplier_id is not null
+    from {{ ref('fact_auction_behaviour') }}
+    where sa_supplier_id is not null and not is_rfq
     group by 1),
 
 fst as ( select distinct
