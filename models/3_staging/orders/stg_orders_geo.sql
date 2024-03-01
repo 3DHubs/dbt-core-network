@@ -124,7 +124,11 @@ left join
 -- Destination Related (Client)
 left join
     {{ ref("addresses") }} as addresses_destination
-    on quotes.shipping_address_id = addresses_destination.address_id
+    on 
+    case when orders.uuid = '32308d16-89b2-4c9b-bc8a-21546e47d9fb' -- 'JG 20240301 Big deal exception to switch destination region to billing instead of shipping'
+         then quotes.billing_address_id  
+         else quotes.shipping_address_id end 
+    = addresses_destination.address_id
 left join
     {{ ref("prep_countries") }} as countries_destination
     on addresses_destination.country_id = countries_destination.country_id

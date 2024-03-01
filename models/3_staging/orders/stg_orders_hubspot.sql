@@ -21,7 +21,7 @@ with stg as (
         -- Foreign Fields
         hcon.hs_company_id                                                                as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
         case
-           when hcon.email ~ '@(3d)?hubs.com' then true else false end                    as hubspot_contact_email_from_hubs,
+           when hcon.email ~ '@(3d)?hubs.com' or hcon.email ~ 'protolabs' then true else false end   as hubspot_contact_email_from_internal,
         hs.hs_latest_associated_company_id                                                as original_hubspot_company_id, --JG: Kept for reference
         hcom.name                                                                         as hubspot_company_name,
         hs.pl_cross_sell_company_name,
