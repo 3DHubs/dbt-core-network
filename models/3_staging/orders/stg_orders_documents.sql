@@ -43,6 +43,7 @@ with first_quote as (
      --todo: investigate what the quote uuid in cnc orders leads to
      order_quote as (
          select orders.uuid                                                      as order_uuid,
+                quotes.uuid                                                      as order_quote_uuid,
                 quotes.document_number                                           as order_quote_document_number,
                 quotes.status                                                    as order_quote_status, -- Used to filter out carts
                 quotes.is_admin                                                  as order_quote_is_admin,
@@ -231,6 +232,7 @@ select -- First Quote
        fq.quote_first_splitted_from_quote_uuid,
 
        -- Order Quote
+       oq.order_quote_uuid,
        oq.order_quote_document_number,
        oq.order_quote_status,     -- Used to filter out carts
        oq.order_quote_is_admin,

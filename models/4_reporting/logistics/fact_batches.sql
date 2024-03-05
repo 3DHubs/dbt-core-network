@@ -57,9 +57,11 @@ select fs.order_uuid,
        case
            when is_cross_docking_bool then MIN(case
                                                    when fs.shipping_leg = 'cross_docking:customer'
+                                                       then fs.tracking_received_by_carrier_at end)
+           when is_cross_docking_bool = false then  MIN(case
+                                                   when fs.shipping_leg = 'drop_shipping:customer' and o.promised_shipping_date >= '2024-03-01' -- agreed change to switch drop shipping orders over to carrier pick up time as well.
                                                        then fs.tracking_received_by_carrier_at
-                                                   else Null end)
-           else MIN(fs.shipment_created_at) end                                                                     as carrier_received_shipment_to_customer_at,
+                                                   else fs.shipment_created_at end) end                                as carrier_received_shipment_to_customer_at,
        case
            when is_cross_docking_bool then MIN(case
                                                    when fs.shipping_leg = 'cross_docking:customer'
@@ -90,8 +92,8 @@ select fs.order_uuid,
        coalesce(sum(fs.number_logistics_message_alerts), 0) > 0                                                     as batch_has_had_logistics_alerts,
        sum(case when fs.is_valid_shipment then 1 else 0 end) > 0                                                    as is_valid_batch
 from {{ ref('fact_shipments') }} as fs 
-left join {{ source('int_service_supply', 'packages') }} as p
-on fs.batch_uuid = p.uuid
+    left join {{ source('int_service_supply', 'packages') }} as p
+    on fs.batch_uuid = p.uuid
     left join {{ ref('prep_supply_orders') }} as o on p.order_uuid = o.uuid
     left join {{ ref('stg_orders_geo') }} as sog on fs.order_uuid = sog.order_uuid
 group by 1, 2, 3, 4, 5, 6

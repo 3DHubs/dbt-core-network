@@ -18,6 +18,7 @@ select
     destination_sub_region,
     destination_market,
     destination_company_name,
+    destination_us_state,
     order_status,
     im_deal_type,
     lead_time,
