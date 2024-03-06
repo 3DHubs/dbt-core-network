@@ -3,7 +3,7 @@ with business_days as (
 
     select date_trunc('month', date) date,
            sum(case when weekend_flag is false and holiday_flag is false then 1 else 0 end) as days
-    from data_lake.dim_dates group by 1
+    from int_analytics.dim_dates group by 1
     order by 1
 )
 
@@ -20,7 +20,7 @@ select dd.date,
        
 
 FROM
-data_lake.dim_dates dd
+int_analytics.dim_dates dd
 left join business_days bd on date_trunc('month', dd."date") = bd.date
 inner join {{ ref('seed_budget') }} b on b.month =  date_trunc('month', dd.date)
 

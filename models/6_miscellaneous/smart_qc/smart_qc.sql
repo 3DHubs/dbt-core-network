@@ -5,7 +5,7 @@
 with date_year_week as (
           select
               distinct CONVERT(varchar(10), dates.year * 100 + dates.week) as year_week
-          from {{ source('data_lake', 'dim_dates') }} as dates
+          from {{ source('int_analytics', 'dim_dates') }} as dates
           where dates.date < DATEADD(month, 2, GETDATE())
           and dates.date > 201901
       ), supplier_options as (

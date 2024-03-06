@@ -9,16 +9,9 @@ sources:
     tables:
       - name: click_performance_reports
 
-  - name: data_lake
-    tags: ["data_lake"]
+  - name: int_analytics
+    tags: ["int_analytics"]
     tables:
-      - name: full_order_history_events
-      - name: legacy_contacts
-      - name: exchange_rate_spot_daily
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
-        loaded_at_field: date
       - name: btyd
         freshness:
           warn_after: { count: 7, period: day }
@@ -39,6 +32,18 @@ sources:
           warn_after: { count: 2, period: day }
           error_after: { count: 3, period: day }
         loaded_at_field: model_executed_at
+      - name: dim_dates
+      
+  - name: data_lake
+    tags: ["data_lake"]
+    tables:
+      - name: full_order_history_events
+      - name: legacy_contacts
+      - name: exchange_rate_spot_daily
+        freshness:
+          warn_after: { count: 24, period: hour }
+          error_after: { count: 48, period: hour }
+        loaded_at_field: date
       - name: smart_qc
         freshness:
           warn_after: { count: 1, period: day }
@@ -50,7 +55,6 @@ sources:
       - name: supply_cross_docking_tracking_details_20200911
       - name: legacy_orders
       - name: legacy_mqls
-      - name: dim_dates
       - name: nps_scores
 
   - name: ext_google_search

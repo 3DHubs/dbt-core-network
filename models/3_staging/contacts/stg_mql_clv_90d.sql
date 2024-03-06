@@ -56,7 +56,7 @@ with
             row_number() over (
                 partition by hubspot_contact_id order by model_executed_at asc
             ) as row
-        from {{ source("data_lake", "mql_conversion_pred") }} pred
+        from {{ source("int_analytics", "mql_conversion_pred") }} pred
     )
 select
     dc.hubspot_contact_id,

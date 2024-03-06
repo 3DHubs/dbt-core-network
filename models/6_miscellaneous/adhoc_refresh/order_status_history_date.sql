@@ -38,5 +38,5 @@ select s.order_uuid,
            when s.status = 'dispute_created_at' then 'disputed' end as status,
            d.date
 from status s
-inner join data_lake.dim_dates d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
+inner join int_analytics.dim_dates d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
                                                           s.start_status_date <= d.date AND end_status_date > d.date order by 1, date

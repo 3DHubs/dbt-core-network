@@ -12,5 +12,5 @@ with tiers as (select hubspot_company_id,
                                                       over (PARTITION BY snapshot_at) then 'low' end as potential_tier,
                       tiering_probability,
                       row_number() over (partition by hubspot_company_id order by snapshot_at asc) as row
-               from {{ source('data_lake', 'customer_tiering') }} )
+               from {{ source('int_analytics', 'customer_tiering') }} )
 select * from tiers where row =1

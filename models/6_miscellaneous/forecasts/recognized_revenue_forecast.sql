@@ -22,7 +22,7 @@ with
         select p.*, d.date as sourced_at
         from prep_run_rate p
         inner join
-            {{ source("data_lake", "dim_dates") }} d
+            {{ source("int_analytics", "dim_dates") }} d
             on p.start_date <= d.date
             and p.end_date > d.date
         where d.weekend_flag is false and d.holiday_flag is false
