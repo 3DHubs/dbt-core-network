@@ -50,7 +50,7 @@ stg_join_w_seo_targets as (
     select gsc_country.*,
            case when gsct.target_id is not null then true else false end is_seo_target
     from stg_join_w_country as gsc_country
-             left join {{source('data_lake', 'static_seo_targets')}} as gsct on gsct.target_id = gsc_country.target_id
+             left join {{source('int_analytics', 'static_seo_targets')}} as gsct on gsct.target_id = gsc_country.target_id
 )
 
 select *

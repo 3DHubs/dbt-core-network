@@ -16,7 +16,7 @@ with complete_orders as (
 -- that contains deals from both Drupal and Hubspot that are not found in service supply (~9K).
 
     {{ dbt_utils.union_relations(
-    relations=[ref('stg_fact_orders'), source('data_lake', 'legacy_orders')]
+    relations=[ref('stg_fact_orders'), source('int_analytics', 'legacy_orders')]
 ) }}
 
 -- The DBT union relations package unions tables even when they have different widths and column orders

@@ -17,7 +17,7 @@ with supply_cdt as (
            --This is the only shipment for these orders, even though they are x-dock (early implementation phase)
            min(fb.label_created_to_crossdock_at)      as cdtd_shipped_from_cross_dock_at,
            min(fb.delivered_to_customer_at)           as cdtd_delivered_at
-    from {{ source('data_lake', 'supply_cross_docking_tracking_details_20200911') }} as cdtd
+    from {{ source('int_analytics', 'supply_cross_docking_tracking_details_20200911') }} as cdtd
              left join {{ ref('fact_batches') }} as fb
     on fb.order_uuid = cdtd.order_uuid
         left join {{ ref('prep_supply_orders') }} as o
@@ -45,7 +45,7 @@ with supply_cdt as (
                 min(fp.full_delivered_at) as full_delivered_at
          from {{ ref('fact_batches') }} as fp
          where fp.order_uuid not in
-             (select order_uuid from {{ source('data_lake'
+             (select order_uuid from {{ source('int_analytics'
              , 'supply_cross_docking_tracking_details_20200911') }})
          group by 1
      ), 

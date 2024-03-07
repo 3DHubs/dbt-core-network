@@ -54,10 +54,10 @@ select
     mainlinebid as top_of_page_cpc_orginal_currency,
     mainline1bid as firstposition_cpc_orginal_currency,
     (
-        cost_orginal_currency / data_lake_exchange_rate_spot_daily.rate
+        cost_orginal_currency / exchange_rate_spot_daily.rate
     )::decimal(9, 2) as cost_usd,
     (
-        current_max_cpc_orginal_currency / data_lake_exchange_rate_spot_daily.rate
+        current_max_cpc_orginal_currency / exchange_rate_spot_daily.rate
     )::decimal(9, 2) as current_max_cpc_usd,
     nullif(
         historicaladrelevance, '--'
@@ -72,22 +72,22 @@ select
         historicalqualityscore, '--'
     )::int as historical_quality_score,
     (
-        top_of_page_cpc_orginal_currency / data_lake_exchange_rate_spot_daily.rate
+        top_of_page_cpc_orginal_currency / exchange_rate_spot_daily.rate
     )::decimal(9, 2) as top_of_page_cpc_usd,
     (
-        firstposition_cpc_orginal_currency / data_lake_exchange_rate_spot_daily.rate
+        firstposition_cpc_orginal_currency / exchange_rate_spot_daily.rate
     )::decimal(9, 2) as firstposition_cpc_usd,
     nullif(firstpagebid, '--')::double precision as firstpage_cpc_orginal_currency,
     (
-        firstpage_cpc_orginal_currency / data_lake_exchange_rate_spot_daily.rate
+        firstpage_cpc_orginal_currency / exchange_rate_spot_daily.rate
     )::decimal(9, 2) as firstpage_cpc_usd
 
 from keywords_performance_report_ranked
 
-left join {{ source('data_lake', 'exchange_rate_spot_daily') }} as data_lake_exchange_rate_spot_daily
+left join {{ source('int_analytics', 'exchange_rate_spot_daily') }} as exchange_rate_spot_daily
     on
-        data_lake_exchange_rate_spot_daily.currency_code_to = keywords_performance_report_ranked.currencycode
+        exchange_rate_spot_daily.currency_code_to = keywords_performance_report_ranked.currencycode
         and trunc(
             keywords_performance_report_ranked.timeperiod
-        ) = trunc(data_lake_exchange_rate_spot_daily.date)
+        ) = trunc(exchange_rate_spot_daily.date)
 where row_number = 1
