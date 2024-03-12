@@ -42,7 +42,7 @@
 with order_history_events_integrity_test as (
     with production_order_history_events as (
         select date_trunc('day', fohe.created) as created_at, count(*) as number_of_events
-        from {{ source('data_lake', 'full_order_history_events') }} as fohe
+        from {{ source('int_analytics', 'full_order_history_events') }} as fohe
         group by 1
     ),
         backups_order_history_events as (

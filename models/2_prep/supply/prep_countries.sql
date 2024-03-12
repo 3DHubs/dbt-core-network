@@ -40,5 +40,5 @@ select issc.created,
             {{ varchar_to_boolean("is_in_european_union") }}
 
 from {{ source('int_service_supply', 'countries') }} as issc
-left join {{ source('data_lake', 'supply_countries_markets_mapping')}} as scmm on lower(issc.alpha2_code) = scmm.country_iso2
+left join {{ source('int_analytics', 'supply_countries_markets_mapping')}} as scmm on lower(issc.alpha2_code) = scmm.country_iso2
 left join {{ref('seed_countries_european_union')}} as  eu_union on issc.country_id = eu_union.country_id

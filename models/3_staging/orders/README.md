@@ -21,7 +21,7 @@ Most tables in the staging stage have either an `stg_` or `agg_` prefix. Table w
 
 Table | Description
 ------------ | -------------
-stg_orders_hubspot | Queries from data_lake `hubspot_deals` and some data from `hubspot_owners`. Although the construction of this table is rather simple is very important for the fact_orders table as several fields are defined from this source, Hubspot is the CRM software used primarily by the Sales team but also widely use across Hubs to keep track of the status of an order. It also provides us with the contact and company Hubspot IDs that allows us to join the orders table with the contact and company tables.
+stg_orders_hubspot | Queries from `hubspot_deals` and some data from `hubspot_owners`. Although the construction of this table is rather simple is very important for the fact_orders table as several fields are defined from this source, Hubspot is the CRM software used primarily by the Sales team but also widely use across Hubs to keep track of the status of an order. It also provides us with the contact and company Hubspot IDs that allows us to join the orders table with the contact and company tables.
 stg_orders_documents | Takes data from `dbt_prod_data_lake.cnc_order_quotes` which contains data from quotes and purchase orders (POs). Although labelled as a staging table it also aggregates data as one order can have multiple quotes and POs. Quotes and POs contain valuable data such as amounts, timestamps, document numbers and more.
 stg_orders_otr | OTR stands for On Time Rate. This is an example of a table that is built on top of two other staging tables. It compares the data from `stg_orders_logistcs` and `stg_orders_documents` to determine if an order was on time or not, the logistics model determines what actually happened whereas the documents model states what was agreed/promised.
 stg_orders_dealstage | Takes data from `hubspot_deal_dealstage_history` and `fact_order_events`, the later table is a filtered version of `order_history_events`. This table uses this data to determine the status of the order at certain stages, the most critical event defined here is `closing`.
@@ -38,7 +38,7 @@ The model `stg_fact_orders` is where all staging and aggregated models are compi
 
 Not all processing can be done at the compilation and unavoidably there is a need for an extra step after the compilation of the staging tables. The main table `fact_orders` queries from `stg_fact_orders` with some differences:
 
-(1) **Legacy Data:** A static legacy order data living in data_lake schema is unioned to the model (not visible in the diagram).
+(1) **Legacy Data:** A static legacy order data living in int_analytics schema is unioned to the model (not visible in the diagram).
 (2) **Order Aggregates**: some fields such as number_of_orders_contact, became_customer_at_contact are created in the `agg_orders` model and then joined on fact_orders. This model is also later joined to the companies and contacts table (not shown on the diagram).
 (3) **Contribution Margin:** CM1 needs to be defined at this stage as an invoice is recognized based on the recognition date of the order which is defined in the stg_fact_orders model.
 (4) **Re-Orders**: Some orders might have a re-order and this would then have a original_order_uuid, to determine the characteristics of the original order a self-join is required which needs to be done at this stage.

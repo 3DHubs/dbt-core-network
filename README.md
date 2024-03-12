@@ -1,9 +1,6 @@
 # dbt at Hubs
 
-Generally we distinguish three "layers" of data:
-(1) landing (or staging) -- the layer that consists of raw data
-(2) data_lake -- this layer holds foundational data that has been cleaned, and deduplicated, and enriched
-(3) reporting -- this layer holds reporting data (dimensional, factual, and aggregate tables)
+Data lands raw on a variety of "landing" schemas (i.e.: int_analytics, ext_hubspot), then data is structured in a three-layer model with base, prep, stage layers with models stored in the dbt_prod_core schema. The final layer, reporting, is stored in the dbt_prod_reporting schema.
 
 ## Useful commands and examples
 

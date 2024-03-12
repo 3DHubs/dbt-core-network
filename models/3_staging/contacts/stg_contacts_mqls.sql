@@ -1,7 +1,7 @@
 with legacy as (
             select email, 
             first_upload_at
-            from {{ source('data_lake', 'legacy_mqls') }}
+            from {{ source('int_analytics', 'legacy_mqls') }}
     ),
     cart as (
             select 
