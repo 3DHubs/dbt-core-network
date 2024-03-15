@@ -73,7 +73,8 @@ select con.created_at                                             as created_at,
            teams.invite_status                                        as team_invite_status,                                                            
            case when teams.team_name is not null and (team_invite_status = 'accepted' or team_invite_status is null)  
            then true else false end                                   as is_team_member,
-           users.created_at                                           as platform_user_created_at
+           users.created_at                                           as platform_user_created_at,
+           coalesce(users.signup_source,'hubs')                       as signup_source
     from {{ ref('stg_hs_contacts_attributed') }} as con
              left join {{ ref('stg_contacts_mqls') }} as mql on  con.contact_id = mql.contact_id
              left join {{ ref('agg_orders_contacts') }} as agg_orders on con.contact_id = agg_orders.hubspot_contact_id

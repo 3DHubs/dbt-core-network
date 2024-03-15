@@ -54,6 +54,7 @@ select base.created_at,
        base.team_invite_status,
        base.is_team_member,
        base.platform_user_created_at,
+       base.signup_source,
        -- Salesforce fields
        base.salesforce_18_digit_id,
        -- Advertising Fields
