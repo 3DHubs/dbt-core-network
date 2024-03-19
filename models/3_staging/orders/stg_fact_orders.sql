@@ -532,7 +532,7 @@ select
     case when is_closed then subtotal_amount_usd else 0 end                                as subtotal_closed_amount_usd,
     case when is_sourced then subtotal_amount_usd else 0 end                               as subtotal_sourced_amount_usd,
     case when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03 
-         when rda.is_first_auction_rda_sourced = false and is_cross_docking = false then 0
+         when rda.is_first_auction_rda_sourced is not true and is_cross_docking = false then 0
          else qli.shipping_amount_usd end                                                  as prep_shipping_cost_usd, 
     case when is_sourced then coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_shipping_estimate_amount_usd end,0) + coalesce(prep_shipping_cost_usd,0) else 0 end  as shipping_cost_usd,
     case when po_production_finalized_at < coalesce(logistics.shipped_at,'2100-01-01') and coalesce(auc.has_winning_bid_any_auction, false) = false  then po_production_subtotal_cost_usd
