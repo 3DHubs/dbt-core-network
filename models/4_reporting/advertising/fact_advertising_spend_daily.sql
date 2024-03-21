@@ -51,10 +51,10 @@ with campaign_costs_from_keywords as (
                 null                                                          as adgroup_name,
                 null::int                                                     as keyword_id,
                 null                                                          as keyword,
-                cc.impressions - nvl(ccfk.impressions, 0)                     as impressions,
-                cc.clicks - nvl(ccfk.clicks, 0)                               as clicks,
-                cc.cost_orginal_currency - nvl(ccfk.cost_orginal_currency, 0) as cost_orginal_currency,
-                cc.cost_usd - nvl(ccfk.cost_usd, 0)                           as cost_cost_usd,
+                sum(cc.impressions - nvl(ccfk.impressions, 0))::bigint                     as impressions,
+                sum(cc.clicks - nvl(ccfk.clicks, 0))::bigint                               as clicks,
+                sum(cc.cost_orginal_currency - nvl(ccfk.cost_orginal_currency, 0)) as cost_orginal_currency,
+                sum(cc.cost_usd - nvl(ccfk.cost_usd, 0))                          as cost_cost_usd,
                 null::varchar                                                 as _kw_report_sk
 
         from campaign_costs cc
@@ -62,6 +62,7 @@ with campaign_costs_from_keywords as (
                                 on (cc.date = ccfk.date and cc.campaign_id = ccfk.campaign_id and cc.source = ccfk.source)
 
         where cc.cost_orginal_currency - nvl(ccfk.cost_orginal_currency, 0) not between -0.03 and 0.03
+        group by 1,2,3,4,5
 
         -- {% if is_incremental() %}
 
@@ -71,11 +72,39 @@ with campaign_costs_from_keywords as (
      ),
     
       stg_cost_union as (
-             select * from {{ ref('fact_search_keyword_performance') }}
+               select date,
+                 source,
+                 account_id,
+                 campaign_id,
+                 campaign_name,
+                 adgroup_id,
+                 adgroup_name,
+                 keyword_id,
+                 keyword,
+                 impressions,
+                 clicks,
+                 cost_usd,
+                 cost_orginal_currency,
+                 _kw_report_sk
+             from {{ ref('fact_search_keyword_performance') }}
 
              union all
 
-             select * from stg_costs_without_keywords
+             select  date,
+                 source,
+                 account_id,
+                 campaign_id,
+                 campaign_name,
+                 ad_group_id,
+                 adgroup_name,
+                 keyword_id,
+                 keyword,
+                 impressions,
+                 clicks,
+                 cost_cost_usd,
+                 cost_orginal_currency,
+                 _kw_report_sk
+              from stg_costs_without_keywords
              )
 
 select *,

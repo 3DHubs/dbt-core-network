@@ -24,8 +24,8 @@ with akpr as (
         --     and trunc("date") >= current_date - 30
 
         -- {% endif %}
-     )
-
+     ),
+combined as (
 
 -- Google data
 select trunc(akpr.date)                                      as date,
@@ -76,4 +76,20 @@ select trunc(bkpr.date)                                          as date,
 
 from bkpr
             left join {{ ref ('bing_ads_campaigns') }} as bc on bc.id = bkpr.campaign_id
-            left join {{ ref ('bing_ads_ad_groups') }} as bad on bad.id = bkpr.adgroup_id
+            left join {{ ref ('bing_ads_ad_groups') }} as bad on bad.id = bkpr.adgroup_id)
+select date,
+       source,
+       account_id,
+       campaign_id,
+       campaign_name,
+       adgroup_id,
+       adgroup_name,
+       keyword_id,
+       keyword,
+       _kw_report_sk,
+       sum(impressions) impressions,
+       sum(clicks) clicks,
+       sum(cost_usd) cost_usd,
+       sum(cost_orginal_currency) as cost_orginal_currency
+ from combined
+ group by 1,2,3,4,5,6,7,8,9,10

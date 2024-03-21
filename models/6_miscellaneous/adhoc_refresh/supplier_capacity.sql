@@ -1,5 +1,6 @@
                 select fo.supplier_id,
                        d.date                           as production_at,
+                       technology_name,
                        sum(subtotal_sourced_amount_usd) as subtotal_sourced_amount_usd,
                        count(1)                         as orders,
                        null as seen_rate,
@@ -12,10 +13,12 @@
                      on fo.sourced_at <= d.date
                          and coalesce(fo.order_shipped_at,promised_shipping_at_by_supplier) > d.date
                          and order_status != 'canceled'
-                group by 1,2
+                         and d.date>= date_add('year',-3,getdate())
+                group by 1,2,3
                 union all
                 select sa_supplier_id                                                                             as supplier_id,
                        fact_rda_behaviour.sa_assigned_at::date,
+                       fo.technology_name,
                        null as subtotal_sourced_amount_usd,
                        null as orders,
                        (COUNT(CASE
@@ -36,5 +39,7 @@
                                   ELSE NULL END))                                                                 as positive_volume
 
                 FROM dbt_prod_reporting.fact_auction_behaviour AS fact_rda_behaviour
+                left join dbt_prod_reporting.fact_orders fo on fo.order_uuid = fact_rda_behaviour.order_uuid
                 WHERE ((fact_rda_behaviour.is_rfq = 'false'))
-                group by 1, 2
+                   and fact_rda_behaviour.sa_assigned_at >= date_add('year',-3,getdate())
+                group by 1, 2,3
