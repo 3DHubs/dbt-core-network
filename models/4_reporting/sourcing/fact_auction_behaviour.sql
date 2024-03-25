@@ -94,6 +94,7 @@ select
     sa.auction_uuid,
     a.order_uuid,
     a.is_rfq,
+    a.auction_type,
     a.auction_created_at,
     a.finished_at as auction_finished_at,
     a.winning_bid_uuid as auction_winning_bid_uuid,
