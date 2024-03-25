@@ -397,7 +397,7 @@ models:
       - name: hubspot_contact_id
         tests:
           - unique
-  - name: fact_rda_behaviour
+  - name: fact_auction_behaviour
     columns:
       - name: sa_uuid
         tests:
