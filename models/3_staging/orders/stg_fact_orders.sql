@@ -358,6 +358,7 @@ select
 
     otr.is_shipped_on_time_by_supplier,
     otr.is_shipped_on_time_to_customer,
+    otr.is_shipped_on_time_expected_by_customer,
     otr.shipping_to_customer_delay_days,
     otr.shipping_by_supplier_delay_days,
     -- Delay Notifications

@@ -43,6 +43,10 @@ select
     line_item_total_bounding_box_volume_cm3,
     part_volume_cm3,
     line_item_total_volume_cm3,
+    has_fits, 
+    has_internal_corners, 
+    has_part_marking, 
+    tiered_tolerance,
 
     is_complaint,
     complaint_is_valid,

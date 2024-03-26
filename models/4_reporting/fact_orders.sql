@@ -185,6 +185,7 @@ agg.number_of_carts_without_closed_carts_platform_user_id,
 -- Project Attributes 
 agg.project_amount_usd,
 agg.project_order_count,
+agg.is_15k_project,
 
 -- Amounts Quote (USD):
 parts_amount_usd, -- "order_quote_" fields are derived from line items

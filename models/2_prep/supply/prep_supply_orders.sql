@@ -20,7 +20,7 @@ select orders.created,
        orders.status,
        orders.delivered_at,
        orders.shipped_at,
-       orders.expected_shipping_date, -- has no function, but could be adjusted target date
+       orders.expected_shipping_date, -- will be used for additional otr indicator
        orders.legacy_order_id,
        orders.completed_at,
        orders.support_ticket_id,

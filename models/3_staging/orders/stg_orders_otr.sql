@@ -83,8 +83,25 @@ select distinct orders.uuid                              as order_uuid,
                         then false
                     else null
                     end                                  as is_shipped_on_time_to_customer,
+
+                           case
+                    when dateadd(day, 1, orders.expected_shipping_date) > getdate() then null
+                    when orders.expected_shipping_date is null then null
+                    when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
+                         logistics.shipped_to_customer_at is null then null
+                    when orders.status = 'canceled' then null
+                    when hs.delay_reason = 'customer_requested_hold' and logistics.shipped_to_customer_at > orders.expected_shipping_date  then null
+                    when logistics.shipped_to_customer_at > orders.expected_shipping_date then false
+                    when logistics.shipped_to_customer_at <= orders.expected_shipping_date then true
+                    when logistics.shipped_to_customer_at is null and dateadd(day, 1, orders.expected_shipping_date) < getdate()
+                        then false
+                    else null
+                    end                                  as is_shipped_on_time_expected_by_customer,
+
                     round(date_diff('minutes',orders.promised_shipping_date,logistics.shipped_to_customer_at )*1.0/1440,1) as shipping_to_customer_delay_days,
                     round(date_diff('minutes',promised_shipping_at_by_supplier_pick_up_adjusted,logistics.shipped_at )*1.0/1440,1) as shipping_by_supplier_delay_days,
+
+
 
                 -- Delay Notification Feature Aggregates
                 dagg.has_delay_notifications,
