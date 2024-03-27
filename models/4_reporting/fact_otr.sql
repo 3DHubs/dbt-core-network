@@ -1,11 +1,11 @@
-
---    __           _     _           _       _               
---   / _|         | |   | |         | |     | |              
---  | |_ __ _  ___| |_  | |__   __ _| |_ ___| |__   ___  ___ 
---  |  _/ _` |/ __| __| | '_ \ / _` | __/ __| '_ \ / _ \/ __|
---  | || (_| | (__| |_  | |_) | (_| | || (__| | | |  __/\__ \
---  |_| \__,_|\___|\__| |_.__/ \__,_|\__\___|_| |_|\___||___/
-
+-- ______ ___  _____ _____   _____ ___________ 
+-- |  ___/ _ \/  __ \_   _| |  _  |_   _| ___ \
+-- | |_ / /_\ \ /  \/ | |   | | | | | | | |_/ /
+-- |  _||  _  | |     | |   | | | | | | |    / 
+-- | |  | | | | \__/\ | |   \ \_/ / | | | |\ \ 
+-- \_|  \_| |_/\____/ \_/    \___/  \_/ \_| \_|
+                                            
+                                            
 -- Doom font asci                                                         
 -- Model from March 2024, where the new batches (multiple batch per order, otr calculation comes together with the legacy otr calculation)
 
@@ -38,7 +38,7 @@ select
        order_uuid,
        order_quote_uuid,
        po_active_uuid,
-       null as batch_uuid,
+       order_uuid + 1::varchar as batch_uuid,
        1 as batch_number,
        promised_shipping_at_by_supplier,
        order_shipped_at as shipped_by_supplier_at,
