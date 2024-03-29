@@ -19,7 +19,7 @@ with batch_pk_line_items as (
         from batch_pk_line_items
         where batch_package_rank = 1)
         
-        select distinct
+        select 
         docs.order_uuid,
         docs.order_quote_uuid,
         docs.po_active_uuid,
@@ -29,10 +29,6 @@ with batch_pk_line_items as (
         coalesce(fb.carrier_received_shipment_to_crossdock_at,fb.carrier_received_shipment_to_customer_at) as shipped_by_supplier_at,
         bs.ship_by_date    as promised_shipping_at_to_customer,
         fb.carrier_received_shipment_to_customer_at as shipped_to_customer_at,
-        po_bsli.quantity   as quantity_target,
-        po_pli.quantity    as quantity_package,
-        po_bsli.fulfilled_quantity as quantity_fulfilled,
-
         -- This code is used to give suppliers a 12 hours window after the customer promised by date to
         -- Hand over the product to the carrier (this should be removed at a later stage).
         case 
@@ -69,7 +65,10 @@ with batch_pk_line_items as (
         end as is_shipped_on_time_to_customer,
 
         round(date_diff('minutes',promised_shipping_at_to_customer,shipped_to_customer_at )*1.0/1440,1) as shipping_to_customer_delay_days,
-        round(date_diff('minutes',promised_shipping_at_by_supplier_adjusted,shipped_by_supplier_at )*1.0/1440,1) as shipping_by_supplier_delay_days
+        round(date_diff('minutes',promised_shipping_at_by_supplier_adjusted,shipped_by_supplier_at )*1.0/1440,1) as shipping_by_supplier_delay_days,
+        sum(po_bsli.quantity)   as quantity_target,
+        sum(po_pli.quantity)    as quantity_package,
+        sum(po_bsli.fulfilled_quantity) as quantity_fulfilled
 
     from {{ ref('prep_supply_orders') }} as orders
         left join {{ ref ('stg_orders_documents')}} as docs on orders.uuid = docs.order_uuid
@@ -83,3 +82,4 @@ with batch_pk_line_items as (
                 on po_pli.id = po_bpli.package_line_item_id
         left join {{ ref('fact_batches') }} fb on fb.batch_uuid = po_pli.package_uuid
         left join {{ ref ('stg_orders_hubspot')}} as hs on orders.hubspot_deal_id = hs.hubspot_deal_id
+        group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
