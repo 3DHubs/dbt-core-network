@@ -111,3 +111,7 @@ date,scope,all_runs,failed_runs
 2024/03/25,Supply,104,31
 2024/03/25,MR,0,0
 2024/03/25,Acceptance,73,2
+2024/03/25,FE,30,19
+2024/03/25,Supply,100,50
+2024/03/25,MR,0,0
+2024/03/25,Acceptance,35,2
