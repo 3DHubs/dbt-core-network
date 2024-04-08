@@ -1,6 +1,6 @@
                 select fo.supplier_id,
                        d.date                           as production_at,
-                       technology_name,
+                       fo.order_uuid,
                        sum(subtotal_sourced_amount_usd) as subtotal_sourced_amount_usd,
                        count(1)                         as orders,
                        null as seen_rate,
@@ -18,7 +18,7 @@
                 union all
                 select sa_supplier_id                                                                             as supplier_id,
                        fact_rda_behaviour.sa_assigned_at::date,
-                       fo.technology_name,
+                       fo.order_uuid,
                        null as subtotal_sourced_amount_usd,
                        null as orders,
                        (COUNT(CASE
