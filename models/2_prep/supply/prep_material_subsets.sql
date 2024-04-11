@@ -1,12 +1,10 @@
 with distinct_material_subset_region_settings as (
     select
-        distinct
         material_subset_id,
-        order_in_eu,
-        order_in_us,
         excluded_in_us,
         excluded_in_eu
     from {{ source('int_service_supply', 'material_subsets_region_settings') }}
+    group by 1,2,3
 )
 
 
