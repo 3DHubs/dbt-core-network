@@ -137,7 +137,8 @@ select
 
     case when closed_at = (min(closed_at) over (partition by project_uuid)) then sum(subtotal_amount_usd) over (partition by project_uuid) else null end   as project_amount_usd,
     case when project_amount_usd > 15000 then true else false end as is_15k_project_prep,
-    case when closed_at = (min(closed_at) over (partition by project_uuid)) then count(order_uuid) over (partition by project_uuid) else null end          as project_order_count
+    case when closed_at = (min(closed_at) over (partition by project_uuid)) then count(order_uuid) over (partition by project_uuid) else null end          as project_order_count,
+    case when closed_at = (min(closed_at) over (partition by project_uuid)) and sum(case when has_rfq then 1 else 0 end) over (partition by project_uuid) > 0 then true else false end as project_has_rfq
 
 from complete_orders
 
@@ -308,7 +309,8 @@ select orders.order_uuid,
 
        project_amount_usd,
        project_order_count,
-       first_value(is_15k_project_prep) over (partition by orders.project_uuid order by orders.closed_at asc rows between unbounded preceding and unbounded following)           as is_15k_project
+       first_value(is_15k_project_prep) over (partition by orders.project_uuid order by orders.closed_at asc rows between unbounded preceding and unbounded following)           as is_15k_project,
+       project_has_rfq
 
 
 from complete_orders as orders
