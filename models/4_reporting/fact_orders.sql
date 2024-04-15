@@ -186,6 +186,7 @@ agg.number_of_carts_without_closed_carts_platform_user_id,
 agg.project_amount_usd,
 agg.project_order_count,
 agg.is_15k_project,
+agg.is_rfq_project,
 agg.project_has_rfq,
 
 -- Amounts Quote (USD):
