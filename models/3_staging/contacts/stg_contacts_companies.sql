@@ -25,6 +25,7 @@ select contacts.hubspot_contact_id,
            when contacts.hubspot_company_id is null
                then 1
            else null end as inside_customer_number,
-       contacts.is_team_member
+       contacts.is_team_member,
+       contacts.sign_up_source
 from {{ ref('stg_dim_contacts') }} as contacts
             left join {{ ref('agg_orders_contacts') }} as agg_orders on  contacts.hubspot_contact_id = agg_orders.hubspot_contact_id

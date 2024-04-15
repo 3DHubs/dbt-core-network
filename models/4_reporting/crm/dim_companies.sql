@@ -100,6 +100,7 @@ select
        case when acc.became_mql_at_company  >= '2022-01-01' then acc.mql_type end as mql_type, --Cart data only proper available since 2022, hence mql_type.
        acc.became_mql_at_company                                                 as became_mql_at, 
        acc.mql_technology                                                        as mql_technology,
+       acc.sign_up_source,
 
        -- Aggregates from Orders
        agg_orders.became_opportunity_at_company                                  as became_opportunity_at,      -- New Field (1st Sept 2021)   as 

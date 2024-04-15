@@ -12,13 +12,16 @@ select
     first_value(mql_technology)
            over ( partition by hubspot_company_id order by (mql_technology is null)::int, became_mql_at_contact asc rows between unbounded preceding and unbounded following) as mql_technology,
     first_value(mql_type)
-           over ( partition by hubspot_company_id order by (mql_type is null)::int, became_mql_at_contact asc rows between unbounded preceding and unbounded following) as mql_type
+           over ( partition by hubspot_company_id order by (mql_type is null)::int, became_mql_at_contact asc rows between unbounded preceding and unbounded following) as mql_type,
+    first_value(sign_up_source)
+           over ( partition by hubspot_company_id order by (mql_type is null)::int, became_mql_at_contact asc rows between unbounded preceding and unbounded following) as sign_up_source
     from {{ ref('stg_contacts_companies') }}
 )
 
 select s.hubspot_company_id,
        mql.mql_technology,
        mql.mql_type,
+       mql.sign_up_source,
        count(hubspot_contact_id)              as number_of_contacts,
        max(inside_mql_number)                 as number_of_inside_mqls,
        min(became_mql_at_contact)             as became_mql_at_company,
@@ -29,4 +32,4 @@ select s.hubspot_company_id,
 from {{ ref('stg_contacts_companies') }} s
     left join prep_mql_technology mql on mql.hubspot_company_id = s.hubspot_company_id
 
-group by 1,2,3
+group by 1,2,3,4
