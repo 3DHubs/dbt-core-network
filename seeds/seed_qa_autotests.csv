@@ -116,3 +116,6 @@ date,scope,autotests_qty,autotests_skipped,avg_run_duration
 2024/04/02,FE,46,2,11.3
 2024/04/02,Supply,56,2,15.43
 2024/04/02,MR,0,0,0.0
+2024/04/08,FE,47,2,11.75
+2024/04/08,Supply,57,2,14.95
+2024/04/08,MR,0,0,0.0
