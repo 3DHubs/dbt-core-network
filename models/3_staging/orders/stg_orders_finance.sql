@@ -121,7 +121,8 @@ select o.uuid                         as order_uuid,
            else '5. Manual Net30' end as payment_method,
         pl.payment_label,
         pl.order_remaining_amount,
-        pl.order_remaining_amount_usd
+        pl.order_remaining_amount_usd,
+        q.is_pl_pay_later_used                            
 from {{ ref('prep_supply_orders') }} as o
     left join {{ ref('prep_supply_documents') }} as q
     on o.quote_uuid = q.uuid

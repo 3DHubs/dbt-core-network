@@ -305,6 +305,7 @@ select
     finance.is_auto_payment,
     finance.is_instant_payment,
     finance.payment_method,
+    finance.is_pl_pay_later_used,                                     
 
 
     -------- SOURCE: STG ORDERS LOGISTICS --------
