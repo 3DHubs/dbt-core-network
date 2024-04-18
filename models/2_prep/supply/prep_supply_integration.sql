@@ -42,7 +42,7 @@ select
     external_orders.consumer_ship_by as integration_order_ship_by_at,
     coalesce(qt.pl_user_id, ql.user_id) as integration_user_id,
     replace(qt.utm_content, 'content=', '') as integration_utm_content,
-    count(quotes.order_uuid) over (partition by integration_order_number) as number_of_orders_per_integration_order,
+    count(quotes.order_uuid) over (partition by integration_platform_type, integration_order_number ) as number_of_orders_per_integration_order,
     case when number_of_orders_per_integration_order > 1 and integration_platform_type = 'papi' then true else false end as is_multi_line_papi_integration
 
 from {{ source("int_service_supply", "cnc_order_quotes") }} as quotes
