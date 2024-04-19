@@ -10,4 +10,4 @@ select backlink_month::date as backlink_date,
        backlinks,
        cost_usd,
        notes
-from {{ source('ext_gsheets', 'marketing_ahrefs') }}
+from {{ source('ext_gsheets_v2', 'marketing_ahrefs') }}

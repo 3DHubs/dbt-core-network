@@ -140,7 +140,7 @@ sources:
       - name: click_performance_report
       - name: keywords_performance_report
 
-  - name: ext_gsheets
+  - name: ext_gsheets_v2
     loaded_at_field: _sdc_received_at
     tables:
       - name: marketing_ahrefs

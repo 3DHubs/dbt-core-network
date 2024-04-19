@@ -10,7 +10,7 @@ with employees as ( --multiple rows are inserted in source, distinction not clea
     first_name,
     last_name,
     location
-   from {{ source('ext_gsheets', 'hr_bamboo_employees') }}
+   from {{ source('ext_gsheets_v2', 'hr_bamboo_employees') }}
 ),
 sales_hubspot_ids as(
     select

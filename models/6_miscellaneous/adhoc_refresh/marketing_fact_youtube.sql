@@ -6,4 +6,4 @@ select view_month::date as view_date,
        views,
        watch_time_in_hours,
        subscribers
-from {{ source('ext_gsheets', 'marketing_youtube') }}
+from {{ source('ext_gsheets_v2', 'marketing_youtube') }}
