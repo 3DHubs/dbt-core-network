@@ -28,7 +28,6 @@ select docs.created,
        docs.subtotal_price_amount,
        docs.tax_price_amount,
        docs.tax_rate,
-       docs.is_pl_pay_later_used,
        docs.turnaround_time,
        docs.description,
        docs.admin_description,
@@ -72,7 +71,8 @@ select docs.created,
        {{ varchar_to_boolean('tax_category_override') }},
        {{ varchar_to_boolean('is_admin_only') }},
        {{ varchar_to_boolean('requires_local_production') }},
-       {{ varchar_to_boolean('is_instant_payment') }}                     
+       {{ varchar_to_boolean('is_instant_payment') }},
+       {{ varchar_to_boolean('is_pl_pay_later_used')}}                     
 
 from {{ source('int_service_supply', 'cnc_order_quotes') }} as docs
 -- Filter: reduces the number of documents by filtering out empty orders, filter that takes place in the supply_orders model

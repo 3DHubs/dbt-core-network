@@ -99,6 +99,7 @@ select base.created_at,
        agg_orders.is_integration_contact                        as is_integration_contact,
 
        -- Company Aggregates
+       agg_companies.inside_lead_number,
        agg_companies.inside_mql_number,
        agg_companies.inside_opportunity_number,
        agg_companies.inside_customer_number

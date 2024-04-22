@@ -5,5 +5,5 @@ select view_month::date as view_date,
        impressions_ctr_percent*1.0/100 as impressions_ctr_percent,
        views,
        watch_time_in_hours,
-       subscribers
+       subscribers__decimal as subscribers
 from {{ source('ext_gsheets_v2', 'marketing_youtube') }}
