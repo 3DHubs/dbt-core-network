@@ -1,6 +1,6 @@
 {{ config(materialized="incremental") }}
 -- This model makes sure that the upsert int_analytics.smart_qc only stores the result the moment the shipped at is known.
-select qc.line_item_uuid, 
+select distinct qc.line_item_uuid, 
        qc.predicted_proba,
        qc.model_executed_at
     from {{ source("int_analytics", "smart_qc") }} qc
