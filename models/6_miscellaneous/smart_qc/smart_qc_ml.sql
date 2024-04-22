@@ -10,6 +10,6 @@ select qc.line_item_uuid,
    
       {% if is_incremental() %}
 
-             and predicted_proba not in (select distinct predicted_proba from {{ this }})
+             and line_item_uuid not in (select distinct line_item_uuid from {{ this }})
 
      {% endif %}
