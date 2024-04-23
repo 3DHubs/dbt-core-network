@@ -28,7 +28,7 @@ with deal_monthly as (
                    order_hubspot_deal_id,
                    bdr_owner_name                                                                     as employee,
                    'BDR Monthly Base'::text                                                                    as commission_plan,
-                    round(sum((subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0))* c.monthly_fee) , 2) as commission_usd
+                    round(sum((subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0))* (c.monthly_fee * case when closed_at > '2024-04-01' then 2 else 1 end)) , 2) as commission_usd
 
       from dbt_prod_reporting.fact_orders
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.bdr_owner_id
@@ -250,7 +250,12 @@ with deal_monthly as (
       null::bigint as order_hubspot_deal_id,
       hubspot_handover_owner_name                       as employee,
       'BDR Handover fee'::text as commission_plan,
-      count(hubspot_company_id) * 350  as commission_usd
+       sum(
+            case
+                when outbound_handover_date < '2024-04-01' then 350
+                else 200
+            end
+        ) as commission_usd
       from dbt_prod_reporting.dim_companies
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', outbound_handover_date) and c.name = dim_companies.hubspot_handover_owner_name
       where true
