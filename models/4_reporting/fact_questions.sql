@@ -45,6 +45,26 @@ with
             bq.answer_attachment_uuid is not null as has_attachment
         from {{ ref('open_questions') }} as bq
         group by 2,3,4,5,6,7,8,9,10,11,12
+
+
+        union all
+
+        -- part feature questions
+        select
+            pf.uuid as question_uuid,
+            pf.order_uuid,
+            pf.line_item_uuid,
+            pf.status as question_status,
+            pf.submitted_at,
+            pf.author_id,
+            pf.answered_at,
+            pf.answered_by_id,
+            'part_feature_question' as question_type,
+            pf.question_text as questions_description,
+            pf.answer_text as answer,
+            pf.answer_attachment_uuid is not null as has_attachment
+
+        from {{ ref('part_feature_questions') }} as pf
     )
 
 select

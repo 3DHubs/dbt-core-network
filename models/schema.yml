@@ -125,7 +125,8 @@ sources:
       - name: questions
       - name: replies
       - name: reply_options
-      - name: open_questions      
+      - name: open_questions
+      - name: part_feature_questions      
 
   - name: ext_google_ads_console
     freshness:
