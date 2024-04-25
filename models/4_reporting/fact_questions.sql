@@ -12,7 +12,6 @@ with
             q.answered_at,
             q.answered_by_id,
             'dimension_question'  as question_type,
-            q.title as question_category,
             null as question_description,
             qro.description
             || ' '
@@ -46,7 +45,6 @@ with
             bq.answered_at,
             bq.answered_by_id,
             'open_question' as question_type,
-            'open_question' as question_category,
             bq.question_text as question_description,
             bq.answer_text as answer,
             bq.answer_attachment_uuid is not null as has_attachment,
@@ -75,8 +73,8 @@ with
             pf.author_id,
             pf.answered_at,
             pf.answered_by_id,
-            'part_feature_question' as question_type,
-            pf.type as question_category,
+            case when pf.type = 'change_request' then 'part_feature_change_request'
+                when pf.type = 'competing_specifications' then 'part_feature_competing_specifications' end as question_type,
             pf.question_text as questions_description,
             pf.answer_text as answer,
             pf.answer_attachment_uuid is not null as has_attachment,
