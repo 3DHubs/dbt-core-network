@@ -1,10 +1,7 @@
--- Maintained by Daniel Salazar
--- Last edit on 2022-03-06
-
--- The question feature handles 2 different questions curated questions and open questions
 with
     union_question_feature as (
-        -- curated questions
+
+        -- dimension questions
         select
             q.uuid as question_uuid,
             q.order_uuid,
@@ -14,13 +11,22 @@ with
             q.author_id,
             q.answered_at,
             q.answered_by_id,
-            q.title  as question_type,
-            NULL as question_description,
+            'dimension_question'  as question_type,
+            q.title as question_category,
+            null as question_description,
             qro.description
             || ' '
             || qr.value
             || qr.unit as answer,
-            false as has_attachment
+            false as has_attachment,
+            null::integer as material_id,
+            null::integer as material_subset_id,
+            null::integer as material_color_id,
+            null as finish_slug,
+            null::integer as tolerance_id,
+            null::boolean as has_threads,
+            null::boolean as has_part_marking,
+            null::boolean as has_internal_corners
 
         from {{ ref('questions') }} as q
         left join {{ ref('replies') }} as qr on q.uuid = qr.question_uuid
@@ -40,11 +46,21 @@ with
             bq.answered_at,
             bq.answered_by_id,
             'open_question' as question_type,
+            'open_question' as question_category,
             bq.question_text as question_description,
             bq.answer_text as answer,
-            bq.answer_attachment_uuid is not null as has_attachment
+            bq.answer_attachment_uuid is not null as has_attachment,
+            null::integer as material_id,
+            null::integer as material_subset_id,
+            null::integer as material_color_id,
+            null as finish_slug,
+            null::integer as tolerance_id,
+            null::boolean as has_threads,
+            null::boolean as has_part_marking,
+            null::boolean as has_internal_corners
+
         from {{ ref('open_questions') }} as bq
-        group by 2,3,4,5,6,7,8,9,10,11,12
+        group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
 
 
         union all
@@ -60,9 +76,18 @@ with
             pf.answered_at,
             pf.answered_by_id,
             'part_feature_question' as question_type,
+            pf.type as question_category,
             pf.question_text as questions_description,
             pf.answer_text as answer,
-            pf.answer_attachment_uuid is not null as has_attachment
+            pf.answer_attachment_uuid is not null as has_attachment,
+            pf.material_id,
+            pf.material_subset_id,
+            pf.material_color_id,
+            pf.finish_slug,
+            pf.tolerance_id,
+            pf.has_threads,
+            pf.has_part_marking,
+            pf.has_internal_corners
 
         from {{ ref('part_feature_questions') }} as pf
     )
