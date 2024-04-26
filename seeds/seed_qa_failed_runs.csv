@@ -123,3 +123,7 @@ date,scope,all_runs,failed_runs
 2024/04/15,Supply,163,12
 2024/04/15,MR,0,0
 2024/04/15,Acceptance,41,6
+2024/04/22,FE,16,2
+2024/04/22,Supply,63,6
+2024/04/22,MR,9,5
+2024/04/22,Acceptance,40,1
