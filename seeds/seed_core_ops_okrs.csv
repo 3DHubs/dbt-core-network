@@ -1,0 +1,19 @@
+date,bbjective,key_result,metric,current_value,baseline_value,target_value,unit
+2024-03-01,Enhance Infrastructure Resilience and Reliability,Maintain ~100% uptime (over a month) for critical services in the production cluster,Combined monitor uptime percentage for all the K8S resources under the hubs namespace,94,98,100,%
+2024-03-01,Enhance Infrastructure Resilience and Reliability,Maintain ~100% uptime (over a month) for critical services in the production cluster,Combined monitor uptime percentage for AWS resources,100,100,100,%
+2024-03-01,Enhance Infrastructure Resilience and Reliability,Keep Incident Mean Time to Resolution (MTTR) under 1 hour,MTTR on PagerDuty,118,53,59,minutes
+2024-03-01,Enable Developer Self-Service ,"Write comprehensive self-service guides for provisioning development environments, infrastructure components, and using shared packages and tools provided by CoreOps",Percentage of CoreOps domains with their documentation being up-to-date,20,,100,%
+2024-03-01,Enable Developer Self-Service ,"Write comprehensive self-service guides for provisioning development environments, infrastructure components, and using shared packages and tools provided by CoreOps",Number use cases documented,7,5,15,count
+2024-03-01,Enable Developer Self-Service ,Achieve a 95% satisfaction rate from developers using self-service infrastructure provisioning.,Developer satisfaction survey scores,72,86,95,%
+2024-03-01,Enable Developer Self-Service ,Decrease the amount of time the CoreOps team spends on ad-hoc requests by 50%,Number of open AzDO task tickets for ad-hoc requests in a quarter,20,,0,count
+2024-03-01,Enable Developer Self-Service ,Decrease the amount of time the CoreOps team spends on ad-hoc requests by 50%,Number of CoreOps bugs logged on AzDO in a quarter,47,,0,count
+2024-03-01,Enable Developer Self-Service ,Service owners are capable of monitoring their services without additional support from CoreOps,Percentage of services having logs enabled,75,,100,%
+2024-03-01,Enable Developer Self-Service ,Service owners are capable of monitoring their services without additional support from CoreOps,Percentage of services having APM enabled,69,,100,%
+2024-03-01,Streamline CI/CD Pipelines for Faster Software Delivery,Reduce mean time of deployments (from merge to deployment) by 50%,Median duration for all the CI pipelines that run on main branches,13,11.08,10,minutes
+2024-03-01,Streamline CI/CD Pipelines for Faster Software Delivery,Reduce mean time of deployments (from merge to deployment) by 50%,Median duration for the release workflow ,22.09,11.14,10,minutes
+2024-03-01,Streamline CI/CD Pipelines for Faster Software Delivery,Keep deployment pipeline errors under 5% in a quarter,Percentage of release workflow failures in DataDog ,14.5,13.65,4.9,%
+2024-03-01,Streamline CI/CD Pipelines for Faster Software Delivery,Decrease the number of non-standard CI/CD pipelines to 0,Percentage of services that don’t use the release workflow for deployments,15,65,0,%
+2024-03-01,Streamline CI/CD Pipelines for Faster Software Delivery,Decrease the number of non-standard CI/CD pipelines to 1,Percentage of services that don’t have their deployment pipelines provisioned,9,,0,%
+2024-03-01,Streamline CI/CD Pipelines for Faster Software Delivery,Decrease the number of non-standard CI/CD pipelines to 2,Percentage of services using custom (non-standard) CI ,100,100,0,%
+2024-03-01,Established Domain Ownership and Team Boundaries,Every service in our service catalog should have one team as the owner,Percentage of owned Network services on DD Service Catalog,25,0,100,%
+2024-03-01,Established Domain Ownership and Team Boundaries,CoreOps domains and responsibilities are well-understood within the organisation,"CoreOps survey result to the question “On a scale of 1 to 10, how well do you feel you understand the responsibilities and domains of the CoreOps team within our organisation?”",52.4,,10,%
