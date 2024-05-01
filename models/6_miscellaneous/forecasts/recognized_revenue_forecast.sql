@@ -9,13 +9,14 @@ with
             lead_time,
             technology_name,
             destination_region,
-            sum(subtotal_closed_amount_usd) * 1.0 / 30 as subtotal_closed_amount_usd,
-            sum(is_closed::int) * 1.0 / 30 as orders
+            sum(subtotal_sourced_amount_usd) * 1.0 / 30 as subtotal_sourced_amount_usd,
+            sum(is_sourced::int) * 1.0 / 30 as orders
         from {{ ref("fact_orders") }}
         where
             sourced_at >= date_add('days', -42, getdate())
             and sourced_at::date < getdate()::date
             and date_part(dow, sourced_at) not in (0, 6)
+            and subtotal_sourced_amount_usd < 50000
         group by 1, 2, 3, 4,5
     ),
     -- Use that runrate to forecast the sourced orders in the current month for days that are left
@@ -35,10 +36,10 @@ with
             technology_name,
             destination_region,
             date_diff('days', sourced_at, recognized_at) as time_to_recognize,
-            sum(subtotal_closed_amount_usd) as closed_sales,
+            sum(subtotal_sourced_amount_usd) as sourced_sales,
             sum(recognized_revenue_amount_usd) as recognized_amount,
-            recognized_amount *1.0 / nullif(closed_sales,0) as margin_leakage,
-            ratio_to_report(closed_sales) over (
+            recognized_amount *1.0 / nullif(sourced_sales,0) as margin_leakage,
+            ratio_to_report(sourced_sales) over (
                 partition by technology_name, lead_time
             )*margin_leakage as percent_of_total
         from {{ ref("fact_orders") }}
@@ -46,6 +47,7 @@ with
             true
             and sourced_at >= date_add('months', -15, getdate())
             and sourced_at < date_add('months', -3, getdate())
+            and subtotal_sourced_amount_usd < 50000
         group by 1, 2, 3,4
     ),
     -- For the days that are coming and sourced sales that on average should come in the month,
@@ -58,7 +60,7 @@ forecast_recognized as (
             fo.lead_time,
             fo.technology_name,
             fo.destination_region,
-            sum(subtotal_closed_amount_usd * coalesce(percent_of_total,1) * 0.98) as recognized_amount
+            sum(subtotal_sourced_amount_usd * coalesce(percent_of_total,1) * 0.98) as recognized_amount
         from forecast_sourced fo
         left join
             recognized_prep rp
@@ -66,7 +68,7 @@ forecast_recognized as (
             and fo.technology_name = rp.technology_name
         where
             date_trunc('month', date_add('days', time_to_recognize, sourced_at))
-            = date_trunc('month', getdate())
+            >= date_trunc('month', getdate())
         group by 1,2,3,4
     ),
     -- For the orders that were already sourced, get the expected recognized amounts for this month.
@@ -78,7 +80,7 @@ forecast_recognized as (
             fo.lead_time,
             fo.technology_name,
             fo.destination_region,
-            sum(subtotal_closed_amount_usd * coalesce(percent_of_total,1) * 0.98) as recognized_amount
+            sum(subtotal_sourced_amount_usd * coalesce(percent_of_total,1) * 0.98) as recognized_amount
         from  {{ ref("fact_orders") }} fo
         left join
             recognized_prep rp
@@ -86,8 +88,8 @@ forecast_recognized as (
             and fo.technology_name = rp.technology_name
         where
             date_trunc('month', date_add('days', time_to_recognize, sourced_at))
-            = date_trunc('month', getdate())
-            and subtotal_closed_amount_usd < 50000
+            >= date_trunc('month', getdate())
+            and subtotal_sourced_amount_usd < 50000
             and percent_of_total > 0
         group by 1,2,3,4
     ),
@@ -104,7 +106,7 @@ forecast_recognized as (
     left join {{ ref("fact_contribution_margin") }} fcm ON fo.order_uuid = fcm.order_uuid
     where date_trunc('month',recognized_date) =  date_trunc('month', getdate())
     and recognized_date < getdate()
-    and subtotal_closed_amount_usd > 50000
+    and subtotal_sourced_amount_usd >= 50000
     group by 1,2,3,4)
         select *
         from recognized_actual
