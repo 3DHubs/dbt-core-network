@@ -5,7 +5,7 @@ with
     prep_run_rate as (
         select
             getdate()::date as start_date,
-            date_trunc('month', date_add('month', 1, getdate())) as end_date,
+            date_trunc('month', date_add('month', 12, getdate())) as end_date,
             lead_time,
             technology_name,
             destination_region,
@@ -104,8 +104,7 @@ forecast_recognized as (
 
         from {{ ref("fact_orders") }}  fo
     left join {{ ref("fact_contribution_margin") }} fcm ON fo.order_uuid = fcm.order_uuid
-    where date_trunc('month',recognized_date) =  date_trunc('month', getdate())
-    and recognized_date < getdate()
+    where date_trunc('month',recognized_date) >=  date_trunc('month', getdate())
     and subtotal_sourced_amount_usd >= 50000
     group by 1,2,3,4)
         select *
