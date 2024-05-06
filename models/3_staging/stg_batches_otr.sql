@@ -17,8 +17,8 @@ with batch_pk_line_items as (
         select package_line_item_id, 
         batch_shipment_line_item_id
         from batch_pk_line_items
-        where batch_package_rank = 1)
-        
+        where batch_package_rank = 1),
+    prep_batch_otr as (
         select 
         docs.order_uuid,
         docs.order_quote_uuid,
@@ -68,13 +68,15 @@ with batch_pk_line_items as (
         round(date_diff('minutes',promised_shipping_at_by_supplier_adjusted,shipped_by_supplier_at )*1.0/1440,1) as shipping_by_supplier_delay_days,
         sum(po_bsli.quantity)   as quantity_target,
         sum(po_pli.quantity)    as quantity_package,
-        sum(po_bsli.fulfilled_quantity) as quantity_fulfilled
+        sum(po_bsli.fulfilled_quantity) as quantity_fulfilled,
+        rank() over (partition by docs.order_uuid, bs.batch_number order by shipped_by_supplier_at, ppo.status asc) as multi_po_rank --Sometimes a package line item is associate to an older active PO. This will select the batch that has associate batch / package uuid shipping info.
 
     from {{ ref('prep_supply_orders') }} as orders
         left join {{ ref ('stg_orders_documents')}} as docs on orders.uuid = docs.order_uuid
+        left join {{ ref ('prep_purchase_orders')}} as ppo on ppo.order_uuid = orders.uuid
         inner join {{ source('int_service_supply', 'batch_shipments') }} bs on bs.quote_uuid = docs.order_quote_uuid
         inner join {{ source('int_service_supply', 'batch_shipments') }} po_bs
-                    on po_bs.quote_uuid = docs.po_active_uuid and bs.batch_number = po_bs.batch_number
+                    on po_bs.quote_uuid = ppo.uuid and bs.batch_number = po_bs.batch_number
         left join {{ source('int_service_supply', 'batch_shipment_line_items') }} po_bsli
                 on po_bsli.batch_shipment_id = po_bs.id
         left join  package_lines po_bpli on po_bpli.batch_shipment_line_item_id = po_bsli.id
@@ -82,4 +84,5 @@ with batch_pk_line_items as (
                 on po_pli.id = po_bpli.package_line_item_id
         left join {{ ref('fact_batches') }} fb on fb.batch_uuid = po_pli.package_uuid
         left join {{ ref ('stg_orders_hubspot')}} as hs on orders.hubspot_deal_id = hs.hubspot_deal_id
-        group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14
+        group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14, ppo.status)
+        select * from prep_batch_otr where multi_po_rank = 1
