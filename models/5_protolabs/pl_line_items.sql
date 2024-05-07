@@ -55,7 +55,7 @@ select
     complaint_is_conformity_issue,
     dispute_created_at,
     complaint_liability,
-    complaint_type
+    complaint_type,
 
     complaint_outcome_customer,
     complaint_outcome_supplier,
