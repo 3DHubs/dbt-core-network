@@ -66,7 +66,7 @@ select docs.created,
        {{ varchar_to_boolean('is_eligible_for_local_sourcing') }},       
        {{ varchar_to_boolean('is_local_sourcing') }},       
        {{ varchar_to_boolean('is_eligible_for_cross_docking') }},       
-       {{ varchar_to_boolean('is_cross_docking') }},
+       case when lower(first_name) = 'cross' and lower(last_name) = 'dock' then true when is_cross_docking = 'true' then true else false end as is_cross_docking,
        {{ varchar_to_boolean('is_admin') }},       
        {{ varchar_to_boolean('tax_category_override') }},
        {{ varchar_to_boolean('is_admin_only') }},
@@ -79,3 +79,5 @@ from {{ source('int_service_supply', 'cnc_order_quotes') }} as docs
 inner join (select uuid, quote_uuid, updated from {{ ref('prep_supply_orders')}}) as orders on docs.order_uuid = orders.uuid
 -- Useful to get the status of the purchase order, this allow us to filter on active POs on following models
 left join (select uuid, status from int_service_supply.purchase_orders) as po on docs.uuid = po.uuid
+left join {{ source('int_service_supply', 'addresses') }} a on a.address_id = docs.shipping_address_id
+
