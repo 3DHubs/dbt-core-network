@@ -57,5 +57,13 @@ select
     complaint_liability,
     complaint_type
 
+    complaint_outcome_customer,
+    complaint_outcome_supplier,
+    complaint_created_by,
+    complaint_reviewed_by,
+    complaint_comment,
+    corrective_action_plan_needed,
+    qc_comment
+
 from {{ ref("fact_quote_line_items") }}
 where created_date >= '2019-01-01'
