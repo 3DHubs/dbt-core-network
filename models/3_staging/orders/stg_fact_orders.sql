@@ -369,6 +369,7 @@ select
     otr.number_of_delays,
     otr.has_delay_liability_supplier,
     otr.first_delay_created_at,
+    otr.latest_new_shipping_at,
     -- Buffer Value
     otr.first_leg_buffer_value,
     -- Delay Probability

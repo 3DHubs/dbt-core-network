@@ -417,6 +417,7 @@ has_delay_notifications,
 number_of_delays,
 has_delay_liability_supplier,
 first_delay_created_at,
+latest_new_shipping_at,
 delay_probability,
 
 -- Disputes

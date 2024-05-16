@@ -18,7 +18,8 @@ with delay_aggregates as (
            count(*) as number_of_delays,
            true as has_delay_notifications,
            bool_or(delay_liability='supplier') as has_delay_liability_supplier,
-           min(delay_created_at) as first_delay_created_at
+           min(delay_created_at) as first_delay_created_at,
+           max(new_shipping_at) as latest_new_shipping_at
     from {{ ref('fact_delays') }}
     group by 1
 ),
@@ -108,6 +109,7 @@ select distinct orders.uuid                              as order_uuid,
                 dagg.number_of_delays,
                 dagg.has_delay_liability_supplier,
                 dagg.first_delay_created_at,
+                dagg.latest_new_shipping_at,
 
                 -- Delay probability prediction
                 dp.delay_probability,
