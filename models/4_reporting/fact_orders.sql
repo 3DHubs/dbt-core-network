@@ -266,6 +266,8 @@ qc_inspection_result_latest,
 in_country_qc_status,
 pl_cross_sell_channel,
 mp_concerning_actions,
+is_manually_resourced,
+resourced_deal_original_order_number,
 
 
 -- Hubspot Owners

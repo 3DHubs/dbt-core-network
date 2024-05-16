@@ -157,6 +157,8 @@ select
     hs_deals.is_hubs_arranged_direct_shipping,
     hs_deals.mp_concerning_actions,
     hs_deals.is_logistics_shipping_quote_used,
+    hs_deals.is_manually_resourced,
+    hs_deals.resourced_deal_original_order_number,
     case when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
     when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win' 
     when pl_sales_rep_name is not null then 'Twin-Win' end as pl_cross_sell_channel,

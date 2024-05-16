@@ -106,6 +106,10 @@ with stg as (
         hs.is_ultra_strategic as is_priority_deal,
         closing_probability,
 
+        -- Sourcing Fields
+        is_manually_resourced,
+        resourced_deal_original_order_number,
+
         -- Supply Fields
         latest_qc_result as qc_inspection_result_latest,
         in_country_qc_status,

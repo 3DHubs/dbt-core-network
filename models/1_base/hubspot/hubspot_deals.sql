@@ -33,6 +33,8 @@ select
     nullif(property_in_review_reason__value, '')::varchar(124) as in_review_reason,
     nullif(property_cancellation_reason__value, '')::varchar(124) as cancellation_reason,
     nullif(property_mp_concerning_actions__value, '')::varchar(124) as mp_concerning_actions,
+    case when property_manually_resourced_deal__value = 'true' then true else false end as is_manually_resourced,
+    nullif(property_resourced_deal_original_order_number__value, '')::varchar(124) as resourced_deal_original_order_number,
     (
         timestamp 'epoch'
         + property_first_time_quote_sent_date__value / 1000 * interval '1 second'
