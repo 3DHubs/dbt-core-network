@@ -10,7 +10,8 @@
                 line_item_uuid,
                 user_id,
                 anonymous_id,
-                description
+                description,
+                extra
             FROM {{ source('int_service_supply', 'order_history_events') }} as iss_ohe
             WHERE NOT EXISTS (
                 SELECT
@@ -21,7 +22,8 @@
                     line_item_uuid,
                     user_id,
                     anonymous_id,
-                    description
+                    description,
+                    extra
             FROM {{ source('int_analytics', 'full_order_history_events') }} as dl_fohe
             where iss_ohe.id = dl_fohe.id)
                 "],
@@ -36,7 +38,8 @@ select id,
        line_item_uuid,
        user_id,
        anonymous_id,
-       description
+       description,
+       extra
 
 from {{ source('int_analytics', 'full_order_history_events') }}
 
