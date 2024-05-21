@@ -45,6 +45,8 @@ models:
         +tags: supply
       netsuite:
         +tags: ["netsuite", "finance"]
+      retool:
+        +tags: ["retool"]
 
     2_prep:
       +schema: core
