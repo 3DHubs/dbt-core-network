@@ -28,6 +28,7 @@ with
             null::boolean as has_internal_corners
 
         from {{ ref('questions') }} as q
+        inner join {{ ref('prep_supply_documents') }} psd on q.purchase_order_uuid = psd.uuid and is_active_po
         left join {{ ref('replies') }} as qr on q.uuid = qr.question_uuid
         left join {{ ref('reply_options') }} as qro on qr.reply_option_id = qro.id
         where decode(qr.is_correct, 'true', true, 'false', false)
@@ -58,6 +59,7 @@ with
             null::boolean as has_internal_corners
 
         from {{ ref('open_questions') }} as bq
+        inner join {{ ref('prep_supply_documents') }} psd on bq.purchase_order_uuid = psd.uuid and is_active_po
         group by 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
 
 
@@ -88,6 +90,7 @@ with
             pf.has_internal_corners
 
         from {{ ref('part_feature_questions') }} as pf
+        inner join {{ ref('prep_supply_documents') }} psd on pf.purchase_order_uuid = psd.uuid and is_active_po
     )
 
 select

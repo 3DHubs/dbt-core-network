@@ -10,5 +10,6 @@ submitted_at,
 author_id,
 answered_at,
 answered_by_id,
-title
+title,
+purchase_order_uuid
 from {{ source('fed_fulfilment', 'questions') }}
