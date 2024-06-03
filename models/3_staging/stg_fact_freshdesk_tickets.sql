@@ -63,7 +63,7 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
          select *,
                 row_number() over (partition by ticket_id order by id) as rn --filters out duplicate survey responses on 1 ticket (2020-09 less than 1%)
          from {{ ref('freshdesk_survey_results') }}
-         where survey_id = 13000000056)
+         where survey_id in (13000000056,13000000247))
 
 select t.id                                                                  as ticket_id,
        fdmapping.order_uuid,
