@@ -65,6 +65,7 @@ with stg_states as (
          where (not is_test_supplier)
          or s.supplier_id=494 --JG 300622 requested by Arnoldas to include internal supplier id
          or s.supplier_id=19 -- requested by Matt to include internal account Shak IM RFQ
+         or s.supplier_id=467 -- Josh Parket ITAR test
          ), 
      t2 as (select *, row_number() over (partition by supplier_id order by create_date desc nulls last) as rn from t1)
 select supplier_id,
