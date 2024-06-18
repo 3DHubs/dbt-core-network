@@ -68,6 +68,10 @@ select
         when hc.property_reactivated_customer__value = 'false'
         then false
     end::boolean as is_reactivated_customer,
+    case
+    when LOWER(hc.property_true_outbound__value) = 'true' then true
+    when LOWER(hc.property_true_outbound__value) = 'false' then false
+    end::boolean as true_outbound,
     (
         timestamp 'epoch'
         + hc.property_reactivated_customer_date__value / 1000 * interval '1 second'

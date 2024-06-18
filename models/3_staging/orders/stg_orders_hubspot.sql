@@ -68,6 +68,7 @@ with stg as (
         hs.bdr_assigned                                                                   as bdr_owner_id,
         bdr.name                                                                          as bdr_owner_name,
         bdr.primary_team_name                                                             as bdr_owner_primary_team,
+        hs.sales_support_id,
         csr.name                                                                          as customer_success_representative_name,
         psr.name                                                                          as partner_support_representative_name,
         hs.sales_engineer                                                                 as mechanical_engineer_id,
