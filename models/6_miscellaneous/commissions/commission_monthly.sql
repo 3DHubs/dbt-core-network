@@ -253,6 +253,7 @@ with deal_monthly as (
        sum(
             case
                 when outbound_handover_date < '2024-04-01' then 350
+                when true_outbound then 400
                 else 200
             end
         ) as commission_usd
