@@ -152,7 +152,7 @@ select
        
 from {{ ref('hubspot_companies') }} hc
     left join {{ ref('mapping_industry') }} as indm
-on lower(hc.industry) = indm.industry
+on lower(hc.industry) = lower(indm.industry)
     left join {{ ref('stg_companies_dimensions') }} as adc on hc.hubspot_company_id = adc.hubspot_company_id
     left join {{ ref('agg_contacts_company') }} as acc on hc.hubspot_company_id = acc.hubspot_company_id
     left join {{ ref('agg_orders_companies') }} as agg_orders on hc.hubspot_company_id = agg_orders.hubspot_company_id
