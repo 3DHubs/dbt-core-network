@@ -1,9 +1,11 @@
 industry,industry_mapped
 ACCOUNTING,Nonclassifiable Organization
+Aerospace,Aerospace
 AIRLINES_AVIATION,Aerospace
 ALTERNATIVE_MEDICINE,Medical
 ANIMATION,Nonclassifiable Organization
 APPAREL_FASHION,Consumer Products
+Appliance,Consumer Electronics
 ARCHITECTURE_PLANNING,Design Firm
 ARTS_AND_CRAFTS,Consumer Products
 AUTOMOTIVE,Automotive
@@ -18,12 +20,15 @@ CHEMICALS,Manufacturing
 CIVIC_SOCIAL_ORGANIZATION,Nonclassifiable Organization
 CIVIL_ENGINEERING,Industrial & Commercial Machinery
 COMMERCIAL_REAL_ESTATE,Nonclassifiable Organization
+Communications / Telecomm,Communications/Telecommunication
+Computer / Electronics,Computer/Electronics
 COMPUTER_GAMES,Nonclassifiable Organization
 COMPUTER_HARDWARE,Computer/Electronics
 COMPUTER_NETWORK_SECURITY,Computer/Electronics
 COMPUTER_NETWORKING,Computer/Electronics
 COMPUTER_SOFTWARE,Computer/Electronics
 CONSTRUCTION,Industrial & Commercial Machinery
+Consumer Products,Consumer Products
 CONSUMER_ELECTRONICS,Computer/Electronics
 CONSUMER_GOODS,Consumer Products
 CONSUMER_SERVICES,Consumer Products
@@ -31,7 +36,9 @@ COSMETICS,Consumer Products
 DAIRY,Food
 DEFENSE_SPACE,Aerospace
 DESIGN,Design Firm
+Design Firm,Design Firm
 E_LEARNING,Education
+Education,Education
 EDUCATION_MANAGEMENT,Education
 ELECTRICAL_ELECTRONIC_MANUFACTURING,Computer/Electronics
 ENTERTAINMENT,Nonclassifiable Organization
@@ -42,7 +49,9 @@ FACILITIES_SERVICES,Nonclassifiable Organization
 FARMING,Food
 FINANCIAL_SERVICES,Nonclassifiable Organization
 FINE_ART,Design Firm
+Firearms,Nonclassifiable Organization
 FISHERY,Food
+Food,Food
 FOOD_BEVERAGES,Food
 FOOD_PRODUCTION,Industrial & Commercial Machinery
 FUND_RAISING,Nonclassifiable Organization
@@ -59,6 +68,7 @@ HOSPITALITY,Nonclassifiable Organization
 HUMAN_RESOURCES,Nonclassifiable Organization
 IMPORT_AND_EXPORT,Nonclassifiable Organization
 INDIVIDUAL_FAMILY_SERVICES,Nonclassifiable Organization
+Industrial & Commercial Machinery,"Plastic, Rubber, Die-casting Molders"
 INDUSTRIAL_AUTOMATION,Industrial & Commercial Machinery
 INFORMATION_SERVICES,Computer/Electronics
 INFORMATION_TECHNOLOGY_AND_SERVICES,Computer/Electronics
@@ -74,15 +84,19 @@ LAW_PRACTICE,Nonclassifiable Organization
 LEGAL_SERVICES,Nonclassifiable Organization
 LEISURE_TRAVEL_TOURISM,Nonclassifiable Organization
 LIBRARIES,Nonclassifiable Organization
+Lighting,Building Materials
 LOGISTICS_AND_SUPPLY_CHAIN,Nonclassifiable Organization
 LUXURY_GOODS_JEWELRY,Consumer Products
+Machine Shops,Industrial & Commercial Machinery
 MACHINERY,Industrial & Commercial Machinery
 MANAGEMENT_CONSULTING,Nonclassifiable Organization
+Manufacturing,Manufacturing
 MARITIME,Aerospace
 MARKET_RESEARCH,Nonclassifiable Organization
 MARKETING_AND_ADVERTISING,Nonclassifiable Organization
 MECHANICAL_OR_INDUSTRIAL_ENGINEERING,Industrial & Commercial Machinery
 MEDIA_PRODUCTION,Computer/Electronics
+Medical,Medical
 MEDICAL_DEVICES,Medical
 MEDICAL_PRACTICE,Medical
 MENTAL_HEALTH_CARE,Medical
@@ -98,6 +112,7 @@ OIL_ENERGY,Industrial & Commercial Machinery
 ONLINE_MEDIA,Nonclassifiable Organization
 OUTSOURCING_OFFSHORING,Nonclassifiable Organization
 PACKAGE_FREIGHT_DELIVERY,Industrial & Commercial Machinery
+Packaging,Packaging
 PACKAGING_AND_CONTAINERS,Packaging
 PAPER_FOREST_PRODUCTS,Industrial & Commercial Machinery
 PERFORMING_ARTS,Nonclassifiable Organization
@@ -105,6 +120,7 @@ PHARMACEUTICALS,Medical
 PHILANTHROPY,Nonclassifiable Organization
 PHOTOGRAPHY,Nonclassifiable Organization
 PLASTICS,"Plastic, Rubber, Die-casting Molders"
+"Plastics, Rubber, Die-Casting Molders","Plastic, Rubber, Die-casting Molders"
 POLITICAL_ORGANIZATION,Nonclassifiable Organization
 PRIMARY_SECONDARY_EDUCATION,Education
 PRINTING,Industrial & Commercial Machinery
@@ -121,6 +137,7 @@ RECREATIONAL_FACILITIES_AND_SERVICES,Nonclassifiable Organization
 RELIGIOUS_INSTITUTIONS,Nonclassifiable Organization
 RENEWABLES_ENVIRONMENT,Utilities
 RESEARCH,Research/Leboratory
+Research / Laboratory,Research/Leboratory
 RESTAURANTS,Consumer Products
 RETAIL,Consumer Products
 SECURITY_AND_INVESTIGATIONS,Nonclassifiable Organization
