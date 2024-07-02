@@ -127,6 +127,7 @@ select
     hs_deals.sales_lead_id,
     hs_deals.sales_lead_name,
     hs_deals.sales_support_id,
+    hs_deals.sales_support_name,
     hs_deals.hubspot_im_project_manager_id,
     hs_deals.hubspot_im_project_manager_name,
     hs_deals.pl_sales_rep_name,

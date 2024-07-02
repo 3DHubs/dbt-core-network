@@ -68,7 +68,6 @@ with stg as (
         hs.bdr_assigned                                                                   as bdr_owner_id,
         bdr.name                                                                          as bdr_owner_name,
         bdr.primary_team_name                                                             as bdr_owner_primary_team,
-        hs.sales_support_id,
         csr.name                                                                          as customer_success_representative_name,
         psr.name                                                                          as partner_support_representative_name,
         hs.sales_engineer                                                                 as mechanical_engineer_id,
@@ -79,8 +78,10 @@ with stg as (
         so.name                                                                           as hubspot_sourcing_owner_name,
         pm.owner_id                                                                       as hubspot_im_project_manager_id,
         pm.name                                                                           as hubspot_im_project_manager_name,
-        hs.pl_sales_rep_name,
-        hs.pl_sales_rep_manager_name,
+        hs.pl_sales_rep_name                                                              as pl_sales_rep_name,
+        hs.pl_sales_rep_manager_name                                                      as pl_sales_rep_manager_name,
+        hs.sales_support_id                                                               as sales_support_id,
+        ss.name                                                                           as sales_support_name,
         pl_bdm.name                                                                       as pl_business_development_manager_name,
 
         -- TEAM FIELDS
@@ -145,6 +146,8 @@ with stg as (
             on psr.owner_id = hs.supply_owner 
         left join {{ ref ('hubspot_owners') }} as so
             on so.owner_id = hs.sourcing_owner
+        left join {{ ref ('hubspot_owners') }} as ss
+            on ss.owner_id = hs.sales_support_id
         left join {{ ref ('hubspot_owners') }} as pm
             on pm.owner_id = hs.im_pm
         left join {{ ref ('hubspot_owners') }} as pl_bdm

@@ -48,7 +48,7 @@ mechanical_engineer_id,
 hubspot_owner_id,
 hubspot_sourcing_owner_id,
 sales_support_id,
-sales_support.name,
+sales_support_name,
 hubspot_im_project_manager_id,
 orders.billing_id,
 
@@ -469,5 +469,4 @@ left join {{ ref('agg_orders') }} as agg on agg.order_uuid = orders.order_uuid
 left join {{ ref('agg_orders_cm1') }} as agg_cm1 on agg_cm1.order_uuid = orders.order_uuid
 left join {{ ref('stg_fact_reorders') }} as original on original.reorder_order_uuid = orders.order_uuid
 left join {{ ref('stg_order_greenhubs') }} as gh on orders.order_uuid = gh.order_uuid
-left join {{ ref('hubspot_owners') }} as sales_support on sales_support.owner_id::bigint = sales_support_id::bigint
 where coalesce(number_of_carts_without_closed_carts_platform_user_id,1)  < 30 or subtotal_sourced_amount_usd >0 --removal of bot carts
