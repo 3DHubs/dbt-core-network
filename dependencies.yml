@@ -5,3 +5,6 @@ packages:
     version: 0.6.1
   - package: dbt-labs/audit_helper
     version: 0.5.0
+
+projects:
+  - name: network_services

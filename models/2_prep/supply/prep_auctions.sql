@@ -11,7 +11,7 @@ with
         select
             bids.auction_uuid,
             bids.uuid as prep_winning_bid_uuid
-        from {{ ref('prep_bids') }} as bids
+        from {{ ref('bids') }} as bids
         inner join winning_bid_legacy on winning_bid_legacy.uuid = bids.uuid
     )
     

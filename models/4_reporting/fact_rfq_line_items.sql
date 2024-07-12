@@ -111,7 +111,7 @@ select
 
     from {{ ref('line_items') }} as li
              left join {{ ref('prep_supply_documents') }} as docs on docs.uuid = li.quote_uuid
-             inner join {{ ref('prep_bids')}} as bids on bids.uuid = docs.uuid           
+             inner join {{ ref('bids')}} as bids on bids.uuid = docs.uuid           
              inner join {{ ref('prep_auctions')}} as auction_rfq on auction_rfq.auction_uuid = bids.auction_uuid and auction_rfq.is_rfq      
 
              -- Materials Processes and Finishes

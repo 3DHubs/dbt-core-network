@@ -5,7 +5,7 @@ select
     count(distinct case when auction_type = 'RFQ' then pa.quote_uuid else pa.auction_uuid  end) as number_of_auctions
 
     from dbt_prod_core.prep_auctions pa
-         left join {{ ref('prep_bids') }} pb on pb.uuid = pa.winning_bid_uuid
+         left join {{ ref('bids') }} pb on pb.uuid = pa.winning_bid_uuid
          left join {{ ref('stg_orders_documents') }} sod on sod.order_uuid = pa.order_uuid
     group by 1
    
