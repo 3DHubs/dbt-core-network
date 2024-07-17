@@ -17,13 +17,13 @@ with
     
     select
     -- Primary Key
-    auctions.uuid  as auction_uuid,
+    auctions.auction_uuid,
     -- Foreign Keys
-    psd.order_uuid as order_uuid,
-    psd.parent_uuid as quote_uuid,
+    auctions.order_uuid,
+    auctions.quote_uuid,
     -- Auction Type
-    decode(auctions.is_rfq, 'true', True, 'false', False) as is_rfq,
-    case when is_rfq = 'true' then 'RFQ' else 'RDA' end as auction_type,
+    is_rfq,
+    auction_type,
     -- Auctions Fields
     auctions.status,  -- If auction gets status 'resourced' it means it has been brought back to the auction
     auctions.started_at,
@@ -31,18 +31,18 @@ with
     auctions.last_processed_at,
     auctions.base_margin,  -- For debugging purposes only, do not use for reporting
     auctions.base_margin_without_discount,
-    decode(auctions.is_accepted_manually, 'true', True, 'false', False) as is_accepted_manually,
-    decode(auctions.is_resourcing, 'true', True, 'false', False) as is_resourcing,
-    decode(auctions.is_internal_support_ticket_opened, 'true', True, 'false', False) as is_internal_support_ticket_opened,
+    auctions.is_accepted_manually,
+    auctions.is_resourcing,
+    auctions.is_internal_support_ticket_opened,
     auctions.internal_support_ticket_opened_at,     
     auctions.internal_support_ticket_id,
     -- Quotes Fields
-    psd.created as auction_created_at,
-    psd.updated as auction_updated_at,
-    psd.deleted as auction_deleted_at,
-    psd.document_number as auction_document_number,
-    psd.technology_id,
-    case when auction_type = 'RDA' then round((psd.subtotal_price_amount / 100.00), 2)
+    auctions.auction_created_at,
+    auctions.auction_updated_at,
+    auctions.auction_deleted_at,
+    auctions.auction_document_number,
+    auctions.technology_id,
+    case when auction_type = 'RDA' then auctions.auction_subtotal_price_amount
         when auction_type = 'RFQ' then null end as auction_amount_usd,
     -- Order Level Fields
     ali.li_subtotal_amount_usd,
@@ -52,20 +52,20 @@ with
     srl.prep_winning_bid_uuid as srl_prep_winning_bid_uuid,
     coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) as winning_bid_uuid,
     -- Multiple Auctions Per Order
-    row_number() over (partition by psd.order_uuid order by auctions.started_at desc nulls last) as recency_idx,
-    row_number() over (partition by psd.order_uuid, case when coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null then 1 else 0 end
+    row_number() over (partition by auctions.order_uuid order by auctions.started_at desc nulls last) as recency_idx,
+    row_number() over (partition by auctions.order_uuid, case when coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null then 1 else 0 end
         order by auctions.started_at asc nulls last) =1 and coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null as first_successful_auction,
-    row_number() over (partition by psd.order_uuid, case when coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null then 1 else 0 end
+    row_number() over (partition by auctions.order_uuid, case when coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null then 1 else 0 end
     order by auctions.finished_at desc nulls last) =1 and coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null as last_successful_auction,
-    row_number() over (partition by psd.order_uuid, auction_type  order by auctions.started_at desc nulls last) as recency_idx_auction_type,
+    row_number() over (partition by auctions.order_uuid, auction_type  order by auctions.started_at desc nulls last) as recency_idx_auction_type,
     case when auction_type='RDA' then decode(recency_idx_auction_type, 1, True, False) end as is_latest_rda_order_auction,
     case when is_latest_rda_order_auction and last_successful_auction and winner_bid_uuid is not null then true else false end as is_rda_sourced,
      
     -- Technology Name
-    technologies.name as technology_name
+    auctions.technology_name
 
-from {{ source('int_service_supply', 'auctions') }} as auctions
-    inner join {{ ref('prep_supply_documents') }} as psd on auctions.uuid = psd.uuid and psd.deleted is null
-    left join supplier_rfq_winning_bid_legacy srl on srl.auction_uuid = auctions.uuid
+from {{ ref('auctions') }} as auctions
+    inner join {{ ref('prep_supply_documents') }} as psd on auctions.auction_uuid = psd.uuid and psd.deleted is null
+    left join supplier_rfq_winning_bid_legacy srl on srl.auction_uuid = auctions.auction_uuid
     left join {{ ref ('technologies') }} as technologies on psd.technology_id = technologies.technology_id
     left join {{ ref("agg_line_items") }} as ali on psd.parent_uuid = ali.quote_uuid
