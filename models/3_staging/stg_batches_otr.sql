@@ -82,6 +82,9 @@ prep_batch_otr as (
         round(
             date_diff('minutes', promised_shipping_at_by_supplier_adjusted, shipped_by_supplier_at) * 1.0 / 1440, 1
         )                                                                                                               as shipping_by_supplier_delay_days,
+        first_value(bs.batch_number) over (
+               partition by docs.order_uuid order by bs.batch_number desc rows between unbounded preceding and unbounded following) as last_batch_number,
+        case when bs.batch_number = last_batch_number then true else false end as is_last_batch,
         sum(po_bsli.quantity)                                                                                           as quantity_target,
         sum(po_pli.quantity)                                                                                            as quantity_package,
         sum(po_bsli.fulfilled_quantity)                                                                                 as quantity_fulfilled,

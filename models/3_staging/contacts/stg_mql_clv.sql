@@ -139,6 +139,7 @@ select
     advertising_account_id,
     advertising_click_date,
     clv.clv_24m,
+    predicted_proba,
     coalesce(predicted_proba*0.81, 0.0001) as is_customer_prediction,
     is_customer_prediction * clv_24m * 
     case when contact_type = 'first_company_customer' then 2.0

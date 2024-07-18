@@ -35,7 +35,8 @@ select
     is_shipped_on_time_to_customer,
     is_shipped_on_time_to_customer   as is_shipped_on_time_expected_by_customer, -- to be developed still.
     shipping_to_customer_delay_days,
-    shipping_by_supplier_delay_days
+    shipping_by_supplier_delay_days,
+    is_last_batch
 from {{ ref('stg_batches_otr') }}
 union all
 select
@@ -64,7 +65,8 @@ select
     is_shipped_on_time_to_customer,
     is_shipped_on_time_expected_by_customer,
     shipping_to_customer_delay_days,
-    shipping_by_supplier_delay_days
+    shipping_by_supplier_delay_days,
+    true as is_last_batch
 from {{ ref('stg_fact_orders') }} as sfo
     left join {{ ref('prep_supply_orders') }} as pso on sfo.order_uuid = pso.uuid
 where
