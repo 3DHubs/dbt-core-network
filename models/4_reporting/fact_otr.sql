@@ -28,6 +28,8 @@ select
     delivered_to_crossdock_at,
     estimated_delivery_to_cross_dock_at,
     shipped_from_cross_dock_at,
+    sbo.delivered_at,
+    derived_delivered_at,
     quantity_target,
     quantity_package,
     quantity_fulfilled,
@@ -37,7 +39,7 @@ select
     shipping_to_customer_delay_days,
     shipping_by_supplier_delay_days,
     is_last_batch
-from {{ ref('stg_batches_otr') }}
+from {{ ref('stg_batches_otr') }} as sbo
 union all
 select
     'orders'                   as source,
@@ -58,6 +60,8 @@ select
     delivered_to_cross_dock_at,
     estimated_delivery_to_cross_dock_at,
     shipped_from_cross_dock_at,
+    sfo.delivered_at,
+    derived_delivered_at,
     total_quantity             as quantity_target,
     total_quantity             as quantity_package,
     total_quantity             as quantity_fulfilled,

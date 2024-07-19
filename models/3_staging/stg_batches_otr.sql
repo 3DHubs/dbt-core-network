@@ -40,6 +40,11 @@ prep_batch_otr as (
         fb.delivered_to_crossdock_at,
         fb.provided_estimate_delivery_to_crossdock_at                                                                   as estimated_delivery_to_cross_dock_at,
         fb.shipped_from_cross_dock_at,
+        fb.delivered_to_customer_at                                                                                     as delivered_at,
+        coalesce(case
+                when fb.delivered_to_customer_at is not null then fb.delivered_to_customer_at
+                when shipped_to_customer_at + interval '7 days' < current_date and
+                    fb.delivered_to_customer_at is null then shipped_to_customer_at + interval '7 days' end)            as derived_delivered_at,
         -- This code is used to give suppliers a 12 hours window after the customer promised by date to
         -- Hand over the product to the carrier (this should be removed at a later stage).
         case
@@ -104,7 +109,7 @@ prep_batch_otr as (
         left join {{ ref('fact_batches') }} as fb on po_pli.package_uuid = fb.batch_uuid
         left join {{ ref ('stg_orders_hubspot') }} as hs on orders.hubspot_deal_id = hs.hubspot_deal_id
         left join {{ ref ('stg_orders_geo') }} as geo on orders.uuid = geo.order_uuid
-    group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, ppo.status
+    group by 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, ppo.status
 )
 
 select * from prep_batch_otr where multi_po_rank = 1
