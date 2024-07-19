@@ -5,8 +5,7 @@
 -- | |  | | | | \__/\ | |   \ \_/ / | | | |\ \ 
 -- \_|  \_| |_/\____/ \_/    \___/  \_/ \_| \_|
 
-
--- Doom font asci                                                         
+                                              
 -- Model from March 2024, where the new batches (multiple batch per order, otr calculation comes together with the legacy otr calculation)
 
 select
@@ -70,7 +69,7 @@ select
     is_shipped_on_time_expected_by_customer,
     shipping_to_customer_delay_days,
     shipping_by_supplier_delay_days,
-    true as is_last_batch
+    true                       as is_last_batch
 from {{ ref('stg_fact_orders') }} as sfo
     left join {{ ref('prep_supply_orders') }} as pso on sfo.order_uuid = pso.uuid
 where

@@ -31,20 +31,30 @@ prep_batch_otr as (
         fb.batch_uuid,
         bs.batch_number,
         po_bs.ship_by_date                                                                                              as promised_shipping_at_by_supplier,
-        convert_timezone(geo.origin_timezone, promised_shipping_at_by_supplier)                                         as localized_promised_shipping_at_by_supplier,
-        coalesce(fb.carrier_received_shipment_to_crossdock_at, fb.carrier_received_shipment_to_customer_at)             as shipped_by_supplier_at,
-        convert_timezone(geo.origin_timezone, shipped_by_supplier_at)                                                   as localized_shipped_by_supplier_at,
+        convert_timezone(
+            geo.origin_timezone, promised_shipping_at_by_supplier
+        )                                                                                                               as localized_promised_shipping_at_by_supplier,
+        coalesce(
+            fb.carrier_received_shipment_to_crossdock_at, fb.carrier_received_shipment_to_customer_at
+        )                                                                                                               as shipped_by_supplier_at,
+        convert_timezone(
+            geo.origin_timezone, shipped_by_supplier_at
+        )                                                                                                               as localized_shipped_by_supplier_at,
         bs.ship_by_date                                                                                                 as promised_shipping_at_to_customer,
-        convert_timezone(geo.destination_timezone, promised_shipping_at_to_customer)                                    as localized_promised_shipping_at_to_customer,
+        convert_timezone(
+            geo.destination_timezone, promised_shipping_at_to_customer
+        )                                                                                                               as localized_promised_shipping_at_to_customer,
         fb.carrier_received_shipment_to_customer_at                                                                     as shipped_to_customer_at,
         fb.delivered_to_crossdock_at,
         fb.provided_estimate_delivery_to_crossdock_at                                                                   as estimated_delivery_to_cross_dock_at,
         fb.shipped_from_cross_dock_at,
         fb.delivered_to_customer_at                                                                                     as delivered_at,
         coalesce(case
-                when fb.delivered_to_customer_at is not null then fb.delivered_to_customer_at
-                when shipped_to_customer_at + interval '7 days' < current_date and
-                    fb.delivered_to_customer_at is null then shipped_to_customer_at + interval '7 days' end)            as derived_delivered_at,
+            when fb.delivered_to_customer_at is not null then fb.delivered_to_customer_at
+            when
+                shipped_to_customer_at + interval '7 days' < current_date
+                and fb.delivered_to_customer_at is null then shipped_to_customer_at + interval '7 days'
+        end)                                                                                                            as derived_delivered_at,
         -- This code is used to give suppliers a 12 hours window after the customer promised by date to
         -- Hand over the product to the carrier (this should be removed at a later stage).
         case
@@ -88,8 +98,9 @@ prep_batch_otr as (
             date_diff('minutes', promised_shipping_at_by_supplier_adjusted, shipped_by_supplier_at) * 1.0 / 1440, 1
         )                                                                                                               as shipping_by_supplier_delay_days,
         first_value(bs.batch_number) over (
-               partition by docs.order_uuid order by bs.batch_number desc rows between unbounded preceding and unbounded following) as last_batch_number,
-        case when bs.batch_number = last_batch_number then true else false end as is_last_batch,
+            partition by docs.order_uuid order by bs.batch_number desc rows between unbounded preceding and unbounded following
+        )                                                                                                               as last_batch_number,
+        coalesce(bs.batch_number = last_batch_number, false)                                                            as is_last_batch,
         sum(po_bsli.quantity)                                                                                           as quantity_target,
         sum(po_pli.quantity)                                                                                            as quantity_package,
         sum(po_bsli.fulfilled_quantity)                                                                                 as quantity_fulfilled,

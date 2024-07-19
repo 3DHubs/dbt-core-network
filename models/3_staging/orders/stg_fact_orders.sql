@@ -31,48 +31,57 @@ select
 
     ------------- SOURCE: DATA LAKE ORDERS -----------
     -- Orders: IDs
-    case when legacy_order_id is not null then orders.legacy_order_id::varchar
-         when legacy_order_id is null then orders.uuid end                                 as order_uuid, -- Most drupal orders exists in supply but we want to keep their original ID
-    orders.quote_uuid                                                                      as order_quote_uuid,
+    case
+        when legacy_order_id is not null then orders.legacy_order_id::varchar
+        when legacy_order_id is null then orders.uuid
+    end                                                                                          as order_uuid, -- Most drupal orders exists in supply but we want to keep their original ID
+    orders.quote_uuid                                                                            as order_quote_uuid,
     orders.reorder_original_order_uuid,
-    orders.billing_request_id                                                              as billing_id, -- This is the key used to indenitfy when the order was paid out and under which billing month
-    case when dealstage.closed_at is not null then md5(concat(concat('project', coalesce(hs_deals.hubspot_contact_id,users.hubspot_contact_id)),dealstage.closed_at::date)) end as project_uuid,
+    orders.billing_request_id                                                                    as billing_id, -- This is the key used to indenitfy when the order was paid out and under which billing month
+    case
+        when
+            dealstage.closed_at is not null
+            then md5(concat(concat('project', coalesce(hs_deals.hubspot_contact_id, users.hubspot_contact_id)), dealstage.closed_at::date))
+    end                                                                                          as project_uuid,
 
     -- Orders: Dates
-    orders.created                                                                         as created_at,
+    orders.created                                                                               as created_at,
     case
         when orders.promised_shipping_date > '2019-10-01'
-            then orders.promised_shipping_date end                                         as promised_shipping_at_to_customer,
-    convert_timezone(destination_timezone, promised_shipping_at_to_customer)               as localized_promised_shipping_at_to_customer,
+            then orders.promised_shipping_date
+    end                                                                                          as promised_shipping_at_to_customer,
+    convert_timezone(
+        destination_timezone, promised_shipping_at_to_customer
+    )                                                                                            as localized_promised_shipping_at_to_customer,
     orders.completed_at,
 
     -- Orders: Other Fields
-    'supply'                                                                               as data_source,
-    case when orders.legacy_order_id is not null then true else false end                  as is_legacy,
+    'supply'                                                                                     as data_source,
+    coalesce (orders.legacy_order_id is not null, false)                                         as is_legacy,
 
     -- Product Features
     orders.is_eligible_for_restriction,
 
     -- Platform data
     users.platform_user_id,
-    case when length(users.platform_user_id) > 16 then true else false end as is_anonymous_cart,
+    coalesce (length(users.platform_user_id) > 16, false)                                        as is_anonymous_cart,
 
     ---------- SOURCE: SUPPLY EXTERNAL ORDERS --------------
 
     -- External Orders: Main fields
-    coalesce(integration.is_papi_integration,false) as is_papi_integration,
+    coalesce(integration.is_papi_integration, false)                                             as is_papi_integration,
     integration.integration_platform_type,
-    integration.integration_order_id, 
+    integration.integration_order_id,
     integration.integration_quote_id,
-    integration.integration_order_number, 
-    integration.integration_purchase_order_number,    
+    integration.integration_order_number,
+    integration.integration_purchase_order_number,
     integration.integration_user_id,
     integration.integration_utm_content, -- JG may be removed after campaign 2022-12-01 PL shallow quicklink
     integration.number_of_orders_per_integration_order,
     integration.is_multi_line_papi_integration,
 
-    
-    
+
+
     ---------- SOURCE: STG ORDERS HUBSPOT --------------
 
     -- HS Deals: Main Fields
@@ -83,11 +92,11 @@ select
     hs_deals.hubspot_pipeline,
 
     -- HS Deals: Foreign Fields
-    coalesce(hs_deals.hubspot_company_id,users.hubspot_company_id) as hubspot_company_id, -- for carts falling back on user link
+    coalesce(hs_deals.hubspot_company_id, users.hubspot_company_id)                              as hubspot_company_id, -- for carts falling back on user link
     hs_deals.hubspot_company_name,
     hs_deals.pl_cross_sell_company_name,
     hs_deals.is_integration_mql_contact,
-    coalesce(hs_deals.hubspot_contact_id,users.hubspot_contact_id) as hubspot_contact_id,
+    coalesce(hs_deals.hubspot_contact_id, users.hubspot_contact_id)                              as hubspot_contact_id,
     hs_deals.hubspot_technology_id,
     hs_deals.hubspot_company_source,
 
@@ -161,10 +170,12 @@ select
     hs_deals.is_logistics_shipping_quote_used,
     hs_deals.is_manually_resourced,
     hs_deals.resourced_deal_original_order_number,
-    case when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
-    when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win' 
-    when pl_sales_rep_name is not null then 'Twin-Win' end as pl_cross_sell_channel,
-    case when integration_platform_type is not null or pl_cross_sell_channel is not null then true else false end as is_integration_tmp,
+    case
+        when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
+        when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win'
+        when pl_sales_rep_name is not null then 'Twin-Win'
+    end                                                                                          as pl_cross_sell_channel,
+    coalesce(integration_platform_type is not null or pl_cross_sell_channel is not null, false)  as is_integration_tmp,
 
     ---------- SOURCE: Auctions --------------
 
@@ -174,8 +185,8 @@ select
     auc.number_of_auction_cancellations,
 
     -- RDA: Auction Fields
-    coalesce(rda.is_rda_sourced, false) as is_rda_sourced,
-    case when rfq.is_rfq_automatically_sourced or rda.is_rda_sourced then true else false end as has_winning_bid, 
+    coalesce(rda.is_rda_sourced, false)                                                          as is_rda_sourced,
+    coalesce(rfq.is_rfq_automatically_sourced or rda.is_rda_sourced, false)                      as has_winning_bid,
     rda.is_first_auction_rda_sourced,
     rda.auction_uuid,
     rda.auction_status,
@@ -211,7 +222,7 @@ select
     rda.winning_shipping_estimate_amount_usd,
     rda.winning_l1_shipping_margin_amount_usd,
     rda.l1_shipping_estimate_source,
-    rda.winning_bid_original_ship_by_date as original_shipping_at_by_supplier,
+    rda.winning_bid_original_ship_by_date                                                        as original_shipping_at_by_supplier,
     rda.has_accepted_winning_bid,
     rda.has_restricted_winning_bid,
     rda.has_winning_bid_countered_on_price,
@@ -229,7 +240,7 @@ select
     rfq.is_rfq_automatically_sourced,
     rfq.number_of_rfqs,
     rfq.number_of_suppliers_rfq_requests,
-    rfq.number_of_suppliers_rfq_responded, 
+    rfq.number_of_suppliers_rfq_responded,
     rfq.number_of_rfq_requests,
     rfq.number_of_rfq_responded,
 
@@ -249,17 +260,17 @@ select
     docs.order_quote_created_at,
     docs.order_quote_submitted_at,
     docs.order_quote_finalised_at,
-    docs.order_quote_lead_time as lead_time,
+    docs.order_quote_lead_time                                                                   as lead_time,
     docs.sourcing_window,
-    docs.order_quote_price_multiplier as price_multiplier,
-    geo.is_cross_docking_ind as is_cross_docking,
-    docs.order_quote_is_eligible_for_cross_docking as is_eligible_for_cross_docking,
-    docs.order_quote_is_local_sourcing as is_local_sourcing,
-    docs.order_quote_is_eligible_for_local_sourcing as is_eligible_for_local_sourcing,
-    docs.order_quote_requires_local_production as requires_local_production,
-    docs.rfq_quote_application as rfq_quote_application,
-    docs.rfq_quote_note as rfq_quote_note,
-    docs.rfq_quote_delivered_by as rfq_quote_delivered_by,
+    docs.order_quote_price_multiplier                                                            as price_multiplier,
+    geo.is_cross_docking_ind                                                                     as is_cross_docking,
+    docs.order_quote_is_eligible_for_cross_docking                                               as is_eligible_for_cross_docking,
+    docs.order_quote_is_local_sourcing                                                           as is_local_sourcing,
+    docs.order_quote_is_eligible_for_local_sourcing                                              as is_eligible_for_local_sourcing,
+    docs.order_quote_requires_local_production                                                   as requires_local_production,
+    docs.rfq_quote_application,
+    docs.rfq_quote_note,
+    docs.rfq_quote_delivered_by,
 
     --Finance related exchange rates
     docs.order_quote_source_currency,
@@ -275,7 +286,7 @@ select
 
     --Documents: First Purchase Order
     docs.po_first_uuid,
-    docs.po_first_sourced_cost_usd,    
+    docs.po_first_sourced_cost_usd,
     docs.sourced_at,
     docs.is_sourced,
 
@@ -286,8 +297,8 @@ select
     docs.po_active_document_number,
     docs.po_active_company_entity,
     docs.po_active_support_ticket_id,
-    docs.po_active_promised_shipping_at_by_supplier as promised_shipping_at_by_supplier,
-    convert_timezone(origin_timezone, po_active_promised_shipping_at_by_supplier)               as localized_promised_shipping_at_by_supplier,
+    docs.po_active_promised_shipping_at_by_supplier                                              as promised_shipping_at_by_supplier,
+    convert_timezone(origin_timezone, po_active_promised_shipping_at_by_supplier)                as localized_promised_shipping_at_by_supplier,
 
     --Documents: All Purchase Orders
     docs.number_of_purchase_orders,
@@ -302,14 +313,14 @@ select
 
     -- Finance: Netsuite Fields
     finance.payment_label,
-    finance.order_remaining_amount as remaining_amount,
-    finance.order_remaining_amount_usd as remaining_amount_usd,
+    finance.order_remaining_amount                                                               as remaining_amount,
+    finance.order_remaining_amount_usd                                                           as remaining_amount_usd,
 
     -- Finance: Fields from Combined Sources
     finance.is_auto_payment,
     finance.is_instant_payment,
     finance.payment_method,
-    finance.is_pl_pay_later_used,                                     
+    finance.is_pl_pay_later_used,
 
 
     -------- SOURCE: STG ORDERS LOGISTICS --------
@@ -334,8 +345,8 @@ select
     logistics.has_consistent_shipping_info,
 
     -- Logistics: Shipping Dates
-    logistics.shipped_at as order_shipped_at, -- Prefix to avoid ambiguous field
-    convert_timezone(origin_timezone, logistics.shipped_at)               as localized_order_shipped_at,
+    logistics.shipped_at                                                                         as order_shipped_at, -- Prefix to avoid ambiguous field
+    convert_timezone(origin_timezone, logistics.shipped_at)                                      as localized_order_shipped_at,
     logistics.shipped_to_customer_at,
     logistics.shipped_from_cross_dock_at,
     logistics.shipment_label_created_at,
@@ -353,9 +364,18 @@ select
     logistics_business_hours.time_transit_at_cross_dock_business_minutes,
 
     -- Logistics: Estimates
-        coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_first_leg_customs_amount_usd 
-                  when not is_rfq_automatically_sourced then apoli.estimated_l1_customs_amount_usd_no_winning_bid else rfq.winning_bid_estimated_first_leg_customs_amount_usd end , 0)  as estimated_l1_customs_amount_usd,
-    coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_second_leg_customs_amount_usd else rfq.winning_bid_estimated_second_leg_customs_amount_usd end,0) as  estimated_l2_customs_amount_usd,
+    coalesce(case
+        when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_first_leg_customs_amount_usd
+        when not is_rfq_automatically_sourced then apoli.estimated_l1_customs_amount_usd_no_winning_bid else
+            rfq.winning_bid_estimated_first_leg_customs_amount_usd
+    end, 0)                                                                                      as estimated_l1_customs_amount_usd,
+    coalesce(
+        case
+            when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_second_leg_customs_amount_usd else
+                rfq.winning_bid_estimated_second_leg_customs_amount_usd
+        end,
+        0
+    )                                                                                            as estimated_l2_customs_amount_usd,
 
     -------- SOURCE: STG OTR -----------
     -- Calculated based on cnc orders, and
@@ -393,30 +413,30 @@ select
     qli.has_custom_finish,
     qli.parts_amount_usd,
     qli.shipping_amount,
-    qli.shipping_amount_usd,    
+    qli.shipping_amount_usd,
     qli.discount_cost_usd,
-    qli.other_line_items_amount_usd as other_amount_usd,
+    qli.other_line_items_amount_usd                                                              as other_amount_usd,
     qli.line_item_technology_id,
-    qli.line_item_process_id as process_id,
-    qli.line_item_process_name as process_name,
+    qli.line_item_process_id                                                                     as process_id,
+    qli.line_item_process_name                                                                   as process_name,
     qli.parts_titles,
     qli.parts_max_depth_cm,
     qli.parts_max_heigth_cm,
     qli.parts_max_width_cm,
-    
+
     -- RND exclusive Fields
     qli.is_supply_or_smart_rfq,
     qli.total_smallest_bounding_box_volume_cm3,
 
     -- Purchase Orders
-    fpoli.parts_amount_usd as parts_cost_usd,
-    fpoli.shipping_amount_usd as po_first_shipping_cost_usd,  
-    fpoli.other_line_items_amount_usd as other_costs_usd,
+    fpoli.parts_amount_usd                                                                       as parts_cost_usd,
+    fpoli.shipping_amount_usd                                                                    as po_first_shipping_cost_usd,
+    fpoli.other_line_items_amount_usd                                                            as other_costs_usd,
 
-    apoli.parts_amount_usd as po_active_parts_cost_usd,
-    apoli.shipping_amount_usd as po_active_shipping_cost_usd,  
-    apoli.other_line_items_amount_usd as po_active_other_costs_usd,
-    apoli.has_vqc_line_item as is_vqced,
+    apoli.parts_amount_usd                                                                       as po_active_parts_cost_usd,
+    apoli.shipping_amount_usd                                                                    as po_active_shipping_cost_usd,
+    apoli.other_line_items_amount_usd                                                            as po_active_other_costs_usd,
+    apoli.has_vqc_line_item                                                                      as is_vqced,
 
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews
@@ -440,7 +460,7 @@ select
     geo.destination_region,
     geo.destination_sub_region,
     geo.destination_us_state,
-    coalesce(geo.company_entity,po_active_company_entity) as company_entity, --Request by Bram S to fall back for nulls.
+    coalesce(geo.company_entity, po_active_company_entity)                                       as company_entity, --Request by Bram S to fall back for nulls.
     geo.origin_country,
     geo.origin_latitude,
     geo.origin_longitude,
@@ -452,7 +472,7 @@ select
     -- hubspot dealstage history (hubspot).
 
     -- Closing
-    coalesce(dealstage.is_closed, false) as is_closed,
+    coalesce(dealstage.is_closed, false)                                                          as is_closed,
     dealstage.closed_at,
 
     -- Cancellation
@@ -468,9 +488,13 @@ select
     dealstage.time_in_stage_new_business_minutes,
 
     -- Time spent in DFM for IM
-    case when hubspot_technology_name = 'IM' then  dealstage.im_deal_sourced_after_dfm_at end as im_deal_sourced_after_dfm_at,
-    case when hubspot_technology_name = 'IM' then  dealstage.time_in_stage_dfm_minutes end as time_in_stage_dfm_minutes,
- 
+    case
+        when hubspot_technology_name = 'IM' then dealstage.im_deal_sourced_after_dfm_at
+    end                                                                                          as im_deal_sourced_after_dfm_at,
+    case
+        when hubspot_technology_name = 'IM' then dealstage.time_in_stage_dfm_minutes
+    end                                                                                          as time_in_stage_dfm_minutes,
+
 
     ------ SOURCE: STG INTERACTIONS ---------
     -- The stg table is derived from the aggregation of
@@ -489,7 +513,7 @@ select
     -- Data from Disputes and Dispute Resolution
 
     -- Fields from Disputes Tables
-    coalesce(disputes.is_quality_disputed,false) as is_quality_disputed,
+    coalesce(disputes.is_quality_disputed, false)                                                as is_quality_disputed,
     disputes.dispute_created_at,
 
     disputes.dispute_status,
@@ -505,64 +529,96 @@ select
     -- Joins that are used to bring a few fields
     -- , they do not aggregate or compile data
 
-    change_requests.freshdesk_ticket_id                                                    as change_request_freshdesk_ticket_id,
-    change_requests.status                                                                 as change_request_status,
-    case when change_requests.status is not null then true else false end                  as has_change_request,
+    change_requests.freshdesk_ticket_id                                                          as change_request_freshdesk_ticket_id,
+    change_requests.status                                                                       as change_request_status,
+    coalesce (change_requests.status is not null, false)                                         as has_change_request,
 
     ---------- SOURCE: COMBINED FIELDS --------------
     -- Fields that are defined from two or more sources
 
     -- IDs
-    coalesce(orders.hubspot_deal_id, hs_deals.hubspot_deal_id)                             as order_hubspot_deal_id, -- Prefix to avoid ambiguous field
-    coalesce(orders.number, docs.order_quote_document_number)                              as document_number,
+    coalesce(orders.hubspot_deal_id, hs_deals.hubspot_deal_id)                                   as order_hubspot_deal_id, -- Prefix to avoid ambiguous field
+    coalesce(orders.number, docs.order_quote_document_number)                                    as document_number,
 
     -- Lifecycle:
-    order_hubspot_deal_id is not null                                                      as exists_in_hubspot,
-    order_quote_status = 'cart'                                                            as is_cart,
-    case when order_quote_status = 'cart' then null else -- In June 2021 some carts started being created in HS
-        coalesce(docs.order_first_submitted_at, hs_deals.hubspot_created_at) end           as submitted_at,
-    submitted_at is not null                                                               as is_submitted,
-    coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), pcr.title )                 as cancellation_reason,
-    coalesce(nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.reason_mapped, cancellation_reason)  as cancellation_reason_mapped,
-    case when cancellation_reason_mapped in ('MP requested cancellation','Lead time cannot be met','Unusable files/Design cannot be manufactured')
-         then 1 else coalesce(auc.number_of_auction_cancellations,0) end                   as number_of_cancellations,
-    srl.is_recognized                                                                      as is_recognized,
-    srl.recognized_at                                                                      as recognized_at,
+    order_hubspot_deal_id is not null                                                            as exists_in_hubspot,
+    order_quote_status
+    = 'cart'                                                                                     as is_cart,
+    case
+        when order_quote_status = 'cart' then null else -- In June 2021 some carts started being created in HS
+            coalesce(docs.order_first_submitted_at, hs_deals.hubspot_created_at)
+    end                                                                                          as submitted_at,
+    submitted_at is not null                                                                     as is_submitted,
+    coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), pcr.title)                        as cancellation_reason,
+    coalesce(
+        nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.reason_mapped, cancellation_reason
+    )                                                                                            as cancellation_reason_mapped,
+    case
+        when cancellation_reason_mapped in ('MP requested cancellation', 'Lead time cannot be met', 'Unusable files/Design cannot be manufactured')
+            then 1
+        else coalesce(auc.number_of_auction_cancellations, 0)
+    end                                                                                          as number_of_cancellations,
+    srl.is_recognized,
+    srl.recognized_at,
 
-       -- Technology:
-    coalesce(rda.auction_technology_id, qli.line_item_technology_id, hubspot_technology_id) as technology_id,
-    coalesce(rda.technology_name, qli.line_item_technology_name,
-             hubspot_technology_name)                                                      as technology_name,
+    -- Technology:
+    coalesce(rda.auction_technology_id, qli.line_item_technology_id, hubspot_technology_id)      as technology_id,
+    coalesce(rda.technology_name, qli.line_item_technology_name,hubspot_technology_name)         as technology_name,
 
     -- Financial:
-    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                     as subtotal_amount_usd,
-    case when is_closed then subtotal_amount_usd else 0 end                                as subtotal_closed_amount_usd,
-    case when is_sourced then subtotal_amount_usd else 0 end                               as subtotal_sourced_amount_usd,
-    case when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd *1.0 * 0.03 
-         when rda.is_first_auction_rda_sourced is not true and is_cross_docking = false then 0
-         else qli.shipping_amount_usd end                                                  as prep_shipping_cost_usd, 
-    case when is_sourced then coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_shipping_estimate_amount_usd end,0) + coalesce(prep_shipping_cost_usd,0) else 0 end  as shipping_cost_usd,
-    case when po_production_finalized_at < coalesce(logistics.shipped_at,'2100-01-01') and coalesce(auc.has_winning_bid_any_auction, false) = false  then po_production_subtotal_cost_usd
-          else  po_first_sourced_cost_usd  end                                             as subtotal_po_cost_usd,    
-    case when is_sourced then coalesce(subtotal_po_cost_usd,0) + coalesce(shipping_cost_usd,0) + 
-    estimated_l1_customs_amount_usd + estimated_l2_customs_amount_usd else 0 end as subtotal_sourced_cost_usd,
+    coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                           as subtotal_amount_usd,
+    case
+        when is_closed then subtotal_amount_usd else 0
+    end                                                                                          as subtotal_closed_amount_usd,
+    case
+        when is_sourced then subtotal_amount_usd else 0
+    end                                                                                          as subtotal_sourced_amount_usd,
+    case
+        when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd * 1.0 * 0.03
+        when rda.is_first_auction_rda_sourced is not true and is_cross_docking = false then 0
+        else qli.shipping_amount_usd
+    end                                                                                          as prep_shipping_cost_usd,
+    case
+        when
+            is_sourced
+            then
+                coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_shipping_estimate_amount_usd end, 0)
+                + coalesce(prep_shipping_cost_usd, 0)
+        else 0
+    end                                                                                          as shipping_cost_usd,
+    case
+        when
+            po_production_finalized_at < coalesce(logistics.shipped_at, '2100-01-01') and coalesce(auc.has_winning_bid_any_auction, false) = false
+            then po_production_subtotal_cost_usd
+        else po_first_sourced_cost_usd
+    end                                                                                          as subtotal_po_cost_usd,
+    case
+        when is_sourced
+            then
+                coalesce(subtotal_po_cost_usd, 0) + coalesce(shipping_cost_usd, 0)
+                + estimated_l1_customs_amount_usd + estimated_l2_customs_amount_usd
+        else 0
+    end                                                                                          as subtotal_sourced_cost_usd,
 
     -- Suppliers:
-    coalesce(docs.po_active_supplier_id, rda.supplier_id)                          as supplier_id,
+    coalesce(docs.po_active_supplier_id, rda.supplier_id)                                        as supplier_id,
 
- 
+
 
     -- Commission Related:
-    case when hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - qli.shipping_amount_usd > 50 -- Threshold
+    case
+        when
+            hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - qli.shipping_amount_usd > 50 -- Threshold
             and is_closed is true and rfq.has_rfq = false then true
-         when hs_deals.hubspot_amount_usd = 0 then true -- discussed with finance to have $0 amount deals not commissioned. 
-         when is_closed is not true then null else false end                  as has_significant_amount_gap, 
-    coalesce(interactions.has_svp_interaction or qli.has_svp_line_item,false)               as is_svp
+        when hs_deals.hubspot_amount_usd = 0 then true -- discussed with finance to have $0 amount deals not commissioned. 
+        when is_closed is not true then null else false
+    end                                                                                          as has_significant_amount_gap,
+    coalesce(interactions.has_svp_interaction or qli.has_svp_line_item, false)                   as is_svp
 
 from {{ ref('prep_supply_orders') }} as orders
 
     -- Staging
-    left join {{ ref ('stg_orders_hubspot') }} as hs_deals on hs_deals.hubspot_deal_id = orders.hubspot_deal_id
+    left join {{ ref ('stg_orders_hubspot') }} as hs_deals on orders.hubspot_deal_id = hs_deals.hubspot_deal_id
     left join {{ ref ('stg_orders_documents') }} as docs on orders.uuid = docs.order_uuid
     left join {{ ref ('stg_orders_finance') }} as finance on orders.uuid = finance.order_uuid
     left join {{ ref ('stg_orders_logistics') }} as logistics on orders.uuid = logistics.order_uuid
@@ -575,14 +631,14 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('stg_recognition_logic') }} as srl on orders.uuid = srl.order_uuid
 
     -- Reporting
-    left join {{ ref ('fact_discounts')}} as discounts on orders.uuid = discounts.order_uuid
+    left join {{ ref ('fact_discounts') }} as discounts on orders.uuid = discounts.order_uuid
 
     -- Aggregates
     left join {{ ref ('agg_orders_rda') }} as rda on orders.uuid = rda.order_uuid
     left join {{ ref ('agg_orders_rfq') }} as rfq on orders.uuid = rfq.order_uuid
-    left join {{ ref ('agg_orders_auctions')}} as auc on orders.uuid = auc.order_uuid
+    left join {{ ref ('agg_orders_auctions') }} as auc on orders.uuid = auc.order_uuid
     left join {{ ref ('agg_orders_technical_reviews') }} as reviews on orders.uuid = reviews.order_uuid
-    left join {{ ref ('agg_orders_interactions')}} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
+    left join {{ ref ('agg_orders_interactions') }} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
     left join {{ ref ('agg_line_items') }} as qli on orders.quote_uuid = qli.quote_uuid -- Agg Order-Quotes
     left join {{ ref ('agg_line_items') }} as fpoli on docs.po_first_uuid = fpoli.quote_uuid -- Agg First POs
     left join {{ ref ('agg_line_items') }} as apoli on docs.po_active_uuid = apoli.quote_uuid -- Agg Active POs        
@@ -595,8 +651,9 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref('prep_cancellation_reasons') }} as pcr on orders.cancellation_reason_id = pcr.id
 
 
-where true
-  and orders.legacy_order_id is null -- We take legacy orders from int_analytics.legacy_orders table as source of truth in a later stage
-  and coalesce (orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately
-    and coalesce (orders.hubspot_deal_id,-9) != 9665453990 -- Revamp of a big order that landed in December 2020, to be filtered out as indicated by Marnix.
-    and (coalesce (hs_deals.hubspot_contact_email_from_internal,false) = false or subtotal_sourced_amount_usd >0)
+where
+    true
+    and orders.legacy_order_id is null -- We take legacy orders from int_analytics.legacy_orders table as source of truth in a later stage
+    and coalesce(orders.hubspot_deal_id, -9) != 1062498043 -- Manufacturing agreement, orders were logged separately
+    and coalesce(orders.hubspot_deal_id, -9) != 9665453990 -- Revamp of a big order that landed in December 2020, to be filtered out as indicated by Marnix.
+    and (coalesce(hs_deals.hubspot_contact_email_from_internal, false) = false or subtotal_sourced_amount_usd > 0)
