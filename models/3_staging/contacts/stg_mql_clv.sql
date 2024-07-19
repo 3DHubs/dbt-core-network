@@ -142,8 +142,11 @@ select
     predicted_proba,
     coalesce(predicted_proba*0.81, 0.0001) as is_customer_prediction,
     is_customer_prediction * clv_24m * 
-    case when contact_type = 'first_company_customer' then 2.0
-         else 0.67 end as cpa_price,
+    case when became_mql_at >= '2024-07-19' -- we agreed on an adjustment for na vs emea, since first company customers for na were outperforming the model by 55%
+    then case when  dc.region = 'na' and contact_type = 'first_company_customer' then 2.5
+    when contact_type = 'first_company_customer' then 1.6 else 0.67 end 
+    else case when contact_type = 'first_company_customer' then 2.0
+         else 0.67 end end as cpa_price,
     is_customer_prediction * clv_24m as original_cpa_price
 from contacts_prep dc
 left join mql_pred pred
