@@ -42,7 +42,7 @@ select orders.created,
 from {{ source('int_service_supply', 'cnc_orders') }} as orders
         left join {{ ref('prep_supply_integration') }} as pse on orders.uuid = pse.order_uuid 
         left join {{ ref('prep_users') }} as users on orders.user_id = users.user_id 
-        left join {{ source('int_service_supply', 'anonymous_user_carts') }} auc on orders.uuid = auc.order_uuid and ( auc.anonymous_user_email = 'test@hubs.com' or  auc.anonymous_user_email ~ '@pthubs.com')
+        left join {{ ref('anonymous_user_carts') }} auc on orders.uuid = auc.order_uuid and ( auc.anonymous_user_email = 'test@hubs.com' or  auc.anonymous_user_email ~ '@pthubs.com')
 -- Filter: only orders with line items on the main quote, this removes empty carts.
 where exists (
     select 1 from {{ source('int_service_supply', 'line_items') }} as li

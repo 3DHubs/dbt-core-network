@@ -60,6 +60,6 @@ left join
     on ql.quote_id = quotes.uuid
     and created_at < '2023-04-01'  -- switched to quicklinks_tracking after April
 left join
-    {{ source("int_service_supply", "addresses") }} adr
+    {{ ref("addresses") }} adr
     on adr.address_id = quotes.shipping_address_id
 where (ql.quote_id is not null or is_external = 'true' or qt.order_uuid is not null)

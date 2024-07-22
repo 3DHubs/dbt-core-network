@@ -211,10 +211,6 @@ sources:
     tables:
       - name: automated_shipping_customs_information
 
-  #   - name: fed_service_supply
-  #    tables:
-  #      - name: line_items
-
   - name: int_retool
     tables:
       - name: qc_inspections
@@ -235,28 +231,10 @@ sources:
 
   - name: int_service_supply
     tables:
-      - name: addresses
-      - name: anonymous_user_carts
-      - name: auctions
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
-        loaded_at_field: started_at
-      - name: new_bids
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
-        loaded_at_field: placed_at
       - name: batch_shipment_line_items
       - name: batch_shipments
       - name: batch_package_line_items
-      - name: bids
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
-        loaded_at_field: placed_at
-      - name: new_bids_bid_reasons
-      - name: bid_reasons
+      - name: new_bids
       - name: billing_requests
         freshness:
           warn_after: { count: 31, period: day }
@@ -264,7 +242,6 @@ sources:
         loaded_at_field: created
       - name: branded_materials
       - name: cancellation_reasons
-      - name: cnc_order_parts_inspection_attachments
       - name: cnc_orders
         freshness:
           warn_after: { count: 12, period: hour }
@@ -287,7 +264,6 @@ sources:
           error_after: { count: 7, period: day }
         loaded_at_field: created
       - name: countries
-      - name: currencies
       - name: discount_codes
       - name: discounts
       - name: dispute_issues
@@ -302,7 +278,6 @@ sources:
         freshness: null # To be added when more volume
         loaded_at_field: created
       - name: financial_settings
-      - name: lead_time_tiers
       - name: line_items
         freshness:
           warn_after: { count: 12, period: hour }
@@ -339,12 +314,9 @@ sources:
       - name: package_line_items
       - name: processes
       - name: purchase_orders
-      - name: question_groups
       - name: quicklinks_tracking
       - name: quote_docusign_requests
-      - name: refund_reasons
       - name: refund_requests
-      - name: refunds
       - name: roles
       - name: sales_rfqs
       - name: shipments
@@ -355,7 +327,6 @@ sources:
       - name: shipping_carriers
       - name: shipping_options
       - name: shipping_labels
-      - name: supplier_auction_line_items
       - name: supplier_auctions
         freshness:
           warn_after: { count: 12, period: hour }
@@ -371,8 +342,6 @@ sources:
       - name: teams
       - name: team_invites
       - name: team_users
-      - name: technologies
-      - name: tolerances
       - name: transactions
         freshness:
           warn_after: { count: 24, period: hour }
@@ -380,7 +349,6 @@ sources:
         loaded_at_field: created
       - name: users
       - name: users_roles
-      - name: virtual_quality_control_order_packaging_photos
 
   - name: ext_freshdesk
     freshness:

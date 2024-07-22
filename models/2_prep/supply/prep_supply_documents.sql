@@ -79,5 +79,5 @@ from {{ source('int_service_supply', 'cnc_order_quotes') }} as docs
 inner join (select uuid, quote_uuid, updated from {{ ref('prep_supply_orders')}}) as orders on docs.order_uuid = orders.uuid
 -- Useful to get the status of the purchase order, this allow us to filter on active POs on following models
 left join (select uuid, status from int_service_supply.purchase_orders) as po on docs.uuid = po.uuid
-left join {{ source('int_service_supply', 'addresses') }} a on a.address_id = docs.shipping_address_id
+left join {{ ref('addresses') }} a on a.address_id = docs.shipping_address_id
 
