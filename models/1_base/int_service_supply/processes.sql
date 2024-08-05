@@ -13,10 +13,6 @@ select created,
        nullif(turnaround_time, '-')           as turnaround_time,
        nullif(wall_thickness, '-')            as wall_thickness,
        header_image_id,
-       technology_id,
-       infill_percentages,
-       nullif(layer_height_z_resolution, '-') as layer_height_z_resolution,
-       layer_height_z_resolution_default,
-       layer_height_z_resolutions
+       technology_id
 
 from {{ source('int_service_supply', 'processes') }}
