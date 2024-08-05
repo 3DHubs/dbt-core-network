@@ -137,8 +137,8 @@ select     li.order_uuid,
            c.outcome_customer as complaint_outcome_customer,
            c.outcome_supplier as complaint_outcome_supplier,
            c.resolution_at as complaint_resolution_at,
-           u.first_name + ' ' + u.last_name as complaint_created_by,
-           ur.first_name + ' ' + ur.last_name as complaint_reviewed_by,
+           c.created_by as complaint_created_by,
+           c.reviewed_by as complaint_reviewed_by,
            c.comment as complaint_comment,
            c.claim_type as complaint_type,
            c.liability as complaint_liability,
@@ -218,8 +218,6 @@ select     li.order_uuid,
 
              -- Complaints 
              left join {{ ref ('complaints')}} c on c.line_item_uuid = li.uuid
-             left join {{ ref('prep_users') }} u on u.user_id = c.created_by_user_id
-             left join {{ ref('prep_users') }} ur on ur.user_id = c.reviewed_by_user_id
 
             -- Joins for exchange rates
              left join {{ ref('stg_orders_dealstage') }} as order_deals on docs.order_uuid = order_deals.order_uuid
