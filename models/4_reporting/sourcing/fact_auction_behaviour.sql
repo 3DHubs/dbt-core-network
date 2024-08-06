@@ -89,6 +89,7 @@ select
     b.lead_time,
     b.accepted_ship_by_date, -- ship by date accepted by supplier
     b.ship_by_date, -- accepted ship by date + if counterbid + sourcing time and non business day adjustments
+    b.is_active as bid_is_active,
 
     -- Auction + Order Fields
     sa.auction_uuid,
