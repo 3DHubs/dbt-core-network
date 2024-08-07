@@ -25,12 +25,12 @@ with legacy as (
         contact_id
         from {{ ref('stg_hs_contacts_attributed_prep') }} contacts
         where first_cart_uuid not in (
-        select uuid from {{ source('int_service_supply', 'cnc_orders') }})
+        select uuid from {{ ref('orders') }})
     ),    
     empty_cart_2 as (
         select distinct
         users.hubspot_contact_id
-        from {{ source('int_service_supply', 'cnc_orders') }} orders
+        from {{ ref('orders') }} orders
         left join {{ ref('prep_users') }} as users on users.user_id = orders.user_id
         where orders.uuid not in (
         select uuid from {{ ref('prep_supply_orders') }})

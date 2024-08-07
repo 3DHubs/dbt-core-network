@@ -8,15 +8,12 @@
 
 select orders.created,
        orders.updated,
-       orders.deleted,
-       orders.id,
        orders.billing_request_id,
        orders.hubspot_deal_id,
        orders.uuid,
        orders.reorder_original_order_uuid,
        orders.user_id,
        orders.quote_uuid,
-       orders.session_id,
        orders.status,
        orders.delivered_at,
        orders.shipped_at,
@@ -24,22 +21,14 @@ select orders.created,
        orders.legacy_order_id,
        orders.completed_at,
        orders.support_ticket_id,
-       orders.number,
        orders.cancellation_reason_id,
+       orders.number,
        orders.in_production_at,
        orders.promised_shipping_date, -- is C-OTR target date
        orders.accepted_at,
-       orders.description,
-       orders.shipped_to_warehouse_at,
+       orders.is_eligible_for_restriction
 
-       -- Boolean Fields
-       {{ varchar_to_boolean('is_admin') }},
-       {{ varchar_to_boolean('is_strategic') }},
-       {{ varchar_to_boolean('is_automated_shipping_available') }},
-       {{ varchar_to_boolean('should_create_auction') }},
-       {{ varchar_to_boolean('is_eligible_for_restriction') }}
-
-from {{ source('int_service_supply', 'cnc_orders') }} as orders
+from {{ ref('orders') }} as orders
         left join {{ ref('prep_supply_integration') }} as pse on orders.uuid = pse.order_uuid 
         left join {{ ref('prep_users') }} as users on orders.user_id = users.user_id 
         left join {{ ref('anonymous_user_carts') }} auc on orders.uuid = auc.order_uuid and ( auc.anonymous_user_email = 'test@hubs.com' or  auc.anonymous_user_email ~ '@pthubs.com')

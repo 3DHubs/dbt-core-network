@@ -4,9 +4,9 @@ select
     quotes.uuid,
     quotes.order_uuid,
     quotes.document_number,
-    decode(is_external, 'true', true, 'false', false) as is_papi_integration,
+    orders.is_external as is_papi_integration,
     case
-        when is_external = 'true'
+        when is_external
         then 'papi'
         when ql.quote_id is not null
         then 'quicklink'
@@ -47,7 +47,7 @@ select
 
 from {{ source("int_service_supply", "cnc_order_quotes") }} as quotes
 inner join
-    {{ source("int_service_supply", "cnc_orders") }} as orders
+    {{ ref("orders") }} as orders
     on orders.quote_uuid = quotes.uuid
 left join
     {{ source("int_service_supply", "external_orders") }} as external_orders
@@ -62,4 +62,4 @@ left join
 left join
     {{ ref("addresses") }} adr
     on adr.address_id = quotes.shipping_address_id
-where (ql.quote_id is not null or is_external = 'true' or qt.order_uuid is not null)
+where (ql.quote_id is not null or orders.is_external or qt.order_uuid is not null)

@@ -38,6 +38,7 @@ select
     orders.quote_uuid                                                                            as order_quote_uuid,
     orders.reorder_original_order_uuid,
     orders.billing_request_id                                                                    as billing_id, -- This is the key used to indenitfy when the order was paid out and under which billing month
+    orders.cancellation_reason_id,
     case
         when
             dealstage.closed_at is not null

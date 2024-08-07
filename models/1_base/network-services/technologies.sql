@@ -1,4 +1,4 @@
 select technology_id,
-name
-
+name,
+slug
 from {{ ref('network_services', 'gold_technologies') }}
