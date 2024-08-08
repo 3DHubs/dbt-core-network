@@ -107,6 +107,7 @@ with stg as (
         hs.is_strategic,
         hs.is_ultra_strategic as is_priority_deal,
         closing_probability,
+        hs.hubspot_signed_customer_quote_pdf_link,
 
         -- Sourcing Fields
         is_manually_resourced,

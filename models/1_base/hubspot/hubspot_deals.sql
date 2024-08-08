@@ -149,7 +149,8 @@ select
         when property_sales_priced__value = 'true' then true else false
     end as is_sales_priced,
     nullif(property_tracking_number__value, '')::varchar(124) as hubspot_tracking_number,
-    nullif(property_tracking_link__value, '')::varchar(124) as hubspot_tracking_link
+    nullif(property_tracking_link__value, '')::varchar(124) as hubspot_tracking_link,
+    nullif(property_signed_customer_quote_pdf_link__value, '')::varchar(2048) as hubspot_signed_customer_quote_pdf_link
 from deals as ehd
 left join
     (

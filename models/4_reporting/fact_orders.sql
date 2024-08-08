@@ -270,6 +270,7 @@ pl_cross_sell_channel,
 mp_concerning_actions,
 is_manually_resourced,
 resourced_deal_original_order_number,
+hubspot_signed_customer_quote_pdf_link,
 
 
 -- Hubspot Owners
