@@ -27,6 +27,7 @@ select
     nullif(property_supply_owner__value, '')::varchar(124) as supply_owner,
     nullif(property_review_type__value, '')::varchar(124) as review_type,
     nullif(property_sales_engineer__value, '')::int as sales_engineer,
+    nullif(property_me_deal_buddy__value, '')::int as sales_engineer_deal_buddy,
     nullif(property_bdr_assigned__value, '')::int as bdr_assigned,
     nullif(property_sales_support_specialist__value, '')::int as sales_support_id,
     nullif(property_delay_liability__value, '')::varchar(124) as delay_liability,

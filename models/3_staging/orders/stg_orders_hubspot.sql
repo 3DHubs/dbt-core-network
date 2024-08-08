@@ -72,6 +72,7 @@ with stg as (
         psr.name                                                                          as partner_support_representative_name,
         hs.sales_engineer                                                                 as mechanical_engineer_id,
         me.name                                                                           as mechanical_engineer_name,
+        me_buddy.name                                                                     as mechanical_engineer_deal_buddy_name,
         hs.purchasing_manager                                                             as hubspot_purchasing_manager,
         hs.review_owner                                                                   as hubspot_technical_review_owner,
         hs.sourcing_owner                                                                 as hubspot_sourcing_owner_id,
@@ -141,6 +142,8 @@ with stg as (
             on bdr.owner_id = hs.bdr_assigned --and createdate between bdr.start_date and bdr.end_date JG We stopped tracking history of teams
         left join {{ ref ('hubspot_owners') }} as me
             on me.owner_id = hs.sales_engineer
+        left join {{ ref ('hubspot_owners') }} as me_buddy
+            on me_buddy.owner_id = hs.sales_engineer_deal_buddy
         left join {{ ref ('hubspot_owners') }} as csr
             on csr.owner_id = hs.customer_success_manager
         left join {{ ref ('hubspot_owners') }} as psr
