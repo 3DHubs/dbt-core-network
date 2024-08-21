@@ -342,13 +342,6 @@ sources:
       - name: teams
       - name: team_invites
       - name: team_users
-      - name: transactions
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
-        loaded_at_field: created
-      - name: users
-      - name: users_roles
 
   - name: ext_freshdesk
     freshness:
