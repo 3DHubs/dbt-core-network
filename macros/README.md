@@ -19,3 +19,9 @@ Example use case: Google Ads and Bing Ads keyword peformance reports are synced 
 
 ## `varchar_to_boolean`
 This macro can be used to cast a boolean field containind text to boolean data type. E.g. 'true' will be cast to True.
+
+## `generate_schema_name`
+This macro is designed to define a more standardized way of creating personal dbt schema. It relies on a env_var called DBT_ENVIRONMENT that defines in which environment models are running (dev vs prod vs ci).
+The `dev` schema will be built as such: `dbt_dev_analytics_+ user_name_+custom_schema_name`. 
+The user_name is part of the dbt credentials (Redshift name, e.g.: jur), the custom_schema_name is the suffix added to specific folders, such as `core` or `protolabs`. An example would be `dbt_dev_analytics_jgroot_core`
+The `prod` schema remains identical to the current state, using the environment and the folder name.
