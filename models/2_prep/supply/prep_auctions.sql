@@ -29,6 +29,7 @@ with
     auctions.started_at,
     auctions.finished_at,
     auctions.last_processed_at,
+    auctions.expected_sourcing_window_end_at,
     auctions.base_margin,  -- For debugging purposes only, do not use for reporting
     auctions.base_margin_without_discount,
     auctions.is_accepted_manually,

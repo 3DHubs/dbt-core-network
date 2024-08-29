@@ -98,6 +98,7 @@ select
     a.auction_type,
     a.auction_created_at,
     a.finished_at as auction_finished_at,
+    a.expected_sourcing_window_end_at,
     a.winning_bid_uuid as auction_winning_bid_uuid,
     a.status as auction_status,
     a.auction_document_number,
