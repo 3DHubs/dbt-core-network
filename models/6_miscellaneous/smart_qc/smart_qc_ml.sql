@@ -1,8 +1,9 @@
 {{ config(materialized="incremental"
 , tags=["multirefresh"]
+
     ,post_hook = """
             unload ('SELECT line_item_uuid, predicted_proba FROM  {{ this }} where loaded_at = \\'{{ run_started_at }}\\' ') 
-            to 's3://controlhub.prod.hubs.com/scan-hub/smart-qc-ml/{{ run_started_at.strftime(\"%Y-%m-%d\") }}/'
+            to 's3://controlhub.prod.hubs.com/scan-hub/smart-qc-ml/{{ run_started_at.strftime(\"%Y-%m-%d-%H:%M\") }}/'
             iam_role 'arn:aws:iam::256629611817:role/redshift-spectrum'
             parquet
             maxfilesize 100 mb
