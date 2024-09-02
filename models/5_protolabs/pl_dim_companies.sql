@@ -9,6 +9,7 @@ select
     is_funded,
     is_strategic,
     is_integration_company,
+    hubspot_owner_name,
     country_iso2,
     country_name,
     continent,
