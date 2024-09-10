@@ -84,7 +84,7 @@ select
 
 from keywords_performance_report_ranked
 
-left join {{ source('int_analytics', 'exchange_rate_spot_daily') }} as exchange_rate_spot_daily
+left join {{ ref('exchange_rate_daily') }} as exchange_rate_spot_daily
     on
         exchange_rate_spot_daily.currency_code_to = keywords_performance_report_ranked.currencycode
         and trunc(
