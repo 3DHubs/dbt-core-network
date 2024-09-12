@@ -34,7 +34,7 @@ from {{ ref('orders') }} as orders
         left join {{ ref('anonymous_user_carts') }} auc on orders.uuid = auc.order_uuid and ( auc.anonymous_user_email = 'test@hubs.com' or  auc.anonymous_user_email ~ '@pthubs.com')
 -- Filter: only orders with line items on the main quote, this removes empty carts.
 where exists (
-    select 1 from {{ source('int_service_supply', 'line_items') }} as li
+    select 1 from {{ ref('gold_line_items') }} as li
     where orders.quote_uuid = li.quote_uuid
 )
 -- Filters: external orders created through the PAPI integration
