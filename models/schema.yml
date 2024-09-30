@@ -336,6 +336,8 @@ sources:
   - name: dbt_ingestion
     tables:
       - name: gold_ext_airbyte_exchange_rate_daily
+        freshness:
+          error_after: { count: 24, period: hour }
   - name: ext_freshdesk
     freshness:
       warn_after: {count: 24, period: hour}
