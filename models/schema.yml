@@ -223,6 +223,21 @@ sources:
           warn_after: { count: 48, period: hour }
           error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+      - name: ups_api_documents
+        freshness:
+          warn_after: { count: 48, period: hour }
+          error_after: { count: 72, period: hour }
+        loaded_at_field: _sdc_batched_at
+      - name: dhl_api_shipment_dimensions
+        freshness:
+          warn_after: { count: 48, period: hour }
+          error_after: { count: 72, period: hour }
+        loaded_at_field: _sdc_batched_at
+      - name: ups_api_shipment_dimensions
+        freshness:
+          warn_after: { count: 48, period: hour }
+          error_after: { count: 72, period: hour }
+        loaded_at_field: _sdc_batched_at
 
   - name: int_service_supply
     tables:
