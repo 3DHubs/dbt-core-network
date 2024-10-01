@@ -15,4 +15,4 @@ Select
     package_piece_count,
     logistics_operation_id
 
-from {{ ref('logistics_operations_shipment_dimensions') }} as logistics_operation
+from {{ ref('logistics_operation_shipment_dimensions') }} as logistics_operation
