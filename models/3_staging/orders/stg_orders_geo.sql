@@ -49,36 +49,36 @@ select distinct
         else false
     end as is_cross_docking_ind,
     case
-        when is_cross_docking_ind then cross_dock_geo.locality else null
+        when is_cross_docking_ind then cross_dock_geo.shipping_locality else null
     end as cross_dock_city,
     case
-        when is_cross_docking_ind then cross_dock_geo.name else null
+        when is_cross_docking_ind then cross_dock_geo.shipping_country else null
     end as cross_dock_country,
     case
-        when is_cross_docking_ind then cross_dock_geo.lat else null
+        when is_cross_docking_ind then cross_dock_geo.shipping_latitude else null
     end as cross_dock_latitude,
     case
-        when is_cross_docking_ind then cross_dock_geo.lon else null
+        when is_cross_docking_ind then cross_dock_geo.shipping_longitude else null
     end as cross_dock_longitude,
 
     hs_deals.is_hubs_arranged_direct_shipping as is_cross_dock_override,
 
     -- Destination (Based on Contact Shipping Address)
-    addresses_destination.company_name as destination_company_name,
-    addresses_destination.locality as destination_city,
-    addresses_destination.postal_code as destination_postal_code,
-    addresses_destination.lat as destination_latitude,
-    addresses_destination.lon as destination_longitude,
-    addresses_destination.timezone as destination_timezone,
-    countries_destination.name as destination_country,
-    countries_destination.alpha2_code as destination_country_iso2,
-    countries_destination.market as destination_market,
-    countries_destination.region as destination_region,
-    countries_destination.sub_region as destination_sub_region,
+    coalesce(adr.company_name, quotes.shipping_company_name) as destination_company_name,
+    coalesce(adr.locality, quotes.shipping_locality) as destination_city,
+    coalesce(adr.postal_code, quotes.shipping_postal_code) as destination_postal_code,
+    coalesce(adr.lat, quotes.shipping_latitude) as destination_latitude,
+    coalesce(adr.lon, quotes.shipping_longitude) as destination_longitude,
+    coalesce(adr.timezone, quotes.shipping_timezone) as destination_timezone,
+    coalesce(adr.country_name, quotes.shipping_country) as destination_country,
+    coalesce(adr.country_alpha2_code, quotes.shipping_country_alpha2_code) as destination_country_iso2,
+    coalesce(adr.market, quotes.market) as destination_market,
+    coalesce(adr.region, quotes.region) as destination_region,
+    coalesce(adr.sub_region, quotes.sub_region) as destination_sub_region,
     states_destination.state as destination_us_state,
 
     -- Company Entity
-    countries_entity.name as company_entity
+    quotes.corporate_country as company_entity
 
 
 from {{ ref("prep_supply_orders") }} as orders
@@ -106,39 +106,21 @@ left join
     (
         select
             ppo.order_uuid,
-            addresses_crossdock.locality,
-            addresses_crossdock.lat,
-            countries_crossdock.name,
-            addresses_crossdock.lon
+            ppo.shipping_locality,
+            ppo.shipping_latitude,
+            ppo.shipping_longitude,
+            ppo.shipping_country
         from {{ ref("prep_purchase_orders") }} as ppo
-        left join
-            {{ ref("addresses") }} as addresses_crossdock
-            on ppo.shipping_address_id = addresses_crossdock.address_id
-        left join
-            {{ ref("prep_countries") }} as countries_crossdock
-            on addresses_crossdock.country_id = countries_crossdock.country_id
         where ppo.status = 'active'
     ) as cross_dock_geo
     on orders.uuid = cross_dock_geo.order_uuid
 
--- Destination Related (Client)
-left join
-    {{ ref("addresses") }} as addresses_destination
-    on 
-    case when orders.uuid = '32308d16-89b2-4c9b-bc8a-21546e47d9fb' -- 'JG 20240301 Big deal exception to switch destination region to billing instead of shipping'
-         then quotes.billing_address_id  
-         else quotes.shipping_address_id end 
-    = addresses_destination.address_id
-left join
-    {{ ref("prep_countries") }} as countries_destination
-    on addresses_destination.country_id = countries_destination.country_id
+-- Destination Related Exception (Client)
+left join {{ ref("seed_stg_orders_geo_exceptions") }} as exc 
+    on quotes.uuid = exc.quote_uuid
+left join {{ ref("prep_addresses") }} as adr
+    on exc.shipping_address_id = adr.address_id
+
 left join
     us_states as states_destination
     on quotes.shipping_address_id = states_destination.address_id
-
--- Company Entity Related (Hubs)
-left join
-    {{ ref("company_entities") }} as entity on quotes.company_entity_id = entity.id
-left join
-    {{ ref("prep_countries") }} as countries_entity
-    on entity.corporate_country_id = countries_entity.country_id

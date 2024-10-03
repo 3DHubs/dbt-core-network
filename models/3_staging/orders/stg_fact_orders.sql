@@ -456,14 +456,14 @@ select
     geo.destination_city,
     geo.destination_latitude,
     geo.destination_longitude,
-    geo.destination_country,
     geo.destination_country_iso2,
     geo.destination_postal_code,
+    geo.destination_country,
     geo.destination_market,
     geo.destination_region,
     geo.destination_sub_region,
     geo.destination_us_state,
-    coalesce(geo.company_entity, po_active_company_entity)                                       as company_entity, --Request by Bram S to fall back for nulls.
+    coalesce(geo.company_entity, po_active_company_entity) as company_entity, --Request by Bram S to fall back for nulls.
     geo.origin_country,
     geo.origin_latitude,
     geo.origin_longitude,
@@ -648,7 +648,7 @@ from {{ ref('prep_supply_orders') }} as orders
 
     -- Data Lake
     left join {{ ref ('prep_supply_integration') }} as integration on orders.uuid = integration.order_uuid
-
+    
     -- Service Supply
     left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
     left join {{ ref('prep_cancellation_reasons') }} as pcr on orders.cancellation_reason_id = pcr.id

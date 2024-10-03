@@ -1,4 +1,4 @@
- select li.uuid, 
+select li.uuid, 
         nvl(cc_rates.rate,0) as estimated_l1_customs_rate
         
         from {{ ref('prep_line_items')}} as li

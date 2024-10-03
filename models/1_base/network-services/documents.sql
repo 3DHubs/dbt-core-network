@@ -33,6 +33,16 @@ select created,
        is_admin,      
        requires_local_production,
        is_pl_pay_later_used,
-       is_cross_docking_derived
+       is_cross_docking_derived,
+       shipping_company_name,
+       shipping_locality,
+       shipping_postal_code,
+       shipping_latitude,
+       shipping_longitude,
+       shipping_timezone,
+       shipping_country_id,
+       shipping_country,
+       shipping_country_alpha2_code,
+       corporate_country
 
 from {{ ref('network_services', 'gold_documents') }} as docs

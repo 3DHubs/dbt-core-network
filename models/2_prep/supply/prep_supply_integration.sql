@@ -26,7 +26,7 @@ select
         when
             quote.created < '2023-04-17'
             and integration_platform_type = 'quicklink'
-            and adr.country_id = 237
+            and quote.shipping_country = 'United States'
         then true
         else false
     end is_test,
@@ -59,7 +59,4 @@ left join
     fed_publicapi.quick_link ql
     on ql.quote_id = quote.uuid
     and created_at < '2023-04-01'  -- switched to quicklinks_tracking after April
-left join
-    {{ ref("addresses") }} adr
-    on adr.address_id = quote.shipping_address_id
 where (ql.quote_id is not null or orders.is_external or qt.order_uuid is not null)

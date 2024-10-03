@@ -13,7 +13,11 @@ select
        po.voided_at,
        po.supplier_id,
        po.author_id,
-       po.billing_request_id
+       po.billing_request_id,
+       oqs.shipping_locality,
+       oqs.shipping_latitude,
+       oqs.shipping_longitude,
+       oqs.shipping_country
 
 from {{ source('int_service_supply', 'purchase_orders') }} as po
          inner join {{ ref('prep_supply_documents') }} as oqs

@@ -45,6 +45,20 @@ select docs.created,
        docs.is_admin,
        docs.requires_local_production,
        docs.is_pl_pay_later_used,
+       -- Geo Fields
+       docs.shipping_company_name,
+       docs.shipping_locality,
+       docs.shipping_postal_code,
+       docs.shipping_latitude,
+       docs.shipping_longitude,
+       docs.shipping_timezone,
+       docs.shipping_country_id,
+       docs.shipping_country,
+       docs.shipping_country_alpha2_code,
+       docs.corporate_country,
+       adr.sub_region,
+       adr.region,
+       adr.market,
 
        -- Key Fields for Filtering
        orders.updated as order_updated_at, -- Necessary for incremental model settings in prep_line_items
@@ -56,5 +70,5 @@ from {{ ref('documents') }} as docs
 inner join (select uuid, quote_uuid, updated from {{ ref('prep_supply_orders')}}) as orders on docs.order_uuid = orders.uuid
 -- Useful to get the status of the purchase order, this allow us to filter on active POs on following models
 left join (select uuid, status from {{ source('int_service_supply', 'purchase_orders') }}) as po on docs.uuid = po.uuid
-left join {{ ref('addresses') }} a on a.address_id = docs.shipping_address_id
+left join {{ref('prep_addresses')}} as adr on docs.shipping_address_id = adr.address_id
 
