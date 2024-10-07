@@ -65,6 +65,8 @@ select
     has_winning_bid_countered_on_design,
     has_winning_bid_countered_on_lead_time,
     has_winning_bid_countered_on_price,
+    has_rfq,
+    is_first_auction_rda_sourced,
 
     --hubspot atteibutes
     review_outcome
