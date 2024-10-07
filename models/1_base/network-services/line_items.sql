@@ -63,7 +63,8 @@ select
        has_internal_corners,
        has_part_marking,
        has_technical_drawings,
-       is_cosmetic
+       is_cosmetic,
+       process_name
 
 from {{ ref('gold_line_items') }} as li
 where true

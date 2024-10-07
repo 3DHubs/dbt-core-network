@@ -30,6 +30,7 @@ select
         li.material_id,
         li.material_subset_id,
         li.process_id,
+        li.process_name,
         li.material_color_id,
         li.branded_material_id,
         li.shipping_option_id,
@@ -68,7 +69,6 @@ select
         msub.name                                                                    as material_subset_name,
         msub.density                                                                 as material_density_g_cm3,
         mc.name                                                                      as material_color_name,
-        prc.name                                                                     as process_name,
         bmat.name                                                                    as branded_material_name,
         mf.name                                                                      as surface_finish_name,
         mf.cosmetic_type,
@@ -117,7 +117,6 @@ select
              -- Materials Processes and Finishes
              left join {{ ref('materials') }} as mat on mat.material_id = li.material_id
              left join {{ source('int_service_supply', 'material_types') }}  as mt on mt.material_type_id = mat.material_type_id
-             left join {{ ref('processes') }} as prc on prc.process_id = li.process_id
              left join {{ ref('prep_material_subsets') }} as msub on msub.material_subset_id = li.material_subset_id
              left join {{ source('int_service_supply', 'branded_materials') }} as bmat on bmat.branded_material_id = li.branded_material_id
              left join {{ ref('material_finishes') }} as mf on li.finish_slug = mf.slug

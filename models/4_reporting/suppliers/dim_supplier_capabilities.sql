@@ -77,7 +77,7 @@ with supplier_tech as (
                 sp.height_max
          from {{ ref('suppliers') }} as s
                   left outer join {{ source('int_service_supply', 'supplier_processes') }} as sp on s.id = sp.supplier_id
-                  left outer join {{ ref('processes') }} as p on sp.process_id = p.process_id
+                  left outer join {{ ref('gold_processes') }} as p on sp.process_id = p.process_id
      )
 select st.*,
        f.surface_finish_id,
