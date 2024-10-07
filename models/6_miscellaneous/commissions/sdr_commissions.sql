@@ -17,7 +17,7 @@ with seed_file_data as (
             sc.end_at::date,
             sc.onboarded_suppliers,
             split_to_array(sc.Onboarded_suppliers, ',') as supplier_array
-    from {{ source('ext_gsheets_v2', 'sdr_commissions') }} as sc
+    from {{ ref('seed_sdr_commissions') }}  as sc
     where sc.sdr_owner != 'Fictional Account'
 ),
 
