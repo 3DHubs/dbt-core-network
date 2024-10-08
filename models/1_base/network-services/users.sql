@@ -11,7 +11,7 @@ select
     is_email_verified,
     signup_source,
     hubspot_contact_id,
-    last_sign_in_at,
+    last_active_at as last_sign_in_at,
     is_internal,
     is_test
 from {{ ref('network_services', 'gold_users') }}

@@ -9,6 +9,50 @@ sources:
     tables:
       - name: click_performance_reports
 
+  - name: dbt_networkservices
+    tables:
+      - name: gold_auctions
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: auction_created_at
+      - name: gold_bids
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: created
+      - name: gold_complaints
+        freshness:
+          warn_after: { count: 4, period: day }
+          error_after: { count: 7, period: day }
+        loaded_at_field: created_at
+      - name: gold_documents
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: created
+      - name: gold_line_items
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: created
+      - name: gold_orders
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: created
+      - name: gold_transactions
+        freshness:
+          warn_after: { count: 2, period: day }
+          error_after: { count: 4, period: day }
+        loaded_at_field: created
+      - name: gold_users
+        freshness:
+          warn_after: { count: 2, period: day }
+          error_after: { count: 3, period: day }
+        loaded_at_field: created_at
+
+
   - name: int_analytics
     tags: ["int_analytics"]
     tables:
