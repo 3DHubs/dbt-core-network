@@ -8,6 +8,6 @@
         )
     }}
 
-    select user_id, last_sign_in_at from {{ ref('prep_users') }} where last_sign_in_at is not null
+    select user_id, last_sign_in_at::timestamp as last_sign_in_at from {{ ref('prep_users') }} where last_sign_in_at::timestamp is not null
 
 {% endsnapshot %}
