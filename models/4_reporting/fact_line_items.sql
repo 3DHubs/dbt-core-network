@@ -111,8 +111,8 @@ select     li.order_uuid,
            mt.name                                                                      as material_type_name,
            msub.name                                                                    as material_subset_name,
            msub.density                                                                 as material_density_g_cm3,
-           mc.name                                                                      as material_color_name,
-           bmat.name                                                                    as branded_material_name,
+           li.material_color_name,
+           li.branded_material_name,
            mf.name                                                                      as surface_finish_name,
            mf.cosmetic_type,
 
@@ -211,9 +211,7 @@ select     li.order_uuid,
              left join {{ ref('materials') }} as mat on mat.material_id = li.material_id
              left join {{ source('int_service_supply', 'material_types') }}  as mt on mt.material_type_id = mat.material_type_id
              left join {{ ref('prep_material_subsets') }} as msub on msub.material_subset_id = li.material_subset_id
-             left join {{ source('int_service_supply', 'branded_materials') }} as bmat on bmat.branded_material_id = li.branded_material_id
              left join {{ ref('material_finishes') }} as mf on li.finish_slug = mf.slug
-             left join {{ source('int_service_supply', 'material_colors') }} as mc on li.material_color_id = mc.material_color_id -- TODO: does not exist.
 
              -- Complaints 
              left join {{ ref ('complaints')}} c on c.line_item_uuid = li.uuid
