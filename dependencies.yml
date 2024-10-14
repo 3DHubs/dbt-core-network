@@ -8,3 +8,4 @@ packages:
 
 projects:
   - name: network_services
+  - name: ingestion

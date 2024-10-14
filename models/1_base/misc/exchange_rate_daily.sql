@@ -7,4 +7,4 @@ SELECT
     is_historical,
     rate
 
-FROM {{ source('dbt_ingestion', 'gold_ext_airbyte_exchange_rate_daily') }}
+FROM {{ ref('ingestion', 'gold_ext_airbyte_exchange_rate_daily') }}

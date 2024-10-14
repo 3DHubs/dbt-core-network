@@ -10,7 +10,7 @@ with
             rawviews as pageviews,
             timeperpageview::decimal(18, 2) as time_per_pageview,
             pagebouncerate::decimal(18, 2) as bounce_rate
-        from {{ source("dbt_ingestion", "gold_ext_airbyte_hubspot_pages") }}
+        from {{ ref("ingestion", "gold_ext_airbyte_hubspot_pages") }}
 
         {% if is_incremental() %}
 
