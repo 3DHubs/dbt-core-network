@@ -48,6 +48,10 @@ select
     )::date as first_time_response_date,
     -- trunc(property_first_time_response_date__value)::date as
     -- first_time_response_date,
+    case when property_expected_shipping_date__value !~ '^[0-9]+$' then null
+    else ( timestamp 'epoch'
+        + property_expected_shipping_date__value / 1000 * interval '1 second'
+    )::date end as im_hs_promised_shipping_at_by_supplier, -- The date entered by the IM deal owner to move the deal stage to "Won In Production." This is referred to as the "Latest Ship By Date" in HubSpot.
     case
         when property_high_risk__value = 'Yes'
         then true

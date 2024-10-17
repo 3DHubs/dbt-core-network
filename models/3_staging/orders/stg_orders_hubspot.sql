@@ -37,6 +37,7 @@ with stg as (
         hs.closedate                                                                      as hubspot_closed_at,
         hs.first_time_quote_sent_date                                                     as first_time_quote_sent_at,
         hs.first_time_response_date                                                       as first_time_response_at,
+        hs.im_hs_promised_shipping_at_by_supplier,
 
         -- Lifecycle
         dealstage.dealstage_mapped_value                                                  as hubspot_dealstage_mapped,

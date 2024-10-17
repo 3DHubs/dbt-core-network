@@ -300,8 +300,12 @@ select
     docs.po_active_document_number,
     docs.po_active_company_entity,
     docs.po_active_support_ticket_id,
-    docs.po_active_promised_shipping_at_by_supplier                                              as promised_shipping_at_by_supplier,
-    convert_timezone(origin_timezone, po_active_promised_shipping_at_by_supplier)                as localized_promised_shipping_at_by_supplier,
+    case 
+        when hubspot_technology_name = 'IM' then im_hs_promised_shipping_at_by_supplier
+        else docs.po_active_promised_shipping_at_by_supplier end                                 as promised_shipping_at_by_supplier,
+    case 
+        when hubspot_technology_name = 'IM' then convert_timezone(origin_timezone, im_hs_promised_shipping_at_by_supplier)
+        else convert_timezone(origin_timezone, po_active_promised_shipping_at_by_supplier) end   as localized_promised_shipping_at_by_supplier,
 
     --Documents: All Purchase Orders
     docs.number_of_purchase_orders,

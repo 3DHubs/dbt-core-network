@@ -58,6 +58,14 @@ select distinct orders.uuid                              as order_uuid,
                 end as promised_shipping_at_by_supplier_pick_up_adjusted,
                 
                 case
+                    -- IM S-OTR Logic Part
+                    when psd.technology_id = '3' and orders.created < '2024-10-01' then null
+                    when psd.technology_id = '3' and lower(hs.im_deal_type) = 'tooling & samples' and orders.status != 'canceled' then
+                    case
+                        when logistics.shipped_at <= hs.im_hs_promised_shipping_at_by_supplier then true
+                        when logistics.shipped_at > hs.im_hs_promised_shipping_at_by_supplier then false
+                        when logistics.shipped_at is null and dateadd(day, 1, hs.im_hs_promised_shipping_at_by_supplier) < getdate() then false
+                        end -- End of IM S-OTR Logic Part
                     when dateadd(day, 1, po_active_promised_shipping_at_by_supplier) > getdate() then null
                     when promised_shipping_at_by_supplier_pick_up_adjusted is null then null
                     when orders.status in ('completed', 'delivered', 'disputed', 'shipped') and
@@ -70,7 +78,6 @@ select distinct orders.uuid                              as order_uuid,
                          dateadd(day, 1, promised_shipping_at_by_supplier_pick_up_adjusted) < getdate() then false
                     else null
                     end                                  as is_shipped_on_time_by_supplier, -- Switched to as main calculation in July 2023
-
                 case
                     when dateadd(day, 1, orders.promised_shipping_date) > getdate() then null
                     when orders.promised_shipping_date is null then null
@@ -119,10 +126,10 @@ select distinct orders.uuid                              as order_uuid,
 
 from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('stg_orders_documents')}} as docs on orders.uuid = docs.order_uuid
+    left join {{ ref('prep_supply_documents') }} as psd on orders.quote_uuid = psd.uuid
     left join {{ ref ('stg_orders_logistics')}} as logistics on orders.uuid = logistics.order_uuid
     left join {{ ref ('stg_orders_hubspot')}} as hs on orders.hubspot_deal_id = hs.hubspot_deal_id
     left join {{ ref ('prep_supply_buffers')}}  as buffers on docs.sourced_at::date = buffers.date and 
     case when logistics.origin_country not in ('United States', 'China', 'India', 'Mexico') then 'Row' else logistics.origin_country end = buffers.supplier_country and logistics.cross_dock_country = buffers.crossdock_country
     left join delay_aggregates as dagg on orders.uuid = dagg.order_uuid
     left join delay_pred dp on dp.order_uuid = orders.uuid and dp.row=1
-

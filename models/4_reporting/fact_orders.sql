@@ -102,7 +102,7 @@ localized_order_shipped_at,
 shipped_to_customer_at,
 promised_shipping_at_to_customer, -- From order quote
 localized_promised_shipping_at_to_customer,
-promised_shipping_at_by_supplier, -- From active PO
+promised_shipping_at_by_supplier, -- From active PO; For IM's case, we use im_hs_promised_shipping_at_by_supplier from stg_orders_hubspot
 original_shipping_at_by_supplier, -- In case of winning counterbid lead time different
 localized_promised_shipping_at_by_supplier,
 estimated_delivery_to_cross_dock_at,
