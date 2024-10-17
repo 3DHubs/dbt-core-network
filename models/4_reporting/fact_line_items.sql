@@ -95,6 +95,7 @@ select     li.order_uuid,
            li.infill,
            li.layer_height,
            li.is_cosmetic,
+           li.material_name,
            vqc.is_vqced,
 
            -- Tolerances
@@ -107,7 +108,6 @@ select     li.order_uuid,
            dt.name                                                                      as technology_name,
 
            -- Materials, Processes & Finishes
-           mat.name                                                                     as material_name,
            mt.name                                                                      as material_type_name,
            msub.name                                                                    as material_subset_name,
            msub.density                                                                 as material_density_g_cm3,
@@ -208,8 +208,7 @@ select     li.order_uuid,
              left join {{ ref('agg_line_items_disputes') }} as d on d.line_item_uuid = li.uuid                             
 
              -- Materials Processes and Finishes
-             left join {{ ref('materials') }} as mat on mat.material_id = li.material_id
-             left join {{ source('int_service_supply', 'material_types') }}  as mt on mt.material_type_id = mat.material_type_id
+             left join {{ source('int_service_supply', 'material_types') }}  as mt on mt.material_type_id = li.material_type_id
              left join {{ ref('prep_material_subsets') }} as msub on msub.material_subset_id = li.material_subset_id
              left join {{ ref('material_finishes') }} as mf on li.finish_slug = mf.slug
 

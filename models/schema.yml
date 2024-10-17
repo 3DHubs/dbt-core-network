@@ -335,7 +335,6 @@ sources:
       - name: material_subsets
       - name: material_subsets_region_settings
       - name: material_types
-      - name: materials
       - name: materials_material_finishes
       - name: netsuite_customers
       - name: order_change_requests

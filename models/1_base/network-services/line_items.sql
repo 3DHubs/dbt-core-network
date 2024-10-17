@@ -32,6 +32,8 @@ select
        unit_price_amount,
        material_subset_id,
        material_id,
+       material_type_id,
+       material_name,
        process_id,
        technology_id,
        parent_uuid,
@@ -66,6 +68,11 @@ select
        has_part_marking,
        has_technical_drawings,
        is_cosmetic,
+       branded_material_name,
+       branded_material_slug,
+       material_color_name,
+       material_color_slug,
+       material_color_category,
        process_name
 
 from {{ ref('gold_line_items') }} as li
