@@ -68,9 +68,6 @@ select
        has_part_marking,
        has_technical_drawings,
        is_cosmetic,
-       branded_material_name,
-       branded_material_slug,
-       material_color_name,
        material_color_slug,
        material_color_category,
        process_name
