@@ -59,8 +59,8 @@ select distinct orders.uuid                              as order_uuid,
                 
                 case
                     -- IM S-OTR Logic Part
-                    when psd.technology_id = '3' and orders.created < '2024-10-01' then null
-                    when psd.technology_id = '3' and lower(hs.im_deal_type) = 'tooling & samples' and orders.status != 'canceled' then
+                    when coalesce(psd.technology_id,hs.hubspot_technology_id) = '3' and lower(hs.im_deal_type) = 'tooling & samples' and orders.created < '2024-10-01' then null
+                    when coalesce(psd.technology_id,hs.hubspot_technology_id) = '3' and lower(hs.im_deal_type) = 'tooling & samples' and orders.status != 'canceled' then
                     case
                         when logistics.shipped_at <= hs.im_hs_promised_shipping_at_by_supplier then true
                         when logistics.shipped_at > hs.im_hs_promised_shipping_at_by_supplier then false
