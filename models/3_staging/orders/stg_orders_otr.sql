@@ -28,7 +28,7 @@ with delay_aggregates as (
                 order_uuid,
                 round(predicted_proba,4) as delay_probability,
                 row_number() over (partition by order_uuid order by model_executed_at asc) as row
-            from {{ source('int_analytics', 'delay_probability') }}  pred
+            from {{ source('int_analytics', 'delay_probability_v2') }}  pred
         )
 
 -- Main Query: It compares shipping dates with promised shipping date from order documents (PO & Quote)
