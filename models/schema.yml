@@ -66,11 +66,7 @@ sources:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: snapshot_at
-      - name: delay_probability_v2
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
-        loaded_at_field: model_executed_at
+      - name: delay_probability
       - name: mql_conversion_pred
         freshness:
           warn_after: { count: 2, period: day }
