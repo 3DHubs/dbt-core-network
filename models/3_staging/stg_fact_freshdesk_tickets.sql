@@ -56,7 +56,6 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
          where merge_sequence = 1
      ),
      agents as (select id, contact_name from {{ ref('freshdesk_agents') }} where _is_latest),
-     contacts as (select id, name, email from {{ ref('freshdesk_contacts') }} where _is_latest),
      groups as (select id::bigint as id, name from {{ ref('freshdesk_groups') }} where _is_latest),
      companies as (select id, name from {{ ref('freshdesk_companies') }} where _is_latest),
      freshdesk_survey_results as (
@@ -124,7 +123,7 @@ select t.id                                                                  as 
        t.is_primary_ticket
 from uniqs t
          left outer join agents a on t.responder_id = a.id
-         left outer join contacts c on t.requester_id = c.id
+         left outer join {{ref('freshdesk_contacts')}} c on t.requester_id = c.id
          left outer join groups g on t.group_id = g.id
          left outer join companies com on t.company_id = com.id
          left outer join fdmapping fdmapping on t.id = fdmapping.id

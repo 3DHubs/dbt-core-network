@@ -1,35 +1,16 @@
-    with contacts as (
-        select *,
-               row_number() over (partition by id order by load_timestamp desc nulls last) as rn
-        from {{ source('ext_freshdesk', 'freshdesk_contacts') }}
-        )
-select contacts.active,
-       contacts.address,
-       contacts.company_id,
-       contacts.description,
-       contacts.email,
-       contacts.id::bigint as id,
-       contacts.job_title,
-       contacts.language,
-       contacts.mobile,
-       contacts.phone,
-       contacts.time_zone,
-       contacts.twitter_id,
-       contacts.facebook_id,
-       contacts.created_at,
-       contacts.updated_at,
-       contacts.csat_rating::float::int as csat_rating,
-       contacts.preferred_source,
-       contacts.unique_external_id,
-       contacts.twitter_profile_status,
-       contacts.twitter_followers_count,
-       contacts.custom_fields_customer_manager,
-       contacts.custom_fields_country,
-       contacts.custom_fields_signature_image_url,
-       contacts.custom_fields_perona,
-       contacts.name,
-       contacts.custom_fields_priority,
-       contacts.custom_fields_persona,
-       decode(contacts.rn, 1, True) as _is_latest,
-       contacts.load_timestamp as _load_timestamp
-from contacts
+
+SELECT active,
+        description,
+        email,
+        id,
+        language,
+        time_zone,
+        created_at,
+        updated_at,
+        csat_rating,
+        preferred_source,
+        unique_external_id,
+        load_timestamp,
+        name
+
+FROM {{ ref("ingestion", "gold_ext_airbyte_freshdesk_contacts") }}
