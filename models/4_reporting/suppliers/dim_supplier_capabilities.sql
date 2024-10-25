@@ -59,7 +59,7 @@ with supplier_tech as (
                 ms.process_id
          from {{ ref('suppliers') }} as s
                   left outer join {{ source('int_service_supply', 'suppliers_material_subsets') }} as sms on s.id = sms.supplier_id
-                  left outer join {{ ref('prep_material_subsets') }} as ms
+                  left outer join {{ ref('material_subsets') }} as ms
                                   on sms.material_subset_id = ms.material_subset_id
                   left join {{ ref('materials') }} m on ms.material_id = m.material_id
      ),

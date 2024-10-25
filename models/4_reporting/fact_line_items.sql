@@ -65,6 +65,7 @@ select     li.order_uuid,
            li.upload_id,
            li.correlation_uuid,
            li.technology_id,
+           li.technology_name,
            li.material_id,
            li.material_subset_id,
            li.process_id,
@@ -105,12 +106,12 @@ select     li.order_uuid,
            li.custom_tolerance_unit,
 
            -- Technology
-           dt.name                                                                      as technology_name,
+           
 
            -- Materials, Processes & Finishes
-           mt.name                                                                      as material_type_name,
-           msub.name                                                                    as material_subset_name,
-           msub.density                                                                 as material_density_g_cm3,
+           li.material_type_name,
+           li.material_subset_name,
+           li.material_density_g_cm3,
            li.material_color_name,
            li.branded_material_name,
            mf.name                                                                      as surface_finish_name,
@@ -154,8 +155,8 @@ select     li.order_uuid,
                 else pdf.part_height_cm end as part_longest_dimension,
            pdf.part_bounding_box_volume_cm3,
            pdf.part_smallest_bounding_box_volume_cm3,
-           round(coalesce(pdf.upload_part_volume_cm3, (li.weight_in_grams/msub.density)), 6) as part_volume_cm3,           
-           round(coalesce(msub.density * pdf.upload_part_volume_cm3, li.weight_in_grams), 6) as part_weight_g,           
+           round(coalesce(pdf.upload_part_volume_cm3, (li.weight_in_grams/li.material_density_g_cm3)), 6) as part_volume_cm3,           
+           round(coalesce(li.material_density_g_cm3 * pdf.upload_part_volume_cm3, li.weight_in_grams), 6) as part_weight_g,           
            round(pdf.part_bounding_box_volume_cm3 * li.quantity, 6)                   as line_item_total_bounding_box_volume_cm3,
            round(pdf.part_smallest_bounding_box_volume_cm3 * li.quantity, 6)          as line_item_total_smallest_bounding_box_volume_cm3,           
            round(part_volume_cm3 * li.quantity, 6)                                    as line_item_total_volume_cm3,
@@ -199,17 +200,12 @@ select     li.order_uuid,
            line_item_price_amount_usd * lic.estimated_l1_customs_rate                  as line_item_estimated_l1_customs_amount_usd_no_winning_bid
 
     from {{ ref('prep_line_items') }} as li
-             left join {{ ref('prep_supply_documents') }} as docs on docs.uuid = li.quote_uuid
-
-             -- Technology
-             left join {{ ref('technologies') }} dt on dt.technology_id = li.technology_id             
+             left join {{ ref('prep_supply_documents') }} as docs on docs.uuid = li.quote_uuid             
 
              -- Disputes
              left join {{ ref('agg_line_items_disputes') }} as d on d.line_item_uuid = li.uuid                             
 
              -- Materials Processes and Finishes
-             left join {{ source('int_service_supply', 'material_types') }}  as mt on mt.material_type_id = li.material_type_id
-             left join {{ ref('prep_material_subsets') }} as msub on msub.material_subset_id = li.material_subset_id
              left join {{ ref('material_finishes') }} as mf on li.finish_slug = mf.slug
 
              -- Complaints 

@@ -43,6 +43,7 @@ with
     auctions.auction_deleted_at,
     auctions.auction_document_number,
     auctions.technology_id,
+    auctions.technology_name,
     case when auction_type = 'RDA' then auctions.auction_subtotal_price_amount
         when auction_type = 'RFQ' then null end as auction_amount_usd,
     -- Order Level Fields
@@ -60,13 +61,9 @@ with
     order by auctions.finished_at desc nulls last) =1 and coalesce(auctions.new_winner_bid_uuid, auctions.winner_bid_uuid, srl.prep_winning_bid_uuid) is not null as last_successful_auction,
     row_number() over (partition by auctions.order_uuid, auction_type  order by auctions.started_at desc nulls last) as recency_idx_auction_type,
     case when auction_type='RDA' then decode(recency_idx_auction_type, 1, True, False) end as is_latest_rda_order_auction,
-    case when is_latest_rda_order_auction and last_successful_auction and winner_bid_uuid is not null then true else false end as is_rda_sourced,
-     
-    -- Technology Name
-    auctions.technology_name
+    case when is_latest_rda_order_auction and last_successful_auction and winner_bid_uuid is not null then true else false end as is_rda_sourced
 
 from {{ ref('auctions') }} as auctions
     inner join {{ ref('prep_supply_documents') }} as psd on auctions.auction_uuid = psd.uuid and psd.deleted is null
     left join supplier_rfq_winning_bid_legacy srl on srl.auction_uuid = auctions.auction_uuid
-    left join {{ ref ('technologies') }} as technologies on psd.technology_id = technologies.technology_id
     left join {{ ref("agg_line_items") }} as ali on psd.parent_uuid = ali.quote_uuid
