@@ -71,8 +71,8 @@ select
         li.material_density_g_cm3,
         li.material_color_name,
         li.branded_material_name,
-        mf.name                                                                      as surface_finish_name,
-        mf.cosmetic_type,
+        li.surface_finish_name,
+        li.cosmetic_type,
 
         -- Amount Fields
         li.auto_price_amount,
@@ -113,10 +113,7 @@ select
     from {{ ref('line_items') }} as li
              left join {{ ref('prep_supply_documents') }} as docs on docs.uuid = li.quote_uuid
              inner join {{ ref('bids')}} as bids on bids.uuid = docs.uuid           
-             inner join {{ ref('prep_auctions')}} as auction_rfq on auction_rfq.auction_uuid = bids.auction_uuid and auction_rfq.is_rfq      
-
-             -- Materials Processes and Finishes
-             left join {{ ref('material_finishes') }} as mf on li.finish_slug = mf.slug
+             inner join {{ ref('prep_auctions')}} as auction_rfq on auction_rfq.auction_uuid = bids.auction_uuid and auction_rfq.is_rfq
 
             -- Joins for exchange rates
              left join {{ ref('stg_orders_dealstage') }} as order_deals on docs.order_uuid = order_deals.order_uuid

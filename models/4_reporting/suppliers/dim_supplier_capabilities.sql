@@ -32,10 +32,8 @@ with supplier_tech as (
                 m.material_id as material_id
          from {{ ref('suppliers') }} s
                   left join {{ source('int_service_supply', 'supplier_finishes') }} sf on sf.supplier_id = s.id
-                  left join {{ ref('material_finishes') }} mf on mf.id = sf.finish_id
-                  left join {{ source('int_service_supply', 'materials_material_finishes') }} mmf
-                            on mmf.material_finish_id = sf.finish_id
-                  left join {{ ref('materials') }} m on mmf.material_id = m.material_id
+                  left join {{ ref('gold_material_finishes') }} mf on mf.id = sf.finish_id
+                  left join {{ ref('materials') }} m on mf.material_id = m.material_id
      ),
      finishes as (
          select supplier_id,

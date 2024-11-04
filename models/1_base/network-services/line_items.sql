@@ -74,7 +74,9 @@ select
        is_cosmetic,
        material_color_slug,
        material_color_category,
-       process_name
+       process_name, 
+       surface_finish_name,
+       cosmetic_type
 
 from {{ ref('gold_line_items') }} as li
 where true

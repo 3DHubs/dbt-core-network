@@ -114,8 +114,8 @@ select     li.order_uuid,
            li.material_density_g_cm3,
            li.material_color_name,
            li.branded_material_name,
-           mf.name                                                                      as surface_finish_name,
-           mf.cosmetic_type,
+           li.surface_finish_name,
+           li.cosmetic_type,
 
            -- Dispute Fields
            d.dispute_created_at,
@@ -204,9 +204,6 @@ select     li.order_uuid,
 
              -- Disputes
              left join {{ ref('agg_line_items_disputes') }} as d on d.line_item_uuid = li.uuid                             
-
-             -- Materials Processes and Finishes
-             left join {{ ref('material_finishes') }} as mf on li.finish_slug = mf.slug
 
              -- Complaints 
              left join {{ ref ('complaints')}} c on c.line_item_uuid = li.uuid
