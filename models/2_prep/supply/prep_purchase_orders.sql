@@ -17,6 +17,7 @@ select
        oqs.shipping_locality,
        oqs.shipping_latitude,
        oqs.shipping_longitude,
+       oqs.shipping_country_id,
        oqs.shipping_country
 
 from {{ source('int_service_supply', 'purchase_orders') }} as po

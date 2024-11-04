@@ -33,10 +33,11 @@ select distinct
     orders.uuid as order_uuid,
 
     -- Origin (Supplier)
-    countries_origin.name as origin_country,
-    addresses_origin.lat as origin_latitude,
-    addresses_origin.lon as origin_longitude,
-    addresses_origin.timezone as origin_timezone,
+    s.country_id as origin_country_id,
+    s.country_name as origin_country,
+    s.address_latitude as origin_latitude,
+    s.address_longitude as origin_longitude,
+    s.address_timezone as origin_timezone,
     countries_origin.market as origin_market,
     countries_origin.region as origin_region,
 
@@ -95,11 +96,8 @@ left join {{ ref("stg_orders_documents") }} as docs on orders.uuid = docs.order_
 left join {{ ref("agg_orders_rda") }} as rda on orders.uuid = rda.order_uuid
 left join {{ ref('suppliers') }} as s on s.id = coalesce(docs.po_active_supplier_id, rda.supplier_id)
 left join
-    {{ ref("addresses") }} as addresses_origin
-    on addresses_origin.address_id = s.address_id
-left join
     {{ ref("prep_countries") }} as countries_origin
-    on countries_origin.country_id = addresses_origin.country_id
+    on countries_origin.country_id = s.country_id
 
 -- Purchase Order Related (CrossDock)
 left join

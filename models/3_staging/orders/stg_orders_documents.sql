@@ -148,7 +148,7 @@ with first_quote as (
                 purchase_orders.supplier_support_ticket_id                                   as po_active_support_ticket_id,
                 suppliers.name                                                               as po_active_supplier_name,
                 suppliers.address_id                                                         as po_active_supplier_address_id,
-                countries.name                                                               as po_active_company_entity,
+                quotes.corporate_country                                                     as po_active_company_entity,
                 case
                     when quotes.shipping_date >= '2019-10-01'
                         then quotes.shipping_date end                                        as po_active_promised_shipping_at_by_supplier,
@@ -160,8 +160,6 @@ with first_quote as (
              left join {{ ref('exchange_rate_daily') }} as rates
                 on rates.currency_code_to = quotes.currency_code 
                 and rates.date = trunc(quotes.finalized_at)
-             left join {{ ref('company_entities') }} as ce on quotes.company_entity_id = ce.id
-             left join {{ ref('prep_countries') }} as countries on ce.corporate_country_id = countries.country_id
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
          where quotes.type = 'purchase_order'
            and purchase_orders.status = 'active'
@@ -182,7 +180,7 @@ with first_quote as (
                 purchase_orders.supplier_support_ticket_id                                   as po_production_support_ticket_id,
                 suppliers.name                                                               as po_production_supplier_name,
                 suppliers.address_id                                                         as po_production_supplier_address_id,
-                countries.name                                                               as po_production_company_entity,
+                quotes.corporate_country                                                     as po_production_company_entity,
                 case
                     when quotes.shipping_date >= '2019-10-01'
                         then quotes.shipping_date end                                        as po_production_promised_shipping_at_by_supplier,
@@ -199,8 +197,6 @@ with first_quote as (
              left join  {{ ref('exchange_rate_daily') }} as rates
                 on rates.currency_code_to = quotes.currency_code 
                 and rates.date = trunc(quotes.finalized_at)
-             left join {{ ref('company_entities') }} as ce on quotes.company_entity_id = ce.id
-             left join {{ ref('prep_countries') }} as countries on ce.corporate_country_id = countries.country_id
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
              inner join first_po on first_po.order_uuid = quotes.order_uuid
          where quotes.type = 'purchase_order'

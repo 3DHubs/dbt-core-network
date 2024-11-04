@@ -4,20 +4,12 @@
                 s.address_id,
                 s.name                                                                       as supplier_name,
                 su.email                                                                     as supplier_email,
-                split_part(su.email, '@', 2)                                                 as supplier_email_domain,
-                case
-                    when su.email is null OR trim(su.email) = '' then false else true
-                end                                                                          as has_email,
+                su.email_domain                                                              as supplier_email_domain,
+                su.email is not null                                                         as has_email,
                 s.is_suspended                                                               as is_suspended,
-                case
-                    when su.email !~ '@(3d)?hubs.com' then false else true
-                end                                                                          as is_test_supplier,
-                case
-                    when su.email LIKE '%@protolabs%' then true else false 
-                end                                                                          as is_protolabs,
-                case
-                    when su.email !~ '.*anonymized*.' then false else true 
-                end                                                                          as is_anonymized,
+                su.is_internal                                                               as is_test_supplier,
+                su.is_protolabs                                                              as is_protolabs,
+                su.is_anonymized                                                             as is_anonymized,
                 s.is_accepting_auctions                                                      as is_able_to_accept_auctions,
                 s.allow_for_rfq                                                              as is_eligible_for_rfq,
                 s.is_eligible_for_vqc,

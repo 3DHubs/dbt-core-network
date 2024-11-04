@@ -29,6 +29,11 @@ select distinct
     last_name,
     full_name,
     users.email,
+    email_domain,
+    is_internal,
+    is_test,
+    is_protolabs,
+    is_anonymized,
     settings,
     is_email_verified,
     signup_source,
@@ -40,8 +45,6 @@ select distinct
         else True
     --    else decode(is_active, 'true', True, 'false', False) -- This seems to have been dropped without communication.
         end                                                               is_active,
-    is_internal,
-    is_test,
     user_comp.company_name,
     user_comp.postal_code,
     coalesce(dur.role_mapped, 'customer') as user_role_mapped,

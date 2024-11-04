@@ -1,5 +1,6 @@
 select 
     created_at,
+    last_active_at as last_sign_in_at,
     user_id,
     uuid,
     country_code,
@@ -7,11 +8,13 @@ select
     last_name,
     full_name,
     email,
+    email_domain,
+    is_internal,
+    is_test,
+    is_protolabs,
+    is_anonymized,
     settings,
     is_email_verified,
     signup_source,
-    hubspot_contact_id,
-    last_active_at as last_sign_in_at,
-    is_internal,
-    is_test
+    hubspot_contact_id
 from {{ ref('network_services', 'gold_users') }}

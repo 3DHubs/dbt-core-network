@@ -16,6 +16,11 @@ sources:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: auction_created_at
+      - name: gold_billing_requests
+        freshness:
+          warn_after: { count: 31, period: day }
+          error_after: { count: 33, period: day }
+        loaded_at_field: created_at      
       - name: gold_bids
         freshness:
           warn_after: { count: 1, period: day }
@@ -283,11 +288,6 @@ sources:
       - name: batch_shipment_line_items
       - name: batch_shipments
       - name: batch_package_line_items
-      - name: billing_requests
-        freshness:
-          warn_after: { count: 31, period: day }
-          error_after: { count: 33, period: day }
-        loaded_at_field: created
       - name: cancellation_reasons
       - name: commodity_code_customs_rates
       - name: company_entities
