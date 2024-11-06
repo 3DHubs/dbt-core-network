@@ -12,6 +12,7 @@ select
     sourced_at,
     delivered_at,
     derived_delivered_at,
+    first_time_quote_sent_at,
     technology_name,
     process_name,
     destination_region,

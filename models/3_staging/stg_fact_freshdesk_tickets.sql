@@ -69,6 +69,15 @@ select t.id                                                                  as 
        t.subject,
        t.first_created_at                                                    as created_date,
        g.name                                                                as group,
+       case 
+            when g.name like '%Partner%' or g.name like '%Suppliers%' or g.name = 'Legacy Order Fulfilment'  then 'Partner Support'
+            when g.name like '%Customer%' or g.name like 'Project Manager%' or g.name in ('TrustPilot', 'Inbox', 'Legal') then 'Customer Team'
+            when g.name like '%Supply%' then 'Supply'
+            when g.name = 'Sales' then 'Sales'
+            when g.name in ('In Review - Supply RFQ', 'Technical Review') then 'Mechanical Engineering'
+            when g.name in ('Broken tracking links', 'Logistics') then 'Logistics'
+            when g.name = 'Finance' then 'Finance'
+            else null end                                                    as tickets_team,
        t.responder_id                                                        as agent_id,
        a.contact_name                                                        as ticket_agent_name,
        c.name                                                                as customer_contact,
