@@ -186,6 +186,8 @@ select
     auc.has_winning_bid_any_auction,
     auc.number_of_auctions,
     auc.number_of_auction_cancellations,
+    case when docs.is_sourced then 
+        (case when auc.last_winning_bid_auction_type = 'RDA' then True else False end) end      as is_last_auction_rda_sourced,
 
     -- RDA: Auction Fields
     coalesce(rda.is_rda_sourced, false)                                                          as is_rda_sourced,

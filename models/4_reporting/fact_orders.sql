@@ -314,6 +314,7 @@ is_vqced,
 has_winning_bid_any_auction,
 number_of_auctions,
 number_of_auction_cancellations,
+is_last_auction_rda_sourced,
 
 -- RDA (Reverse Dutch Auction)
 auction_document_number,
