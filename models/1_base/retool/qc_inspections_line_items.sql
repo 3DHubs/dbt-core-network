@@ -20,4 +20,4 @@ select
     {{ varchar_to_boolean('passed')}},                         
     {{ varchar_to_boolean('smart_qc')}}                        
 
-from {{ source('int_retool', 'inspection_line_items') }} as qc_inspections_line_items
+from {{ ref('ingestion', 'gold_int_airbyte_retool_inspection_line_items') }} as qc_inspections_line_items

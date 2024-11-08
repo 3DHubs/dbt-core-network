@@ -24,5 +24,5 @@ select
        -- Boolean Fields
        {{ varchar_to_boolean('in_hubs_box')}}                 
 
-from {{ source('int_retool', 'qc_inspections') }} as qc_inspections
+from {{ ref('ingestion', 'gold_int_airbyte_retool_qc_inspections') }} as qc_inspections
 
