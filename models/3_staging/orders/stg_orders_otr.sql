@@ -27,6 +27,7 @@ with delay_aggregates as (
             select 
                 order_uuid,
                 round(predicted_proba,4) as delay_probability,
+                predicted_class as delay_days_predicted,
                 row_number() over (partition by order_uuid order by model_executed_at asc) as row
             from {{ source('int_analytics', 'delay_probability_v2') }}  pred
         )
@@ -120,6 +121,7 @@ select distinct orders.uuid                              as order_uuid,
 
                 -- Delay probability prediction
                 dp.delay_probability,
+                dp.delay_days_predicted,
 
                 -- Buffer value
                 buffers.first_leg_buffer_value

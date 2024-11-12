@@ -405,6 +405,7 @@ select
     otr.first_leg_buffer_value,
     -- Delay Probability
     otr.delay_probability,
+    otr.delay_days_predicted,
 
     -------- SOURCE: AGG ORDERS LINE ITEMS --------
 
