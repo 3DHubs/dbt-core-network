@@ -1,6 +1,10 @@
 {{
   config(
-    materialized='table'
+    materialized='incremental',
+    on_schema_change='sync_all_columns',
+    unique_key='uuid',
+    tags=["multirefresh"],
+    post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ ref('line_items') }} )"]
   )
 }}
 
@@ -23,7 +27,31 @@ select
        docs.order_updated_at as order_updated_at,
        docs.shipping_address_id,
     -- Line Item Fields
-       li.*
+       li.*,
+    -- Part Dimensional Fields
+       case when li.upload_properties is not null then 
+       round(nullif(json_extract_path_text(li.upload_properties, 'volume', 'value', true), '')::float / 1000, 6)                                                 
+                                                                end as upload_part_volume_cm3, -- prefix to make origin explicit
+       case when li.upload_properties is not null then                                                         
+       round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'depth', true),'')::float / 10, 6)   
+                                                                end as part_depth_cm,
+       case when li.upload_properties is not null then
+       round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'width', true),'')::float / 10, 6)
+                                                                end as part_width_cm,
+       case when li.upload_properties is not null then
+       round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'height', true),'')::float / 10, 6)
+                                                                end as part_height_cm,
+       case when li.upload_properties is not null then
+       round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'depth', true),'')::float / 10, 6)
+                                                                end as smallest_bounding_box_depth_cm,
+       case when li.upload_properties is not null then
+       round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'width', true),'')::float / 10, 6)
+                                                                end as smallest_bounding_box_width_cm,
+       case when li.upload_properties is not null then
+       round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'height', true),'')::float / 10, 6)
+                                                                end as smallest_bounding_box_height_cm,                        
+       round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_bounding_box_volume_cm3,
+       round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_smallest_bounding_box_volume_cm3
 
 from {{ ref('line_items') }} as li
  
@@ -35,3 +63,9 @@ where true
     -- Filter: only interested on quotes that are not in the cart status
   --  and docs.status <> 'cart'
 
+{% if is_incremental() %}
+
+-- this filter will only be applied on an incremental run
+and (li_updated_at >= (select max(li_updated_at) from {{ this }}) )
+
+{% endif %}

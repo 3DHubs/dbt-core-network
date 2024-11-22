@@ -10,42 +10,7 @@
 -- contains data about line items from different documents, the model fact_quote_line_items downstream is filtered
 -- to include only line items from the main quote of the order.
  
- 
-with part_dimensional_attributes as (
-        select li.id,
-           round(nullif(json_extract_path_text(li.upload_properties, 'volume', 'value', true), '')::float / 1000,
-                 6)                                                 as upload_part_volume_cm3, -- prefix to make origin explicit
-           round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'depth', true),
-                        '')::float / 10, 6)                         as part_depth_cm,
-           round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'width', true),
-                        '')::float / 10, 6)                         as part_width_cm,
-           round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'height', true),
-                        '')::float / 10, 6)                         as part_height_cm,
-           round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'depth', true),
-                        '')::float / 10, 6)                         as smallest_bounding_box_depth_cm,
-           round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'width', true),
-                        '')::float / 10, 6)                         as smallest_bounding_box_width_cm,
-           round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'height', true),
-                        '')::float / 10, 6)                         as smallest_bounding_box_height_cm,                        
-           round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_bounding_box_volume_cm3,
-           round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_smallest_bounding_box_volume_cm3
-
-        from {{ ref('prep_line_items')}} as li
-        where true
-        and type = 'part'
-        and upload_properties is not null
-        and is_order_quote
-    ),
- vqc as (
-    select li.uuid, 
-        min(livqc.file_uuid) as livqc_file, 
-        case when livqc_file is not null then true else false end as is_vqced
-    from {{ ref('line_items') }} as li
-    left join {{ source('int_service_supply', 'line_item_virtual_quality_control_part_photos') }} as livqc on li.uuid = livqc.line_item_uuid  
-    group by li.uuid
-)
-
-    
+  
 select     li.order_uuid,
            -- Document fields
            li.document_uuid,
@@ -147,18 +112,16 @@ select     li.order_uuid,
            c.qc_comment,
 
            -- Part Dimensional Fields
-           pdf.part_depth_cm,
-           pdf.part_width_cm,
-           pdf.part_height_cm,
-           case when pdf.part_depth_cm >= part_width_cm and pdf.part_depth_cm >= pdf.part_height_cm then pdf.part_depth_cm
-                when pdf.part_width_cm >= pdf.part_depth_cm and pdf.part_width_cm >= pdf.part_height_cm then pdf.part_width_cm
-                else pdf.part_height_cm end as part_longest_dimension,
-           pdf.part_bounding_box_volume_cm3,
-           pdf.part_smallest_bounding_box_volume_cm3,
-           round(coalesce(pdf.upload_part_volume_cm3, (li.weight_in_grams/li.material_density_g_cm3)), 6) as part_volume_cm3,           
-           round(coalesce(li.material_density_g_cm3 * pdf.upload_part_volume_cm3, li.weight_in_grams), 6) as part_weight_g,           
-           round(pdf.part_bounding_box_volume_cm3 * li.quantity, 6)                   as line_item_total_bounding_box_volume_cm3,
-           round(pdf.part_smallest_bounding_box_volume_cm3 * li.quantity, 6)          as line_item_total_smallest_bounding_box_volume_cm3,           
+           li.part_depth_cm,
+           li.part_width_cm,
+           li.part_height_cm,
+           greatest(li.part_depth_cm, li.part_width_cm, li.part_height_cm) as part_longest_dimension,
+           li.part_bounding_box_volume_cm3,
+           li.part_smallest_bounding_box_volume_cm3,
+           round(coalesce(li.upload_part_volume_cm3, (li.weight_in_grams/li.material_density_g_cm3)), 6) as part_volume_cm3,           
+           round(coalesce(li.material_density_g_cm3 * li.upload_part_volume_cm3, li.weight_in_grams), 6) as part_weight_g,           
+           round(li.part_bounding_box_volume_cm3 * li.quantity, 6)                   as line_item_total_bounding_box_volume_cm3,
+           round(li.part_smallest_bounding_box_volume_cm3 * li.quantity, 6)          as line_item_total_smallest_bounding_box_volume_cm3,           
            round(part_volume_cm3 * li.quantity, 6)                                    as line_item_total_volume_cm3,
            round(part_weight_g * li.quantity, 6)                                      as line_item_weight_g,
 
@@ -216,7 +179,6 @@ select     li.order_uuid,
                              and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, docs.finalized_at, docs.created)) = trunc(rates.date)
 
              -- Other Joins
-             left join part_dimensional_attributes pdf on pdf.id = li.id
-             left join vqc on li.uuid = vqc.uuid
+             left join {{ ref('prep_line_items_vqc') }} as vqc on li.uuid = vqc.uuid
              left join {{ ref('tolerances') }} t on t.id = li.tolerance_id  
              left join {{ ref('stg_line_items_customs')}} lic on lic.uuid = li.uuid    
