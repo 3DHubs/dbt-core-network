@@ -122,7 +122,9 @@ select o.uuid                         as order_uuid,
         pl.payment_label,
         pl.order_remaining_amount,
         pl.order_remaining_amount_usd,
-        q.is_pl_pay_later_used                            
+        q.is_pl_pay_later_used,
+        bo_transactions.is_netsuite_batch_order
+
 from {{ ref('prep_supply_orders') }} as o
     left join {{ ref('prep_supply_documents') }} as q
     on o.quote_uuid = q.uuid
@@ -132,3 +134,4 @@ from {{ ref('prep_supply_orders') }} as o
     on o.quote_uuid = d.quote_uuid
     left join {{ ref('stg_orders_dealstage') }} as dealstage on o.uuid = dealstage.order_uuid
     left join payment_labels as pl on o.uuid = pl.order_uuid
+    left join {{ ref('netsuite_batch_order_transactions') }} as bo_transactions on bo_transactions.document_number = q.document_number

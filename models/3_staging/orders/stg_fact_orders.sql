@@ -330,6 +330,7 @@ select
     finance.is_instant_payment,
     finance.payment_method,
     finance.is_pl_pay_later_used,
+    finance.is_netsuite_batch_order,
 
 
     -------- SOURCE: STG ORDERS LOGISTICS --------

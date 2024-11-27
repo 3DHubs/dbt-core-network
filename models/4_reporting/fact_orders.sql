@@ -369,6 +369,7 @@ stripe_is_successful_payment,
 po_active_company_entity,
 is_auto_payment,
 is_instant_payment,
+is_netsuite_batch_order,
 payment_method,
 is_pl_pay_later_used,                                    
 company_entity, -- From the order quote
