@@ -1,5 +1,5 @@
 {{ config(
-    tags=["adhoc"]
+    tags=["adhoc", "daily_exclusion"]
 ) }}
 
 select
