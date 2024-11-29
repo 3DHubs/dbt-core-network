@@ -4,7 +4,7 @@
         on_schema_change='sync_all_columns',
         unique_key='uuid',
         tags=["multirefresh"],
-        post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ source('int_service_supply', 'line_items') }} )"]
+        post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ ref('network_services', 'gold_line_items') }} )"]
     )
 }}
 
@@ -76,7 +76,8 @@ select
        material_color_category,
        process_name, 
        surface_finish_name,
-       cosmetic_type
+       cosmetic_type,
+       is_expedited
 
 from {{ ref('gold_line_items') }} as li
 where true

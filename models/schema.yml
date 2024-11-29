@@ -46,6 +46,21 @@ sources:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: created
+      - name: gold_packages
+        freshness:
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: created_at
+      - name: gold_supplier_auctions
+        freshness:
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: assigned_at         
+      - name: gold_shipments
+        freshness:
+          warn_after: { count: 12, period: hour }
+          error_after: { count: 24, period: hour }
+        loaded_at_field: created                  
       - name: gold_transactions
         freshness:
           warn_after: { count: 2, period: day }
@@ -285,12 +300,8 @@ sources:
 
   - name: int_service_supply
     tables:
-      - name: batch_shipment_line_items
-      - name: batch_shipments
-      - name: batch_package_line_items
       - name: cancellation_reasons
       - name: commodity_code_customs_rates
-      - name: company_entities
       - name: countries
       - name: cnc_order_quotes # Required for a snapshot
         freshness:
@@ -311,14 +322,10 @@ sources:
         freshness: null # To be added when more volume
         loaded_at_field: created
       - name: financial_settings
-      - name: line_items
       - name: line_item_virtual_quality_control_part_photos
       - name: matching_scores
-      - name: material_subsets
-      - name: material_subsets_region_settings
-      - name: material_types
       - name: netsuite_customers
-      - name: new_bids      
+      - name: new_bids # Required for a snapshot
       - name: order_change_requests
       - name: order_delays
         freshness:
@@ -332,37 +339,13 @@ sources:
         loaded_at_field: created
       - name: order_review_answers
       - name: order_review_questions
-      - name: packages
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
-        loaded_at_field: created
-      - name: package_line_items
       - name: purchase_orders
       - name: quicklinks_tracking
       - name: quote_docusign_requests
       - name: refund_requests
       - name: sales_rfqs
-      - name: shipments
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
-        loaded_at_field: created
-      - name: shipping_carriers
-      - name: shipping_options
-      - name: shipping_labels
-      - name: supplier_auctions
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
-        loaded_at_field: assigned_at
-      - name: supplier_finishes
-      - name: supplier_processes
-      - name: supplier_rfqs
-      - name: supplier_technologies
-      - name: supplier_users
-      - name: suppliers
-      - name: suppliers_material_subsets
+      - name: suppliers # Required for a snapshot
+      - name: supplier_users # Required for a snapshot
       - name: teams
       - name: team_invites
       - name: team_users

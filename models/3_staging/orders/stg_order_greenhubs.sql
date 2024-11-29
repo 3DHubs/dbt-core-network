@@ -15,7 +15,7 @@ with base_query as (
            line_item_total_bounding_box_volume_cm3 - line_item_total_volume_cm3 as li_total_removed_volume_cm3
     from {{ ref ('fact_line_items') }} as li
              left join {{ ref ('stg_fact_orders') }} as orders on li.order_uuid = orders.order_uuid
-             left join {{ source('int_service_supply', 'suppliers') }} as sup on orders.supplier_id = sup.id
+             left join {{ ref('suppliers') }} as sup on orders.supplier_id = sup.id
              left outer join {{ ref('addresses') }} sa on sa.address_id = sup.address_id
              left outer join {{ ref('prep_countries') }} c on c.country_id = sa.country_id
     where li.line_item_type = 'part'

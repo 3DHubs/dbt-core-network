@@ -99,7 +99,7 @@ stg_deals as (
 
 select
     stg_dim_suppliers.supplier_id,
-    stg_dim_suppliers.create_date,
+    stg_dim_suppliers.created_at as create_date, -- Ideally rename in BI
     stg_dim_suppliers.address_id,
     stg_dim_suppliers.supplier_name,
     stg_dim_suppliers.full_name,

@@ -1,10 +1,10 @@
 with supplier_tech as (
-    select s.id                                                 as supplier_id,
-           s.name                                               as supplier_name,
+    select s.id as supplier_id,
+           s.name as supplier_name,
            st.technology_id,
-           tec.name                                             as technology_name,
-           ((st.min_order_amount::float) / 100)::decimal(15, 2) as min_order_amount_usd,
-           ((st.max_order_amount::float) / 100)::decimal(15, 2) as max_order_amount_usd,
+           st.technology_name,
+           st.min_order_amount_usd,
+           st.max_order_amount_usd,
            st.max_active_orders,
            st.allow_cosmetic_worthy_finishes,
            st.allow_orders_with_custom_finishes,
@@ -14,26 +14,23 @@ with supplier_tech as (
            st.num_units_max,
            cl.business_classification,
            cl.service_level_classification
-    from {{ ref('suppliers') }} s
-             left join {{ ref('supplier_technologies') }} st on st.supplier_id = s.id
-             left outer join {{ ref('technologies') }} as tec on st.technology_id = tec.technology_id
-             left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
-             left outer join {{ ref('prep_users') }} as su on ssu.user_id = su.user_id
-             left join {{ ref('seed_supplier_business_classification')}} cl on cl.supplier_id =  s.id and cl.technology_name = tec.name
-    where su.email !~ '@(3d)?hubs.com'
+    from {{ ref('suppliers') }} as s -- Note: using suppliers as main means including some suppliers that don't exist in supplier_technologies
+             left join {{ ref('supplier_technologies') }} as st on s.id = st.supplier_id
+             left outer join {{ ref('supplier_users') }} as ssu on st.supplier_id = ssu.supplier_id
+             left join {{ ref('seed_supplier_business_classification')}} cl on cl.supplier_id =  st.supplier_id and cl.technology_name = st.technology_name
+    where not ssu.is_hubs
 ),
      finishes_prep as (
-         select s.id          as supplier_id,
-                s.name        as supplier_name,
-                sf.finish_id  as surface_finish_id,
-                mf.name       as surface_finish_name,
-                m.technology_id,
-                m.name        as material_name,
-                m.material_id as material_id
-         from {{ ref('suppliers') }} s
-                  left join {{ source('int_service_supply', 'supplier_finishes') }} sf on sf.supplier_id = s.id
-                  left join {{ ref('gold_material_finishes') }} mf on mf.id = sf.finish_id
-                  left join {{ ref('materials') }} m on mf.material_id = m.material_id
+         select sf.supplier_id,
+                sf.supplier_name,
+                sf.surface_finish_id,
+                sf.surface_finish_name,
+                mf.technology_id,
+                mf.material_name,
+                mf.material_id
+         from {{ ref('supplier_finishes') }} sf
+                  -- Finishes and materials have a m-to-m relationship
+                  left join {{ ref('material_finishes') }} mf on mf.id = sf.surface_finish_id
      ),
      finishes as (
          select supplier_id,
@@ -45,37 +42,31 @@ with supplier_tech as (
          group by 1, 2, 3, 4, 5
      ),
      material_subsets as (
-         select s.id,
-                s.name  as supplier_name,
-                ms.name as material_subset_name,
-                ms.material_subset_id,
-                ms.is_available_in_auctions,
-                ms.material_excluded_in_eu,
-                ms.material_excluded_in_us,
-                m.technology_id,
-                m.material_id,
-                ms.process_id
-         from {{ ref('suppliers') }} as s
-                  left outer join {{ source('int_service_supply', 'suppliers_material_subsets') }} as sms on s.id = sms.supplier_id
-                  left outer join {{ ref('material_subsets') }} as ms
-                                  on sms.material_subset_id = ms.material_subset_id
-                  left join {{ ref('materials') }} m on ms.material_id = m.material_id
+         select sms.supplier_id,
+                sms.supplier_name,
+                sms.material_subset_name,
+                sms.material_subset_id,
+                sms.is_available_in_auctions,
+                sms.material_excluded_in_eu,
+                sms.material_excluded_in_us,
+                sms.technology_id,
+                sms.material_id,
+                sms.process_id
+         from {{ ref('supplier_material_subsets') }} as sms
      ),
      processes as (
-         select id     as supplier_id,
-                s.name as supplier_name,
-                p.technology_id,
-                p.process_id,
-                p.name as process_name,
+         select sp.supplier_id,
+                sp.supplier_name,
+                sp.technology_id,
+                sp.process_id,
+                sp.process_name,
                 sp.depth_min, 
                 sp.depth_max, 
                 sp.width_min, 
                 sp.width_max, 
                 sp.height_min, 
                 sp.height_max
-         from {{ ref('suppliers') }} as s
-                  left outer join {{ source('int_service_supply', 'supplier_processes') }} as sp on s.id = sp.supplier_id
-                  left outer join {{ ref('gold_processes') }} as p on sp.process_id = p.process_id
+         from {{ ref('supplier_processes') }} as sp
      )
 select st.*,
        f.surface_finish_id,
@@ -95,7 +86,7 @@ select st.*,
        p.height_max
 from supplier_tech st
          left join finishes f on f.supplier_id = st.supplier_id and f.technology_id = st.technology_id
-         left join material_subsets ms on ms.id = st.supplier_id and ms.technology_id = st.technology_id
+         left join material_subsets ms on ms.supplier_id = st.supplier_id and ms.technology_id = st.technology_id
          left join processes p on p.supplier_id = st.supplier_id and st.technology_id = p.technology_id and
                                   st.technology_id <> 2 -- processes independent for non-3DP orders
          left join processes p1 on p1.supplier_id = st.supplier_id and ms.process_id = p1.process_id and

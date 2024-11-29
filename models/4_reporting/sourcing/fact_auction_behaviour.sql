@@ -5,14 +5,7 @@
 
 {{ config(tags=["multirefresh"]) }}
 
-with
-    stg_supplier_auctions as (
-        select md5(supplier_id || auction_uuid) as sa_uuid, *
-
-        from {{ ref("supplier_auctions") }}
-    ),
-
-bids as (
+with bids as (
     select 
         md5(b.supplier_id || b.auction_uuid) as sa_uuid,
         b.has_changed_prices,
@@ -50,7 +43,7 @@ bids as (
 
 select
     -- Supplier Auction Fields
-    sa.sa_uuid,
+    sa.uuid as sa_uuid,
     sa.supplier_id as sa_supplier_id,
     sa.assigned_at as sa_assigned_at,
     row_number() over (partition by sa.auction_uuid order by sa_assigned_at) as sa_auction_rank,
@@ -58,13 +51,13 @@ select
     sa.last_seen_at as sa_last_seen_at,
     sa.is_preferred_auction as sa_is_preferred_auction,
     sa.is_restricted_auction as sa_is_restricted,
-    coalesce(round((sa.subtotal_price_amount_usd / 100.00), 2), a.auction_amount_usd) as sa_amount_usd,
+    coalesce(sa.subtotal_price_amount_usd, a.auction_amount_usd) as sa_amount_usd,
     sa.margin_without_discount as sa_margin,
-    round((sa.shipping_estimate_amount_usd / 100.00), 2) as shipping_estimate_amount_usd,
-    round((sa.l1_shipping_margin_amount_usd / 100.00), 2) as l1_shipping_margin_amount_usd,
-    round((sa.dhl_shipping_price_estimate_amount_usd / 100.00), 2) as dhl_shipping_price_estimate_amount_usd,
+    sa.shipping_estimate_amount_usd as shipping_estimate_amount_usd,
+    sa.l1_shipping_margin_amount_usd as l1_shipping_margin_amount_usd,
+    sa.dhl_shipping_price_estimate_amount_usd as dhl_shipping_price_estimate_amount_usd,
     sa.is_automatic_rfq as is_automatically_allocated_rfq,
-    sa.original_ship_by_date,
+    sa.ship_by_date as original_ship_by_date,
 
     -- Bid Fields
     b.bid_uuid,
@@ -121,6 +114,6 @@ select
     case when has_winning_bid_on_auction then lead_time*1.0/nullif(winning_bid_lead_time,0) end as leadtime_percent_of_winning_bid,
     case when has_winning_bid_on_auction then count(case when response_type='countered' then sa.auction_uuid end) over (partition by sa.auction_uuid) end as number_of_counter_bids_in_auction
 
-from stg_supplier_auctions as sa
+from {{ ref("supplier_auctions") }} as sa
 inner join {{ ref("prep_auctions") }} as a on a.auction_uuid = sa.auction_uuid
-left join bids as b on b.sa_uuid = sa.sa_uuid and b.supplier_bid_idx = 1
+left join bids as b on b.sa_uuid = sa.uuid and b.supplier_bid_idx = 1

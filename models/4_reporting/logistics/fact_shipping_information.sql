@@ -29,7 +29,7 @@ select
 from {{ source('int_logistics', 'automated_shipping_customs_information') }} as asci
 left join {{ ref('prep_supply_documents') }} as psd on asci.document_number = psd.document_number
 left join {{ ref('prep_supply_orders') }} as pso on asci.document_number = pso.number
-left join {{ source('int_service_supply', 'shipments') }} as ship on ship.tracking_number = asci.shipment_number
+left join {{ ref('prep_shipments') }} as ship on ship.tracking_number = asci.shipment_number
 left join {{ ref('exchange_rate_daily') }} as ex on asci.currency = ex.currency_code_to and asci.invoice_date = trunc(ex.date)
 left join {{ ref('prep_supply_integration') }} as integration on  coalesce(psd.order_uuid, pso.uuid) = integration.order_uuid
 where integration.is_test is not true

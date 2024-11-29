@@ -11,6 +11,9 @@
 -- Aftership Message (through Fact Aftership Messages)
 -- fact_after_ship_last_messages this sub query returns the last message from
 -- fact_aftership_messages
+
+-- Note: this model doesn't have a reliable UUID to join, closest is tracking_number?
+
 {{ config(tags=["multirefresh"]) }}
 
 with
@@ -109,8 +112,8 @@ select
     s.estimated_delivery as shipment_estimated_delivery_at,
 
     -- Carrier
-    sc.carrier_name_mapped,
-    sc.name as carrier_name,
+    s.carrier_name_mapped,
+    s.tracking_carrier_name as carrier_name,
 
     -- Other Attributes
     s.tracking_url,
@@ -122,7 +125,7 @@ select
     falm.tracking_message as tracking_last_message,
 
     -- Platform label indicates if the shipment label was created through the platform
-    sl.provider_label_id is not null as is_platform_label,
+    s.provider_label_id is not null as is_platform_label,
 
     -- Shipping Leg, Origin, Cross-Docking and Destination
     case
@@ -199,17 +202,13 @@ select
         order by shipment_created_at asc
     )
     = 1 as is_first_shipment_of_leg
-from {{ source("int_service_supply", "shipments") }} as s
+from {{ ref("prep_shipments") }} as s
 left join
     fact_after_ship_last_messages as falm
     on s.tracking_number = falm.carrier_tracking_number
 left join
     fact_after_ship_aggregate_message as faam
     on s.tracking_number = faam.carrier_tracking_number
-left join {{ ref("shipping_carriers") }} as sc on s.tracking_carrier_id = sc.id
-left join
-    {{ source("int_service_supply", "shipping_labels") }} as sl
-    on s.shipping_label_id = sl.id
 left join {{ ref("stg_orders_geo") }} as sog on s.order_uuid = sog.order_uuid
 left join
     {{ ref("prep_supply_integration") }} as integration

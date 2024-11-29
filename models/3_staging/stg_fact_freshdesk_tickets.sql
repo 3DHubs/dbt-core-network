@@ -1,3 +1,6 @@
+-- Note: "staging" contradicts with "fact" which is meant for reporting
+-- todo: rename is used in the BI
+
 {{
        config(
               sort = ["ticket_id", "order_uuid"],
@@ -12,7 +15,7 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
                     left join {{ ref('prep_purchase_orders') }} ppo on ppo.supplier_support_ticket_id = t.id
                     left join {{ ref('prep_auctions') }}  rda on rda.internal_support_ticket_id = t.id and not rda.is_rfq
                     left join {{ source('int_service_supply', 'disputes') }} dis on dis.customer_support_ticket_id = t.id
-                    left join {{ source("int_service_supply", "supplier_rfqs") }} rfq on rfq.support_ticket_id = t.id
+                    left join {{ ref("supplier_rfqs") }} rfq on rfq.support_ticket_id = t.id
                     left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
                     left outer join {{ ref('prep_supply_documents') }} as po on po.document_number = t.derived_po_number
                    where t._is_latest),

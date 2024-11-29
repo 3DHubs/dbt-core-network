@@ -12,6 +12,8 @@
 -- Service Supply
 -- Aftership Message (through Fact Aftership Messages)
 
+-- Note: batch_created_at is not 100% not null
+
 {{ config(
     tags=["multirefresh"]
 ) }}
@@ -19,7 +21,7 @@
 select
     fs.order_uuid,
     fs.batch_uuid,
-    p.created                                                             as batch_created_at,
+    p.created_at                                                          as batch_created_at,
     decode(p.is_partial, 'true', True, 'false', False)                    as is_batch_partial,
     sog.is_cross_docking_ind                                              as is_cross_docking_bool,
     case when not is_batch_partial then p.delivered_at end                as full_delivered_at,
@@ -116,7 +118,7 @@ select
     coalesce(sum(fs.number_logistics_message_alerts), 0) > 0              as batch_has_had_logistics_alerts,
     sum(case when fs.is_valid_shipment then 1 else 0 end) > 0             as is_valid_batch
 from {{ ref('fact_shipments') }} as fs
-    left join {{ source('int_service_supply', 'packages') }} as p
+    left join {{ ref('packages') }} as p
         on fs.batch_uuid = p.uuid
     left join {{ ref('prep_supply_orders') }} as o on p.order_uuid = o.uuid
     left join {{ ref('stg_orders_geo') }} as sog on fs.order_uuid = sog.order_uuid

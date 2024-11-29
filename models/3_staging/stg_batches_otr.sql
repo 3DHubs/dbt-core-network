@@ -12,7 +12,7 @@ with batch_pk_line_items as (
         package_line_item_id,
         rank() over (partition by batch_shipment_line_item_id order by id asc) as batch_package_rank,
         batch_shipment_line_item_id
-    from {{ source('int_service_supply', 'batch_package_line_items') }}
+    from {{ ref ('batch_package_line_items') }}
 ),
 
 package_lines as (
@@ -109,13 +109,13 @@ prep_batch_otr as (
     from {{ ref('prep_supply_orders') }} as orders
         left join {{ ref ('stg_orders_documents') }} as docs on orders.uuid = docs.order_uuid
         left join {{ ref ('prep_purchase_orders') }} as ppo on orders.uuid = ppo.order_uuid
-        inner join {{ source('int_service_supply', 'batch_shipments') }} as bs on docs.order_quote_uuid = bs.quote_uuid
-        inner join {{ source('int_service_supply', 'batch_shipments') }} as po_bs
+        inner join {{ ref ('batch_shipments') }} as bs on docs.order_quote_uuid = bs.quote_uuid
+        inner join {{ ref ('batch_shipments') }} as po_bs
             on ppo.uuid = po_bs.quote_uuid and bs.batch_number = po_bs.batch_number
-        left join {{ source('int_service_supply', 'batch_shipment_line_items') }} as po_bsli
+        left join {{ ref ('batch_shipment_line_items') }} as po_bsli
             on po_bs.id = po_bsli.batch_shipment_id
         left join package_lines as po_bpli on po_bsli.id = po_bpli.batch_shipment_line_item_id
-        left join {{ source('int_service_supply', 'package_line_items') }} as po_pli
+        left join {{ ref ('package_line_items') }} as po_pli
             on po_bpli.package_line_item_id = po_pli.id
         left join {{ ref('fact_batches') }} as fb on po_pli.package_uuid = fb.batch_uuid
         left join {{ ref ('stg_orders_hubspot') }} as hs on orders.hubspot_deal_id = hs.hubspot_deal_id

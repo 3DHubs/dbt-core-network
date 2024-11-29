@@ -16,7 +16,7 @@ with stg_states as (
 ),
      t1 as (
          select s.supplier_id,
-                s.create_date,
+                s.created_at,
                 s.address_id,
                 s.supplier_name,
                 trim(case
@@ -67,9 +67,9 @@ with stg_states as (
          or s.supplier_id=19 -- requested by Matt to include internal account Shak IM RFQ
          or s.supplier_id=467 -- Josh Parket ITAR test
          ), 
-     t2 as (select *, row_number() over (partition by supplier_id order by create_date desc nulls last) as rn from t1)
+     t2 as (select *, row_number() over (partition by supplier_id order by created_at desc nulls last) as rn from t1)
 select supplier_id,
-       create_date,
+       created_at,
        address_id,
        supplier_name,
        full_name,

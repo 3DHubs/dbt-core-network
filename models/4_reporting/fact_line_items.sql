@@ -62,6 +62,7 @@ select     li.order_uuid,
            li.layer_height,
            li.is_cosmetic,
            li.material_name,
+           li.is_expedited,
            vqc.is_vqced,
 
            -- Tolerances

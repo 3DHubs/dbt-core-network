@@ -1,30 +1,31 @@
     with suppliers as (
          select s.id                                                                         as supplier_id,
-                s.created                                                                    as create_date,
-                s.address_id,
                 s.name                                                                       as supplier_name,
-                su.email                                                                     as supplier_email,
-                su.email_domain                                                              as supplier_email_domain,
-                su.email is not null                                                         as has_email,
-                s.is_suspended                                                               as is_suspended,
-                su.is_internal                                                               as is_test_supplier,
-                su.is_protolabs                                                              as is_protolabs,
-                su.is_anonymized                                                             as is_anonymized,
+                s.created                                                                    as created_at,
+                s.address_id,
                 s.is_accepting_auctions                                                      as is_able_to_accept_auctions,
                 s.allow_for_rfq                                                              as is_eligible_for_rfq,
                 s.is_eligible_for_vqc,
                 s.currency_code,
                 s.unit_preference,
-                s.monthly_order_value_target,
-                su.last_sign_in_at,
-                su.last_sign_in_at_days_ago
+                s.monthly_order_value_target,                
+                s.is_suspended,
+
+                ssu.email                                                                    as supplier_email,
+                ssu.email_domain                                                             as supplier_email_domain,
+                ssu.email is not null                                                        as has_email,
+                ssu.is_internal                                                              as is_test_supplier,
+                ssu.is_protolabs                                                             as is_protolabs,
+                ssu.is_anonymized                                                            as is_anonymized,
+                ssu.last_active_at                                                           as last_sign_in_at,
+                datediff('day', last_sign_in_at, current_date)                               as last_sign_in_at_days_ago
+
          from {{ ref('suppliers') }} s
-             left outer join {{ source('int_service_supply', 'supplier_users') }} as ssu on s.id = ssu.supplier_id
-             left outer join {{ ref('prep_users') }} as su on ssu.user_id = su.user_id
+             left outer join {{ ref('supplier_users') }} as ssu on s.id = ssu.supplier_id
          ), 
-     unique_suppliers as (select *, row_number() over (partition by supplier_id order by create_date desc nulls last) as rn from suppliers)
+     unique_suppliers as (select *, row_number() over (partition by supplier_id order by created_at desc nulls last) as rn from suppliers)
 select supplier_id,
-       create_date,
+       created_at,
        address_id,
        supplier_name,
        supplier_email,

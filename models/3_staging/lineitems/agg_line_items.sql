@@ -27,7 +27,8 @@ other_line_items as (
         line_item_type,
         line_item_price_amount,
         line_item_price_amount_usd,
-        shipping_option_id
+        shipping_option_id,
+        is_expedited
     from {{ ref("fact_line_items") }} where line_item_type != 'part'
 
 ),
@@ -132,9 +133,8 @@ agg_other_line_items as (
         sum(
             case when oli.line_item_type in ('custom', 'surcharge', 'machining-certification') then oli.line_item_price_amount_usd else 0 end
         )                        as other_line_items_amount_usd,
-        bool_or(so.is_expedited) as is_expedited_shipping -- Applicable only for type shipping, case when not valid in bool_or
+        bool_or(oli.is_expedited) as is_expedited_shipping -- Applicable only for type shipping, case when not valid in bool_or
     from other_line_items as oli
-        left join {{ ref("shipping_options") }} as so on oli.shipping_option_id = so.id
     group by 1
 ),
 
