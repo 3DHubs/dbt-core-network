@@ -19,10 +19,9 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
                     left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
                     left outer join {{ ref('prep_supply_documents') }} as po on po.document_number = t.derived_po_number
                    where t._is_latest),
-    tickets as (select * from {{ ref('freshdesk_tickets') }} where _is_latest),
     frt_ticket_date_prep as (
         select id, min(stats_status_updated_at) as first_response_start_status_open_at
-        from {{ source('ext_freshdesk', 'freshdesk_tickets') }}
+        from {{ ref('freshdesk_tickets') }}
         where status = 2
         group by 1
         ),
@@ -40,10 +39,10 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
                 fme.merged_at,
                 case when is_merged then false else true end                          is_primary_ticket,
                 row_number() over (partition by ft.id order by fme.merged_at desc) as merge_sequence
-         from tickets ft
+         from {{ ref('freshdesk_tickets') }} ft
                   left outer join {{ ref('freshdesk_merge_events') }} fme
          on fme.is_merged_with_self = false and ft.id = fme.ticket_id
-             left outer join tickets as ft_merged_into
+             left outer join {{ ref('freshdesk_tickets') }} as ft_merged_into
              on fme.has_incoming_merge = true and fme.linked_ticket_id = ft_merged_into.id
          group by 1, 2, 4, 6, 8, 9, 10, 11),
      uniqs as (
@@ -54,7 +53,7 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
                 t1.linked_ticket_id,
                 t1.raw_merge_event,
                 t1.is_primary_ticket
-         from tickets
+         from {{ ref('freshdesk_tickets') }} as tickets
                   left outer join t1 on t1.id = tickets.id
          where merge_sequence = 1
      ),
