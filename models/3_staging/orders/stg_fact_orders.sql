@@ -179,6 +179,7 @@ select
     end                                                                                          as pl_cross_sell_channel,
     coalesce(integration_platform_type is not null or pl_cross_sell_channel is not null, false)  as is_integration_tmp,
     hs_deals.hubspot_signed_customer_quote_pdf_link,
+    hs_deals.why_still_in_production,
 
     ---------- SOURCE: Auctions --------------
 

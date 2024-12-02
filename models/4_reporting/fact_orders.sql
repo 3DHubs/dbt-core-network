@@ -271,6 +271,7 @@ mp_concerning_actions,
 is_manually_resourced,
 resourced_deal_original_order_number,
 hubspot_signed_customer_quote_pdf_link,
+why_still_in_production,
 
 
 -- Hubspot Owners
