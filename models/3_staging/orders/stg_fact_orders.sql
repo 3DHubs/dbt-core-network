@@ -527,8 +527,6 @@ select
     -- Fields from Disputes Tables
     coalesce(disputes.is_quality_disputed, false)                                                as is_quality_disputed,
     disputes.dispute_created_at,
-
-    disputes.dispute_status,
     disputes.dispute_requested_outcome,
     disputes.dispute_type,
 

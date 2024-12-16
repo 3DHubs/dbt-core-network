@@ -429,7 +429,6 @@ delay_probability,
 delay_days_predicted,
 
 -- Disputes
-dispute_status,
 dispute_requested_outcome,
 dispute_type,
 dispute_resolution_time_hours,

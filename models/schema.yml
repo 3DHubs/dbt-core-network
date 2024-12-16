@@ -26,6 +26,11 @@ sources:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: created
+      - name: gold_disputes
+        freshness:
+          warn_after: { count: 4, period: day }
+          error_after: { count: 7, period: day }
+        loaded_at_field: created      
       - name: gold_complaints
         freshness:
           warn_after: { count: 4, period: day }
@@ -310,14 +315,6 @@ sources:
         loaded_at_field: created      
       - name: discount_codes
       - name: discounts
-      - name: dispute_issues
-      - name: dispute_line_items
-      - name: dispute_line_items_issues
-      - name: disputes
-        freshness:
-          warn_after: { count: 4, period: day }
-          error_after: { count: 7, period: day }
-        loaded_at_field: created
       - name: external_orders
         freshness: null # To be added when more volume
         loaded_at_field: created
