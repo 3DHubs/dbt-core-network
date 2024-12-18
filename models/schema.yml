@@ -108,6 +108,14 @@ sources:
         loaded_at_field: model_executed_at
       - name: dim_dates
       - name: full_order_history_events
+        freshness: 
+          warn_after:
+            count: 1
+            period: day
+          error_after:
+            count: 2
+            period: day
+        loaded_at_field: created  
       - name: legacy_contacts
       - name: legacy_mqls
       - name: legacy_orders
@@ -183,14 +191,54 @@ sources:
   - name: fed_publicapi
     tables:
       - name: quick_link
+        freshness: 
+          warn_after:
+            count: 1
+            period: day
+          error_after:
+            count: 2
+            period: day
+        loaded_at_field: updated_at
 
   - name: fed_fulfilment
     tables:
       - name: questions
+        freshness: 
+          warn_after:
+            count: 7
+            period: day
+          error_after:
+            count: 14
+            period: day
+        loaded_at_field: submitted_at
       - name: replies
+        freshness: 
+          warn_after:
+            count: 7
+            period: day
+          error_after:
+            count: 14
+            period: day
+        loaded_at_field: created_at
       - name: reply_options
       - name: open_questions
-      - name: part_feature_questions      
+        freshness: 
+          warn_after:
+            count: 7
+            period: day
+          error_after:
+            count: 14
+            period: day
+        loaded_at_field: submitted_at
+      - name: part_feature_questions
+        freshness: 
+          warn_after:
+            count: 7
+            period: day
+          error_after:
+            count: 14
+            period: day
+        loaded_at_field: submitted_at     
 
   - name: ext_google_ads_console
     freshness:
