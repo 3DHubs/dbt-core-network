@@ -559,9 +559,9 @@ select
             coalesce(docs.order_first_submitted_at, hs_deals.hubspot_created_at)
     end                                                                                          as submitted_at,
     submitted_at is not null                                                                     as is_submitted,
-    coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), pcr.title)                        as cancellation_reason,
+    coalesce(nullif(hs_deals.hubspot_cancellation_reason, ''), pcr.cancellation_reason_title) as cancellation_reason,
     coalesce(
-        nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.reason_mapped, cancellation_reason
+        nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.cancellation_reason_mapped, cancellation_reason
     )                                                                                            as cancellation_reason_mapped,
     case
         when cancellation_reason_mapped in ('MP requested cancellation', 'Lead time cannot be met', 'Unusable files/Design cannot be manufactured')
@@ -658,8 +658,7 @@ from {{ ref('prep_supply_orders') }} as orders
     
     -- Service Supply
     left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
-    left join {{ ref('prep_cancellation_reasons') }} as pcr on orders.cancellation_reason_id = pcr.id
-
+    left join {{ ref('prep_cancellation_reasons') }} as pcr on orders.cancellation_reason_id = pcr.cancellation_reason_id
 
 where
     true
