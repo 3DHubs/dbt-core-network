@@ -14,7 +14,6 @@ with list_of_emails as (
 
     select distinct contact_email as email
     from {{ ref('freshdesk_agents') }}
-    where _is_latest
 ),
 
      agents as (
@@ -33,7 +32,6 @@ with list_of_emails as (
                   left join (
              select contact_email, id, contact_name
              from {{ ref('freshdesk_agents') }}
-             where _is_latest
          ) fda on emails.email = fda.contact_email
      ),
 

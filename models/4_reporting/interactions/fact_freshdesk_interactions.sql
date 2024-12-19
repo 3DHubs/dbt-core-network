@@ -25,7 +25,7 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                 'dbt_prod_data_lake.freshdesk_ticket_conversations; not source 2 && 3; not source phone; is_primary_ticket = ' ||
                 'True'                                                              as _data_source
 from {{ ref('freshdesk_ticket_conversations') }} as con
-          left outer join {{ ref('freshdesk_agents')}} as a on con.user_id = a.id and a._is_latest
+          left outer join {{ ref('freshdesk_agents')}} as a on con.user_id = a.id
           left outer join {{ ref('stg_fact_freshdesk_tickets') }} as t on t.ticket_id = con.ticket_id
 where not (con.source = 2 and con.category = 3) -- this is put in place to filter out all public notes (these should not be considered an interaction)
   and t.source <> 'phone'
@@ -56,7 +56,7 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                 'dbt_prod_data_lake.freshdesk_ticket_conversations; not source 2 && 3; not source phone; is_primary_ticket = ' ||
                 'False'                                                             as _data_source
 from {{ ref('freshdesk_ticket_conversations') }} as con
-          left outer join {{ ref ('freshdesk_agents') }} as a on con.user_id = a.id and a._is_latest
+          left outer join {{ ref ('freshdesk_agents') }} as a on con.user_id = a.id
           left outer join {{ ref('stg_fact_freshdesk_tickets') }} as t on t.linked_ticket_id = con.ticket_id
 where not (con.source = 2 and con.category = 3) -- this is put in place to filter out all public notes (these should not be considered an interaction)
   and t.source <> 'phone'
@@ -83,7 +83,7 @@ select {{ redshift.try_cast('t.ticket_id', 'bigint') }}                         
        t.source,
        'reporting.fact_freshdesk_tickets; not source phone'                           as _data_source
 from {{ ref('stg_fact_freshdesk_tickets') }} as t
-          left outer join {{ ref ('freshdesk_agents') }} as a on t.agent_id = a.id and a._is_latest
+          left outer join {{ ref ('freshdesk_agents') }} as a on t.agent_id = a.id
 where true
   and t.source <> 'phone'
 ),
