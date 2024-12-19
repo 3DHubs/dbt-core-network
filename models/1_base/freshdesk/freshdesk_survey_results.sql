@@ -1,9 +1,3 @@
-with survey_results as (
-    select *,
-           row_number() over (partition by id, survey_id, user_id order by load_timestamp desc) as rn
-
-    from {{ source('ext_freshdesk', 'freshdesk_survey_results') }}
-)
 select id,
        survey_id,
        user_id,
@@ -17,5 +11,4 @@ select id,
        ratings_question_13000005574,
        ratings_question_13000005575,
        load_timestamp as _load_timestamp
-from survey_results
-where rn = 1
+from {{ ref('ingestion', 'gold_ext_airbyte_freshdesk_survey_results')}}
