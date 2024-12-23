@@ -39,6 +39,9 @@ select distinct
     signup_source,
     hubspot_contact_id,
     last_sign_in_at,
+    team_id,
+    team_name,
+    team_created_at,
     datediff('day', last_sign_in_at, current_date) as last_sign_in_at_days_ago,
     case
         when last_sign_in_at_days_ago >= 365 or not last_sign_in_at_days_ago then False

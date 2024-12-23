@@ -16,5 +16,8 @@ select
     settings,
     is_email_verified,
     signup_source,
-    hubspot_contact_id
+    hubspot_contact_id,
+    team_id,
+    team_name,
+    team_created_at
 from {{ ref('network_services', 'gold_users') }}
