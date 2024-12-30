@@ -58,7 +58,7 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
          where merge_sequence = 1
      ),
      agents as (select id, contact_name from {{ ref('freshdesk_agents') }}),
-     groups as (select id::bigint as id, name from {{ ref('freshdesk_groups') }} where _is_latest),
+     groups as (select id, name from {{ ref('freshdesk_groups') }}),
      companies as (select id, name from {{ ref('freshdesk_companies') }} where _is_latest),
      freshdesk_survey_results as (
          select *,
