@@ -59,7 +59,7 @@ with fdmapping as (select coalesce(hs.uuid, pso.uuid, ppo.order_uuid, rda.order_
      ),
      agents as (select id, contact_name from {{ ref('freshdesk_agents') }}),
      groups as (select id, name from {{ ref('freshdesk_groups') }}),
-     companies as (select id, name from {{ ref('freshdesk_companies') }} where _is_latest),
+     companies as (select id, name from {{ ref('freshdesk_companies') }}),
      freshdesk_survey_results as (
          select *,
                 row_number() over (partition by ticket_id order by id) as rn --filters out duplicate survey responses on 1 ticket (2020-09 less than 1%)
