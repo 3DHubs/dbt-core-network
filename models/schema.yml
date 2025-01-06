@@ -111,6 +111,11 @@ sources:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: model_executed_at
+      - name: smart_qc_unique_history
+        freshness:
+          warn_after: { count: 2, period: day }
+          error_after: { count: 3, period: day }
+        loaded_at_field: model_executed_at
       - name: dim_dates
       - name: full_order_history_events
         freshness: 
