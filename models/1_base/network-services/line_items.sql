@@ -23,7 +23,7 @@ select
        price_amount,
        unit,
        custom_material_subset_name,
-       finish_slug,
+       finish_slugs,
        custom_finish_name,
        title,
        description,
