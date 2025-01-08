@@ -130,7 +130,7 @@ from {{ ref('prep_supply_orders') }} as o
     on o.quote_uuid = q.uuid
     left join stripe_transactions as t
     on o.quote_uuid = t.quote_uuid
-    left join {{ ref ('quote_docusign_requests') }} as d
+    left join {{ ref('network_services', 'gold_quote_docusign_requests') }} as d
     on o.quote_uuid = d.quote_uuid
     left join {{ ref('stg_orders_dealstage') }} as dealstage on o.uuid = dealstage.order_uuid
     left join payment_labels as pl on o.uuid = pl.order_uuid

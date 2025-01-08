@@ -29,22 +29,20 @@ select so.uuid                                                  as order_uuid,
         -- through discount codes e.g. (CODE: YOURFIRSTDISCOUNT). 
 
         -- Discount Attributes
-        l.discount_id,
-        d.title as discount_title,
+        ld.discount_id,
+        ld.discount_title,
         true as has_discount,
-        d.discount_factor,
-
+        ld.discount_factor,
         -- Discount Codes Attributes
-       discount_code_id,
-       discount_code_id is not null as has_discount_code,
-       dc.code as discount_code,
-       dc.description as discount_code_description,
-       u.first_name + ' ' + u.last_name as discount_code_created_by
+        ld.discount_code_id,
+        ld.discount_code_id is not null as has_discount_code,
+        ld.discount_code,
+        ld.discount_code_description,
+        ld.discount_code_author_name as discount_code_created_by
 
-from {{ ref('prep_line_items') }} l
-         inner join {{ ref('prep_supply_documents') }} coq on coq.uuid = l.quote_uuid
+-- Includes all line_items of type discount
+from {{ ref('network_services', 'gold_discount__line_items') }} as ld
+         -- Prep line items filters on main quote and purchase orders
+         inner join {{ ref('prep_line_items') }} as l on ld.uuid = l.uuid
+         -- Filters out carts
          inner join supply_orders so on so.quote_uuid = l.quote_uuid
-         inner join {{ ref('discounts') }} d on d.id = l.discount_id
-         left join  {{ ref('discount_codes') }} dc on dc.id = l.discount_code_id
-         left join  {{ ref('prep_users') }} u on u.user_id = dc.author_id
-where l.type='discount'

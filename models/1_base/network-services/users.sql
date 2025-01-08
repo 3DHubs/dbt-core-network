@@ -8,6 +8,7 @@ select
     last_name,
     full_name,
     email,
+    user_type,
     email_domain,
     is_internal,
     is_test,

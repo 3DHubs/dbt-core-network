@@ -5,7 +5,7 @@ from {{ source('ext_netsuite', 'customer') }} as enc
 group by 1)
 
 select
-       issnc.user_id as platform_customer_id,
+       ufs.user_id as platform_customer_id,
        enc.internalid as netsuite_company_internal_id,
        enc.companyname as company_name,
        case
@@ -27,16 +27,15 @@ select
        enc.parent__name as parent_company_name,
        enc.subsidiary__name as subsidiary,
        enc.terms__name as netsuite_terms,
-       issfs.tax_number as platform_terms,
-       issfs.credit_amount_limit as platform_credit_limit,
-       issfs.downpayment_order_limit as platform_downpayment_limit,
-       issfs.net_days as platform_net_days,
-       issfs.is_pay_later_allowed,
-       issfs.team_id,
-       issfs.financial_contact_mail,
-       issfs.financial_contact_first_name,
-       issfs.financial_contact_last_name
+       ufs.tax_number as platform_terms,
+       ufs.credit_amount_limit as platform_credit_limit,
+       ufs.downpayment_order_limit as platform_downpayment_limit,
+       ufs.net_days as platform_net_days,
+       ufs.is_pay_later_allowed,
+       ufs.team_id,
+       ufs.financial_contact_mail,
+       ufs.financial_contact_first_name,
+       ufs.financial_contact_last_name
 from {{ source('ext_netsuite', 'customer') }} as enc
-left join {{ source('int_service_supply', 'netsuite_customers') }} as issnc on enc.internalid = issnc.netsuite_customer_id
-left join {{ source('int_service_supply', 'financial_settings') }} as issfs on issnc.user_id = issfs.id
+left join {{ ref('network_services', 'gold_users_financial_settings') }} as ufs on enc.internalid = ufs.netsuite_customer_id
 left join netsuite_agg as nagg on enc.internalid = nagg.parent__internalid

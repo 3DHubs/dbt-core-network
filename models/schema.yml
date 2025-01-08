@@ -26,21 +26,31 @@ sources:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: created
-      - name: gold_disputes
-        freshness:
-          warn_after: { count: 4, period: day }
-          error_after: { count: 7, period: day }
-        loaded_at_field: created      
       - name: gold_complaints
         freshness:
           warn_after: { count: 4, period: day }
           error_after: { count: 7, period: day }
-        loaded_at_field: created_at
+        loaded_at_field: created_at        
+      - name: gold_disputes
+        freshness:
+          warn_after: { count: 4, period: day }
+          error_after: { count: 7, period: day }
+        loaded_at_field: created
+      - name: gold_discount__line_items
+        freshness:
+          warn_after: { count: 4, period: day }
+          error_after: { count: 7, period: day }
+        loaded_at_field: created_at              
       - name: gold_documents
         freshness:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: created
+      - name: gold_external_orders
+        freshness: 
+          warn_after: { count: 2, period: day }
+          error_after: { count: 3, period: day }
+        loaded_at_field: created_at         
       - name: gold_line_items
         freshness:
           warn_after: { count: 1, period: day }
@@ -51,11 +61,41 @@ sources:
           warn_after: { count: 1, period: day }
           error_after: { count: 2, period: day }
         loaded_at_field: created
+      - name: gold_order_reviews
+        freshness:
+          warn_after: { count: 2, period: day }
+          error_after: { count: 3, period: day }
+        loaded_at_field: created_at      
+      - name: gold_open_questions
+        freshness:
+          warn_after: { count: 7, period: day }
+          error_after: { count: 14, period: day }
+        loaded_at_field: submitted_at        
       - name: gold_packages
         freshness:
           warn_after: { count: 12, period: hour }
           error_after: { count: 24, period: hour }
         loaded_at_field: created_at
+      - name: gold_part_feature_questions
+        freshness:
+          warn_after: { count: 7, period: day }
+          error_after: { count: 14, period: day }
+        loaded_at_field: submitted_at
+      - name: gold_quick_link
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: updated_at
+      - name: gold_quicklinks_tracking
+        freshness:
+          warn_after: { count: 1, period: day }
+          error_after: { count: 2, period: day }
+        loaded_at_field: created_at                 
+      - name: gold_questions
+        freshness:
+          warn_after: { count: 7, period: day }
+          error_after: { count: 14, period: day }
+        loaded_at_field: submitted_at                
       - name: gold_supplier_auctions
         freshness:
           warn_after: { count: 12, period: hour }
@@ -196,59 +236,7 @@ sources:
       error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
-      - name: data
-
-  - name: fed_publicapi
-    tables:
-      - name: quick_link
-        freshness: 
-          warn_after:
-            count: 1
-            period: day
-          error_after:
-            count: 2
-            period: day
-        loaded_at_field: updated_at
-
-  - name: fed_fulfilment
-    tables:
-      - name: questions
-        freshness: 
-          warn_after:
-            count: 7
-            period: day
-          error_after:
-            count: 14
-            period: day
-        loaded_at_field: submitted_at
-      - name: replies
-        freshness: 
-          warn_after:
-            count: 7
-            period: day
-          error_after:
-            count: 14
-            period: day
-        loaded_at_field: created_at
-      - name: reply_options
-      - name: open_questions
-        freshness: 
-          warn_after:
-            count: 7
-            period: day
-          error_after:
-            count: 14
-            period: day
-        loaded_at_field: submitted_at
-      - name: part_feature_questions
-        freshness: 
-          warn_after:
-            count: 7
-            period: day
-          error_after:
-            count: 14
-            period: day
-        loaded_at_field: submitted_at     
+      - name: data   
 
   - name: ext_google_ads_console
     freshness:
@@ -363,7 +351,6 @@ sources:
 
   - name: int_service_supply
     tables:
-      - name: cancellation_reasons
       - name: commodity_code_customs_rates
       - name: countries
       - name: cnc_order_quotes # Required for a snapshot
@@ -371,15 +358,8 @@ sources:
           warn_after: { count: 12, period: hour }
           error_after: { count: 24, period: hour }
         loaded_at_field: created      
-      - name: discount_codes
-      - name: discounts
-      - name: external_orders
-        freshness: null # To be added when more volume
-        loaded_at_field: created
-      - name: financial_settings
       - name: line_item_virtual_quality_control_part_photos
       - name: matching_scores
-      - name: netsuite_customers
       - name: new_bids # Required for a snapshot
       - name: order_change_requests
       - name: order_delays
@@ -392,18 +372,11 @@ sources:
           warn_after: { count: 12, period: hour }
           error_after: { count: 24, period: hour }
         loaded_at_field: created
-      - name: order_review_answers
-      - name: order_review_questions
       - name: purchase_orders
-      - name: quicklinks_tracking
-      - name: quote_docusign_requests
       - name: refund_requests
       - name: sales_rfqs
       - name: suppliers # Required for a snapshot
       - name: supplier_users # Required for a snapshot
-      - name: teams
-      - name: team_invites
-      - name: team_users
       
   - name: dbt_ingestion
     tables:

@@ -10,7 +10,7 @@ select
         then 'papi'
         when ql.quote_id is not null
         then 'quicklink'
-        when qt.utm_campaign = 'plQuicklink'
+        when qt.is_quick_link
         then 'quicklink'
         else 'shallowlink'
     end as integration_platform_type,
@@ -20,8 +20,8 @@ select
             or lower(consumer_purchase_order_number) ~ 'test'
             or ql.request_id ~ 'test'
             or ql.email ~ 'mailinator'
-            or ql.email ~ 'protolabs'
-            or ql.email ~ '@(3d)?hubs.com'
+            or ql.is_protolabs_email
+            or ql.is_hubs_email
         then true
         when
             quote.created < '2023-04-17'
@@ -41,7 +41,7 @@ select
     ) as integration_order_created_at,
     external_orders.consumer_ship_by as integration_order_ship_by_at,
     coalesce(qt.pl_user_id, ql.user_id) as integration_user_id,
-    replace(qt.utm_content, 'content=', '') as integration_utm_content,
+    qt.utm_content as integration_utm_content,
     count(quote.order_uuid) over (partition by integration_platform_type, integration_order_number ) as number_of_orders_per_integration_order,
     case when number_of_orders_per_integration_order > 1 and integration_platform_type = 'papi' then true else false end as is_multi_line_papi_integration
 
@@ -50,13 +50,13 @@ inner join
     {{ ref("orders") }} as orders
     on orders.quote_uuid = quote.uuid
 left join
-    {{ source("int_service_supply", "external_orders") }} as external_orders
+    {{ ref('network_services', 'gold_external_orders') }} as external_orders
     on orders.uuid = external_orders.uuid
 left join
-    {{ source("int_service_supply", "quicklinks_tracking") }} qt
+    {{ ref('network_services', 'gold_quicklinks_tracking') }} as qt
     on qt.order_uuid = orders.uuid
 left join
-    fed_publicapi.quick_link ql
+    {{ ref('network_services', 'gold_quick_link') }} as ql
     on ql.quote_id = quote.uuid
-    and created_at < '2023-04-01'  -- switched to quicklinks_tracking after April
+    and ql.created_at < '2023-04-01'  -- switched to quicklinks_tracking after April
 where (ql.quote_id is not null or orders.is_external or qt.order_uuid is not null)
