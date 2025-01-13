@@ -26,7 +26,9 @@ select orders.created,
        orders.in_production_at,
        orders.promised_shipping_date, -- is C-OTR target date
        orders.accepted_at,
-       orders.is_eligible_for_restriction
+       orders.is_eligible_for_restriction,
+       orders.order_change_request_status,
+       orders.order_change_request_freshdesk_ticket_id
 
 from {{ ref('orders') }} as orders
         left join {{ ref('prep_supply_integration') }} as pse on orders.uuid = pse.order_uuid 

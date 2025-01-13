@@ -59,6 +59,9 @@ select
     -- Orders: Other Fields
     'supply'                                                                                     as data_source,
     coalesce (orders.legacy_order_id is not null, false)                                         as is_legacy,
+    orders.order_change_request_freshdesk_ticket_id                                              as change_request_freshdesk_ticket_id,
+    orders.order_change_request_status                                                           as change_request_status,
+    coalesce (change_request_status is not null, false)                                          as has_change_request,    
 
     -- Product Features
     orders.is_eligible_for_restriction,
@@ -535,14 +538,6 @@ select
     disputes.dispute_resolution_time_hours,
     disputes.first_dispute_resolution_type,
 
-    ---------- SOURCE: INT SERVICE SUPPLY --------------
-    -- Joins that are used to bring a few fields
-    -- , they do not aggregate or compile data
-
-    change_requests.freshdesk_ticket_id                                                          as change_request_freshdesk_ticket_id,
-    change_requests.status                                                                       as change_request_status,
-    coalesce (change_requests.status is not null, false)                                         as has_change_request,
-
     ---------- SOURCE: COMBINED FIELDS --------------
     -- Fields that are defined from two or more sources
 
@@ -657,7 +652,6 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('prep_supply_integration') }} as integration on orders.uuid = integration.order_uuid
     
     -- Service Supply
-    left join {{ source('int_service_supply', 'order_change_requests') }} as change_requests on orders.uuid = change_requests.order_uuid
     left join {{ ref('prep_cancellation_reasons') }} as pcr on orders.cancellation_reason_id = pcr.cancellation_reason_id
 
 where

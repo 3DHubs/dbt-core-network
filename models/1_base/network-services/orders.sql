@@ -21,5 +21,7 @@ in_production_at,
 promised_shipping_date,
 accepted_at,
 is_eligible_for_restriction,
-is_external
+is_external,
+order_change_request_status,
+order_change_request_freshdesk_ticket_id
 from {{ ref('network_services', 'gold_orders') }}

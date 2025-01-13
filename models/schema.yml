@@ -358,9 +358,7 @@ sources:
           error_after: { count: 24, period: hour }
         loaded_at_field: created      
       - name: line_item_virtual_quality_control_part_photos
-      - name: matching_scores
       - name: new_bids # Required for a snapshot
-      - name: order_change_requests
       - name: order_delays
         freshness:
           warn_after: { count: 2, period: day }

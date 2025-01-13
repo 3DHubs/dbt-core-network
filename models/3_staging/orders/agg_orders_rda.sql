@@ -85,10 +85,10 @@ canceled as (
     group by 1
 ),
 rejected as (
-    select order_uuid
-    from {{ source('int_service_supply', 'order_change_requests') }}
-    where order_uuid in (select order_uuid from canceled)
-    and status = 'rejected'
+    select uuid
+    from {{ ref('prep_supply_orders') }}
+    where uuid in (select order_uuid from canceled)
+    and order_change_request_status = 'rejected'
 ),
 cancelled_auctions as (
     select distinct a.order_uuid,
@@ -97,7 +97,7 @@ cancelled_auctions as (
     from {{ ref('prep_auctions') }} a
             left join canceled c on c.order_uuid = a.order_uuid 
     where a.status = 'canceled' and not a.is_rfq
-    and a.order_uuid not in (select order_uuid from rejected)   
+    and a.order_uuid not in (select uuid from rejected)   
 ), 
 
 eligibility_sample as (
@@ -105,7 +105,7 @@ eligibility_sample as (
         count (*) as number_of_eligible_suppliers,
         count (case when is_preferred = 'true' then true end) as number_of_eligible_preferred_suppliers,
         count (case when is_local = 'true' then true end) as number_of_eligible_local_suppliers
-    from {{ source('int_service_supply', 'matching_scores') }} as ms
+    from {{ ref('network_services', 'gold_matching_scores') }} as ms
     inner join {{ ref('prep_supply_orders') }} as orders on ms.quote_uuid = orders.quote_uuid
     group by 1
 )
