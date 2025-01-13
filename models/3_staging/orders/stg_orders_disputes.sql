@@ -84,13 +84,8 @@ with disputes as (
                    'The Manufacturing Partner will resolve the dispute by reproducing the relevant parts. The new expected shipping date is%'
                and con.private --check that the interaction is a note
              group by 1
-         ),
-              dispute_refund_requests as (
-                  select order_uuid,
-                         min(created) as dispute_refund_resolution_date
-                  from {{ source('int_service_supply', 'refund_requests') }}
-                  group by 1
-              )
+         )
+
          select so.uuid                                                               as order_uuid,
                 dispute_refund_resolution_date,
                 dispute_remake_resolution_date,
@@ -102,7 +97,7 @@ with disputes as (
                          dispute_remake_resolution_date then 'remake'
                     else null end                                                     as first_dispute_resolution_type
          from {{ ref('prep_supply_orders') }} so
-                  left join dispute_refund_requests rr on rr.order_uuid = so.uuid
+                  left join {{ ref('network_services', 'gold_refund_requests') }} rr on rr.order_uuid = so.uuid
                   left join freshdesk_ticket_remake_request rer on rer.order_uuid = so.uuid
          where rr.order_uuid is not null
             or rer.order_uuid is not null

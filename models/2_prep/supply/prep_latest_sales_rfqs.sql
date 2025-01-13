@@ -8,7 +8,7 @@ sales_rfq_per_order as (
         sales_rfqs.details, 
         sales_rfqs.delivered_by, 
         row_number() over (partition by order_uuid order by created desc) as rn 
-        from {{ ref('sales_rfqs') }} sales_rfqs 
+        from {{ ref('network_services', 'gold_sales_rfqs') }} sales_rfqs 
         inner join {{ ref('documents') }} as docs on docs.uuid = sales_rfqs.quote_uuid 
     group by 1,2,3,4,5,6 ) 
     

@@ -351,7 +351,6 @@ sources:
 
   - name: int_service_supply
     tables:
-      - name: commodity_code_customs_rates
       - name: countries
       - name: cnc_order_quotes # Required for a snapshot
         freshness:
@@ -373,8 +372,6 @@ sources:
           error_after: { count: 24, period: hour }
         loaded_at_field: created
       - name: purchase_orders
-      - name: refund_requests
-      - name: sales_rfqs
       - name: suppliers # Required for a snapshot
       - name: supplier_users # Required for a snapshot
       

@@ -77,7 +77,8 @@ select
        process_name, 
        surface_finish_name,
        cosmetic_type,
-       is_expedited
+       is_expedited,
+       is_vqced
 
 from {{ ref('gold_line_items') }} as li
 where true

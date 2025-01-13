@@ -63,8 +63,7 @@ select     li.order_uuid,
            li.is_cosmetic,
            li.material_name,
            li.is_expedited,
-           vqc.is_vqced,
-
+           li.is_vqced,
            -- Tolerances
            t.name                                                                       as tiered_tolerance,
            li.general_tolerance_class                                                   as general_tolerance,
@@ -180,6 +179,5 @@ select     li.order_uuid,
                              and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, docs.finalized_at, docs.created)) = trunc(rates.date)
 
              -- Other Joins
-             left join {{ ref('prep_line_items_vqc') }} as vqc on li.uuid = vqc.uuid
              left join {{ ref('tolerances') }} t on t.id = li.tolerance_id  
              left join {{ ref('stg_line_items_customs')}} lic on lic.uuid = li.uuid    
