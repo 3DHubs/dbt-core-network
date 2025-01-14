@@ -3,12 +3,12 @@ select f.account_id, f.ordered_date::date as ordered_date, f.service, f.contact_
 sum(replace(line_amount_usd, 'nan', 0)::decimal(10, 2))   as factory_order_amount,
 count(distinct sales_order_id) as order_count
      from dbt_dev_analytics_jgroot_core.fact_orders_factory f
-                                  left join dbt_dev_analytics_jgroot_core.dim_factory_accounts a
+                                  left join dbt_dev_analytics_jgroot_core.dim_factory_accounts_25 a
                                             on a.account_id = f.account_id
                          where factory_network = 'Factory'
                            and line_status != 'Canceled'
                            and replace(line_amount_usd, 'nan', 0)::decimal(10, 2) > 0
-                           and  ordered_date >= '2021-10-01'
+                           and  ordered_date >= '2022-01-01'
                           -- and lower(a.region) = 'emea'
                          group by 1,2,3,4),
 network as (select fo.hubspot_company_id,fo.technology_name, email,
@@ -23,7 +23,7 @@ network as (select fo.hubspot_company_id,fo.technology_name, email,
                          where fo.hubspot_company_id is not null
                            and sourced_at is not null
                            and fo.order_status != 'canceled'
-                           and sourced_at >= '2021-10-01' and sourced_at < '2024-10-01'
+                           and sourced_at >= '2022-01-01' and sourced_at < '2025-01-01'
                            and dc.name is not null
                            --and dc.region = 'emea' 
                            group by 1,2,3,4),

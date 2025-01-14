@@ -10,12 +10,12 @@ with contacts as (with factory_account as (select f.account_id,
                                 row_number()
                                 over (partition by contact_email order by last_order_date_f desc, factory_order_amount desc) as primary_account_nr
                          from dbt_dev_analytics_jgroot_core.fact_orders_factory f
-                                  left join dbt_dev_analytics_jgroot_core.dim_factory_accounts a
+                                  left join dbt_dev_analytics_jgroot_core.dim_factory_accounts_25 a
                                             on a.account_id = f.account_id
                          where factory_network = 'Factory'
                            and line_status != 'Canceled'
                            and replace(line_amount_usd, 'nan', 0)::decimal(10, 2) > 0
-                           and  ordered_date >= '2021-10-01'
+                           and  ordered_date >= '2022-01-01'
                          group by 1, 2, 3),
      network_account as (select fo.hubspot_company_id,
                                 c.email,
@@ -37,7 +37,7 @@ with contacts as (with factory_account as (select f.account_id,
                          where fo.hubspot_company_id is not null
                            and sourced_at is not null
                            and fo.order_status != 'canceled'
-                           and sourced_at >= '2021-10-01' and sourced_at < '2024-10-01'
+                           and sourced_at >= '2022-01-01' and sourced_at < '2025-01-01'
                            and dc.name is not null
                            --and fo.hubspot_company_id in ('668159799')
 --and email ~ 'timberline-designs.com'

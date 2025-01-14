@@ -49,7 +49,7 @@ with data as (with test as (with services as (select f.account_id,
                             from dbt_dev_analytics_jgroot_core.accounts_clean ac
                                      left join services s on s.account_id = ac.account_id
                                      left join services sn on sn.account_id = ac.network_account_id
-                                     left join dbt_dev_analytics_jgroot_core.dim_factory_accounts da
+                                     left join dbt_dev_analytics_jgroot_core.dim_factory_accounts_25 da
                                                on da.account_id = ac.account_id
                                      left join dbt_prod_reporting.dim_companies dc
                                                on dc.hubspot_company_id = ac.network_account_id
@@ -91,13 +91,12 @@ with data as (with test as (with services as (select f.account_id,
                      recency,
                      frequency,
                      monetary,
-                     case
-                         when recency <= 720 and monetary >= 2500 and order_amount >= 100000
-                             then '1 Key'
-                         when monetary > 1000 and frequency >= 3 and order_amount > 10000
-                             then '2 Core'
-                         else
-                             '3 Transactional' end                                                    as customer_segment,
+                      case when order_amount > 200000 and monetary > 2500 and recency <= 720
+        then '1 Strategic & Production'
+        when monetary > 1000 and frequency >= 3 and order_amount > 20000
+        then '2 Grow & Expand'
+        else
+        '3 New & Transactional' end as customer_segment,
                      factory_number_of_employees,
                      network_number_of_employees,
                      factory_owner,
