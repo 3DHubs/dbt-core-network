@@ -85,6 +85,8 @@ with stg as (
         hs.sales_support_id                                                               as sales_support_id,
         ss.name                                                                           as sales_support_name,
         pl_bdm.name                                                                       as pl_business_development_manager_name,
+        nss.name                                                                          as hubspot_network_sales_specialist_name,
+        co.name                                                                           as hubspot_company_owner_name,
 
         -- TEAM FIELDS
         -- Properties added by the different teams
@@ -158,6 +160,10 @@ with stg as (
             on pm.owner_id = hs.im_pm
         left join {{ ref ('hubspot_owners') }} as pl_bdm
             on pl_bdm.owner_id = hs.pl_business_development_manager_id
+        left join {{ ref ('hubspot_owners') }} as co
+            on co.owner_id = hs.company_owner_id
+        left join {{ ref ('hubspot_owners') }} as nss
+            on nss.owner_id = hs.network_sales_specialist_id
         left join {{ref('fact_sales_target') }} as fst
                 on fst.hubspot_id = hs.hubspot_owner_id and fst.target_date::date = coalesce(date_trunc('month',hs.closedate),'2022-01-01') 
         left join {{ ref('seed_hubspot_technology_mapping') }} as htm

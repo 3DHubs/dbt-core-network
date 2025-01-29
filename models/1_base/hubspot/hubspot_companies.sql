@@ -92,6 +92,8 @@ select
     end::boolean as strategic,
     nullif(hc.property_inside_sales_owner__value, '') as inside_sales_owner,
     nullif(hc.property_handover_owner__value, '') as handover_owner,
+    nullif(hc.property_network_sales_specialist__value::bigint, '') as network_sales_specialist_id,
+    
     hc.property_notes_last_updated__value as notes_last_updated_at,
     hc.property_notes_last_contacted__value as notes_last_contacted_at,
     case

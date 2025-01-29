@@ -292,6 +292,8 @@ sales_lead_name,
 pl_sales_rep_name,
 pl_sales_rep_manager_name,
 pl_business_development_manager_name,
+hubspot_network_sales_specialist_name,
+hubspot_company_owner_name,
 
 -- Line Items
 number_of_part_line_items,

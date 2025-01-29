@@ -29,6 +29,8 @@ select
     pl_cross_sell_company_name,
     pl_cross_sell_channel,
     pl_business_development_manager_name,
+    hubspot_network_sales_specialist_name,
+    hubspot_company_owner_name,
 
 
     is_integration,

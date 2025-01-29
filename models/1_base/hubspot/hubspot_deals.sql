@@ -71,6 +71,8 @@ select
     nullif(property_delay_status__value, '')::varchar(65535) as delay_status,
     nullif(property_review_owner__value, '')::varchar(65535) as review_owner,
     nullif(property_sourcing_owner__value, '')::bigint as sourcing_owner,
+    nullif(property_company_owner__value, '')::bigint as company_owner_id,
+    nullif(property_network_sales_specialist__value, '')::bigint as network_sales_specialist_id,
     case
         when property_strategic__value = 'true'
         then true

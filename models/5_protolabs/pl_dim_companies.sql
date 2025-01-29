@@ -10,6 +10,7 @@ select
     is_strategic,
     is_integration_company,
     hubspot_owner_name,
+    hubspot_network_sales_specialist_name,
     country_iso2,
     country_name,
     continent,

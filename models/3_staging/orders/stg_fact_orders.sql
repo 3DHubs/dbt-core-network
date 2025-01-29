@@ -152,6 +152,8 @@ select
     hs_deals.pl_sales_rep_name,
     hs_deals.pl_sales_rep_manager_name,
     hs_deals.pl_business_development_manager_name,
+    hs_deals.hubspot_network_sales_specialist_name,
+    hs_deals.hubspot_company_owner_name,
 
     -- HS Deals: Properties Requested by Teams
     -- Check upstream model for details on the team
