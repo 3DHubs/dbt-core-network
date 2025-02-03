@@ -4,7 +4,7 @@ select issc.created,
        issc.deleted,
        issc.country_id,
        issc.name,
-       issc.alpha2_code,
+       upper(issc.alpha2_code) as alpha2_code,
        issc.continent,
        issc.currency_code,
        issc.coordinates,
@@ -39,6 +39,6 @@ select issc.created,
             {{ varchar_to_boolean("is_in_efta") }},
             {{ varchar_to_boolean("is_in_european_union") }}
 
-from {{ source('int_service_supply', 'countries') }} as issc
+from {{ ref('network_services', 'gold_countries') }} as issc
 left join {{ source('int_analytics', 'supply_countries_markets_mapping')}} as scmm on lower(issc.alpha2_code) = scmm.country_iso2
 left join {{ref('seed_countries_european_union')}} as  eu_union on issc.country_id = eu_union.country_id

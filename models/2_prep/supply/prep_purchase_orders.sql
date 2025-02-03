@@ -20,6 +20,6 @@ select
        oqs.shipping_country_id,
        oqs.shipping_country
 
-from {{ source('int_service_supply', 'purchase_orders') }} as po
+from {{ ref('network_services', 'gold_purchase_orders') }} as po
          inner join {{ ref('prep_supply_documents') }} as oqs
                     on po.uuid = oqs.uuid
