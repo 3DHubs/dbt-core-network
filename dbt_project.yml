@@ -47,6 +47,8 @@ models:
         +tags: ["netsuite", "finance"]
       retool:
         +tags: ["retool"]
+      typeform:
+        +tags: ["typeform"]
 
     2_prep:
       +schema: core

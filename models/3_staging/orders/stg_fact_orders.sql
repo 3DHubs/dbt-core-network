@@ -66,8 +66,8 @@ select
     -- Product Features
     orders.is_eligible_for_restriction,
     case 
-        when orders.reorder_with_same_mp_order_uuid is not null then 'same mp reorder' 
-        when orders.reorder_original_order_uuid is not null then 'reorder'                 
+        when orders.reorder_with_same_mp_order_uuid is not null then 'with same mp' 
+        when orders.reorder_original_order_uuid is not null then 'with any mp'                 
     end                                                                                          as reorder_type,
  
 
