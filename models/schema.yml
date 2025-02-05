@@ -307,6 +307,10 @@ sources:
       - name: customer
       - name: transaction__itemlist__item
 
+  - name: fed_model_repo
+    tables:
+      - name: upload
+
   - name: int_greenhubs
     tables:
       - name: co2_emissions
@@ -314,6 +318,10 @@ sources:
   - name: int_logistics
     tables:
       - name: automated_shipping_customs_information
+
+  - name: int_model_repo_raw
+    tables:
+      - name: job_ml_geo
 
   - name: int_retool
     tables:
