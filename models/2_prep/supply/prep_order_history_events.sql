@@ -12,7 +12,7 @@
                 anonymous_id,
                 description,
                 extra
-            FROM {{ source('int_service_supply', 'order_history_events') }} as iss_ohe
+            FROM {{ ref('network_services', 'gold_order_history_events') }} as ns_ohe
             WHERE NOT EXISTS (
                 SELECT
                     id,
@@ -25,7 +25,7 @@
                     description,
                     extra
             FROM {{ source('int_analytics', 'full_order_history_events') }} as dl_fohe
-            where iss_ohe.id = dl_fohe.id)
+            where ns_ohe.id = dl_fohe.id)
                 "],
         tags=["multirefresh"]
     )
