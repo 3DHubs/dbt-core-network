@@ -10,6 +10,7 @@ select
     fql.line_item_price_amount_source_currency,
     fql.created_date,
     fql.line_item_number,
+    fql.upload_id,
     fql.technology_id,
     fql.material_id,
     fql.material_subset_id,
