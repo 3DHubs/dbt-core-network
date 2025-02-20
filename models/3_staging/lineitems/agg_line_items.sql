@@ -87,6 +87,15 @@ agg_part_line_items as (
                 then null else
                 sum(line_item_total_smallest_bounding_box_volume_cm3)
         end                                                                      as total_smallest_bounding_box_volume_cm3,
+        case 
+            when count(case when line_item_price_amount_manually_edited = true then 1 end) = count(*) 
+                then 'all'
+            when count(case when line_item_price_amount_manually_edited = true then 1 end) > 0 
+                then 'some'
+            else 'none' 
+        end                                                                      as price_amount_manually_edited_status,
+        count(case when line_item_price_amount_manually_edited = true then 1 end) as price_amount_manually_edited_count,
+
 
         -- Financial (Original Currency)    
         sum(line_item_price_amount)                                              as parts_amount,
@@ -133,6 +142,8 @@ agg_other_line_items as (
         sum(
             case when oli.line_item_type in ('custom', 'surcharge', 'machining-certification') then oli.line_item_price_amount_usd else 0 end
         )                        as other_line_items_amount_usd,
+
+        bool_or(oli.line_item_type in ('machining-certification', 'quality-certification'))                     as has_certification,
         bool_or(oli.is_expedited) as is_expedited_shipping -- Applicable only for type shipping, case when not valid in bool_or
     from other_line_items as oli
     group by 1
@@ -191,6 +202,8 @@ select
     apli.has_vqc_line_item,
     apli.is_supply_or_smart_rfq,
     apli.has_svp_line_item,
+    apli.price_amount_manually_edited_status,
+    apli.price_amount_manually_edited_count,
 
     -- Other line items
     aoli.shipping_amount,
@@ -200,6 +213,7 @@ select
     aoli.discount_cost_usd,
     aoli.other_line_items_amount_usd,
     aoli.is_expedited_shipping,
+    aoli.has_certification,
 
     -- Based on first line item
     afli.line_item_technology_id,

@@ -445,6 +445,8 @@ select
     qli.parts_max_depth_cm,
     qli.parts_max_heigth_cm,
     qli.parts_max_width_cm,
+    qli.price_amount_manually_edited_status,
+    qli.price_amount_manually_edited_count,
 
     -- RND exclusive Fields
     qli.is_supply_or_smart_rfq,
@@ -459,6 +461,7 @@ select
     apoli.shipping_amount_usd                                                                    as po_active_shipping_cost_usd,
     apoli.other_line_items_amount_usd                                                            as po_active_other_costs_usd,
     apoli.has_vqc_line_item                                                                      as is_vqced,
+    apoli.has_certification,
 
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews
