@@ -582,7 +582,9 @@ select
 
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                           as subtotal_amount_usd,
-    case when date_diff('hours',sourced_at, cancelled_at) < 48 and cancellation_reason_mapped = 'New order created' then true else false end as exclude_cancelled_new_orders,
+    case when date_diff('hours',docs.sourced_at, dealstage.cancelled_at) < 48 and   coalesce(
+        nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.cancellation_reason_mapped, cancellation_reason
+    )  = 'New order created' then true else false end as exclude_cancelled_new_orders,
     case
         when is_closed and not exclude_cancelled_new_orders then subtotal_amount_usd else 0
     end                                                                                          as subtotal_closed_amount_usd,
