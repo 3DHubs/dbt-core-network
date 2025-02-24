@@ -582,11 +582,12 @@ select
 
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                           as subtotal_amount_usd,
+    case when date_diff('hours',sourced_at, cancelled_at) < 48 and cancellation_reason_mapped = 'New order created' then true else false end as exclude_cancelled_new_orders,
     case
-        when is_closed then subtotal_amount_usd else 0
+        when is_closed and not exclude_cancelled_new_orders then subtotal_amount_usd else 0
     end                                                                                          as subtotal_closed_amount_usd,
     case
-        when is_sourced then subtotal_amount_usd else 0
+        when is_sourced and not exclude_cancelled_new_orders then subtotal_amount_usd else 0
     end                                                                                          as subtotal_sourced_amount_usd,
     case
         when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd * 1.0 * 0.03
@@ -595,7 +596,7 @@ select
     end                                                                                          as prep_shipping_cost_usd,
     case
         when
-            is_sourced
+            is_sourced and not exclude_cancelled_new_orders 
             then
                 coalesce(case when rda.is_first_auction_rda_sourced then rda.first_winning_shipping_estimate_amount_usd end, 0)
                 + coalesce(prep_shipping_cost_usd, 0)
@@ -608,7 +609,7 @@ select
         else po_first_sourced_cost_usd
     end                                                                                          as subtotal_po_cost_usd,
     case
-        when is_sourced
+        when is_sourced and not exclude_cancelled_new_orders 
             then
                 coalesce(subtotal_po_cost_usd, 0) + coalesce(shipping_cost_usd, 0)
                 + estimated_l1_customs_amount_usd + estimated_l2_customs_amount_usd
