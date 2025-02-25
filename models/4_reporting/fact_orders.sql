@@ -313,7 +313,7 @@ parts_max_width_cm,
 greatest(parts_max_depth_cm, parts_max_heigth_cm, parts_max_width_cm ) as max_part_size,
 parts_titles,
 is_vqced,
-has_certification,
+has_coc_certification,
 price_amount_manually_edited_status,
 price_amount_manually_edited_count,
 

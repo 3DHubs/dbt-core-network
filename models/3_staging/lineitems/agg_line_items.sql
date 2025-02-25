@@ -28,7 +28,8 @@ other_line_items as (
         line_item_price_amount,
         line_item_price_amount_usd,
         shipping_option_id,
-        is_expedited
+        is_expedited,
+        line_item_title
     from {{ ref("fact_line_items") }} where line_item_type != 'part'
 
 ),
@@ -143,7 +144,7 @@ agg_other_line_items as (
             case when oli.line_item_type in ('custom', 'surcharge', 'machining-certification') then oli.line_item_price_amount_usd else 0 end
         )                        as other_line_items_amount_usd,
 
-        bool_or(oli.line_item_type in ('machining-certification', 'quality-certification'))                     as has_certification,
+        bool_or(oli.line_item_title in ('Certificate of Conformance (CoC)', 'Certificate of Conformance'))                     as has_coc_certification,
         bool_or(oli.is_expedited) as is_expedited_shipping -- Applicable only for type shipping, case when not valid in bool_or
     from other_line_items as oli
     group by 1
@@ -213,7 +214,7 @@ select
     aoli.discount_cost_usd,
     aoli.other_line_items_amount_usd,
     aoli.is_expedited_shipping,
-    aoli.has_certification,
+    aoli.has_coc_certification,
 
     -- Based on first line item
     afli.line_item_technology_id,

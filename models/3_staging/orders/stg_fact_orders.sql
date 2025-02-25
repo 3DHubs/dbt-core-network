@@ -461,7 +461,7 @@ select
     apoli.shipping_amount_usd                                                                    as po_active_shipping_cost_usd,
     apoli.other_line_items_amount_usd                                                            as po_active_other_costs_usd,
     apoli.has_vqc_line_item                                                                      as is_vqced,
-    apoli.has_certification,
+    apoli.has_coc_certification,
 
     ------ SOURCE: STG REVIEWS ---------
     -- Data from Technical Reviews
