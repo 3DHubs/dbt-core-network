@@ -32,7 +32,7 @@ select
     hubspot_network_sales_specialist_name,
     hubspot_company_owner_name,
 
-
+    is_itar, 
     is_integration,
     is_papi_integration,
     integration_platform_type,

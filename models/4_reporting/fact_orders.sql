@@ -63,6 +63,7 @@ has_significant_amount_gap,
 is_svp,
 data_source,
 is_legacy, 
+is_itar, 
 
 
 -- External Attributes

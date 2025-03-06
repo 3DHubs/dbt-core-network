@@ -61,7 +61,8 @@ select
     coalesce (orders.legacy_order_id is not null, false)                                         as is_legacy,
     orders.order_change_request_freshdesk_ticket_id                                              as change_request_freshdesk_ticket_id,
     orders.order_change_request_status                                                           as change_request_status,
-    coalesce (change_request_status is not null, false)                                          as has_change_request,    
+    coalesce (change_request_status is not null, false)                                          as has_change_request,
+    case when supplier_id = 467 then true else false end                                         as is_itar, 
 
     -- Product Features
     orders.is_eligible_for_restriction,
