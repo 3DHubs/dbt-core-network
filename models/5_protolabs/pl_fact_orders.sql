@@ -5,6 +5,7 @@
 select 
     order_uuid,
     document_number,
+    order_hubspot_deal_id as hubspot_deal_id,
     hubspot_contact_id,
     created_at,
     submitted_at,
