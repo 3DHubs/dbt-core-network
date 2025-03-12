@@ -158,7 +158,8 @@ select
     nullif(property_tracking_number__value, '')::varchar(124) as hubspot_tracking_number,
     nullif(property_tracking_link__value, '')::varchar(124) as hubspot_tracking_link,
     nullif(property_signed_customer_quote_pdf_link__value, '')::varchar(2048) as hubspot_signed_customer_quote_pdf_link,
-    nullif(property_why_still_in_production__value, '')::varchar(2048) as why_still_in_production
+    nullif(property_why_still_in_production__value, '')::varchar(2048) as why_still_in_production,
+    nullif(property_last_page_seen__value, '')::varchar(65535) as last_page_seen
 from deals as ehd
 left join
     (

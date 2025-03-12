@@ -73,7 +73,12 @@ select
     is_first_auction_rda_sourced,
 
     --hubspot atteibutes
-    review_outcome
+    review_outcome,
+    utm_campaign,
+    utm_content,
+    utm_source,
+    utm_term,
+    utm_medium
 
 from  {{ ref('fact_orders') }}
 where created_at >= '2019-01-01'

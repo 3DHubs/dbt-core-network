@@ -274,6 +274,11 @@ is_manually_resourced,
 resourced_deal_original_order_number,
 hubspot_signed_customer_quote_pdf_link,
 why_still_in_production,
+utm_campaign,
+utm_content,
+utm_source,
+utm_term,
+utm_medium,
 
 
 -- Hubspot Owners
