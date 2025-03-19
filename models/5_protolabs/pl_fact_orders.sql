@@ -78,7 +78,8 @@ select
     utm_content,
     utm_source,
     utm_term,
-    utm_medium
+    utm_medium,
+    utm_campaign_name
 
 from  {{ ref('fact_orders') }}
 where created_at >= '2019-01-01'

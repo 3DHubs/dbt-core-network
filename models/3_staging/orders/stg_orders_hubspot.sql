@@ -190,6 +190,9 @@ with stg as (
         )
         
         
-select *
+select stg.*, coalesce(ac.name, bc.name) as utm_campaign_name
 from stg
+ left join {{ ref('google_ads_campaigns') }} as ac on ac.id = case when stg.utm_campaign ~ '^[0-9]+$' then stg.utm_campaign::bigint else null end
+ left join {{ ref('bing_ads_campaigns') }} as bc on bc.id = case when stg.utm_campaign ~ '^[0-9]+$' then stg.utm_campaign::bigint else null end
 where rn = 1
+

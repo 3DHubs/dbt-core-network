@@ -200,6 +200,7 @@ select
     hs_deals.utm_source,
     hs_deals.utm_term,
     hs_deals.utm_medium,
+    hs_deals.utm_campaign_name,
 
     ---------- SOURCE: Auctions --------------
 

@@ -279,6 +279,7 @@ utm_content,
 utm_source,
 utm_term,
 utm_medium,
+utm_campaign_name,
 
 
 -- Hubspot Owners
