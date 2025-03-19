@@ -1,8 +1,8 @@
 select 
-    id                                                        as line_item_inspection_id,
+    id,
     inspection_id,
-    comments                                                  as line_item_inspection_comments,
-    created_at                                                as line_item_inspection_created_at,
+    comments,
+    created_at,                                                
     document_number,
     line_item_number,
     line_item_title,

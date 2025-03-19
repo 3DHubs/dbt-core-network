@@ -321,6 +321,11 @@ sources:
     tables:
       - name: upload
 
+  - name: int_airbyte_controlhub
+    tables:
+      - name: package_scans
+      - name: package_messages
+
   - name: int_greenhubs
     tables:
       - name: co2_emissions

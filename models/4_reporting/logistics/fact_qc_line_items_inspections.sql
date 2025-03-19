@@ -1,9 +1,9 @@
 Select
 
-    line_item_inspection_id,
+    id,
     inspection_id,
-    line_item_inspection_comments,
-    line_item_inspection_created_at,
+    comments,
+    created_at,
     document_number,
     line_item_number,
     line_item_title,
