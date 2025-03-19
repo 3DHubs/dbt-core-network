@@ -87,6 +87,8 @@ with stg as (
         pl_bdm.name                                                                       as pl_business_development_manager_name,
         nss.name                                                                          as hubspot_network_sales_specialist_name,
         co.name                                                                           as hubspot_company_owner_name,
+        hs.technical_program_manager_id                                                   as hubspot_technical_program_manager_id,
+        t_pm.name                                                                         as hubspot_technical_program_manager_name,
 
         -- TEAM FIELDS
         -- Properties added by the different teams
@@ -167,6 +169,8 @@ with stg as (
             on pm.owner_id = hs.im_pm
         left join {{ ref ('hubspot_owners') }} as pl_bdm
             on pl_bdm.owner_id = hs.pl_business_development_manager_id
+        left join {{ ref ('hubspot_owners') }} as t_pm
+            on t_pm.owner_id = hs.technical_program_manager_id
         left join {{ ref ('hubspot_owners') }} as co
             on co.owner_id = hs.company_owner_id
         left join {{ ref ('hubspot_owners') }} as nss

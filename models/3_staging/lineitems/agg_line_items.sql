@@ -166,9 +166,8 @@ agg_first_line_items as (
 lists as (
     select
         quote_uuid,
-        listagg(distinct line_item_title, ', ') within group (
-            order by line_item_title
-        ) as parts_titles
+        listagg(distinct line_item_title, ', ') within group (order by line_item_title) as parts_titles,
+        listagg(distinct quoting_package_version, ', ') within group (order by line_item_title) as quoting_package_versions
     from part_line_items
     group by 1
 )
@@ -223,7 +222,8 @@ select
     afli.line_item_process_name,
 
     -- Lists (cannot be combined with other aggregates)
-    l.parts_titles
+    l.parts_titles,
+    l.quoting_package_versions
 
 from agg_line_items as ali
     left join agg_part_line_items as apli on ali.quote_uuid = apli.quote_uuid

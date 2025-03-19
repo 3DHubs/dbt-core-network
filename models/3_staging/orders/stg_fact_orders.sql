@@ -144,6 +144,8 @@ select
     hs_deals.hubspot_sourcing_owner_id,
     hs_deals.hubspot_sourcing_owner_name,
     hs_deals.hubspot_owner_assigned_date,
+    hs_deals.hubspot_technical_program_manager_id,
+    hs_deals.hubspot_technical_program_manager_name,
     hs_deals.sales_lead_id,
     hs_deals.sales_lead_name,
     hs_deals.sales_support_id,
@@ -455,6 +457,7 @@ select
     qli.parts_max_width_cm,
     qli.price_amount_manually_edited_status,
     qli.price_amount_manually_edited_count,
+    qli.quoting_package_versions,
 
     -- RND exclusive Fields
     qli.is_supply_or_smart_rfq,

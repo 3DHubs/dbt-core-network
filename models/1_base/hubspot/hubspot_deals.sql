@@ -152,6 +152,9 @@ select
     nullif(property_business_development_manager__value, '')::varchar(
         2048
     ) as pl_business_development_manager_id,
+    nullif(property_technical_program_manager__value, '')::varchar(
+        2048
+    ) as technical_program_manager_id,
     case
         when property_sales_priced__value = 'true' then true else false
     end as is_sales_priced,

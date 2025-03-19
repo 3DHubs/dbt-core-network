@@ -332,7 +332,8 @@ sources:
   - name: int_model_repo_raw
     tables:
       - name: job_ml_geo
-
+      - name: job_machining_quote
+      
   - name: int_retool
     tables:
       - name: qc_inspections
