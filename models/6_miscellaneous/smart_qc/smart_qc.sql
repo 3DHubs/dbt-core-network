@@ -83,7 +83,9 @@ with date_year_week as (
                      sdh.surface_finish_name, sdh.tiered_tolerance ORDER BY sdh.year_week asc ROWS UNBOUNDED PRECEDING) as
                                                                                                                            running_disputes_count,
                  round(nullif(line_item_disputes_last_5w * 1.00, 0) / nullif(line_item_count_last_5w, 0),
-                       2)                                                                                               as dispute_percentage_last_5w,
+                       2)                                                                                               
+      
+                       as dispute_percentage_last_5w,
                  round(nullif(running_disputes_count * 1.00 , 0) / nullif(running_line_item_count, 0),
                        2)                                                                                               as dispute_percentage_running
           from supplier_destination_history as sdh
@@ -193,7 +195,8 @@ SELECT
     fact_line_items.is_dispute,
     smart_qc.smarter_qc ,
     count(smart_qc.smarter_qc),
-    100.0 * COUNT(smart_qc.smarter_qc) / SUM(COUNT(smart_qc.smarter_qc)) OVER(PARTITION BY smart_qc.smarter_qc) AS dispute_rate
+    100.0 * COUNT(smart_qc.smarter_qc) / NULLIF(SUM(COUNT(smart_qc.smarter_qc)) OVER(PARTITION BY smart_qc.smarter_qc), 0) AS dispute_rate
+
 
 from {{ ref('fact_orders') }}  AS fact_orders
 LEFT JOIN {{ ref('fact_quote_line_items') }} AS fact_line_items ON fact_line_items.order_uuid = fact_orders.order_uuid
