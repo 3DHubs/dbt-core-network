@@ -113,6 +113,7 @@ shipped_from_cross_dock_at,
 shipment_label_created_at, -- old method for shipped_at
 
 time_transit_at_cross_dock_business_minutes,
+lean_time_transit_at_cross_dock_business_minutes,
 estimated_delivery_to_customer_at,
 delivered_at,
 derived_delivered_at,

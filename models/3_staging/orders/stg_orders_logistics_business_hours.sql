@@ -19,7 +19,22 @@ orders as (
 
 
 {% endif %}
+),
+
+rack_orders as
+
+(
+
+select 
+    distinct 
+    order_uuid,
+    date_entered,
+    latest_contact
+
+    from {{ ref('fact_qc_hold_rack') }} hold_rack
+
 )
+
 
    select 
         orders.order_uuid,
@@ -28,5 +43,16 @@ orders as (
         convert_timezone('Europe/Amsterdam', delivered_to_cross_dock_at) end as delivered_to_cross_dock_at_local,
         case when cross_dock_city = 'Chicago' then  convert_timezone('America/Chicago', shipped_from_cross_dock_at) else
         convert_timezone('Europe/Amsterdam', shipped_from_cross_dock_at) end as shipped_from_cross_dock_at_local,
-         {{ business_minutes_between('delivered_to_cross_dock_at_local', 'shipped_from_cross_dock_at_local') }} as time_transit_at_cross_dock_business_minutes
+         {{ business_minutes_between('delivered_to_cross_dock_at_local', 'shipped_from_cross_dock_at_local') }} as time_transit_at_cross_dock_business_minutes,
+        case
+            when delivered_to_cross_dock_at = shipped_from_cross_dock_at then 0
+            when shipped_from_cross_dock_at < cast(date_entered as timestamp) then 0  
+            when latest_contact < shipped_from_cross_dock_at then {{ business_minutes_between('date_entered', 'latest_contact') }}
+            when shipped_from_cross_dock_at is null then {{ business_minutes_between('date_entered', 'latest_contact') }}
+            when latest_contact >= shipped_from_cross_dock_at then {{ business_minutes_between('latest_contact', 'shipped_from_cross_dock_at') }}
+        else 0 
+        end as time_cross_dock_rack_business_minutes,
+        time_transit_at_cross_dock_business_minutes - time_cross_dock_rack_business_minutes as lean_time_transit_at_cross_dock_business_minutes
+
     from orders   
+    left join rack_orders on orders.order_uuid = rack_orders.order_uuid
