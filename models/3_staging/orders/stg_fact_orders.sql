@@ -394,6 +394,7 @@ select
 
     -- Logsitics: Time spent at cross dock
     logistics_business_hours.time_transit_at_cross_dock_business_minutes,
+    logistics_business_hours.time_cross_dock_rack_business_minutes,
     logistics_business_hours.lean_time_transit_at_cross_dock_business_minutes,
 
     -- Logistics: Estimates
