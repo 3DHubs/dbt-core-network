@@ -144,6 +144,8 @@ select
     hs_deals.hubspot_sourcing_owner_id,
     hs_deals.hubspot_sourcing_owner_name,
     hs_deals.hubspot_owner_assigned_date,
+    hs_deals.hubspot_quality_resolution_specialist_id,
+    hs_deals.hubspot_quality_resolution_specialist_name,
     hs_deals.hubspot_technical_program_manager_id,
     hs_deals.hubspot_technical_program_manager_name,
     hs_deals.sales_lead_id,
