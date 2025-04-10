@@ -1,7 +1,11 @@
+
 {{
   config(
-    materialized='table',
-    tags=["multirefresh"]
+    materialized='incremental',
+    on_schema_change='sync_all_columns',
+    unique_key="uuid",  
+    tags=["multirefresh"],
+    post_hook=["delete from {{ this }}  where uuid not in (select uuid from {{ ref('line_items') }} )"]
   )
 }}
 
@@ -59,3 +63,12 @@ where true
     and (is_order_quote or docs.type = 'purchase_order')    
     -- Filter: only interested on quotes that are not in the cart status
   --  and docs.status <> 'cart'
+
+  {% if is_incremental() %}
+
+    and (
+      li.li_updated_at >= (select max(li_updated_at) from {{ this }})
+      or docs.updated >= (select max(doc_updated_at) from {{ this }})
+    )
+
+  {% endif %}
