@@ -402,9 +402,15 @@ select
     -- Logistics: Estimates
     coalesce(case
         when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_first_leg_customs_amount_usd
-        when not is_rfq_automatically_sourced then apoli.estimated_l1_customs_amount_usd_no_winning_bid else
+        when not is_rfq_automatically_sourced then 
+         case
+        when
+            po_production_finalized_at < coalesce(logistics.shipped_at, '2100-01-01') 
+            then ppoli.estimated_l1_customs_amount_usd_no_winning_bid else  fpoli.estimated_l1_customs_amount_usd_no_winning_bid end
+        else
             rfq.winning_bid_estimated_first_leg_customs_amount_usd
     end, 0)                                                                                      as estimated_l1_customs_amount_usd,
+
     coalesce(
         case
             when rda.is_first_auction_rda_sourced then rda.first_winning_bid_estimated_second_leg_customs_amount_usd else
@@ -675,7 +681,8 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('agg_orders_interactions') }} as interactions on orders.hubspot_deal_id = interactions.hubspot_deal_id
     left join {{ ref ('agg_line_items') }} as qli on orders.quote_uuid = qli.quote_uuid -- Agg Order-Quotes
     left join {{ ref ('agg_line_items') }} as fpoli on docs.po_first_uuid = fpoli.quote_uuid -- Agg First POs
-    left join {{ ref ('agg_line_items') }} as apoli on docs.po_active_uuid = apoli.quote_uuid -- Agg Active POs        
+    left join {{ ref ('agg_line_items') }} as apoli on docs.po_active_uuid = apoli.quote_uuid -- Agg Active POs 
+    left join {{ ref ('agg_line_items') }} as ppoli on docs.po_production_uuid = ppoli.quote_uuid  -- Agg Production POs     
 
     -- Data Lake
     left join {{ ref ('prep_supply_integration') }} as integration on orders.uuid = integration.order_uuid

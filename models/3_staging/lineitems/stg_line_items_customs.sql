@@ -13,7 +13,7 @@ from {{ ref('snap_commodity_code') }}
 
 select li.uuid, 
         nvl(snapcc.rate,0) as estimated_l1_customs_rate
-        
+
         from {{ ref('prep_line_items')}} as li
         inner join {{ ref('prep_purchase_orders')}} po on (li.quote_uuid = po.uuid)
         inner join {{ ref('suppliers')}} s on (po.supplier_id = s.id)

@@ -136,7 +136,7 @@ select
     dc.region,
     dc.contact_type,
     advertising_gclid,
-    advertising_account_id,
+    case when dc.became_mql_at >= '2025-05-01' and advertising_account_id is null then '2794116568' else advertising_account_id end as advertising_account_id, --temp for missing EMEA gAds integration.
     advertising_click_date,
     clv.clv_24m,
     predicted_proba,

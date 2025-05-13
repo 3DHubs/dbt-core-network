@@ -186,7 +186,7 @@ with first_quote as (
                         then quotes.shipping_date end                                        as po_production_promised_shipping_at_by_supplier,
                 date_diff('days', sourced_at, quotes.finalized_at)                           as days_after_sourcing,
                 case when quotes.technology_id = 2 and days_after_sourcing <= 2 then true
-                     when quotes.technology_id = 1 and days_after_sourcing <= 7 then true
+                     when days_after_sourcing <= 7 then true
                      when po_first_uuid = quotes.uuid then true
                      else false end                                                          as is_qualified_as_production,
                 case when is_qualified_as_production then  row_number() over (

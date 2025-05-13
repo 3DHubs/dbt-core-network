@@ -160,7 +160,7 @@ select     li.order_uuid,
            docs.currency_code                                                          as line_item_price_amount_source_currency,
            -- These amount fields are only manually inserted, nowadays only unit_price_amount is populated and the price_amount is calculated from the quantity
            coalesce(li.unit_price_amount, li.price_amount) is not null                 as line_item_price_amount_manually_edited,
-           line_item_price_amount_usd * lic.estimated_l1_customs_rate                  as line_item_estimated_l1_customs_amount_usd_no_winning_bid,
+           (line_item_price_amount_usd -  case when li.unit_price_amount is not null then  (coalesce(li.tooling_price_amount, li.auto_tooling_price_amount, 0) / 100.00 / rates.rate) else 0 end)  * lic.estimated_l1_customs_rate  as line_item_estimated_l1_customs_amount_usd_no_winning_bid, 
            pv.quoting_package_version
 
     from {{ ref('prep_line_items') }} as li

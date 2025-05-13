@@ -14,7 +14,7 @@ select
         then 'quicklink'
         else 'shallowlink'
     end as integration_platform_type,
-    case
+    case when lower(consumer_purchase_order_number) = 'Med AZ Batt Test' then false -- exception for customer order that used test in PO
         when
             quote.created < '2022-10-01'
             or lower(consumer_purchase_order_number) ~ 'test'
