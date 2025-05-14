@@ -282,6 +282,7 @@ utm_source,
 utm_term,
 utm_medium,
 utm_campaign_name,
+last_traffic_source,
 
 
 -- Hubspot Owners

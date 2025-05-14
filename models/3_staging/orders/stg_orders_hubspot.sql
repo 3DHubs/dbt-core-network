@@ -135,12 +135,13 @@ with stg as (
         hs.im_post_sales_value_score,
         hs.im_post_sales_concerning_actions,
 
-        -- UTM Tags
+        -- UTM Tags / traffic details
         nullif({{dbt_utils.get_url_parameter('last_page_seen', 'utm_campaign') }}, '') as utm_campaign,
         nullif({{dbt_utils.get_url_parameter('last_page_seen', 'utm_content') }}, '') as utm_content,
         nullif(coalesce({{dbt_utils.get_url_parameter('last_page_seen', 'utm_source') }},{{dbt_utils.get_url_parameter('last_page_seen', 'utmsource') }}), '') as utm_source,
         nullif({{dbt_utils.get_url_parameter('last_page_seen', 'utm_term') }}, '') as utm_term,
         nullif({{dbt_utils.get_url_parameter('last_page_seen', 'utm_medium') }}, '') as utm_medium,
+        last_traffic_source,
 
         -- Window Functions
         row_number() over (partition by hubspot_deal_id order by random())             as rn

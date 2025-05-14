@@ -196,13 +196,15 @@ select
     hs_deals.hubspot_signed_customer_quote_pdf_link,
     hs_deals.why_still_in_production,
 
-    -- HS Deals: UTM tags
+    -- HS Deals: traffic details
     hs_deals.utm_campaign,
     hs_deals.utm_content,
     hs_deals.utm_source,
     hs_deals.utm_term,
     hs_deals.utm_medium,
     hs_deals.utm_campaign_name,
+    hs_deals.last_traffic_source,
+
 
     ---------- SOURCE: Auctions --------------
 

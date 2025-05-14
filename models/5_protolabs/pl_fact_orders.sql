@@ -72,14 +72,15 @@ select
     has_rfq,
     is_first_auction_rda_sourced,
 
-    --hubspot atteibutes
+    --hubspot attributes
     review_outcome,
     utm_campaign,
     utm_content,
     utm_source,
     utm_term,
     utm_medium,
-    utm_campaign_name
+    utm_campaign_name,
+    last_traffic_source
 
 from  {{ ref('fact_orders') }}
 where created_at >= '2019-01-01'

@@ -164,7 +164,7 @@ select
     nullif(property_signed_customer_quote_pdf_link__value, '')::varchar(2048) as hubspot_signed_customer_quote_pdf_link,
     nullif(property_why_still_in_production__value, '')::varchar(2048) as why_still_in_production,
     nullif(property_last_page_seen__value, '')::varchar(65535) as last_page_seen,
-    nullif(property_latest_traffic_source_static__value, '')::varchar(124) as last_traffice_source
+    nullif(lower(property_latest_traffic_source_static__value), '')::varchar(124) as last_traffic_source
     
 from deals as ehd
 left join
