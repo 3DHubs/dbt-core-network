@@ -61,6 +61,7 @@ with
                         or fam.tracking_status = 'Arrival scan'
                         or fam.tracking_status = 'Arrived at destination country'
                         or fam.tracking_status = 'Departure Scan'
+                        or fam.tracking_message = 'Drop-Off'
                     then fam.tracking_message_received_at
                     else null
                 end
