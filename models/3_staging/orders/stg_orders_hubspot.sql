@@ -101,6 +101,7 @@ with stg as (
         match_lead_time as is_target_lead_time_met,
         review_outcome,
         me_team_review_results,
+        is_production_rfq,
 
         -- Project Operation Fields
         approved_by_services as custom_approval,

@@ -186,6 +186,7 @@ select
     hs_deals.mp_concerning_actions,
     hs_deals.is_logistics_shipping_quote_used,
     hs_deals.is_manually_resourced,
+    hs_deals.is_production_rfq,
     hs_deals.resourced_deal_original_order_number,
     case
         when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel

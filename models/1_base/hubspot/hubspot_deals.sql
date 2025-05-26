@@ -99,6 +99,11 @@ select
         then null
     end::boolean as is_hubs_arranged_direct_shipping,
     case
+        when property_production_rfq__value = 'true'
+        then true
+        else false
+    end::boolean as is_production_rfq,
+    case
         when property_was_logistics_shipping_quote_used___value = 'true'
         then true
         else false
