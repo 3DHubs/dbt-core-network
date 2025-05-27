@@ -10,7 +10,8 @@
                 s.unit_preference,
                 s.monthly_order_value_target,                
                 s.is_suspended,
-
+                
+                ssu.created                                                                  as supplier_user_created_at,
                 ssu.email                                                                    as supplier_email,
                 ssu.email_domain                                                             as supplier_email_domain,
                 ssu.email is not null                                                        as has_email,
@@ -23,7 +24,7 @@
          from {{ ref('suppliers') }} s
              left outer join {{ ref('supplier_users') }} as ssu on s.id = ssu.supplier_id
          ), 
-     unique_suppliers as (select *, row_number() over (partition by supplier_id order by created_at desc nulls last) as rn from suppliers)
+     unique_suppliers as (select *, row_number() over (partition by supplier_id order by supplier_user_created_at asc nulls last) as rn from suppliers)
 select supplier_id,
        created_at,
        address_id,
