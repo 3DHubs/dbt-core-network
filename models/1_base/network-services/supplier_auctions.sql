@@ -33,6 +33,7 @@ select supplier_id,
        is_customer_requested_reorder,
        is_preferred_auction,
        is_restricted_auction,
-       is_automatic_rfq
+       is_automatic_rfq,
+       plan_to_bid_at
 
 from {{ ref('network_services', 'gold_supplier_auctions') }}

@@ -43,6 +43,8 @@ with rda_interactions as (
                                    then sai.bid_uuid end))                                           as number_of_lead_time_counterbids,
            count(distinct
                  (case when sai.bid_has_changed_prices then sai.bid_uuid end))                       as number_of_price_counterbids,
+           count(distinct
+                 (case when sai.plan_to_bid_at is not null then sai.bid_uuid end))                   as number_of_planned_bids,
            --Winning Bid Results
            bool_or(sai.is_winning_bid)                                                               as has_winning_bid,
            bool_or(sai.is_winning_bid and sai.response_type = 'accepted')                            as has_accepted_winning_bid,
@@ -128,6 +130,7 @@ rdai.number_of_rejected_responses,
 rdai.number_of_design_counterbids,
 rdai.number_of_lead_time_counterbids,
 rdai.number_of_price_counterbids,
+rdai.number_of_planned_bids,
 rdai.has_winning_bid,
 rdai.first_winning_bid_margin,
 rdai.first_winning_bid_margin_usd,

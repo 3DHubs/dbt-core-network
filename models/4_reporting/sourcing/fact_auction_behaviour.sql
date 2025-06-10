@@ -58,6 +58,7 @@ select
     sa.dhl_shipping_price_estimate_amount_usd as dhl_shipping_price_estimate_amount_usd,
     sa.is_automatic_rfq as is_automatically_allocated_rfq,
     sa.ship_by_date as original_ship_by_date,
+    sa.plan_to_bid_at,
 
     -- Bid Fields
     b.bid_uuid,

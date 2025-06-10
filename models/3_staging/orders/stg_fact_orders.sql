@@ -245,6 +245,7 @@ select
     rda.number_of_design_counterbids,
     rda.number_of_lead_time_counterbids,
     rda.number_of_price_counterbids,
+    rda.number_of_planned_bids,
 
     --RDA: Winning Bid Fields
     rda.winning_bid_uuid,
