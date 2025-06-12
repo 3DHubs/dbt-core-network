@@ -64,6 +64,7 @@ select     li.order_uuid,
            li.material_name,
            li.is_expedited,
            li.is_vqced,
+           li.commodity_code,
            -- Tolerances
            t.name                                                                       as tiered_tolerance,
            li.general_tolerance_class                                                   as general_tolerance,
