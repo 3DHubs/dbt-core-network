@@ -14,7 +14,7 @@ with keywords_performance_report_ranked as
             partition by timeperiod, keywordid, adgroupid, accountid
             order by _sdc_report_datetime desc, _sdc_sequence desc
         ) as row_number
-    from {{ source('ext_bing', 'keyword_performance_report') }}
+    from {{ ref('bing_ads_keywords_source') }}
 
     {% if is_incremental() %}
 
@@ -25,6 +25,7 @@ with keywords_performance_report_ranked as
 
 select
     _kw_report_sk,
+    source,
     accountid::bigint as account_id,
     accountname as account_name,
     accountnumber as account_number,
@@ -51,36 +52,12 @@ select
     qualityscore as quality_score,
     timeperiod as date,
     viewthroughconversions as view_trough_conversions,
-    mainlinebid as top_of_page_cpc_orginal_currency,
-    mainline1bid as firstposition_cpc_orginal_currency,
     (
         cost_orginal_currency / exchange_rate_spot_daily.rate
     )::decimal(9, 2) as cost_usd,
     (
         current_max_cpc_orginal_currency / exchange_rate_spot_daily.rate
-    )::decimal(9, 2) as current_max_cpc_usd,
-    nullif(
-        historicaladrelevance, '--'
-    )::int as historical_ad_relevance,
-    nullif(
-        historicalexpectedctr, '--'
-    )::int as historical_expected_ctr,
-    nullif(
-        historicallandingpageexperience, '--'
-    )::int as historical_landingpage_experience,
-    nullif(
-        historicalqualityscore, '--'
-    )::int as historical_quality_score,
-    (
-        top_of_page_cpc_orginal_currency / exchange_rate_spot_daily.rate
-    )::decimal(9, 2) as top_of_page_cpc_usd,
-    (
-        firstposition_cpc_orginal_currency / exchange_rate_spot_daily.rate
-    )::decimal(9, 2) as firstposition_cpc_usd,
-    nullif(firstpagebid, '--')::double precision as firstpage_cpc_orginal_currency,
-    (
-        firstpage_cpc_orginal_currency / exchange_rate_spot_daily.rate
-    )::decimal(9, 2) as firstpage_cpc_usd
+    )::decimal(9, 2) as current_max_cpc_usd
 
 from keywords_performance_report_ranked
 

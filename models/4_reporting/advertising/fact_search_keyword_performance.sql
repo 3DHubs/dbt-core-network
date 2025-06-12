@@ -30,6 +30,7 @@ combined as (
 -- Google data
 select trunc(akpr.date)                                      as date,
        'adwords'                                             as source, --TODO: Requires update to Google Ads?
+       'adwords'                                             as sub_source,
        akpr.account_id,
        akpr.campaign_id,
        coalesce(ac.name, last_value(akpr.campaign_name) over (partition by akpr.campaign_id order by date asc rows
@@ -56,6 +57,7 @@ union all
 -- Bing data
 select trunc(bkpr.date)                                          as date,
        'bing'                                                    as source,
+       bkpr.source                                               as sub_source,
        bkpr.account_id,
        bkpr.campaign_id,
        coalesce(bc.name, last_value(bkpr.campaign_name) over (partition by bkpr.campaign_id order by date asc rows
@@ -75,8 +77,8 @@ select trunc(bkpr.date)                                          as date,
        bkpr._kw_report_sk
 
 from bkpr
-            left join {{ ref ('bing_ads_campaigns') }} as bc on bc.id = bkpr.campaign_id
-            left join {{ ref ('bing_ads_ad_groups') }} as bad on bad.id = bkpr.adgroup_id)
+            left join {{ ref ('bing_ads_campaigns') }} as bc on bc.id = bkpr.campaign_id and bc.source = bkpr.source
+            left join {{ ref ('bing_ads_ad_groups') }} as bad on bad.id = bkpr.adgroup_id and bad.source = bkpr.source)
 select date,
        source,
        account_id,

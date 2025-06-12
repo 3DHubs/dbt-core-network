@@ -80,7 +80,10 @@ select
     utm_term,
     utm_medium,
     utm_campaign_name,
-    last_traffic_source
+    last_traffic_source,
+
+    -- Plaform Attributes
+    is_anonymous_cart
 
 from  {{ ref('fact_orders') }}
 where created_at >= '2019-01-01'
