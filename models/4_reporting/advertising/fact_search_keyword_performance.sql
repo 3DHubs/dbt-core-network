@@ -81,6 +81,7 @@ from bkpr
             left join {{ ref ('bing_ads_ad_groups') }} as bad on bad.id = bkpr.adgroup_id and bad.source = bkpr.source)
 select date,
        source,
+       sub_source,
        account_id,
        campaign_id,
        campaign_name,
@@ -94,4 +95,4 @@ select date,
        sum(cost_usd) cost_usd,
        sum(cost_orginal_currency) as cost_orginal_currency
  from combined
- group by 1,2,3,4,5,6,7,8,9,10
+ group by 1,2,3,4,5,6,7,8,9,10,11

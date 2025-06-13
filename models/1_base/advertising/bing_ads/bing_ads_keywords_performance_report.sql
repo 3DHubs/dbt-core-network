@@ -28,36 +28,20 @@ select
     source,
     accountid::bigint as account_id,
     accountname as account_name,
-    accountnumber as account_number,
-    accountstatus as account_status,
     adgroupid as adgroup_id,
     adgroupname as adgroup_name,
-    adgroupstatus as adgroup_status,
-    allconversions as all_conversions,
-    averageposition as average_position,
     campaignid as campaign_id,
     campaignname as campaign_name,
-    campaignstatus as campaign_status,
     clicks,
-    conversions,
     spend::decimal(9, 2) as cost_orginal_currency,
     currencycode as orginal_currency,
-    currentmaxcpc as current_max_cpc_orginal_currency,
     impressions,
     keyword,
     keywordid as keyword_id,
-    keywordlabels as labels,
-    keywordstatus as keyword_status,
-    landingpageexperience as landingpage_experience,
-    qualityscore as quality_score,
     timeperiod as date,
-    viewthroughconversions as view_trough_conversions,
     (
         cost_orginal_currency / exchange_rate_spot_daily.rate
-    )::decimal(9, 2) as cost_usd,
-    (
-        current_max_cpc_orginal_currency / exchange_rate_spot_daily.rate
-    )::decimal(9, 2) as current_max_cpc_usd
+    )::decimal(9, 2) as cost_usd
 
 from keywords_performance_report_ranked
 

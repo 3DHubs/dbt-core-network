@@ -1,6 +1,7 @@
 select 
     date,
     source,
+    sub_source,
     account_id,
     campaign_id,
     campaign_name,
