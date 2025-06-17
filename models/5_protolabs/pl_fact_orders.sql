@@ -25,6 +25,7 @@ select
     im_deal_type,
     lead_time,
     hubspot_owner_name,
+    hubspot_paid_sales_rep_name,
     pl_sales_rep_name,
     pl_sales_rep_manager_name, 
     pl_cross_sell_company_name,

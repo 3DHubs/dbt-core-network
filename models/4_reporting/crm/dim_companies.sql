@@ -53,6 +53,7 @@ select
        hc.is_qualified,
        hc.strategic as is_strategic,
        hc.ultra_strategic as is_priority_account,
+       hc.ultimate_company_owner_role                                            as hubspot_ultimate_company_owner_role,
        hc.became_strategic_date,
        hc.hubspot_owner_assigned_date,
        hc.notes_last_updated_at                                                  as last_activity_at,
@@ -70,6 +71,7 @@ select
        own_inside.primary_team_name                                              as hubspot_inside_owner_primary_team_name,
        own_handover.name                                                         as hubspot_handover_owner_name,
        own_nss.name                                                              as hubspot_network_sales_specialist_name,
+       uco.name                                                                  as hubspot_ultimate_company_owner_name,
 
        -- Source: Location
        lower(dc.alpha2_code)                                                     as country_iso2,
@@ -164,6 +166,7 @@ on lower(hc.industry) = lower(indm.industry)
     left join {{ ref('hubspot_owners') }} as own_inside on own_inside.owner_id::bigint = hc.inside_sales_owner::bigint
     left join {{ ref('hubspot_owners') }} as own_handover on own_handover.owner_id = hc.handover_owner
     left join {{ ref('hubspot_owners') }} as own_nss on own_nss.owner_id = hc.network_sales_specialist_id
+    left join {{ ref('hubspot_owners') }} as uco on uco.owner_id = hc.ultimate_company_owner_id
     left join companies_btyd as btyd on btyd.company_id = hc.hubspot_company_id
     left join {{ ref('stg_customer_tiering') }} as sct on hc.hubspot_company_id = sct.hubspot_company_id
     left join fact_retention as fr on hc.hubspot_company_id = fr.hubspot_company_id

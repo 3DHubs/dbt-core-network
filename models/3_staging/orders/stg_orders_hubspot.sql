@@ -80,6 +80,8 @@ with stg as (
         so.name                                                                           as hubspot_sourcing_owner_name,
         pm.owner_id                                                                       as hubspot_im_project_manager_id,
         pm.name                                                                           as hubspot_im_project_manager_name,
+        hs.paid_sales_rep_id                                                              as hubspot_paid_sales_rep_id,
+        paid_sr.name                                                                      as hubspot_paid_sales_rep_name,
         hs.pl_sales_rep_name                                                              as pl_sales_rep_name,
         hs.pl_sales_rep_manager_name                                                      as pl_sales_rep_manager_name,
         hs.sales_support_id                                                               as sales_support_id,
@@ -181,6 +183,8 @@ with stg as (
             on nss.owner_id = hs.network_sales_specialist_id
         left join {{ ref ('hubspot_owners') }} as qrs
             on qrs.owner_id = hs.quality_resolution_specialist_id
+        left join {{ ref ('hubspot_owners') }} as paid_sr
+            on paid_sr.owner_id = hs.paid_sales_rep_id
         left join {{ref('fact_sales_target') }} as fst
                 on fst.hubspot_id = hs.hubspot_owner_id and fst.target_date::date = coalesce(date_trunc('month',hs.closedate),'2022-01-01') 
         left join {{ ref('seed_hubspot_technology_mapping') }} as htm

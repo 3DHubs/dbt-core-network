@@ -74,6 +74,7 @@ select
     nullif(property_company_owner__value, '')::bigint as company_owner_id,
     nullif(property_network_sales_specialist__value, '')::bigint as network_sales_specialist_id,
     nullif(property_complaint_manager__value, '')::bigint as quality_resolution_specialist_id,
+    nullif(property_paid_sales_rep__value, '')::bigint as paid_sales_rep_id,
     case
         when property_strategic__value = 'true'
         then true

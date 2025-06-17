@@ -136,6 +136,8 @@ select
     hs_deals.mechanical_engineer_id,
     hs_deals.mechanical_engineer_name,
     hs_deals.mechanical_engineer_deal_buddy_name,
+    hs_deals.hubspot_paid_sales_rep_id,
+    hs_deals.hubspot_paid_sales_rep_name,
     hs_deals.hubspot_owner_id,
     hs_deals.hubspot_owner_name,
     hs_deals.hubspot_owner_primary_team,
