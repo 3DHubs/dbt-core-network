@@ -11,4 +11,4 @@ select id,
        ratings_question_13000005574,
        ratings_question_13000005575,
        load_timestamp as _load_timestamp
-from {{ ref('ingestion', 'gold_ext_airbyte_freshdesk_survey_results')}}
+from {{ ref('dbt_src_external', 'gold_ext_airbyte_freshdesk_survey_results')}}
