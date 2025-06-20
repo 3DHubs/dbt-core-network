@@ -6,7 +6,7 @@
                 with to_remove as (
                     select _sdc_sequence,
                         row_number() over (partition by date, click_view_gclid order by _sdc_batched_at desc) as row_number
-                    from analytics.ext_google_ads_console.click_performance_report)
+                    from INGESTION_SANDBOX_S3.ext_google_ads_console.click_performance_report)
             select _sdc_sequence
             from to_remove
             where row_number > 1) 

@@ -5,4 +5,4 @@ select
     type,
     payment_method,
     fee_amount
-from {{ ref('network_services', 'gold_transactions') }}
+from {{ ref('sources_network', 'gold_transactions') }}

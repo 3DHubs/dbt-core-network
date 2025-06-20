@@ -26,4 +26,4 @@ select id,
        address_longitude,
        address_timezone
 
-from {{ ref('network_services', 'gold_suppliers') }}
+from {{ ref('sources_network', 'gold_suppliers') }}

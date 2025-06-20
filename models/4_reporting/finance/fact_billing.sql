@@ -19,4 +19,4 @@ select
        override_reason,
        corporate_country
 
-from {{ ref('network_services', 'gold_billing_requests') }}
+from {{ ref('sources_network', 'gold_billing_requests') }}

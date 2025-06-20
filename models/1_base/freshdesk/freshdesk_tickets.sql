@@ -35,7 +35,7 @@ select
        ftsm.description                                                     as source_description,
        tickets._is_latest
 
-from {{ ref('ingestion', 'gold_ext_airbyte_freshdesk_tickets') }} tickets
+from {{ ref('dbt_src_external', 'gold_ext_airbyte_freshdesk_tickets') }} tickets
          left outer join {{ ref('seed_freshdesk_ticket_source') }} ftsm
                          on tickets.source = ftsm.source_id
          left outer join {{ ref('seed_freshdesk_ticket_priority') }} ftpm

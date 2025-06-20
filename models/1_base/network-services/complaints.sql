@@ -13,4 +13,4 @@ claim_type,
 liability,
 corrective_action_plan_needed,
 qc_comment
-from {{ ref('network_services', 'gold_complaints') }}
+from {{ ref('sources_network', 'gold_complaints') }}

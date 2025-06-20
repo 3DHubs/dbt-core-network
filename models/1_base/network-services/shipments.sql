@@ -12,4 +12,4 @@ shipping_label_id,
 provider_label_id,
 status,
 shipping_leg
-from {{ ref('network_services', 'gold_shipments') }}
+from {{ ref('sources_network', 'gold_shipments') }}

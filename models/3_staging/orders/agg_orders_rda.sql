@@ -107,7 +107,7 @@ eligibility_sample as (
         count (*) as number_of_eligible_suppliers,
         count (case when is_preferred = 'true' then true end) as number_of_eligible_preferred_suppliers,
         count (case when is_local = 'true' then true end) as number_of_eligible_local_suppliers
-    from {{ ref('network_services', 'gold_matching_scores') }} as ms
+    from {{ ref('sources_network', 'gold_matching_scores') }} as ms
     inner join {{ ref('prep_supply_orders') }} as orders on ms.quote_uuid = orders.quote_uuid
     group by 1
 )

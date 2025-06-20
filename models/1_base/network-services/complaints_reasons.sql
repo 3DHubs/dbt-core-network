@@ -22,4 +22,4 @@ reason_type_id,
 reason_type,
 reason_id,
 reason
-from {{ ref('network_services', 'gold_complaints_reasons') }}
+from {{ ref('sources_network', 'gold_complaints_reasons') }}

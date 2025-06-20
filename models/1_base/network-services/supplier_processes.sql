@@ -12,4 +12,4 @@ select
     process_name,
     technology_id
 
-from {{ ref('network_services', 'gold_supplier_processes') }}
+from {{ ref('sources_network', 'gold_supplier_processes') }}

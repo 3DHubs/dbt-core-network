@@ -1,3 +1,4 @@
+{#
 {{ config(materialized="incremental"
 , tags=["multirefresh"]
       ,pre_hook=[""" {% if  env_var('DBT_ENVIRONMENT') == 'prod' %} 
@@ -26,18 +27,18 @@
     """
     )
  }}
+#}
 
-
--- This model makes sure that the upsert int_analytics.smart_qc only stores the result the moment the shipped at is known.
-select line_item_uuid, 
-       predicted_proba,
-       model_executed_at,
-       '{{ run_started_at }}' as loaded_at
-    from {{ source("int_analytics", "smart_qc_unique_history") }} qc   
-    where true
+-- -- This model makes sure that the upsert int_analytics.smart_qc only stores the result the moment the shipped at is known.
+-- select line_item_uuid, 
+--        predicted_proba,
+--        model_executed_at,
+--        '{{ run_started_at }}' as loaded_at
+--     from {{ source("int_analytics", "smart_qc_unique_history") }} qc   
+--     where true
    
-      {% if is_incremental() %}
+--       {% if is_incremental() %}
 
-             and line_item_uuid not in (select distinct line_item_uuid from {{ this }})
+--              and line_item_uuid not in (select distinct line_item_uuid from {{ this }})
 
-     {% endif %}
+--      {% endif %}

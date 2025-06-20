@@ -28,7 +28,7 @@ union_question_feature as (
         null::boolean        as has_part_marking,
         null::boolean        as has_internal_corners
 
-    from {{ ref('network_services', 'gold_questions') }} as q
+    from {{ ref('sources_network', 'gold_questions') }} as q
         inner join {{ ref('prep_supply_documents') }} as psd on q.purchase_order_uuid = psd.uuid and psd.is_active_po
 
     union all
@@ -60,7 +60,7 @@ union_question_feature as (
         null::boolean                         as has_part_marking,
         null::boolean                         as has_internal_corners
 
-    from {{ ref('network_services', 'gold_open_questions') }} as bq
+    from {{ ref('sources_network', 'gold_open_questions') }} as bq
         inner join {{ ref('prep_supply_documents') }} as psd on bq.purchase_order_uuid = psd.uuid and psd.is_active_po
 
     union all
@@ -95,7 +95,7 @@ union_question_feature as (
         pf.has_part_marking,
         pf.has_internal_corners
 
-    from {{ ref('network_services', 'gold_part_feature_questions') }} as pf
+    from {{ ref('sources_network', 'gold_part_feature_questions') }} as pf
         inner join {{ ref('prep_supply_documents') }} as psd on pf.purchase_order_uuid = psd.uuid and psd.is_active_po
 )
 

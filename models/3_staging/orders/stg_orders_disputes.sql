@@ -25,8 +25,8 @@ with disputes as (
          line_item_disputes as (
              select order_uuid,
                     min(dli.created) as line_item_created
-             from {{ ref('network_services', 'gold_disputes') }} dis
-        left join {{ ref('network_services', 'gold_dispute_line_items_issues') }} dli on dli.dispute_uuid = dis.uuid
+             from {{ ref('sources_network', 'gold_disputes') }} dis
+        left join {{ ref('sources_network', 'gold_dispute_line_items_issues') }} dli on dli.dispute_uuid = dis.uuid
              group by 1
          ),
          disputes_temp as (select dis.order_uuid,
@@ -35,7 +35,7 @@ with disputes as (
                                   dis.requested_outcome                                                                          as dispute_requested_outcome,
                                   dis.type                                                                                       as dispute_type,
                                   row_number() over ( partition by dis.order_uuid order by coalesce(lid.line_item_created, created) desc) as rn -- Prioritize 'new' over 'draft', most recent first
-                           from {{ ref('network_services', 'gold_disputes') }} dis
+                           from {{ ref('sources_network', 'gold_disputes') }} dis
                                left join line_item_disputes lid
                            on dis.order_uuid = lid.order_uuid
                            ),
@@ -74,7 +74,7 @@ with disputes as (
              from {{ ref('freshdesk_tickets') }} t
                       left join {{ ref('prep_supply_orders') }} as hs on hs.hubspot_deal_id = t.hubspot_deal_id
                       left join {{ ref('prep_supply_orders') }} pso on pso.support_ticket_id = t.id
-                      left join {{ ref('network_services', 'gold_disputes') }} dis on dis.customer_support_ticket_id = t.id
+                      left join {{ ref('sources_network', 'gold_disputes') }} dis on dis.customer_support_ticket_id = t.id
                       left join {{ ref('prep_purchase_orders') }} ppo on ppo.supplier_support_ticket_id = t.id
                       left outer join {{ ref('prep_supply_orders') }} as ho on ho.number = t.derived_document_number
                       left outer join {{ ref('prep_supply_documents') }} po on po.document_number = t.derived_po_number
@@ -97,7 +97,7 @@ with disputes as (
                          dispute_remake_resolution_date then 'remake'
                     else null end                                                     as first_dispute_resolution_type
          from {{ ref('prep_supply_orders') }} so
-                  left join {{ ref('network_services', 'gold_refund_requests') }} rr on rr.order_uuid = so.uuid
+                  left join {{ ref('sources_network', 'gold_refund_requests') }} rr on rr.order_uuid = so.uuid
                   left join freshdesk_ticket_remake_request rer on rer.order_uuid = so.uuid
          where rr.order_uuid is not null
             or rer.order_uuid is not null

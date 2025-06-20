@@ -26,4 +26,4 @@ has_design_modifications,
 has_changed_shipping_date,
 is_active,
 title
-from {{ ref('network_services', 'gold_bids') }}
+from {{ ref('sources_network', 'gold_bids') }}

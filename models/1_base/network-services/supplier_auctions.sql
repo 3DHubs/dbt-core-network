@@ -36,4 +36,4 @@ select supplier_id,
        is_automatic_rfq,
        plan_to_bid_at
 
-from {{ ref('network_services', 'gold_supplier_auctions') }}
+from {{ ref('sources_network', 'gold_supplier_auctions') }}
