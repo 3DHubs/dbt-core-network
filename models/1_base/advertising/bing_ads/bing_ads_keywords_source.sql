@@ -42,7 +42,7 @@ select
     spend,
     timeperiod,
     'factory' as source
-from {{ source('_ext_bing_factory', 'keyword_performance_report') }}
+from {{ source('ext_bing_emea', 'keyword_performance_report') }}
 union all
 select
     __sdc_primary_key,
