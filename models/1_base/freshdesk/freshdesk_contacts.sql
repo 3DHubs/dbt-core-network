@@ -13,4 +13,4 @@ SELECT active,
         load_timestamp,
         name
 
-FROM {{ ref('dbt_src_external', "gold_ext_airbyte_freshdesk_contacts") }}
+FROM {{ ref('dbt_src_external', "gold_airbyte_freshdesk_contacts") }}
