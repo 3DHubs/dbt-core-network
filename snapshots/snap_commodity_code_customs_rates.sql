@@ -8,6 +8,6 @@
     )
 }}
 
-select * from {{ ref('network_services', 'gold_commodity_code_customs_rates') }}
+select * from {{ ref('sources_network', 'gold_commodity_code_customs_rates') }}
 
 {% endsnapshot %}

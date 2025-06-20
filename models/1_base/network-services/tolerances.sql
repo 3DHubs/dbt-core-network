@@ -1,3 +1,3 @@
 select id,
        name
-from {{ ref('network_services', 'gold_tolerances') }}
+from {{ ref('sources_network', 'gold_tolerances') }}

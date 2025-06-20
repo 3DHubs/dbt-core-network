@@ -14,4 +14,4 @@ select
     num_units_max,
     technology_name
 
-from {{ ref('network_services', 'gold_supplier_technologies') }}
+from {{ ref('sources_network', 'gold_supplier_technologies') }}

@@ -50,13 +50,13 @@ inner join
     {{ ref("orders") }} as orders
     on orders.quote_uuid = quote.uuid
 left join
-    {{ ref('network_services', 'gold_external_orders') }} as external_orders
+    {{ ref('sources_network', 'gold_external_orders') }} as external_orders
     on orders.uuid = external_orders.uuid
 left join
-    {{ ref('network_services', 'gold_quicklinks_tracking') }} as qt
+    {{ ref('sources_network', 'gold_quicklinks_tracking') }} as qt
     on qt.order_uuid = orders.uuid
 left join
-    {{ ref('network_services', 'gold_quick_link') }} as ql
+    {{ ref('sources_network', 'gold_quick_link') }} as ql
     on ql.quote_id = quote.uuid
     and ql.created_at < '2023-04-01'  -- switched to quicklinks_tracking after April
 where (ql.quote_id is not null or orders.is_external or qt.order_uuid is not null)

@@ -12,7 +12,7 @@
                 anonymous_id,
                 description,
                 extra
-            FROM {{ ref('network_services', 'gold_order_history_events') }} as ns_ohe
+            FROM {{ ref('sources_network', 'gold_order_history_events') }} as ns_ohe
             WHERE NOT EXISTS (
                 SELECT
                     id,

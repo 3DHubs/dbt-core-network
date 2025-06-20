@@ -13,4 +13,4 @@ select
     material_name,
     process_id,
     technology_name
-from {{ ref('network_services', 'gold_supplier_material_subsets') }}
+from {{ ref('sources_network', 'gold_supplier_material_subsets') }}

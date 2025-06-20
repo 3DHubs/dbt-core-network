@@ -25,4 +25,4 @@ is_eligible_for_restriction,
 is_external,
 order_change_request_status,
 order_change_request_freshdesk_ticket_id
-from {{ ref('network_services', 'gold_orders') }}
+from {{ ref('sources_network', 'gold_orders') }}

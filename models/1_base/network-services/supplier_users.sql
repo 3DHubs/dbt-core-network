@@ -12,4 +12,4 @@ is_protolabs,
 is_anonymized,
 last_active_at
 
-from {{ ref('network_services', 'gold_supplier_users') }}
+from {{ ref('sources_network', 'gold_supplier_users') }}

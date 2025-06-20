@@ -18,4 +18,4 @@ select created,
        last_name,
        email,
        timezone
-from {{ ref('network_services', 'gold_addresses') }}
+from {{ ref('sources_network', 'gold_addresses') }}

@@ -11,5 +11,5 @@ select line_item_uuid,
        max(case when dispute_issue_id = 2 then 1 else 0 end) as has_surface_finish_issue,
        max(case when dispute_issue_id = 4 then 1 else 0 end) as has_incorrect_material_issue,
        max(case when dispute_issue_id = 6 then 1 else 0 end) as has_parts_damaged_issue
-from {{ ref('network_services', 'gold_dispute_line_items_issues') }}
+from {{ ref('sources_network', 'gold_dispute_line_items_issues') }}
 group by 1

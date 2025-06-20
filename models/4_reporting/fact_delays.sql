@@ -19,7 +19,7 @@ select d.uuid                                                                   
        u.user_role_mapped                                                                        as delay_submitted_by,
        case when delay_liability <> 'supplier' and u.user_role_mapped = 'supplier' then true end as delay_requires_validation,
        true                                                                                      as delay_is_valid -- To be replaced with product feature enhancement (Diego, Aug 2022)
-from {{ ref('network_services', 'gold_order_delays') }} as d
+from {{ ref('sources_network', 'gold_order_delays') }} as d
     -- Joins to get role submitted the delay, prodct might add the column directly in the future
     left join {{ ref('prep_users') }} as u
 on d.author_id = u.user_id

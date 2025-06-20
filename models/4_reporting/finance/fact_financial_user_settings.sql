@@ -37,5 +37,5 @@ select
        ufs.financial_contact_first_name,
        ufs.financial_contact_last_name
 from {{ source('ext_netsuite', 'customer') }} as enc
-left join {{ ref('network_services', 'gold_users_financial_settings') }} as ufs on enc.internalid = ufs.netsuite_customer_id
+left join {{ ref('sources_network', 'gold_users_financial_settings') }} as ufs on enc.internalid = ufs.netsuite_customer_id
 left join netsuite_agg as nagg on enc.internalid = nagg.parent__internalid

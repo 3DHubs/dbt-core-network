@@ -6,5 +6,5 @@
         team_id,
         team_name,
         team_created_at
- from {{ ref('network_services', 'gold_team_invites') }}
+ from {{ ref('sources_network', 'gold_team_invites') }}
  where is_latest

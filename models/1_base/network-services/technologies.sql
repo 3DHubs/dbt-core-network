@@ -1,4 +1,4 @@
 select technology_id,
 name,
 slug
-from {{ ref('network_services', 'gold_technologies') }}
+from {{ ref('sources_network', 'gold_technologies') }}

@@ -45,4 +45,4 @@ select created,
        shipping_country_alpha2_code,
        corporate_country
 
-from {{ ref('network_services', 'gold_documents') }} as docs
+from {{ ref('sources_network', 'gold_documents') }} as docs

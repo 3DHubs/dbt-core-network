@@ -69,6 +69,6 @@ from {{ ref('documents') }} as docs
 -- Filter: reduces the number of documents by filtering out empty orders, filter that takes place in the supply_orders model
 inner join (select uuid, quote_uuid, updated from {{ ref('prep_supply_orders')}}) as orders on docs.order_uuid = orders.uuid
 -- Useful to get the status of the purchase order, this allow us to filter on active POs on following models
-left join (select uuid, status from {{ ref('network_services', 'gold_purchase_orders') }}) as po on docs.uuid = po.uuid
+left join (select uuid, status from {{ ref('sources_network', 'gold_purchase_orders') }}) as po on docs.uuid = po.uuid
 left join {{ref('prep_addresses')}} as adr on docs.shipping_address_id = adr.address_id
 

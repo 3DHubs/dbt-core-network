@@ -41,7 +41,7 @@ select so.uuid                                                  as order_uuid,
         ld.discount_code_author_name as discount_code_created_by
 
 -- Includes all line_items of type discount
-from {{ ref('network_services', 'gold_discount__line_items') }} as ld
+from {{ ref('sources_network', 'gold_discount__line_items') }} as ld
          -- Prep line items filters on main quote and purchase orders
          inner join {{ ref('prep_line_items') }} as l on ld.uuid = l.uuid
          -- Filters out carts

@@ -21,4 +21,4 @@ select
     team_id,
     team_name,
     team_created_at
-from {{ ref('network_services', 'gold_users') }}
+from {{ ref('sources_network', 'gold_users') }}

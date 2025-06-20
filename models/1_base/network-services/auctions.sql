@@ -25,4 +25,4 @@ auction_type,
 is_accepted_manually,
 is_resourcing,
 is_internal_support_ticket_opened
-from {{ ref('network_services', 'gold_auctions') }}
+from {{ ref('sources_network', 'gold_auctions') }}
