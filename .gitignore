@@ -8,5 +8,7 @@ dbt_modules/
 logs/
 
 # Other files
+.user.yml
+extensions.json
 profiles.yml
 dbt_internal_packages/
