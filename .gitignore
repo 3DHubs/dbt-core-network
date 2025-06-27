@@ -6,3 +6,10 @@
 target/
 dbt_modules/
 logs/
+
+# Other files
+.user.yml
+extensions.json
+profiles.yml
+dbt_packages/
+dbt_internal_packages/

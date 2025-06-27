@@ -10,5 +10,5 @@ Select
     boxes_mapping.dimension_mapping                                    as branded_box_dimensions,
     branded_box_quantity
 
-from {{ ref('dbt_src_external', 'gold_ext_airbyte_typeform_responses') }} as branded_boxes
+from {{ ref('dbt_src_external', 'gold_airbyte_typeform_responses') }} as branded_boxes
     left join {{ ref('seed_branded_boxes_mapping') }} boxes_mapping on branded_boxes.branded_box_dimensions = boxes_mapping.dimensions

@@ -1,10 +1,6 @@
 packages:
   - package: dbt-labs/dbt_utils
     version: 0.8.2
-  - package: dbt-labs/redshift
-    version: 0.6.1
-  - package: dbt-labs/audit_helper
-    version: 0.5.0
 
 projects:
   - name: sources_network

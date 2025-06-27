@@ -14,20 +14,29 @@ select
     nullif(hc.property_country__value, '')::varchar as country,
     nullif(hc.property_city__value, '')::varchar as city,
     hc.companyid::bigint as company_id,
-    (
-        timestamp 'epoch'
-        + hc.property_attempted_to_contact_date_company__value
-        / 1000
-        * interval '1 second'
-    )::timestamp without time zone as attempted_to_contact_at,
+    
+    -- todo-migration: Snowflake way of processing the UNIX timestamp, needs testing 
+    to_timestamp(cast(property_attempted_to_contact_date_company__value as bigint) / 1000) as attempted_to_contact_at,
+    -- (
+    --     timestamp 'epoch'
+    --     + hc.property_attempted_to_contact_date_company__value
+    --     / 1000
+    --     * interval '1 second'
+    -- )::timestamp without time zone as attempted_to_contact_at,
+
     (
         timestamp 'epoch'
         + property_connected_date_company__value / 1000 * interval '1 second'
     )::timestamp without time zone as connected_at,
     nullif(hc.property_hubspot_owner_id__value, '')::bigint as hubspot_owner_id,
     nullif(hc.property_ae_assigned__value, '')::int as ae_id,
-    nullif(hc.property_ultimate_company_owner__value, '')::bigint as ultimate_company_owner_id,
-    nullif(hc.property_ultimate_company_owner_role__value, '')::varchar as ultimate_company_owner_role,
+    
+    -- todo-migration: field is not available upstream now, change when field is available
+    null as ultimate_company_owner_id,
+    -- nullif(hc.property_ultimate_company_owner__value, '')::bigint as ultimate_company_owner_id,
+    -- todo-migration: field is not available upstream now, change when field is available
+    null as ultimate_company_owner_role,
+    -- nullif(hc.property_ultimate_company_owner_role__value, '')::varchar as ultimate_company_owner_role,
     trunc(hc.property_hubspot_owner_assigneddate__value)::date
     as hubspot_owner_assigned_date,
     (

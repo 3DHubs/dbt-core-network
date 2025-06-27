@@ -1,13 +1,12 @@
-
-# Name your project! Project names should contain only lowercase characters
-# and underscores. A good package name should reflect your organization's
-# name or the intended use of these models
-name: 'hubs'
+name: 'dbt_core_network'
 version: '1.0.1'
 config-version: 2
+dbt-cloud:
+  project-id: 386544
+
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'default'
+profile: 'my-snowflake-db'
 
 # These configurations specify where dbt should look for different types of files.
 # The `model-paths` config, for example, states that models in this project can be
@@ -18,14 +17,12 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
-target-path: "target"  # directory which will store compiled SQL files
 clean-targets: # directories to be removed by `dbt clean`
   - "target"
-  - "dbt_packages" 
+  - "dbt_packages"
 
 # Model config
-models:
+models: #todo-migration: post-hooks were removed, check if this is an issue in Snowflake
 
   hubs:
     1_base:
@@ -65,16 +62,14 @@ models:
         +tags: ["contacts"]
       +bind: false
 
-    4_reporting: 
+    4_reporting:
       +schema: reporting
       +materialized: table
-      post-hook: 'grant select on {{ this }} to protolabs'
 
     5_protolabs:
-      +schema: protolabs 
+      +schema: protolabs
       +bind: false
       +materialized: table
-      post-hook: 'grant select on {{ this }} to protolabs'
       +tags: protolabs
 
     6_miscellaneous:
@@ -86,7 +81,6 @@ models:
         +tags: ["weekly", "daily_exclusion"]
       backup_refresh:
         +tags: ["backup", "daily_exclusion"]
-        post-hook: 'grant all on schema dbt_backups to group etl; grant all on schema dbt_backups to group dbt_devs;grant all on all tables in schema dbt_backups to group etl; grant all on all tables in schema dbt_backups to group dbt_devs;'
 
 # Seeds schema
 seeds:
@@ -98,13 +92,8 @@ snapshots:
 
 # Tests
 
-# Access
-# On run-end read-only access is granted to the ro_group in Redshift on the target schema's contents.
-on-run-end:
-  - "{{ grant_select_on_schemas(schemas, 'ro_group') }}"
-
-
-  # these variables will need to be in H24 format!
+# Variables
+# These variables will need to be in H24 format!
 vars:
   working_hour_start: 9
   working_hour_end: 18

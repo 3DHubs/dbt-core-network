@@ -16,171 +16,201 @@ sources:
     schema: dbt_networkservices
     tables:
       - name: gold_auctions
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: auction_created_at
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: gold_billing_requests
-        freshness:
-          warn_after: { count: 31, period: day }
-          error_after: { count: 33, period: day }
         loaded_at_field: created_at
+        config:
+          freshness:
+            warn_after: {count: 31, period: day}
+            error_after: {count: 33, period: day}
       - name: gold_bids
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: gold_complaints
-        freshness:
-          warn_after: { count: 4, period: day }
-          error_after: { count: 7, period: day }
         loaded_at_field: created_at
+        config:
+          freshness:
+            warn_after: {count: 4, period: day}
+            error_after: {count: 7, period: day}
       - name: gold_disputes
-        freshness:
-          warn_after: { count: 4, period: day }
-          error_after: { count: 7, period: day }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 4, period: day}
+            error_after: {count: 7, period: day}
       - name: gold_discount__line_items
-        freshness:
-          warn_after: { count: 4, period: day }
-          error_after: { count: 7, period: day }
         loaded_at_field: created_at
+        config:
+          freshness:
+            warn_after: {count: 4, period: day}
+            error_after: {count: 7, period: day}
       - name: gold_documents
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: gold_external_orders
-        freshness:
-          warn_after: { count: 2, period: day }
-          error_after: { count: 3, period: day }
         loaded_at_field: created_at
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 3, period: day}
       - name: gold_line_items
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: gold_orders
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: gold_order_reviews
-        freshness:
-          warn_after: { count: 2, period: day }
-          error_after: { count: 3, period: day }
         loaded_at_field: created_at
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 3, period: day}
       - name: gold_open_questions
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 14, period: day }
         loaded_at_field: submitted_at
+        config:
+          freshness:
+            warn_after: {count: 7, period: day}
+            error_after: {count: 14, period: day}
       - name: gold_order_delays
-        freshness:
-          warn_after: { count: 2, period: day }
-          error_after: { count: 4, period: day }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 4, period: day}
       - name: gold_order_history_events # Used in a sensitive incremental model
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
-        loaded_at_field: created                
+        loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 12, period: hour}
+            error_after: {count: 24, period: hour}
       - name: gold_packages
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
         loaded_at_field: created_at
+        config:
+          freshness:
+            warn_after: {count: 12, period: hour}
+            error_after: {count: 24, period: hour}
       - name: gold_part_feature_questions
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 14, period: day }
         loaded_at_field: submitted_at
+        config:
+          freshness:
+            warn_after: {count: 7, period: day}
+            error_after: {count: 14, period: day}
       - name: gold_quick_link
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: updated_at
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: gold_quicklinks_tracking
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: created_at
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: gold_questions
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 14, period: day }
         loaded_at_field: submitted_at
+        config:
+          freshness:
+            warn_after: {count: 7, period: day}
+            error_after: {count: 14, period: day}
       - name: gold_supplier_auctions
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
         loaded_at_field: assigned_at
+        config:
+          freshness:
+            warn_after: {count: 12, period: hour}
+            error_after: {count: 24, period: hour}
       - name: gold_shipments
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 12, period: hour}
+            error_after: {count: 24, period: hour}
       - name: gold_team_invites
-        freshness:
-          warn_after: { count: 3, period: day }
-          error_after: { count: 5, period: day }
         loaded_at_field: invite_created_at
+        config:
+          freshness:
+            warn_after: {count: 3, period: day}
+            error_after: {count: 5, period: day}
       - name: gold_transactions
-        freshness:
-          warn_after: { count: 2, period: day }
-          error_after: { count: 4, period: day }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 4, period: day}
       - name: gold_users
-        freshness:
-          warn_after: { count: 2, period: day }
-          error_after: { count: 3, period: day }
         loaded_at_field: created_at
 
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 3, period: day}
   - name: int_analytics
     database: INGESTION_SANDBOX_S3
     schema: int_analytics
-    tags: ["int_analytics"]
     tables:
       - name: btyd
-        freshness:
-          warn_after: { count: 7, period: day }
-          error_after: { count: 14, period: day }
         loaded_at_field: snapshot_date
+        config:
+          freshness:
+            warn_after: {count: 7, period: day}
+            error_after: {count: 14, period: day}
       - name: customer_tiering
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: snapshot_at
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: delay_probability_v2
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: model_executed_at
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: mql_conversion_pred
-        freshness:
-          warn_after: { count: 2, period: day }
-          error_after: { count: 3, period: day }
         loaded_at_field: model_executed_at
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 3, period: day}
       - name: smart_qc
-        freshness:
-          warn_after: { count: 1, period: day }
-          error_after: { count: 2, period: day }
         loaded_at_field: model_executed_at
+        config:
+          freshness:
+            warn_after: {count: 1, period: day}
+            error_after: {count: 2, period: day}
       - name: smart_qc_unique_history
-        freshness:
-          warn_after: { count: 2, period: day }
-          error_after: { count: 3, period: day }
         loaded_at_field: model_executed_at
+        config:
+          freshness:
+            warn_after: {count: 2, period: day}
+            error_after: {count: 3, period: day}
       - name: dim_dates
       - name: full_order_history_events
-        freshness:
-          warn_after:
-            count: 1
-            period: day
-          error_after:
-            count: 2
-            period: day
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after:
+              count: 1
+              period: day
+            error_after:
+              count: 2
+              period: day
       - name: legacy_contacts
       - name: legacy_mqls
       - name: legacy_orders
@@ -190,16 +220,19 @@ sources:
       - name: static_seo_targets
       - name: supply_countries_markets_mapping
 
+    config:
+      tags: ["int_analytics"]
   - name: ext_google_search
     database: INGESTION_SANDBOX_S3
     schema: ext_google_search
     tables:
       - name: search_console
-        freshness:
-          warn_after: { count: 5, period: day }
-          error_after: { count: 6, period: day }
         loaded_at_field: "date::timestamp"
 
+        config:
+          freshness:
+            warn_after: {count: 5, period: day}
+            error_after: {count: 6, period: day}
   - name: dbt_backups
     database: INGESTION_SANDBOX_S3
     schema: dbt_backups
@@ -224,31 +257,30 @@ sources:
   - name: ext_aftership_bv
     database: INGESTION_SANDBOX_S3
     schema: ext_aftership_bv
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: data
       - name: data__msg__checkpoints
 
+    config:
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
   - name: ext_aftership_llc
     database: INGESTION_SANDBOX_S3
     schema: ext_aftership_llc
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: data
       - name: data__msg__checkpoints
 
+    config:
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
   - name: ext_bing
     database: INGESTION_SANDBOX_S3
     schema: ext_bing
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: accounts
@@ -257,12 +289,13 @@ sources:
       - name: campaigns
       - name: keyword_performance_report
 
+    config:
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
   - name: ext_bing_emea
     database: INGESTION_SANDBOX_S3
     schema: ext_bing_emea
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: accounts
@@ -270,35 +303,41 @@ sources:
       - name: campaign_performance_report
       - name: campaigns
       - name: keyword_performance_report
+
+    config:
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
   
-  - name: _ext_bing_factory
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
-    loaded_at_field: _sdc_received_at
-    tables:
-      - name: accounts
-      - name: ad_groups
-      - name: campaign_performance_report
-      - name: campaigns
-      - name: keyword_performance_report
+  # todo-migration: this source is not available yet, add when ready
+  # - name: _ext_bing_factory
+  #   loaded_at_field: _sdc_received_at
+  #   tables:
+  #     - name: accounts
+  #     - name: ad_groups
+  #     - name: campaign_performance_report
+  #     - name: campaigns
+  #     - name: keyword_performance_report
+
+    # config:
+    #   freshness:
+    #     warn_after: {count: 12, period: hour}
+    #     error_after: {count: 24, period: hour}
 
   - name: ext_hubspot_webhooks
     database: INGESTION_SANDBOX_S3
     schema: ext_hubspot_webhooks
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: data
 
+    config:
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
   - name: ext_google_ads_console
     database: INGESTION_SANDBOX_S3
     schema: ext_google_ads_console
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: accounts
@@ -308,6 +347,10 @@ sources:
       - name: click_performance_report
       - name: keywords_performance_report
 
+    config:
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
   - name: ext_gsheets_v2
     database: INGESTION_SANDBOX_S3
     schema: ext_gsheets_v2
@@ -324,46 +367,49 @@ sources:
     schema: ext_hubspot
     tables:
       - name: contacts
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
+        config:
+          freshness:
+            warn_after: {count: 24, period: hour}
+            error_after: {count: 48, period: hour}
       - name: companies
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
+        config:
+          freshness:
+            warn_after: {count: 24, period: hour}
+            error_after: {count: 48, period: hour}
       - name: hubspot_engagements
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
         loaded_at_field: load_timestamp
+        config:
+          freshness:
+            warn_after: {count: 24, period: hour}
+            error_after: {count: 48, period: hour}
       - name: campaigns
       - name: deals
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
+        config:
+          freshness:
+            warn_after: {count: 24, period: hour}
+            error_after: {count: 48, period: hour}
       - name: deals__associations__associatedcompanyids
       - name: deals__associations__associatedvids
       - name: hubspot_deals_dealstage_history_20201125
       - name: email_events
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
         loaded_at_field: _sdc_received_at
+        config:
+          freshness:
+            warn_after: {count: 24, period: hour}
+            error_after: {count: 48, period: hour}
       - name: hubspot_owners
-        freshness:
-          warn_after: { count: 24, period: hour }
-          error_after: { count: 48, period: hour }
         loaded_at_field: "load_timestamp"
 
+        config:
+          freshness:
+            warn_after: {count: 24, period: hour}
+            error_after: {count: 48, period: hour}
   - name: ext_netsuite
     database: INGESTION_SANDBOX_S3
     schema: ext_netsuite
-    freshness:
-      warn_after: { count: 12, period: hour }
-      error_after: { count: 24, period: hour }
     loaded_at_field: _sdc_received_at
     tables:
       - name: currencyrate
@@ -371,6 +417,10 @@ sources:
       - name: customer
       - name: transaction__itemlist__item
 
+    config:
+      freshness:
+        warn_after: {count: 12, period: hour}
+        error_after: {count: 24, period: hour}
   - name: fed_model_repo
     database: INGESTION_SANDBOX_S3
     schema: fed_model_repo
@@ -402,46 +452,53 @@ sources:
     tables:
       - name: job_ml_geo
       - name: job_machining_quote
-      
+
   - name: int_retool
     database: INGESTION_SANDBOX_S3
     schema: int_retool
     tables:
       - name: qc_inspections
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: inspection_line_items
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: dhl_api_documents
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: ups_api_documents
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: dhl_api_shipment_dimensions
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: ups_api_shipment_dimensions
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: uk_ups_api_documents
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _sdc_batched_at
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: xdock_holdrack_status
 
 
@@ -451,10 +508,11 @@ sources:
     tables:
       - name: countries # Required for a snapshot
       - name: cnc_order_quotes # Required for a snapshot
-        freshness:
-          warn_after: { count: 12, period: hour }
-          error_after: { count: 24, period: hour }
         loaded_at_field: created
+        config:
+          freshness:
+            warn_after: {count: 12, period: hour}
+            error_after: {count: 24, period: hour}
       - name: new_bids # Required for a snapshot
       - name: suppliers # Required for a snapshot
       - name: supplier_users # Required for a snapshot
@@ -464,43 +522,45 @@ sources:
     schema: dbt_ingestion
     tables:
       - name: gold_ext_airbyte_exchange_rate_daily
-        freshness:
-          error_after: { count: 24, period: hour }
         loaded_at_field: date
+        config:
+          freshness:
+            error_after: {count: 24, period: hour}
       - name: gold_ext_airbyte_hubspot_pages
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: date
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: gold_ext_airbyte_freshdesk_tickets
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: _load_timestamp
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
       - name: gold_ext_airbyte_freshdesk_survey_results
-        freshness:
-          warn_after: { count: 48, period: hour }
-          error_after: { count: 72, period: hour }
         loaded_at_field: load_timestamp
 
+        config:
+          freshness:
+            warn_after: {count: 48, period: hour}
+            error_after: {count: 72, period: hour}
   - name: ext_freshdesk
     database: INGESTION_SANDBOX_S3
     schema: ext_freshdesk
-    freshness:
-      warn_after: { count: 24, period: hour }
-      error_after: { count: 48, period: hour }
     loaded_at_field: load_timestamp
     tables:
       - name: freshdesk_ticket_conversations
       - name: freshdesk_tickets_groups_backup_20200401
-        freshness: null # Ignoring freshness for this data source
+        config:
+          freshness:
       - name: freshdesk_groups_legacy_20200401
-        freshness: null # Ignoring freshness for this data source
-
-#########
-# TESTS #
-#########
-
+        config:
+          freshness:
+    config:
+      freshness:
+        warn_after: {count: 24, period: hour}
+        error_after: {count: 48, period: hour}
 models:
   - name: dim_companies
     columns:
