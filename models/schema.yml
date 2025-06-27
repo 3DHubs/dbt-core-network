@@ -319,10 +319,11 @@ sources:
   #     - name: campaigns
   #     - name: keyword_performance_report
 
-    config:
-      freshness:
-        warn_after: {count: 12, period: hour}
-        error_after: {count: 24, period: hour}
+    # config:
+    #   freshness:
+    #     warn_after: {count: 12, period: hour}
+    #     error_after: {count: 24, period: hour}
+
   - name: ext_hubspot_webhooks
     database: INGESTION_SANDBOX_S3
     schema: ext_hubspot_webhooks
