@@ -26,7 +26,10 @@ select
     )::timestamp without time zone as connected_at,
     nullif(hc.property_hubspot_owner_id__value, '')::bigint as hubspot_owner_id,
     nullif(hc.property_ae_assigned__value, '')::int as ae_id,
-    nullif(hc.property_ultimate_company_owner__value, '')::bigint as ultimate_company_owner_id,
+    
+    -- todo-migration: field is not available upstream now, change when field is available
+    null as ultimate_company_owner_id,
+    -- nullif(hc.property_ultimate_company_owner__value, '')::bigint as ultimate_company_owner_id,
     nullif(hc.property_ultimate_company_owner_role__value, '')::varchar as ultimate_company_owner_role,
     trunc(hc.property_hubspot_owner_assigneddate__value)::date
     as hubspot_owner_assigned_date,

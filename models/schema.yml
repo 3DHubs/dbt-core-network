@@ -308,14 +308,16 @@ sources:
       freshness:
         warn_after: {count: 12, period: hour}
         error_after: {count: 24, period: hour}
-  - name: _ext_bing_factory
-    loaded_at_field: _sdc_received_at
-    tables:
-      - name: accounts
-      - name: ad_groups
-      - name: campaign_performance_report
-      - name: campaigns
-      - name: keyword_performance_report
+  
+  # todo-migration: this source is not available yet, add when ready
+  # - name: _ext_bing_factory
+  #   loaded_at_field: _sdc_received_at
+  #   tables:
+  #     - name: accounts
+  #     - name: ad_groups
+  #     - name: campaign_performance_report
+  #     - name: campaigns
+  #     - name: keyword_performance_report
 
     config:
       freshness:

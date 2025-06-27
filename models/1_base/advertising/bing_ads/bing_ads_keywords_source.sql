@@ -22,6 +22,7 @@ select
 from {{ source('ext_bing', 'keyword_performance_report') }}
 union all
 -- todo-migration: the table below is not available yet, add when available
+{#
 -- select
 --     __sdc_primary_key,
 --     _sdc_batched_at,
@@ -45,6 +46,7 @@ union all
 --     'factory' as source
 -- from {{ source('_ext_bing_factory', 'keyword_performance_report') }}
 -- union all
+#}
 select
     __sdc_primary_key,
     _sdc_batched_at,
