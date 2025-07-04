@@ -1,6 +1,6 @@
 SELECT 
 
-    "date",
+    date,
     currency_code_base,
     currency_code_to,
     is_success,
