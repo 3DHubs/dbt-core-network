@@ -24,10 +24,14 @@ select
     --     * interval '1 second'
     -- )::timestamp without time zone as attempted_to_contact_at,
 
-    (
-        timestamp 'epoch'
-        + property_connected_date_company__value / 1000 * interval '1 second'
-    )::timestamp without time zone as connected_at,
+    -- todo-migration: Snowflake way of processing the UNIX timestamp, needs testing 
+    to_timestamp(cast(property_connected_date_company__value as bigint) / 1000) as connected_at,
+    -- (
+    --     timestamp 'epoch'
+    --     + property_connected_date_company__value / 1000 * interval '1 second'
+    -- )::timestamp without time zone as connected_at,
+
+
     nullif(hc.property_hubspot_owner_id__value, '')::bigint as hubspot_owner_id,
     nullif(hc.property_ae_assigned__value, '')::int as ae_id,
     
@@ -37,8 +41,10 @@ select
     -- todo-migration: field is not available upstream now, change when field is available
     null as ultimate_company_owner_role,
     -- nullif(hc.property_ultimate_company_owner_role__value, '')::varchar as ultimate_company_owner_role,
-    trunc(hc.property_hubspot_owner_assigneddate__value)::date
-    as hubspot_owner_assigned_date,
+    
+    -- todo-migration: I changed the trunc to date_trunc, to be checked.
+    date_trunc('day', property_hubspot_owner_assigneddate__value) as hubspot_owner_assigned_date,
+    -- trunc(hc.property_hubspot_owner_assigneddate__value)::date as hubspot_owner_assigned_date,
     (
         timestamp 'epoch'
         + nullif(hc.property_added_as_strategic__value, '') / 1000 * interval '1 second'
