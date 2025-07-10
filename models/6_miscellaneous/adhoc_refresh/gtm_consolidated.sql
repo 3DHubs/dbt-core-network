@@ -4,7 +4,7 @@ with data as (with test as (with services as (select f.account_id,
                                               from dbt_dev_analytics_jgroot_core.fact_orders_factory f
                                                        left join
                                                    (select account_id, count(distinct service) as services_count
-                                                    from dbt_dev_analytics_jgroot_core.fact_orders_factory
+                                                    from dbt_dev_analytics_jgroot_core.fact_orders_factory ---- 
                                                     group by 1) s on s.account_id = f.account_id
                                               group by 1, 2)
                             select ac.account_id,
@@ -43,7 +43,7 @@ with data as (with test as (with services as (select f.account_id,
                                    dc.hubspot_owner_name                                                      as network_owner,
                                    case
                                        when da.employee_count_total = 'nan' then null
-                                       else CAST(TRIM(TRAILING '.0' FROM da.employee_count_total) AS INT) end as factory_number_of_employees,
+                                       else cast(regexp_replace(da.employee_count_total, '\\.0$', '') as int) end as factory_number_of_employees,
                                    dc.number_of_employees                                                     as network_number_of_employees
 
                             from dbt_dev_analytics_jgroot_core.accounts_clean ac
