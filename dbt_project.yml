@@ -23,8 +23,7 @@ clean-targets: # directories to be removed by `dbt clean`
 
 # Model config
 models: #todo-migration: post-hooks were removed, check if this is an issue in Snowflake
-
-  hubs:
+  dbt_core_network:
     1_base:
       +schema: core
       +materialized: view
