@@ -39,7 +39,7 @@ left outer join {{ ref('netsuite_currency_rates') }} as rates
 on rates.transactioncurrency__internalid = netsuite_trn.currency__internalid
     and basecurrency__name = 'USD' and
     -- Exchange Rates are shifted a day comparing Netsuite vs what lands on RS
-    trunc(netsuite_trn.createddate) = dateadd(day,1,trunc(rates.effectivedate))
+    date_trunc('day', cast(netsuite_trn.createddate as date)) = dateadd(day, 1, date_trunc('day', cast(rates.effectivedate as date))) --todo-migration: date_trunc and check why cast is done
     left outer join stg_line_items_netsuite as li on li.netsuite_transaction_id = netsuite_trn.tranid
 where true
   and _type in ('Invoice'

@@ -1,6 +1,6 @@
 select line_item_uuid,
        min(created)                           as dispute_created_at,
-       listagg(distinct '[' || trunc(created) || '] ' || trim(description),
+       listagg(distinct '[' || date_trunc('day', created) || '] ' || trim(description), --todo-migration: changed to date_trunc, do validation
            '\n\n')
            within group (order by created)    as dispute_description,
        max(affected_parts_quantity)           as dispute_affected_parts_quantity,
