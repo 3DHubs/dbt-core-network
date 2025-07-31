@@ -1,4 +1,4 @@
--- source from Hubspot Stitch setup initially by Nihad.
+-- source from Hubspot Stitch setup initially by Nihad. hello Alec!
 with
     deals as (
         select
