@@ -21,8 +21,8 @@ with fact_aftership_messages_bv as (
     select 'BV'                                               as entity,
            exa.msg__tracking_number                           as carrier_tracking_number, -- EXA EXt Aftership
            exa.msg__courier_tracking_link                     as carrier_tracking_link,
-           timestamptz(exa.msg__expected_delivery)::timestamp as tracking_latest_expected_delivery,
-           timestamptz(exam.checkpoint_time)::timestamp            as tracking_message_received_at,
+           exa.msg__expected_delivery::timestamp              as tracking_latest_expected_delivery, --todo-migration-test
+           exam.checkpoint_time::timestamp                    as tracking_message_received_at,--todo-migration-test
            exam.city                                          as tracking_shipment_city,  -- EXAM EXt Aftership Messages
            exam.country_name                                  as tracking_shipment_country_name,
            exam.location                                      as tracking_shipment_location,
@@ -44,8 +44,8 @@ with fact_aftership_messages_bv as (
          select 'LLC'                                              as entity, -- EXA EXt Aftership
                 exa.msg__tracking_number                           as carrier_tracking_number,
                 exa.msg__courier_tracking_link                     as carrier_tracking_link,
-                timestamptz(exa.msg__expected_delivery)::timestamp as tracking_latest_expected_delivery,
-                timestamptz(exam.checkpoint_time)::timestamp            as tracking_message_received_at,
+                exa.msg__expected_delivery::timestamp              as tracking_latest_expected_delivery, --todo-migration-test
+                exam.checkpoint_time::timestamp                    as tracking_message_received_at,--todo-migration-test
                 exam.city                                          as tracking_shipment_city, -- EXAM EXt Aftership Messages
                 exam.country_name                                  as tracking_shipment_country_name,
                 exam.location                                      as tracking_shipment_location,
@@ -93,7 +93,7 @@ select famu.*, -- FAMU Fact Aftership Messages Unionised
        OVER (PARTITION BY famu.carrier_tracking_number ORDER BY famu.tracking_message_received_at asc) AS message_number,
        count(*) over (PARTITION BY famu.carrier_tracking_number) =
        message_number                                                                                  as is_last_message,
-       date_diff('hours', famu.tracking_message_received_at,
+       datediff('hour', famu.tracking_message_received_at,
                  lead(famu.tracking_message_received_at, 1) OVER (PARTITION BY
-                     famu.carrier_tracking_number ORDER BY famu.tracking_message_received_at asc))     as number_of_hours_in_status
+                     famu.carrier_tracking_number ORDER BY famu.tracking_message_received_at asc))     as number_of_hours_in_status --todo-migration-test
 from fact_aftership_messages_union as famu
