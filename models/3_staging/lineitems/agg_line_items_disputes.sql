@@ -1,6 +1,6 @@
 select line_item_uuid,
        min(created)                           as dispute_created_at,
-       listagg(distinct '[' || date_trunc('day', created) || '] ' || trim(description), --todo-migration: changed to date_trunc, do validation
+       listagg(distinct '[' || date_trunc('day', created) || '] ' || trim(description), --todo-migration-test: changed to date_trunc, do validation
            '\n\n')
            within group (order by created)    as dispute_description,
        max(affected_parts_quantity)           as dispute_affected_parts_quantity,
@@ -11,5 +11,5 @@ select line_item_uuid,
        max(case when dispute_issue_id = 2 then 1 else 0 end) as has_surface_finish_issue,
        max(case when dispute_issue_id = 4 then 1 else 0 end) as has_incorrect_material_issue,
        max(case when dispute_issue_id = 6 then 1 else 0 end) as has_parts_damaged_issue
-from {{ ref('sources_network', 'gold_dispute_line_items_issues') }}
+from {{ ref('sources_network', 'gold_dispute_line_items_issues') }} --todo-migration-research: SQL compilation error: [GOLD_DISPUTE_LINE_ITEMS_ISSUES.CREATED] is not a valid order by expression
 group by 1
