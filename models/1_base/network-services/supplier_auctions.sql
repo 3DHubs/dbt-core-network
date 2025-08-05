@@ -34,6 +34,7 @@ select supplier_id,
        is_preferred_auction,
        is_restricted_auction,
        is_automatic_rfq,
-       plan_to_bid_at
+       null as plan_to_bid_at --todo-migration-missing
+    --    plan_to_bid_at 
 
 from {{ ref('sources_network', 'gold_supplier_auctions') }}
