@@ -40,3 +40,6 @@ select s.order_uuid,
            when s.status = 'delivered_at' then 'delivered to customer'
            when s.status = 'dispute_created_at' then 'disputed' end as status
 from status s
+
+
+--todo-migration adhoc

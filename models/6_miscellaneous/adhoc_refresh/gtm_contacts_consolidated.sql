@@ -187,3 +187,5 @@ union all
 select account_id, account_email as email, concat(account_id, account_email) as id from contacts
 )
 select distinct * from combine  --where account_id='0013100001elQvFAAU'
+
+--todo-migration adhoc

@@ -59,3 +59,5 @@ select account_id,
        fulfillment_type
 
 from network_clean where primary_account_nr_rank = 1
+
+--todo-migration adhoc
