@@ -5,17 +5,22 @@ select
     ow.email as email,
     initcap(ow.first_name) as "first_name",
     replace(initcap(ow.last_name), ' Pl', '')
-    + case when lower(t.name::varchar) ~ 'protolabs' then ' (PL)' else '' end as last_name,
-    initcap(first_name)
-    + ' '
-    + replace(initcap(ow.last_name), ' Pl', '')
-    + case when lower(t.name::varchar) ~ 'protolabs' then ' (PL)' else '' end as name,
+        || case 
+            when regexp_like(lower(t.name::varchar), 'protolabs') then ' (PL)' 
+            else '' 
+           end as last_name,
+    initcap(ow.first_name)
+        || ' '
+        || replace(initcap(ow.last_name), ' Pl', '')
+        || case when regexp_like(lower(t.name::varchar), 'protolabs') then ' (PL)' 
+        else '' 
+        end as name,
     ow.user_id as user_id,
     ow.created_at as created_at,
     ow.updated_at as updated_at,
     ow.archived as archived,
     ow.load_timestamp as loaded_at,
     t.name::varchar as primary_team_name,
-    t.primary::bool as is_current
-from {{ source("ext_hubspot", "hubspot_owners") }} ow, ow.teams t
+    cast(t.primary as boolean) as is_current
+from {{ source("ext_hubspot", "hubspot_owners") }} ow, ow.teams t -- todo-migration: join notation of I'm assuming is json doesn't work in snowflake
 where t.primary = true

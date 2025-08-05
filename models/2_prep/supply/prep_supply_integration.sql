@@ -17,9 +17,9 @@ select
     case when lower(consumer_purchase_order_number) = 'Med AZ Batt Test' then false -- exception for customer order that used test in PO
         when
             quote.created < '2022-10-01'
-            or lower(consumer_purchase_order_number) ~ 'test'
-            or ql.request_id ~ 'test'
-            or ql.email ~ 'mailinator'
+            or regexp_like(lower(consumer_purchase_order_number), 'test')
+            or regexp_like(ql.request_id, 'test')
+            or regexp_like(ql.email, 'mailinator')
             or ql.is_protolabs_email
             or ql.is_hubs_email
         then true
@@ -60,3 +60,4 @@ left join
     on ql.quote_id = quote.uuid
     and ql.created_at < '2023-04-01'  -- switched to quicklinks_tracking after April
 where (ql.quote_id is not null or orders.is_external or qt.order_uuid is not null)
+-- todo-migration: doesn't work in dbt but works in Snowflake itself

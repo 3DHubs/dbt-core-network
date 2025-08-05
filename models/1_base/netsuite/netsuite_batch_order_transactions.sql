@@ -1,6 +1,6 @@
 select 
     custbodyquotenumber                         as document_number,
-    bool_or(custbody_batch_order)               as is_netsuite_batch_order
+    max(custbody_batch_order)                   as is_netsuite_batch_order -- todo-migration: bool_ors don't work in snowflake
 
     
 from {{ source('ext_netsuite', 'transaction') }} as netsuite_batch_order_transactions

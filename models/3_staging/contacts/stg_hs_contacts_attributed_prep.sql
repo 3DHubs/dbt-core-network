@@ -89,11 +89,12 @@ select hc.contact_id,
        hc.sf_18_digit_id,
        hc.first_cart_uuid,
        case
-           when lower(hutk_analytics_source) ~ 'offline' and
-                lower(hutk_analytics_source_data_1) ~ 'import' and
+           when regexp_like(lower(hutk_analytics_source), 'offline') and
+                regexp_like(lower(hutk_analytics_source_data_1), 'import') and
                 hc.created_at > '2018-11-18' then 'outbound'
            when lower(hutk_analytics_source_data_1) = 'integration' and
                 hutk_analytics_source_data_2 = '52073'
                then 'outbound'
            else 'inbound' end                                                                        as channel_type
 from hc
+-- todo-migration: sources don't work 

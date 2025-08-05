@@ -34,6 +34,6 @@ select supplier_id,
        is_preferred_auction,
        is_restricted_auction,
        is_automatic_rfq,
-       plan_to_bid_at
+       plan_to_bid_at -- ask Diego why it doesn't pull from network Services. It should be there already 
 
 from {{ ref('sources_network', 'gold_supplier_auctions') }}

@@ -11,6 +11,6 @@ with tiers as (select hubspot_company_id,
                                                       within group (order by tiering_probability asc)
                                                       over (PARTITION BY snapshot_at) then 'low' end as potential_tier,
                       tiering_probability,
-                      row_number() over (partition by hubspot_company_id order by snapshot_at asc) as row
+                      row_number() over (partition by hubspot_company_id order by snapshot_at asc) as row_ -- todo-migration: idk best name for it
                from {{ source('int_analytics', 'customer_tiering') }} )
-select * from tiers where row =1
+select * from tiers where row_ =1
