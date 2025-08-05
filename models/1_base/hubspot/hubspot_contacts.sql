@@ -21,7 +21,7 @@ select nullif(property_lifecyclestage__value, '')::varchar(1024)                
        nullif(property_firstname__value, '')::varchar(1024)                                             as firstname,
        nullif(property_emailtype__value, '')::varchar(1024)                                             as email_type,
        nullif(property_email__value, '')::varchar(1024)                                                 as email,
-       date_trunc('day', property_hubspot_owner_assigneddate__value)                                    as hubspot_owner_assigned_date, --todo-migration: check this column
+       date_trunc('day', property_hubspot_owner_assigneddate__value)                                    as hubspot_owner_assigned_date, --todo-migration-test
        property_createdate__value::timestamp without time zone                                          as createdate,
        vid::bigint                                                                                      as contact_id,
        nullif(property_bdr_campaign__value, '')::varchar(2048)                                          as bdr_campaign,

@@ -67,4 +67,4 @@ select
     )
     order by 1
     
-    
+--todo-migration-test couldn't run in my dbt - alec

@@ -16,6 +16,6 @@ select
     ow.archived as archived,
     ow.load_timestamp as loaded_at,
     t.name::varchar as primary_team_name,
-    t.primary::bool as is_current
-from {{ source("ext_hubspot", "hubspot_owners") }} ow, ow.teams t
+    cast(t.primary as boolean) as is_current
+from {{ source("ext_hubspot", "hubspot_owners") }} ow, ow.teams t --todo-migration-research Join notation of tables; I'm assuming is json doesn't work in snowflake
 where t.primary = true
