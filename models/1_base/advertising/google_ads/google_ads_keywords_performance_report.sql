@@ -81,5 +81,5 @@ select _kw_report_sk,
 from keywords_performance_report_ranked
        left join {{ ref('exchange_rate_daily') }} as rates
               on rates.currency_code_to = keywords_performance_report_ranked.currency
-                     and date_trunc('day', cast(keywords_performance_report_ranked.day as timestamp)) = date_trunc('day', cast(rates.date as timestamp)) --todo-migration: trunc changed to date_trunc, do validation
+                     and date_trunc('day', cast(keywords_performance_report_ranked.day as timestamp)) = date_trunc('day', cast(rates.date as timestamp)) --todo-migration-test: trunc changed to date_trunc, do validation
 where row_number = 1

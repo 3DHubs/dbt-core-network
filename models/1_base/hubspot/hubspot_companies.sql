@@ -2,6 +2,7 @@
 select
     hc.property_createdate__value as created_at,
     hc.property_name__value as name,
+
     null as number_of_employees, --todo-migration-missing
     -- (
     --     case
@@ -10,6 +11,7 @@ select
     --         else hc.property_numberofemployees__value__double
     --     end
     -- )::int as number_of_employees,
+    
     nullif(hc.property_industry__value, '')::varchar as industry,
     hc.companyid::bigint as hubspot_company_id,
     nullif(hc.property_country__value, '')::varchar as country,

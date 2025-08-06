@@ -6,7 +6,7 @@
 
 with stg_gsc_data as (
     select date,
-           case when keys rlike 'https.{3}www.3dhubs.com' then '3dhubs' else 'hubs' end tld, --todo-migration: changed ~ operator for rlike, check data
+           case when keys rlike 'https.{3}www.3dhubs.com' then '3dhubs' else 'hubs' end tld, --todo-migration-test: changed ~ operator for rlike, check data
            translate(keys, '[]', '')                                 as keys_clean,
            split_part(regexp_replace(trim(translate(split_part(keys_clean, ',', 1), '''', '')), 'https://www.{1,3}hubs.com', ''), '#', 1) -- Catering for 3dhubs.com and hubs.com
                                                                      as url,

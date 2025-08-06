@@ -17,11 +17,11 @@ select
     case when lower(consumer_purchase_order_number) = 'Med AZ Batt Test' then false -- exception for customer order that used test in PO
         when
             quote.created < '2022-10-01'
-            or regexp_like(lower(consumer_purchase_order_number), 'test') --todo-migration-test
-            or regexp_like(ql.request_id, 'test') --todo-migration-test
-            or regexp_like(ql.email, 'mailinator') --todo-migration-test
+            or regexp_like(lower(consumer_purchase_order_number), 'test')
+            or regexp_like(ql.request_id, 'test')
+            or regexp_like(ql.email, 'mailinator')
             or ql.is_protolabs_email
-            or ql.is_hubs_email
+            or ql.is_hubs_email 
         then true
         when
             quote.created < '2023-04-17'
@@ -29,7 +29,7 @@ select
             and quote.shipping_country = 'United States'
         then true
         else false
-    end is_test,
+    end is_test, --todo-migration-test replaced ~ for regexp_like
     external_orders.consumer_order_id as integration_order_id,
     ql.request_id as integration_quote_id,
     coalesce(
