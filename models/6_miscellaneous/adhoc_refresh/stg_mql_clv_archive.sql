@@ -115,5 +115,3 @@
 --     and became_mql_at >= '2021-01-01'
 
 -- order by 1
-
---todo-migration adhoc

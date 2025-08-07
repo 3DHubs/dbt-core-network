@@ -20,5 +20,3 @@ where became_mql_at >= '2024-05-01' and is_customer_prediction > 0.01
     {% endif %}
 
 limit 100
-
---todo-migration adhoc
