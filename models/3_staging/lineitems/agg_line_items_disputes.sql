@@ -1,4 +1,4 @@
-with 
+with --todo-migration-test: distinct inside listagg doesn't work in snowflake. So the structure I had to change. Test the CTE
 
 distinct_dispute_description as (
     select distinct 

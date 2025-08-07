@@ -96,4 +96,4 @@ select hc.contact_id,
                 hutk_analytics_source_data_2 = '52073'
                then 'outbound'
            else 'inbound' end                                                                        as channel_type
-from hc --todo-migration-test: sources don't work
+from hc

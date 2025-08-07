@@ -30,4 +30,3 @@ with seed_sales_targets as (
                  left join dbt_prod_core.hubspot_owners own on own.owner_id = s.hubspot_id
             where day = 1 --and own.name = 'Philippe Tarjan'
             order by date
---todo-migration-missing can't test because of snowflake access
