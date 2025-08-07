@@ -30,10 +30,9 @@ select
     lower(description) as description
 from {{ ref('prep_order_history_events') }}
 
-where lower(description) !~ '(aftership|shippo)'
-
-    and lower(description) ~ 'completed|canceled an auction|dispute' -- Note 1
-
+where lower(description) not regexp_like(lower(description), '(aftership|shippo)')
+    and regexp_like(lower(description), 'completed|canceled an auction|dispute')   
+    
     {% if is_incremental() %}
 
         and created > (select max(created) from {{ this }} )
