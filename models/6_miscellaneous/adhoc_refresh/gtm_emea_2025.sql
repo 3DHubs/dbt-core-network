@@ -292,4 +292,4 @@ left join dbt_dev_analytics_jgroot_seed.seed_emea_2025_additional_columns ac on 
 left join dbt_prod_core.prep_countries pc on pc.alpha2_code =(ac.country_iso)
 left join country_network cn on cn.client_id = al.hubspot_company_id and primary_country = 1
 
---todo-migration adhoc
+--todo-migration-adhoc: harcoded reference to Redshift schemas and tables

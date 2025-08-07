@@ -60,5 +60,6 @@
                 from dbt_prod_reporting.fact_orders fo
                 left join dbt_prod_reporting.fact_otr fot ON fo.order_uuid = fot.order_uuid
                 where fot.promised_shipping_at_by_supplier >= dateadd('year',-3,current_date()) --todo-migration-test
---todo-migration-missing can't test because of snowflake access
+
+--todo-migration: hardcoded references to Redshift schemas
     

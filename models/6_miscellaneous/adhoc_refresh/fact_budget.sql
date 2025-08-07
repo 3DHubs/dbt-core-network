@@ -24,4 +24,4 @@ int_analytics.dim_dates dd
 left join business_days bd on date_trunc('month', dd."date") = bd.date
 inner join {{ ref('seed_budget') }} b on b.month =  date_trunc('month', dd.date)
 
---todo-migration adhoc
+--todo-migration-adhoc: hardcoded reference to redshift

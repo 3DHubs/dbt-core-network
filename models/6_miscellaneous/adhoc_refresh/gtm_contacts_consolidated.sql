@@ -188,4 +188,4 @@ select account_id, account_email as email, concat(account_id, account_email) as 
 )
 select distinct * from combine  --where account_id='0013100001elQvFAAU'
 
---todo-migration adhoc
+--todo-migration-adhoc: hardcoded reference to personal schema on Redshift

@@ -42,4 +42,4 @@ select s.order_uuid,
 from status s
 
 
---todo-migration adhoc
+--todo-migration-adhoc: hardcoded reference to Redshift schemas

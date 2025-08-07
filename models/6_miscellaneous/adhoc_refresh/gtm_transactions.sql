@@ -60,4 +60,4 @@ select account_id,
 
 from network_clean where primary_account_nr_rank = 1
 
---todo-migration adhoc
+--todo-migration-adhoc: hardcoded reference to Redshift schemas and tables
