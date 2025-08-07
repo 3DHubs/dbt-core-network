@@ -45,7 +45,7 @@ select
     count(quote.order_uuid) over (partition by integration_platform_type, integration_order_number ) as number_of_orders_per_integration_order,
     case when number_of_orders_per_integration_order > 1 and integration_platform_type = 'papi' then true else false end as is_multi_line_papi_integration
 
-from {{ ref("documents") }} as quote --todo-migration-test  doesn't work in dbt but works in Snowflake itself
+from {{ ref("documents") }} as quote 
 inner join
     {{ ref("orders") }} as orders
     on orders.quote_uuid = quote.uuid
