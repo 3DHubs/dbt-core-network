@@ -96,5 +96,3 @@ select date,
        sum(cost_orginal_currency) as cost_orginal_currency
  from combined
  group by 1,2,3,4,5,6,7,8,9,10,11
-
- --todo-migration-missing can't test because of snowflake access
