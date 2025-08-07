@@ -30,8 +30,8 @@ select
     lower(description) as description
 from {{ ref('prep_order_history_events') }}
 
-where lower(description) not regexp_like(lower(description), '(aftership|shippo)')
-    and regexp_like(lower(description), 'completed|canceled an auction|dispute')   
+where lower(description) not rlike(lower(description), '(aftership|shippo)')
+    and rlike(lower(description), 'completed|canceled an auction|dispute')   --todo-migration-test: replaced ~ for rlike
     
     {% if is_incremental() %}
 
