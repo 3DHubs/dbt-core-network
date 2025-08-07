@@ -4,4 +4,5 @@ select created_at,
        question_1,
        answer_1
 from {{ ref('fact_order_reviews') }}
-where created_at >= date_add('years',-2,date_trunc('year',getdate()))
+where created_at >= dateadd('year',-2,date_trunc('year',current_date())) --todo-migration-test
+

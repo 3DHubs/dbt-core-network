@@ -1,4 +1,3 @@
--- source from Hubspot Stitch setup initially by Nihad.
 with
     deals as (
         select
@@ -37,21 +36,14 @@ select
     nullif(property_mp_concerning_actions__value, '')::varchar(124) as mp_concerning_actions,
     case when property_manually_resourced_deal__value = 'true' then true else false end as is_manually_resourced,
     nullif(property_resourced_deal_original_order_number__value, '')::varchar(124) as resourced_deal_original_order_number,
-    (
-        timestamp 'epoch'
-        + property_first_time_quote_sent_date__value / 1000 * interval '1 second'
-    )::timestamp without time zone as first_time_quote_sent_date,
+    dateadd(second,property_first_time_quote_sent_date__value / 1000, to_timestamp('1970-01-01 00:00:00')) as first_time_quote_sent_date, --todo-migration-test
     nullif(property_dispute_liability__value, '')::varchar(124) as dispute_liability,
-    (
-        timestamp 'epoch'
-        + property_first_time_response_date__value / 1000 * interval '1 second'
-    )::date as first_time_response_date,
+    dateadd(second, property_first_time_response_date__value / 1000, to_date('1970-01-01')) as first_time_response_date, --todo-migration-test
     -- trunc(property_first_time_response_date__value)::date as
     -- first_time_response_date,
-    case when property_expected_shipping_date__value !~ '^[0-9]+$' then null
-    else ( timestamp 'epoch'
-        + property_expected_shipping_date__value / 1000 * interval '1 second'
-    )::date end as im_hs_promised_shipping_at_by_supplier, -- The date entered by the IM deal owner to move the deal stage to "Won In Production." This is referred to as the "Latest Ship By Date" in HubSpot.
+    case when not regexp_like(property_expected_shipping_date__value, '^[0-9]+$') then null
+         else dateadd(second, property_expected_shipping_date__value / 1000, timestamp '1970-01-01 00:00:00')::date
+         end as im_hs_promised_shipping_at_by_supplier, -- The date entered by the IM deal owner to move the deal stage to "Won In Production." This is referred to as the "Latest Ship By Date" in HubSpot. --todo-migration-test
     case
         when property_high_risk__value = 'Yes'
         then true
@@ -73,8 +65,10 @@ select
     nullif(property_sourcing_owner__value, '')::bigint as sourcing_owner,
     nullif(property_company_owner__value, '')::bigint as company_owner_id,
     nullif(property_network_sales_specialist__value, '')::bigint as network_sales_specialist_id,
-    nullif(property_complaint_manager__value, '')::bigint as quality_resolution_specialist_id,
-    nullif(property_paid_sales_rep__value, '')::bigint as paid_sales_rep_id,
+    null as quality_resolution_specialist_id, 
+    -- nullif(property_complaint_manager__value, '')::bigint as quality_resolution_specialist_id, --todo-migration-missing
+    null as paid_sales_rep_id,
+    -- nullif(property_paid_sales_rep__value, '')::bigint as paid_sales_rep_id, --todo-migration-missing
     case
         when property_strategic__value = 'true'
         then true
@@ -99,11 +93,12 @@ select
         when property_hubs_arranges_direct_shipping__ds___value = ''
         then null
     end::boolean as is_hubs_arranged_direct_shipping,
-    case
-        when property_production_rfq__value = 'true'
-        then true
-        else false
-    end::boolean as is_production_rfq,
+    null as is_production_rfq,
+    -- case
+    --     when property_production_rfq__value = 'true'
+    --     then true
+    --     else false
+    -- end::boolean as is_production_rfq, --todo-migration-missing
     case
         when property_was_logistics_shipping_quote_used___value = 'true'
         then true
@@ -128,7 +123,8 @@ select
     nullif(property_original_im_deal_s_order_number__value, '')::varchar(
         2048
     ) as original_im_deal_s_order_number,
-    nullif(property_im_post_sales_value_score__value, '')::varchar(128) as im_post_sales_value_score,
+    null as im_post_sales_value_score,
+    -- nullif(property_im_post_sales_value_score__value, '')::varchar(128) as im_post_sales_value_score, --todo-migration-missing
     nullif(property_im_post_sales_concerning_actions__value, '')::varchar(128) as im_post_sales_concerning_actions,
     nullif(property_critical_to_quality_check_complete__value, '')::varchar(
         2048
@@ -170,7 +166,8 @@ select
     nullif(property_signed_customer_quote_pdf_link__value, '')::varchar(2048) as hubspot_signed_customer_quote_pdf_link,
     nullif(property_why_still_in_production__value, '')::varchar(2048) as why_still_in_production,
     nullif(property_last_page_seen__value, '')::varchar(65535) as last_page_seen,
-    nullif(lower(property_latest_traffic_source_static__value), '')::varchar(124) as last_traffic_source
+    null as last_traffic_source --todo-migration-missing
+    -- nullif(lower(property_latest_traffic_source_static__value), '')::varchar(124) as last_traffic_source
     
 from deals as ehd
 left join

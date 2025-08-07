@@ -40,3 +40,5 @@ select s.order_uuid,
 from status s
 inner join int_analytics.dim_dates d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
                                                           s.start_status_date <= d.date AND end_status_date > d.date order by 1, date
+
+--todo-migration-adhoc: hardcoded reference to Redshift schemas

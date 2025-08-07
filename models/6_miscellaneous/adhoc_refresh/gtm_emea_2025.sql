@@ -291,3 +291,5 @@ left join dbt_dev_analytics_jgroot_seed.temp_factory_industry tfi
 left join dbt_dev_analytics_jgroot_seed.seed_emea_2025_additional_columns ac on ac.creator_account_id = al.creator_account_id
 left join dbt_prod_core.prep_countries pc on pc.alpha2_code =(ac.country_iso)
 left join country_network cn on cn.client_id = al.hubspot_company_id and primary_country = 1
+
+--todo-migration-adhoc: harcoded reference to Redshift schemas and tables

@@ -17,11 +17,11 @@ select
     case when lower(consumer_purchase_order_number) = 'Med AZ Batt Test' then false -- exception for customer order that used test in PO
         when
             quote.created < '2022-10-01'
-            or lower(consumer_purchase_order_number) ~ 'test'
-            or ql.request_id ~ 'test'
-            or ql.email ~ 'mailinator'
+            or regexp_like(lower(consumer_purchase_order_number), 'test')
+            or regexp_like(ql.request_id, 'test')
+            or regexp_like(ql.email, 'mailinator')
             or ql.is_protolabs_email
-            or ql.is_hubs_email
+            or ql.is_hubs_email 
         then true
         when
             quote.created < '2023-04-17'
@@ -29,7 +29,7 @@ select
             and quote.shipping_country = 'United States'
         then true
         else false
-    end is_test,
+    end is_test, --todo-migration-test replaced ~ for regexp_like
     external_orders.consumer_order_id as integration_order_id,
     ql.request_id as integration_quote_id,
     coalesce(
@@ -45,7 +45,7 @@ select
     count(quote.order_uuid) over (partition by integration_platform_type, integration_order_number ) as number_of_orders_per_integration_order,
     case when number_of_orders_per_integration_order > 1 and integration_platform_type = 'papi' then true else false end as is_multi_line_papi_integration
 
-from {{ ref("documents") }} as quote
+from {{ ref("documents") }} as quote 
 inner join
     {{ ref("orders") }} as orders
     on orders.quote_uuid = quote.uuid
@@ -59,4 +59,4 @@ left join
     {{ ref('sources_network', 'gold_quick_link') }} as ql
     on ql.quote_id = quote.uuid
     and ql.created_at < '2023-04-01'  -- switched to quicklinks_tracking after April
-where (ql.quote_id is not null or orders.is_external or qt.order_uuid is not null)
+where (ql.quote_id is not null or orders.is_external or qt.order_uuid is not null) 

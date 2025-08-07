@@ -1,6 +1,6 @@
 
 
-select trunc(acpr.date)                                          as date,
+select date_trunc('day', acpr.date)                                          as date, --todo-migration-test: check date_trunc, changed from trunc()
        'adwords'                                                 as source, --TODO: Requires update to Google Ads?
        acpr.account_id,
        acpr.campaign_id,
@@ -28,7 +28,7 @@ where acpr.date >= '2019-07-01'
 
 union all
 
-select trunc(bcpr.date)                                  as date,
+select date_trunc('day', bcpr.date)                                  as date, --todo-migration-test: check date_trunc, changed from trunc()
        'bing'                                            as source,
        bcpr.account_id,
        bcpr.campaign_id,

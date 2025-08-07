@@ -47,7 +47,7 @@ from keywords_performance_report_ranked
 
 left join {{ ref('exchange_rate_daily') }} as exchange_rate_spot_daily
     on
-        -- todo-migration: replaced the trunc for date_trunc('day', timestamp), check values
+        -- todo-migration-test: replaced the trunc for date_trunc('day', timestamp), check values
         exchange_rate_spot_daily.currency_code_to = keywords_performance_report_ranked.currencycode
         and 
         date_trunc('day', keywords_performance_report_ranked.timeperiod) 

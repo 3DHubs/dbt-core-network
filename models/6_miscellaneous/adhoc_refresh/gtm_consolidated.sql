@@ -112,3 +112,4 @@ with data as (with test as (with services as (select f.account_id,
 select *
 from data
 
+--todo-migration-adhoc: hardcoded reference to personal schema in Redshift

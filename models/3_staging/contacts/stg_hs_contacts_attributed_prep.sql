@@ -89,8 +89,8 @@ select hc.contact_id,
        hc.sf_18_digit_id,
        hc.first_cart_uuid,
        case
-           when lower(hutk_analytics_source) ~ 'offline' and
-                lower(hutk_analytics_source_data_1) ~ 'import' and
+           when regexp_like(lower(hutk_analytics_source), 'offline') and --todo-migration-test
+                regexp_like(lower(hutk_analytics_source_data_1), 'import') and --todo-migration-test
                 hc.created_at > '2018-11-18' then 'outbound'
            when lower(hutk_analytics_source_data_1) = 'integration' and
                 hutk_analytics_source_data_2 = '52073'

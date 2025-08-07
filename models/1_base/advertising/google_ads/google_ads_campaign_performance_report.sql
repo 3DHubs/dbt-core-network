@@ -43,6 +43,6 @@ select customerid                                          as account_id,
        impressions
 from campaign_performance_report_ranked c
          left join {{ ref('exchange_rate_daily') }} as rates
-                   on rates.currency_code_to = c.currency
-                       and trunc(c.date) = trunc(rates.date)
+                     on rates.currency_code_to = c.currency
+                            and date_trunc('day', c.date) = date_trunc('day', rates.date) --todo-migration-test: trunc changed to date_trunc, do validation
 where row_number = 1

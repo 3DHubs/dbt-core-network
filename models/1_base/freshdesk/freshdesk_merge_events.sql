@@ -49,7 +49,7 @@ with numbers as (
                 regexp_count(body_text, '\\d{6,}')                                                     as num_tickets_merged
             from {{ ref('freshdesk_ticket_conversations') }}
             where true
-            and lower(body_text) ~ 'ticket.*merged into'
+            and lower(body_text) rlike 'ticket.*merged into' --todo-migration-test: changed ~ operator for rlike, check data
             and _is_latest)
 select created_at                                 as merged_at,
         id                                         as ticket_conversation_id,

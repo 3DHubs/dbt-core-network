@@ -97,7 +97,7 @@ with
     mql_pred as (
         select hubspot_contact_id,
                predicted_proba,
-               row_number() over (partition by hubspot_contact_id order by model_executed_at asc) as row
+               row_number() over (partition by hubspot_contact_id order by model_executed_at asc) as rn
         from {{ source('int_analytics', 'mql_conversion_pred') }}  pred
     ),
     contacts_prep as (
@@ -150,7 +150,7 @@ select
     is_customer_prediction * clv_24m as original_cpa_price
 from contacts_prep dc
 left join mql_pred pred
-    on dc.hubspot_contact_id = pred.hubspot_contact_id and pred.row = 1
+    on dc.hubspot_contact_id = pred.hubspot_contact_id and pred.rn = 1 --todo-migration-test: changed row for rn, should be fine!
 left join
     clv
     on clv.first_closed_order_technology = dc.mql_technology

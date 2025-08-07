@@ -47,8 +47,5 @@ from campaign_performance_report_ranked
 left join {{ ref('exchange_rate_daily') }} as exchange_rate_spot_daily
     on
         exchange_rate_spot_daily.currency_code_to = campaign_performance_report_ranked.currencycode
-        and trunc(
-            campaign_performance_report_ranked.timeperiod
-        ) = trunc(exchange_rate_spot_daily.date)
-
+        and date_trunc('day', campaign_performance_report_ranked.timeperiod) = date_trunc('day', exchange_rate_spot_daily.date) --todo-migration-test: check if this is correct
 where row_number = 1
