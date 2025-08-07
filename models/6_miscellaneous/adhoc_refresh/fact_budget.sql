@@ -2,15 +2,15 @@
 with business_days as (
 
     select date_trunc('month', date) date,
-           sum(case when weekend_flag is false and holiday_flag is false then 1 else 0 end) as days
+           sum(case when not weekend_flag and not holiday_flag then 1 else 0 end) as days --todo-migration-test: replaced is false for not {field}
     from int_analytics.dim_dates group by 1
     order by 1
 )
 
 select dd.date,
        bd.days as business_days,
-       case when weekend_flag is false and holiday_flag is false then true else false end as is_business_day,
-       case when weekend_flag is false and holiday_flag_us is false then true else false end as is_business_day_us,
+       case when not weekend_flag and not holiday_flag then true else false end as is_business_day, --todo-migration-test: replaced is false for not {field}
+       case when not weekend_flag and not holiday_flag_us then true else false end as is_business_day_us, --todo-migration-test: replaced is false for not {field}
        b.month,
        b.integration,
        b.kpi,
