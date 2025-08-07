@@ -311,7 +311,7 @@ sources:
         error_after: {count: 24, period: hour}
       loaded_at_field: _sdc_received_at
       
-  # todo-migration: this source is not available yet, add when ready
+  # todo-migration-missing: this source is not available yet, add when ready
   # - name: _ext_bing_factory
   #   loaded_at_field: _sdc_received_at
   #   tables:

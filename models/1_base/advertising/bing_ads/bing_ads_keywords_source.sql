@@ -21,7 +21,7 @@ select
     'network_amer' as source
 from {{ source('ext_bing', 'keyword_performance_report') }}
 union all
--- todo-migration: the table below is not available yet, add when available
+-- todo-migration-missing: the table below is not available yet, add when available
 {#
 -- select
 --     __sdc_primary_key,
