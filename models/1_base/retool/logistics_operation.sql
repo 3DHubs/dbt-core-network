@@ -12,15 +12,17 @@ select
     NULL                                                                                                     as destination_company,
     NULL                                                                                                     as destination_state_code,
     NULL                                                                                                     as destination_zip_code,
-    coalesce(
-        case when total_weight ~ '^[0-9]+(\.[0-9]+)?$' then cast(total_weight as numeric) 
-        else null end, 0)                                                                                    as package_total_weight_kg,
-    coalesce( 
-        case when total_weight ~ '^[0-9]+(\.[0-9]+)?$' then cast(total_weight as numeric) 
-        else null end, 0) / 0.45359237                                                                       as package_total_weight_lb,  -- Convert kg to pounds
+    coalesce(case when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number) 
+        else null 
+    end, 0)                                                                                                  as package_total_weight_kg, --todo-migration-test
+    coalesce(case when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number) 
+        else null 
+    end, 0) / 0.45359237                                                                                     as package_total_weight_lb  -- Convert kg to pounds --todo-migration-test
+
 
     -- Timestamp Fields
-    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH:MI:SS.MS')::timestamp       as logistics_operation_start_time,
+    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'yyyy-mm-dd hh24:mi:ss.ff')
+                as logistics_operation_start_time, --todo-migration-test
     created_at                                                                                               as label_created_at,
     updated_at                                                                                               as logistics_operation_updated_at,
     extract(epoch from (label_created_at - logistics_operation_start_time))                                  as time_spent_in_seconds,
@@ -48,12 +50,15 @@ select
     destination_company,
     destination_state_code,
     destination_zip                                                                                          as destination_zip_code,
+    coalesce(case when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number) 
+        else null 
+    end, 0) * 0.45359237                                                                                     as package_total_weight_kg,  -- Convert to kg --todo-migration-test
     coalesce( 
-        case when total_weight ~ '^[0-9]+(\.[0-9]+)?$' then cast(total_weight as numeric) 
-        else null end, 0) * 0.45359237                                                                       as package_total_weight_kg,  -- Convert to kg
-    coalesce(
-        case when total_weight ~ '^[0-9]+(\.[0-9]+)?$' then cast(total_weight as numeric) 
-        else null end, 0)                                                                                    as package_total_weight_lb,  -- Original weight in lb  
+    case 
+        when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number) 
+        else null 
+    end, 0)                                                                                                  as package_total_weight_lb  -- Original weight in lb --todo-migration-test
+
 
     -- Timestamp Fields   
     to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH:MI:SS.MS')::timestamp       as logistics_operation_start_time,
@@ -84,11 +89,12 @@ select
     null                                                                                                     as destination_state_code,
     null                                                                                                     as destination_zip_code,
     coalesce(
-    case when total_weight ~ '^[0-9]+(\.[0-9]+)?$' then cast(total_weight as numeric)
-    else null end, 0)                                                                                        as package_total_weight_kg,  -- Original weight in kg
+    case when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number)
+    else null end, 0)                                                                                        as package_total_weight_kg,  -- Original weight in kg --todo-migration-test
     coalesce(
-    case when total_weight ~ '^[0-9]+(\.[0-9]+)?$' then cast(total_weight as numeric) * 2.20462
-    else null end, 0)                                                                                        as package_total_weight_lb,  -- Convert to lb
+    case when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number) * 2.20462
+    else null end, 0)                                                                                        as package_total_weight_lb,  -- Convert to lb --todo-migration-test
+
 
     -- Timestamp Fields
     to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH:MI:SS.MS')::timestamp       as logistics_operation_start_time,
