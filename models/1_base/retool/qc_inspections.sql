@@ -7,9 +7,10 @@ select
        completed_at,
        created_at,
        time_spent::decimal                                    as inspection_time_spent_seconds,
-       case 
-            when paused_time_total > 0 then dateadd(second, paused_at, timestamp 'epoch')
-            else null end                                     as paused_at, --todo-migration-test: replaced multiplication of number by interval, to be checked
+       case
+        when paused_time_total > 0 then dateadd(second, paused_time_total, to_timestamp_ntz('1970-01-01 00:00:00'))
+        else null 
+        end                                                   as paused_at, --todo-migration-test: replaced multiplication of number by interval, to be checked; changed epoch -alec
        paused_time_total::decimal                             as total_inspection_paused_time_seconds,
        
        doc_status                                             as document_status,
