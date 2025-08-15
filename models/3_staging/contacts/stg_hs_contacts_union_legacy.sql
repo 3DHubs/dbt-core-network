@@ -39,3 +39,5 @@ select
        sf_18_digit_id,
        rank() over (partition by email order by createdate desc) as rnk_desc_email 
 from union_contacts
+
+--todo-migration-research doesn't run because of a long string
