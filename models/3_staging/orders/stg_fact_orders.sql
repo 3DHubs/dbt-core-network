@@ -192,7 +192,7 @@ select
     hs_deals.resourced_deal_original_order_number,
     case
         when hs_deals.hubspot_pl_cross_sell_channel is not null then hs_deals.hubspot_pl_cross_sell_channel
-        when lower(hs_deals.hubspot_company_name) ~ 'protolabs' then 'Twin-Win'
+        when regexp_like(lower(hs_deals.hubspot_company_name), 'protolabs') then 'Twin-Win' --todo-migration-test
         when pl_sales_rep_name is not null then 'Twin-Win'
     end                                                                                          as pl_cross_sell_channel,
     coalesce(integration_platform_type is not null or pl_cross_sell_channel is not null, false)  as is_integration_tmp,
