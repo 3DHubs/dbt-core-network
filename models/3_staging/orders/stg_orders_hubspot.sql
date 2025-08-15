@@ -64,7 +64,7 @@ with stg as (
         own.name                                                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
         own.office_location,
-        trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp
+        date_trunc('day', hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp --todo-migration-test
         fst.sales_lead_id                                                                 as sales_lead_id,
         fst.sales_lead                                                                    as sales_lead_name,
         hs.bdr_assigned                                                                   as bdr_owner_id,

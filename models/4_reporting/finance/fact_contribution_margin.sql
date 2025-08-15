@@ -6,7 +6,7 @@ select  fpo.po_uuid                            as source_uuid,
         fpo.po_document_number                 as source_document_number,
         'cost'                                 as type,
         fpo.order_uuid,
-        trunc(fpo.cost_recognized_at)          as recognized_date,
+        date_trunc('day', fpo.cost_recognized_at)          as recognized_date, --todo-migration-test
         fpo.source_currency,
         fpo.exchange_rate_po                   as exchange_rate,
         fpo.exchange_rate_at_sourcing          as exchange_rate_intial, -- exchange rate at sourcing
@@ -20,7 +20,7 @@ select  fi.invoice_uuid                       as source_uuid,
         fi.invoice_document_number            as source_document_number,
         'revenue'                             as type,
         fi.order_uuid,
-        trunc(fi.revenue_recognized_at)       as recognized_date,
+        date_trunc('day', fi.revenue_recognized_at)       as recognized_date, --todo-migration-test
         fi.invoice_source_currency            as source_currency,
         fi.exchange_rate_invoices             as exchange_rate,
         fi.exchange_rate_at_closing           as exchange_rate_intial, -- exchange rate at closing

@@ -37,8 +37,8 @@ select  dcps.hubspot_contact_id,
             when dcps.stg_hsa_keyword_id is not null and coalesce(advertising_campaign_group, '') <> 'Display' then
                 coalesce(cpc.adgroup_id, keywords.adgroup_id)
             else null end                                                                 as advertising_adgroup_id,
-        trunc(
-                coalesce(cpc.date, dcps.hutk_analytics_first_visit_timestamp::timestamp)) as advertising_click_date,
+        date_trunc('day', 
+                coalesce(cpc.date, dcps.hutk_analytics_first_visit_timestamp::timestamp)) as advertising_click_date, --todo-migration-test
         lower(coalesce(cpc.device, nullif({{dbt_utils.get_url_parameter('hutk_analytics_first_url', 'device') }},
                                             '')))                                           as stg_device,
         case
