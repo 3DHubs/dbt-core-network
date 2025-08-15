@@ -17,15 +17,14 @@ select
     end, 0)                                                                                                  as package_total_weight_kg, --todo-migration-test
     coalesce(case when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number) 
         else null 
-    end, 0) / 0.45359237                                                                                     as package_total_weight_lb  -- Convert kg to pounds --todo-migration-test
-
+    end, 0) / 0.45359237                                                                                     as package_total_weight_lb,  -- Convert kg to pounds --todo-migration-test
 
     -- Timestamp Fields
-    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'yyyy-mm-dd hh24:mi:ss.ff')
-                as logistics_operation_start_time, --todo-migration-test
+    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH24:MI:SS.FF')                as logistics_operation_start_time, --todo-migration-test
     created_at                                                                                               as label_created_at,
     updated_at                                                                                               as logistics_operation_updated_at,
-    extract(epoch from (label_created_at - logistics_operation_start_time))                                  as time_spent_in_seconds,
+    datediff(second, logistics_operation_start_time, label_created_at)                                       as time_spent_in_seconds, --todo-migration-test
+
 
     -- Boolean Fields   
     {{ varchar_to_boolean('is_conforming') }}                                                                
@@ -57,14 +56,14 @@ select
     case 
         when regexp_like(total_weight, '^[0-9]+(\.[0-9]+)?$') then cast(total_weight as number) 
         else null 
-    end, 0)                                                                                                  as package_total_weight_lb  -- Original weight in lb --todo-migration-test
+    end, 0)                                                                                                  as package_total_weight_lb,  -- Original weight in lb --todo-migration-test
 
 
     -- Timestamp Fields   
-    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH:MI:SS.MS')::timestamp       as logistics_operation_start_time,
+    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH24:MI:SS.FF')                as logistics_operation_start_time,
     created_at                                                                                               as label_created_at,
     NULL                                                                                                     as logistics_operation_updated_at,
-    extract(epoch from (label_created_at - logistics_operation_start_time))                                  as time_spent_in_seconds,
+    datediff(second, logistics_operation_start_time, label_created_at)                                       as time_spent_in_seconds, --todo-migration-test
 
     -- Boolean Fields
     {{ varchar_to_boolean('is_conforming') }}                                                                                            
@@ -97,10 +96,10 @@ select
 
 
     -- Timestamp Fields
-    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH:MI:SS.MS')::timestamp       as logistics_operation_start_time,
+    to_timestamp(replace(replace(started_at, 'T', ' '), 'Z', ''), 'YYYY-MM-DD HH24:MI:SS.FF')                as logistics_operation_start_time,
     created_at                                                                                               as label_created_at,
     null                                                                                                     as logistics_operation_updated_at,
-    extract(epoch from (label_created_at - logistics_operation_start_time))                                  as time_spent_in_seconds,
+    datediff(second, logistics_operation_start_time, label_created_at)                                       as time_spent_in_seconds, --todo-migration-test
 
     --Boolean Fields
     {{ varchar_to_boolean('is_conforming') }}
