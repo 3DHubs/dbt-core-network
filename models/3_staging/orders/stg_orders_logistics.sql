@@ -54,10 +54,10 @@ with supply_cdt as (
         -- the first_leg_carrier_name mentioned below.
         agg_shipment as (
             select fs_first_leg.order_uuid,
-                listagg(fs_first_leg.carrier_name)         as first_leg_carrier_name,
-                listagg(fs_first_leg.carrier_name_mapped)  as first_leg_carrier_name_mapped,
-                listagg(fs_second_leg.carrier_name)        as second_leg_carrier_name,
-                listagg(fs_second_leg.carrier_name_mapped) as second_leg_carrier_name_mapped
+                listagg(fs_first_leg.carrier_name, ' ')         as first_leg_carrier_name, --todo-migration-test listagg
+                listagg(fs_first_leg.carrier_name_mapped, ' ')  as first_leg_carrier_name_mapped, --todo-migration-test listagg
+                listagg(fs_second_leg.carrier_name, ' ')        as second_leg_carrier_name, --todo-migration-test listagg
+                listagg(fs_second_leg.carrier_name_mapped, ' ') as second_leg_carrier_name_mapped --todo-migration-test listagg
 
             from {{ ref('fact_shipments') }} as fs_first_leg
                     left join {{ ref('fact_shipments') }} as fs_second_leg
