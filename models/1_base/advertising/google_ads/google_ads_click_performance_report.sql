@@ -22,7 +22,7 @@ select distinct
        date                                          as date,
        device,
        click_view_gclid                             as google_click_id,
-       reverse(split_part(reverse(click_view_keyword),'~',1))::bigint   as keyword_id,
+       reverse(split_part(reverse(click_view_keyword),'~',1))::bigint   as keyword_id, --todo-migration-research reverse function
        click_view_keyword_info__text                as keyword
 from {{ source('ext_google_ads_console', 'click_performance_report') }}
 union
