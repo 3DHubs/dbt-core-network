@@ -87,7 +87,7 @@ seeds:
 
 # Snapshot configuration
 snapshots:
-  +target_schema: dbt_prod_snapshots
+  +schema: dbt_prod_snapshots
 
 # Tests
 
