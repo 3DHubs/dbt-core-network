@@ -61,8 +61,8 @@ with account as (select creator_account_id,
                                 when DATE_PART('year', sourced_at) = 2024
                                     then subtotal_sourced_amount_usd end)                                            as order_amount_2024,
                         max(case
-                                when sourced_at > date_add('months', -12, getdate()) then sourced_at
-                                else '2000-01-01' end)                                                               as last_order_date_n,
+                                when sourced_at > dateadd('month', -12, current_date) then sourced_at
+                                else '2000-01-01' end)                                                               as last_order_date_n, --todo-migration-test dateadd current_date
                         row_number()
                         over (partition by dc.hubspot_company_id order by last_order_date_n desc, order_amount desc) as primary_account_nr
 
