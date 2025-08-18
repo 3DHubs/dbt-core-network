@@ -22,9 +22,9 @@
                 from companies
                 where
                     date_trunc('month', became_customer_at)
-                    >= date_trunc('month', date_add('month', -30, getdate()))
-                    and date_trunc('month', became_customer_at)
-                    < date_trunc('month', date_add('month', -0, getdate()))
+                    >= date_trunc('month', dateadd('month', -30, current_date))
+                    and date_trunc('month', became_customer_at) 
+                    < date_trunc('month', current_date) --todo-migration-test dateadd current_date
                 group by 1, 2, 3
             ),
             cohort_sales as (
@@ -62,11 +62,11 @@
                         )
                     )
                     and date_trunc('month', dcom.became_customer_at)
-                    >= date_trunc('month', date_add('month', -30, getdate()))
-                    and date_trunc('month', dcom.became_customer_at)
-                    < date_trunc('month', date_add('month', -0, getdate()))
+                    >= date_trunc('month', dateadd('month', -30, current_date))
+                    and date_trunc('month', dcom.became_customer_at) 
+                    < date_trunc('month', current_date) 
                     and is_sourced
-                    and (datediff('month', fo.sourced_at, current_date) > 0)
+                    and (datediff('month', fo.sourced_at, current_date) > 0) --todo-migration-test dateadd current_date
                 group by 1, 2, 3
                 order by 2, 3, 1
             )
