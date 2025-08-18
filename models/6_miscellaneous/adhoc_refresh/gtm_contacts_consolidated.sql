@@ -2,7 +2,7 @@ with contacts as (with factory_account as (select f.account_id,
                                 contact_email,
                                 account_name,
                                 max(case
-                                        when ordered_date > date_add('months', -12, getdate()) then ordered_date
+                                        when ordered_date > dateadd('month', -12, current_date) then ordered_date
                                         else '2000-01-01' end)                                             as last_order_date_f,
                                 max(ordered_date::timestamp) as factory_last_order_date,
                                 count(distinct sales_order_id) as factory_order_count,
@@ -22,7 +22,7 @@ with contacts as (with factory_account as (select f.account_id,
                                 dc.name,
                                 dc.closed_sales_usd as hubspot_company_order_amount,
                                 max(case
-                                        when sourced_at > date_add('months', -12, getdate()) then sourced_at
+                                        when sourced_at > dateadd('month', -12, current_date) then sourced_at
                                         else '2000-01-01' end)                                                    as last_order_date_n,
                                 max(sourced_at::timestamp) as last_order_date,
                                 count(distinct order_uuid) as order_count,
