@@ -11,4 +11,5 @@ select ticket_id,
        first_response_reply_date as first_response_reply_at,
        first_response_time_in_hours
 from  {{ ref('fact_freshdesk_tickets') }}
-where created_date >= date_add('years',-2,date_trunc('year',getdate()))
+where created_date >= dateadd(year, -2, date_trunc('year', current_date)) --todo-migration-test --date_add current_date
+
