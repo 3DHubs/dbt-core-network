@@ -22,9 +22,9 @@ with
                 from contacts
                 where
                     date_trunc('month', became_customer_at)
-                    >= date_trunc('month', date_add('month', -30, getdate()))
+                    >= date_trunc('month', dateadd(month, -30, current_date)) --todo-migration-test current_date dateadd
                     and date_trunc('month', became_customer_at)
-                    < date_trunc('month', date_add('month', -0, getdate()))
+                    < date_trunc('month', current_date) --todo-migration-test current_date
                 group by 1, 2, 3
             ),
             cohort_sales as (
@@ -62,11 +62,11 @@ with
                         )
                     )
                     and date_trunc('month', dcom.became_customer_at)
-                    >= date_trunc('month', date_add('month', -30, getdate()))
+                    >= date_trunc('month', dateadd(month, -30, current_date)) --todo-migration-test dateadd
                     and date_trunc('month', dcom.became_customer_at)
-                    < date_trunc('month', date_add('month', -0, getdate()))
+                    < date_trunc('month', current_date) --todo-migration-test current_date  
                     and is_sourced
-                    and (datediff('month', fo.sourced_at, current_date) > 0)
+                    and datediff('month', fo.sourced_at, current_date) > 0 --todo-migration-test current_date
                 group by 1, 2, 3
                 order by 2, 3, 1
             )
@@ -156,7 +156,7 @@ left join
     on clv.first_closed_order_technology = dc.mql_technology
     and clv.region = dc.region
     and clv.cohort = 1
-    where became_mql_at >= '2021-01-01' and (became_mql_at < date_add('days',-2,getdate())
+    where became_mql_at >= '2021-01-01' and (became_mql_at < dateadd(day, -2, current_date) --todo-migration-test current_date
     or predicted_proba is not null )
 
 order by 1
