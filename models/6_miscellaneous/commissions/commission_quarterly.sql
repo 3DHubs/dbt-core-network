@@ -26,7 +26,7 @@ with  quarterly_closed_amount_directors as (
       group by 1,2),
       quarterly_directors as (
       select
-      date_add('month',2,commission_date) as commission_date,
+      dateadd(month, 2, commission_date) as commission_date, --todo-migration-test dateadd
       null::bigint as order_hubspot_deal_id,
       employee,
       target_amount_usd, 
@@ -63,7 +63,7 @@ with  quarterly_closed_amount_directors as (
       group by 1,2),
       quarterly_integration_lead as (
       select
-      date_add('month',2,commission_date) as commission_date,
+      dateadd(month, 2, commission_date) as commission_date, --todo-migration-test dateadd current_date
       null::bigint as order_hubspot_deal_id,
       employee,
       target_amount_usd, 
@@ -100,7 +100,7 @@ with  quarterly_closed_amount_directors as (
       group by 1,2),
       quarterly_technical_manager as (
       select
-      date_add('month',2,commission_date) as commission_date,
+      dateadd('month', 2, commission_date) as commission_date, --todo-migration-test dateadd 
       null::bigint as order_hubspot_deal_id,
       employee,
       target_amount_usd, 
@@ -140,7 +140,7 @@ with  quarterly_closed_amount_directors as (
       group by 1,2,3,4,5),
       quarterly_leads as (
       select
-       date_add('month',2,commission_date) as commission_date,
+       dateadd('month', 2, commission_date) as commission_date, --todo-migration-test dateadd 
       null::bigint as order_hubspot_deal_id,
       employee,
       target_amount_usd, 
@@ -174,7 +174,7 @@ with  quarterly_closed_amount_directors as (
       round(sum( case when is_strategic then subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0) else 0 end) , 2)                  as subtotal_closed_amount_usd,
       round(sum(subtotal_closed_amount_usd - coalesce(shipping_amount_usd, 0)) , 2)                                                          as subtotal_threshold_amount_usd -- used for 75% threshold calculation
       from dbt_prod_reporting.fact_orders fo
-      left join dbt_prod_snapshots.snap_dim_companies_hubspot_owner owner on fo.hubspot_company_id = owner.hubspot_company_id and closed_at >= owner.dbt_valid_from and closed_at < coalesce(owner.dbt_valid_to, getdate())
+      left join dbt_prod_snapshots.snap_dim_companies_hubspot_owner owner on fo.hubspot_company_id = owner.hubspot_company_id and closed_at >= owner.dbt_valid_from and closed_at < coalesce(owner.dbt_valid_to, current_date) --todo-migration-test current_date
       inner join {{ ref('commission_rules') }} c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fo.hubspot_owner_id
       left join dbt_prod_core.hubspot_owners own on own.owner_id = owner.hubspot_owner_id
       where true
@@ -204,7 +204,7 @@ with  quarterly_closed_amount_directors as (
       from quarterly_closed_amount qa
       inner join quarterly_target qt on qt.hubspot_id = qa.hubspot_owner_id and qt.target_date = qa.commission_date),
       quarterly_strategic as (
-      select  date_add('month',2,commission_date) as commission_date,
+      select dateadd('month', 2, commission_date) as commission_date, --todo-migration-test dateadd
       null::bigint as order_hubspot_deal_id,
       employee,
       'Quarterly Strategic'::text as commission_plan,
@@ -216,7 +216,7 @@ with  quarterly_closed_amount_directors as (
       group by commission_date, employee
       ),
       quarterly_overperformance as (
-      select  date_add('month',2,commission_date) as commission_date,
+      select dateadd('month', 2, commission_date) as commission_date, --todo-migration-test dateadd
       null::bigint as order_hubspot_deal_id,
       employee,
       'Quarterly Strategic'::text as commission_plan,
