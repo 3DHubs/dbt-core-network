@@ -7,4 +7,4 @@ select interaction_id,
        customer_interaction_count,
        is_first_interaction
 from {{ ref('fact_freshdesk_interactions') }}
-where created_date >= date_add('years',-2,date_trunc('year',getdate()))
+where created_date >= dateadd('year', -2, date_trunc('year', current_date)) --todo-migration-test dateadd current_date
