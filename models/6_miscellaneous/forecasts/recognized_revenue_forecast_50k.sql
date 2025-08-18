@@ -61,7 +61,7 @@ with dates as
                                 'sold'                                                                           as type
                                from {{ ref("fact_orders") }} as fo
                                         left join average_values av on fo.technology_name = av.avg_technology_name
-                               where fo.sourced_at >= date_add('year', -2, getdate())
+                               where fo.sourced_at >= dateadd('year', -2, current_date) --todo-migration-test dateadd current_date
                                  and fo.subtotal_sourced_amount_usd >= 50000
                                  and fo.recognized_at is null
                                group by 1, 2, 4, 5
@@ -80,7 +80,7 @@ with dates as
                                 'sold'                                                                                       as type
                                 from {{ ref("fact_orders") }} as fo
                                           left join average_values av on fo.technology_name = av.avg_technology_name
-                                where fo.sourced_at >= date_add('year', -2, getdate())
+                                where fo.sourced_at >= dateadd('year', -2, current_date) --todo-migration-test dateadd current_date
                                    and fo.subtotal_sourced_amount_usd >= 50000
                                    and fo.recognized_at is null
                                  group by 1, 2, 4, 5
@@ -98,7 +98,7 @@ with dates as
 
                               from {{ ref("fact_orders") }} as fo
                                        left join average_values av on fo.technology_name = av.avg_technology_name
-                              where fo.sourced_at >= date_add('year', -2, getdate())
+                              where fo.sourced_at >= dateadd('year', -2, current_date) --todo-migration-test dateadd current_date
                                 and fo.subtotal_sourced_amount_usd >= 50000
                                 and fo.recognized_at is null
                               group by 1, 2, 4, 5
@@ -140,22 +140,24 @@ with dates as
                  from {{ ref("fact_orders") }} as fo
                           cross join (select distinct date_trunc('month', d.date) as date
                                       from {{ source("int_analytics", "dim_dates") }} d
-                                      where d.date >= getdate()
-                                        and d.date < date_add('months', 3, date_trunc('month', getdate()))) d
+                                      where d.date >= current_date
+                                            and d.date < dateadd('month', 3, date_trunc('month', current_date))) d --todo-migration-test dateadd current_date
                  where subtotal_sourced_amount_usd >= 50000
-                   and promised_shipping_at_to_customer >= date_add('month', -6, date_trunc('months', getdate()))
-                   and promised_shipping_at_to_customer < date_trunc('months', getdate())
+                   and promised_shipping_at_to_customer >= dateadd('month', -6, date_trunc('month', current_date)) --todo-migration-test dateadd current_date
+                   and promised_shipping_at_to_customer < date_trunc('month', current_date) --todo-migration-test  current_date
                  group by 1, 2, 3
                  order by 1, 2, 3)
         ,
      high_f as (select technology_name,
-                       case when date_add('day', 7 + lead_time + 14, date) < getdate() then
-                            case when date_add('day', av.avg_recognition_delay,date_add('day', 7 + lead_time + 14, date)) < getdate() then
-                                 case when dateadd(day, av.high_recognition_delay,date_add('day', 7 + lead_time + 14, date)) < getdate() then
-                                  null
-                                      else dateadd(day, av.high_recognition_delay, date_add('day', 7 + lead_time + 14, date)) end
-                                 else dateadd(day, av.high_recognition_delay, date_add('day', 7 + lead_time + 14, date)) end
-                            else date_add('day', 7 + lead_time + 14, date) end                                          as recognized_date,
+                       case when dateadd('day', 7 + lead_time + 14, date) < current_date then
+                            case when dateadd('day', av.avg_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) < current_date then
+                                case when dateadd('day', av.high_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) < current_date then null
+                                     else dateadd('day', av.high_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) 
+                                end
+                                else dateadd('day', av.high_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) 
+                                end 
+                            else dateadd('day', 7 + lead_time + 14, date) 
+                        end                                                                                             as recognized_date, --todo-migration-test dateadd current_date
                        sum(run_rate_sourced_amount)                                                                     as forecast_amount,
                        '1 high'                                                                                         as expectation,
                        'forecast'                                                                                       as type
@@ -164,11 +166,10 @@ with dates as
                 group by 1, 2, 4, 5)
         ,
      medium_f as (select technology_name,
-                         case when date_add('day', av.avg_recognition_delay, date_add('day', 7 + lead_time + 14, date)) < getdate() then
-                              case when dateadd(day, av.high_recognition_delay, date_add('day', 7 + lead_time + 14, date)) < getdate() then
-                               null
-                                   else dateadd(day, av.high_recognition_delay, date_add('day', 7 + lead_time + 14, date)) end
-                              else date_add('day', av.avg_recognition_delay, date_add('day', 7 + lead_time + 14, date)) end        as recognized_date,
+                         case when dateadd('day', av.avg_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) < current_date then
+                                case when dateadd('day', av.high_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) < current_date then null
+                              else dateadd('day', av.high_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) end
+                              else dateadd('day', av.avg_recognition_delay, dateadd('day', 7 + lead_time + 14, date))end           as recognized_date, --todo-migration-test dateadd current_date
                          sum(run_rate_sourced_amount)                                                                              as forecast_amount,
                          '2 medium'                                                                                                as expectation,
                          'forecast'                                                                                                as type
@@ -177,9 +178,9 @@ with dates as
                   group by 1, 2, 4, 5)
         ,
      low_f as (select technology_name,
-                      case when dateadd(day, av.high_recognition_delay, date_add('day', 7 + lead_time + 14, date)) < getdate() then 
-                       null
-                           else dateadd(day, av.high_recognition_delay, date_add('day', 7 + lead_time + 14, date)) end             as recognized_date,
+                      case when dateadd('day', av.high_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) < current_date then null
+                        else dateadd('day', av.high_recognition_delay, dateadd('day', 7 + lead_time + 14, date)) 
+                        end                                                                                                        as recognized_date, --todo-migration-test dateadd current_date
                       sum(run_rate_sourced_amount) forecast_amount,
                       '3 low'                                                                                                      as expectation,
                       'forecast'                                                                                                   as type
