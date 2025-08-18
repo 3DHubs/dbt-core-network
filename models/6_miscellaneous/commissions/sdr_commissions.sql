@@ -40,7 +40,7 @@ with seed_file_data as (
                 else ds.first_sourced_order end                                   as first_sourced_order_at,
 
             date_trunc('quarter', supplier_created_date)::date                    as commission_start_at,  -- First day of the Commission start quarter, based on creation date of supplier
-            date_add('day', -1, date_add('Month', 12, commission_start_at))::date as commission_end_at -- Last day of the Commission end quarter
+            dateadd('day', -1, dateadd('month', 12, commission_start_at))::date as commission_end_at -- Last day of the Commission end quarter --todo-migration-test dateadd
         from transformed_seed_file as tsf
             left join {{ ref('dim_suppliers') }} as ds on tsf.supplier_id = ds.supplier_id
     ),
