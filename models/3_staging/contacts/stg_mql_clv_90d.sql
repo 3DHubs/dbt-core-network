@@ -43,10 +43,9 @@ with
         from {{ ref("fact_orders") }} fo
         inner join contacts c on c.hubspot_contact_id = fo.hubspot_contact_id
         where
-            fo.sourced_at < date_add('days', 90, c.became_customer_at)
-            and c.became_customer_at
-            > date_add('years', -2, date_add('days', -90, getdate()))
-            and c.became_customer_at < date_add('days', -90, getdate())
+            fo.sourced_at < dateadd(day, 90, c.became_customer_at)
+            and c.became_customer_at > dateadd(year, -2, dateadd(day, -90, current_date)) --todo-migration-test dateadd/current date
+            and c.became_customer_at < dateadd(day, -90, current_date) --todo-migration-test dateadd/current date
         group by 1, 2, 3
     ),  -- select * from clv;
     mql_pred as (
@@ -55,7 +54,7 @@ with
             predicted_proba,
             row_number() over (
                 partition by hubspot_contact_id order by model_executed_at asc
-            ) as row
+            ) as row_num --todo-migration-test renamed row
         from {{ source("int_analytics", "mql_conversion_pred") }} pred
     )
 select
@@ -72,7 +71,7 @@ select
     is_customer_prediction * clv_90d as cpa_price
 from contacts dc
 left join
-    mql_pred pred on dc.hubspot_contact_id = pred.hubspot_contact_id and pred.row = 1
+    mql_pred pred on dc.hubspot_contact_id = pred.hubspot_contact_id and pred.row_num = 1 --todo-migration-test renamed the row
 left join
     clv
     on clv.first_closed_order_technology = dc.mql_technology
