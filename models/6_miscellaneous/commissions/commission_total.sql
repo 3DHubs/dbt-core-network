@@ -13,9 +13,9 @@ with all_commissions as (
       commission_usd,
       own.owner_id
       from all_commissions
-      left join dbt_prod_core.hubspot_owners own on own.name = all_commissions.employee and own.is_current is true
+      left join dbt_prod_core.hubspot_owners own on own.name = all_commissions.employee and own.is_current = true --todo-migration-test replaced is with =
       where true
       --and employee is not null
-      and commission_date is not null
+      and commission_date <> null 
       and commission_usd <> 0
       order by commission_date desc, employee
