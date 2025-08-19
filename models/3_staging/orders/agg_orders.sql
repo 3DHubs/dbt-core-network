@@ -33,9 +33,9 @@ select
 -- CONTACT FIELDS
 
     -- Lifecycle
-    case when hubspot_contact_id is not null then min(created_at) over (partition by hubspot_contact_id) end                                           as became_created_at_contact,
-    case when hubspot_contact_id is not null then min(submitted_at) over (partition by hubspot_contact_id) end                                         as became_opportunity_at_contact,
-    case when hubspot_contact_id is not null then min(closed_at) over (partition by hubspot_contact_id) end                                            as became_customer_at_contact,
+    case when hubspot_contact_id <> null then min(created_at) over (partition by hubspot_contact_id) end                                           as became_created_at_contact, --todo-migration-test <> instead of is not
+    case when hubspot_contact_id <> null then min(submitted_at) over (partition by hubspot_contact_id) end                                         as became_opportunity_at_contact, --todo-migration-test <> instead of is not
+    case when hubspot_contact_id <> null then min(closed_at) over (partition by hubspot_contact_id) end                                            as became_customer_at_contact, --todo-migration-test <> instead of is not
     max(created_at) over (partition by hubspot_contact_id)                                                                                             as recent_order_created_at_contact,
     nth_value(case when is_closed then closed_at else null end, 2)
        over (partition by hubspot_contact_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)          as second_order_closed_at_contact,
