@@ -120,7 +120,7 @@ select
              left join {{ ref('exchange_rate_daily') }} as rates
                              on rates.currency_code_to = docs.currency_code 
                              -- From '2022-04-01' we started using the more appropriate closing date as exchange rate date for closing values instead of quote finalized_at, this has been changed but not retroactively.
-                             and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, docs.finalized_at, docs.created)) = trunc(rates.date)
+                             and date_trunc('day', coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, docs.finalized_at, docs.created)) = date_trunc('day', rates.date) --todo-migration-test
 
              left join {{ ref('tolerances') }} t on t.id = li.tolerance_id      
 

@@ -38,7 +38,7 @@ with
             end as has_churned_at,
 
             case
-                when delta_current_previous_order is not null
+                when delta_current_previous_order <> null --todo-migration-test = from is
                 then delta_current_previous_order > 365
                 else false
             end as reactivated,
@@ -52,7 +52,7 @@ with
             = 1 as first_data_point
 
         from {{ ref("fact_orders") }} as fo
-        where true and fo.closed_at is not null
+        where true and fo.closed_at <> null --todo-migration-test = from is
     ),
     combine_first_activation_first_churn as (
 
@@ -81,7 +81,7 @@ select
     cfafc.reactivated,
     cfafc.reactivated_at,
     coalesce(cfafc.has_churned_at, cfafc.next_churned_at) as churned_at,
-    churned_at is not null as churned,
+    churned_at <> null as churned, --todo-migration-test = from is
     rank() over (
         partition by cfafc.hubspot_company_id
         order by coalesce(cfafc.reactivated_at, cfafc.activated_at) desc

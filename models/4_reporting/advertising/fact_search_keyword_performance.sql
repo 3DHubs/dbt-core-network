@@ -2,8 +2,8 @@
 with akpr as (
     select *
     from {{ ref('google_ads_keywords_performance_report') }}
-    where "date" >= '2019-07-01'
-      and "date" < current_date
+    where "DATE" >= '2019-07-01'
+      and "DATE" < current_date --todo-migration-test: replaced date for "DATE"
 
     -- {% if is_incremental() %}
     -- -- We load the last 30 days because that's how far Stitch looks back at the keyword performance report.
@@ -28,7 +28,7 @@ with akpr as (
 combined as (
 
 -- Google data
-select trunc(akpr.date)                                      as date,
+select date_trunc('day', akpr.date)                          as date, --todo-migration-test: replaced trunc for date_trunc('day', akpr.date)
        'adwords'                                             as source, --TODO: Requires update to Google Ads?
        'adwords'                                             as sub_source,
        akpr.account_id,
@@ -55,7 +55,7 @@ from akpr
 union all
 
 -- Bing data
-select trunc(bkpr.date)                                          as date,
+select date_trunc('day', bkpr.date)                              as date, --todo-migration-test: replaced trunc for date_trunc('day', bkpr.date)
        'bing'                                                    as source,
        bkpr.source                                               as sub_source,
        bkpr.account_id,

@@ -7,4 +7,4 @@ select review_id,
        total_time_in_review_stage_ongoing_business_minutes,
        review_iteration
 from {{ ref('fact_hubspot_deal_reviews') }}
-where first_review_new_date >= date_add('years',-2,date_trunc('year',getdate()))
+where first_review_new_date >= dateadd(year, -2, date_trunc('year', current_date)) --todo-migration-test dateadd current_date

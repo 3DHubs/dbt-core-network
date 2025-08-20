@@ -4,8 +4,8 @@ select base.created_at,
        base.name,
        base.country_iso2,
        base.hubspot_company_id,
-       case when base.hubspot_company_id is null then false 
-       when hc.hubspot_company_id is null then false else true end             as is_part_of_company,
+       case when base.hubspot_company_id = null then false  --todo-migration-test = from is
+       when hc.hubspot_company_id = null then false else true end             as is_part_of_company, --todo-migration-test = from is
        base.hubspot_contact_id,
        base.hutk_analytics_source,
        base.hutk_analytics_source_data_1,

@@ -14,7 +14,7 @@
                      on fo.sourced_at <= d.date
                          and coalesce(fo.order_shipped_at,promised_shipping_at_by_supplier) > d.date
                          and order_status != 'canceled'
-                         and d.date>= date_add('year',-3,getdate())
+                         and d.date >= dateadd(year, -3, current_date) --todo-migration-test dateadd current_date
                 group by 1,2,3
                 union all
                 select sa_supplier_id                                                                             as supplier_id,
@@ -43,7 +43,7 @@
                 FROM dbt_prod_reporting.fact_auction_behaviour AS fact_rda_behaviour
                 left join dbt_prod_reporting.fact_orders fo on fo.order_uuid = fact_rda_behaviour.order_uuid
                 WHERE ((fact_rda_behaviour.is_rfq = 'false'))
-                   and fact_rda_behaviour.sa_assigned_at >= date_add('year',-3,getdate())
+                   and fact_rda_behaviour.sa_assigned_at >= dateadd(year, -3, current_date) --todo-migration-test dateadd current_date
                 group by 1, 2,3
                 union all
                 select fo.supplier_id,
@@ -59,7 +59,7 @@
 
                 from dbt_prod_reporting.fact_orders fo
                 left join dbt_prod_reporting.fact_otr fot ON fo.order_uuid = fot.order_uuid
-                where fot.promised_shipping_at_by_supplier >= dateadd('year',-3,current_date()) --todo-migration-test
+                where fot.promised_shipping_at_by_supplier >= dateadd(year, -3, current_date) --todo-migration-test dateadd current_date
 
 --todo-migration-adhoc: hardcoded references to Redshift schemas
     

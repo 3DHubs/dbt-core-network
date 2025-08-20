@@ -49,10 +49,10 @@ from {{ ref('prep_supply_documents') }} as oqsl
                             and case 
                                     -- The proper exchange rate date here before recognition is the recognition date not delivered date.
                                     -- Correction will be from '2022-04-01' onwards but not retroactively.
-                                    when orders.recognized_at >= '2022-04-01' and oqsl.created <= orders.recognized_at then trunc(orders.recognized_at)
-                                    when oqsl.created <= osl.delivered_at then trunc(osl.delivered_at)
-                                    else trunc(oqsl.created) 
-                                end = trunc(rates.date)
+                                    when orders.recognized_at >= '2022-04-01' and oqsl.created <= orders.recognized_at then date_trunc('day', orders.recognized_at)
+                                    when oqsl.created <= osl.delivered_at then date_trunc('day', osl.delivered_at)
+                                    else date_trunc('day', oqsl.created) 
+                                end = date_trunc('day', rates.date) --todo-migration-test
             left join {{ ref('seed_financial_recognition_cogs_exceptions') }} as sfrce  on oqsl.document_number  = sfrce.source_document_number
 
                                 

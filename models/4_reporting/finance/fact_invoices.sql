@@ -30,7 +30,7 @@ with stg_cube_invoices_supply as (
 
         from {{ ref('prep_supply_documents') }} as invoices
             left outer join {{ ref('exchange_rate_daily') }} as rates
-                on rates.currency_code_to = invoices.currency_code and trunc(invoices.finalized_at) = trunc(rates.date)
+                on rates.currency_code_to = invoices.currency_code and date_trunc('day', invoices.finalized_at) = date_trunc('day', rates.date) --todo-migration-test
         where true
            and invoices.type in ('invoice')
            and invoices.finalized_at is not null -- Locked quotes only

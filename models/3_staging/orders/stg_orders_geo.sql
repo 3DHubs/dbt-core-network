@@ -44,7 +44,7 @@ select distinct
     -- Crossdock
     case
         when
-            quotes.is_cross_docking is true
+            quotes.is_cross_docking = true --todo-migration-test = from is
             and not coalesce(hs_deals.is_hubs_arranged_direct_shipping,false)
         then true
         else false

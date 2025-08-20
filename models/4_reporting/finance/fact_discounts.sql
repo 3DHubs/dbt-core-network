@@ -35,7 +35,7 @@ select so.uuid                                                  as order_uuid,
         ld.discount_factor,
         -- Discount Codes Attributes
         ld.discount_code_id,
-        ld.discount_code_id is not null as has_discount_code,
+        ld.discount_code_id <> null as has_discount_code, --todo-migration-test <> from is not
         ld.discount_code,
         ld.discount_code_description,
         ld.discount_code_author_name as discount_code_created_by

@@ -22,9 +22,9 @@ with
                 from contacts
                 where
                     date_trunc('month', became_customer_at)
-                    >= date_trunc('month', date_add('month', -30, getdate()))
+                    >= date_trunc('month', dateadd(month, -30, current_date)) --todo-migration-test current_date dateadd
                     and date_trunc('month', became_customer_at)
-                    < date_trunc('month', date_add('month', -0, getdate()))
+                    < date_trunc('month', current_date) --todo-migration-test current_date
                 group by 1, 2, 3
             ),
             cohort_sales as (
@@ -62,11 +62,11 @@ with
                         )
                     )
                     and date_trunc('month', dcom.became_customer_at)
-                    >= date_trunc('month', date_add('month', -30, getdate()))
+                    >= date_trunc('month', dateadd(month, -30, current_date)) --todo-migration-test dateadd
                     and date_trunc('month', dcom.became_customer_at)
-                    < date_trunc('month', date_add('month', -0, getdate()))
+                    < date_trunc('month', current_date) --todo-migration-test current_date  
                     and is_sourced
-                    and (datediff('month', fo.sourced_at, current_date) > 0)
+                    and datediff('month', fo.sourced_at, current_date) > 0 --todo-migration-test current_date
                 group by 1, 2, 3
                 order by 2, 3, 1
             )
@@ -119,7 +119,7 @@ select
             ) as mql_technology,
             coalesce(region, 'row') as region,
             case
-                when is_part_of_company = false or is_part_of_company is null
+                when is_part_of_company = false or is_part_of_company = null --todo-migration-test = from is
                 then 'freemailer'
                 when is_part_of_company = true and inside_mql_number = 1
                 then 'first_company_customer'
@@ -136,7 +136,7 @@ select
     dc.region,
     dc.contact_type,
     advertising_gclid,
-    case when dc.became_mql_at >= '2025-05-01' and advertising_account_id is null then '2794116568' else advertising_account_id end as advertising_account_id, --temp for missing EMEA gAds integration.
+    case when dc.became_mql_at >= '2025-05-01' and advertising_account_id = null then '2794116568' else advertising_account_id end as advertising_account_id, --temp for missing EMEA gAds integration. --todo-migration-test = from is
     advertising_click_date,
     clv.clv_24m,
     predicted_proba,
@@ -156,7 +156,7 @@ left join
     on clv.first_closed_order_technology = dc.mql_technology
     and clv.region = dc.region
     and clv.cohort = 1
-    where became_mql_at >= '2021-01-01' and (became_mql_at < date_add('days',-2,getdate())
-    or predicted_proba is not null )
+    where became_mql_at >= '2021-01-01' and (became_mql_at < dateadd(day, -2, current_date) --todo-migration-test current_date
+    or predicted_proba <> null ) --todo-migration-test = from is
 
 order by 1

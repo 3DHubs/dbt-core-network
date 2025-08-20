@@ -50,7 +50,7 @@ union_question_feature as (
         'open_question'                       as question_type,
         bq.question_text                      as question_description,
         bq.answer_text                        as answer,
-        bq.answer_attachment_uuid is not null as has_attachment,
+        bq.answer_attachment_uuid <> null     as has_attachment, --todo-migration-test = from is
         null::integer                         as material_id,
         null::integer                         as material_subset_id,
         null::integer                         as material_color_id,
@@ -85,7 +85,7 @@ union_question_feature as (
         end                                   as question_type,
         pf.question_text                      as questions_description,
         pf.answer_text                        as answer,
-        pf.answer_attachment_uuid is not null as has_attachment,
+        pf.answer_attachment_uuid <> null     as has_attachment, --todo-migration-test = from is
         pf.material_id,
         pf.material_subset_id,
         pf.material_color_id,

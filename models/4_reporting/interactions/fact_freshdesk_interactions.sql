@@ -16,7 +16,7 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                     when con.category = 3 then 'agent reply'
                     else 'customer reply' end                                       as interaction_type,
                 case when interaction_type = 'agent reply' then 1 else 0 end        as agent_interaction_count,
-                case when con.private is true and agent_name != 'Dev Ops' then 1 
+                case when con.private = true and agent_name != 'Dev Ops' then 1     --todo-migration-test = from is 
                     else 0 end                                                      as internal_interaction_count,
                 con.incoming::int                                                   as customer_interaction_count,
                 false                                                               as /*  */is_first_interaction,
@@ -47,7 +47,7 @@ select distinct {{ redshift.try_cast('con.id', 'bigint') }}                     
                     when con.category = 3 then 'agent reply'
                     else 'customer reply' end                                       as interaction_type,
                 case when interaction_type = 'agent reply' then 1 else 0 end        as agent_interaction_count,
-                case when con.private is true and agent_name != 'Dev Ops' then 1 
+                case when con.private = true and agent_name != 'Dev Ops' then 1  --todo-migration-test = from is
                     else 0 end                                                      as internal_interaction_count,
                 con.incoming::int                                                   as customer_interaction_count,
                 false                                                               as is_first_interaction,

@@ -14,7 +14,7 @@
                 ssu.created                                                                  as supplier_user_created_at,
                 ssu.email                                                                    as supplier_email,
                 ssu.email_domain                                                             as supplier_email_domain,
-                ssu.email is not null                                                        as has_email,
+                ssu.email <> null                                                            as has_email, --todo-migration-test = from is
                 ssu.is_internal                                                              as is_test_supplier,
                 ssu.is_protolabs                                                             as is_protolabs,
                 ssu.is_anonymized                                                            as is_anonymized,

@@ -50,16 +50,12 @@ select con.created_at                                             as created_at,
            con.contact_source                                         as contact_source,
            jobtitle                                                   as job_title,
            case
-               when lower(job_title) ~ 'college|faculty|fellow|graduate|lecturer|learning|student|teacher'
-                   then 'University'
-               when lower(job_title) ~
-                    'chief|director|executive|manag|ceo|coo|c-level|owner|cto|cmo|principal|president|vp|founder|head|director|chairman|partner|supervisor'
-                   then 'Manager'
-               when lower(job_title) ~ 'purchas|buy|procur|order' then 'Procurement'
-               when lower(job_title) ~ 'engin|mech|design|technic|product|research|develop|ingénieur'
-                   then 'Engineer or Designer'
+               when regexp_like(lower(job_title), 'college|faculty|fellow|graduate|lecturer|learning|student|teacher') then 'University'
+               when regexp_like(lower(job_title), 'chief|director|executive|manag|ceo|coo|c-level|owner|cto|cmo|principal|president|vp|founder|head|director|chairman|partner|supervisor') then 'Manager'
+               when regexp_like(lower(job_title), 'purchas|buy|procur|order') then 'Procurement'
+               when regexp_like(lower(job_title), 'engin|mech|design|technic|product|research|develop|ingénieur') then 'Engineer or Designer'
                when lower(job_title) is null then null
-               else 'Other' end                                       as job_role,
+               else 'Other' end                                       as job_role, --todo-migration-test replaced ~
            dc.name                                                    as country_name,
            dc.market,
            dc.region,

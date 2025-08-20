@@ -50,46 +50,46 @@ prep_batch_otr as (
         fb.shipped_from_cross_dock_at,
         fb.delivered_to_customer_at                                                                                     as delivered_at,
         coalesce(case
-            when fb.delivered_to_customer_at is not null then fb.delivered_to_customer_at
+            when fb.delivered_to_customer_at <> null then fb.delivered_to_customer_at
             when
                 shipped_to_customer_at + interval '7 days' < current_date
-                and fb.delivered_to_customer_at is null then shipped_to_customer_at + interval '7 days'
-        end)                                                                                                            as derived_delivered_at,
+                and fb.delivered_to_customer_at = null then shipped_to_customer_at + interval '7 days'
+        end)                                                                                                            as derived_delivered_at, --todo-migration-test = from is
         -- This code is used to give suppliers a 12 hours window after the customer promised by date to
         -- Hand over the product to the carrier (this should be removed at a later stage).
         case
-            when promised_shipping_at_by_supplier is not null
+            when promised_shipping_at_by_supplier <> null
                 then
                     dateadd(hour, 12, promised_shipping_at_by_supplier)
-        end                                                                                                             as promised_shipping_at_by_supplier_adjusted,
+        end                                                                                                             as promised_shipping_at_by_supplier_adjusted, --todo-migration-test = from is
 
         case
             when dateadd(day, 1, promised_shipping_at_by_supplier) > getdate() then null
-            when promised_shipping_at_by_supplier_adjusted is null then null
+            when promised_shipping_at_by_supplier_adjusted = null then null
             when
                 orders.status in ('completed', 'delivered', 'disputed', 'shipped')
-                and shipped_by_supplier_at is null then null
+                and shipped_by_supplier_at = null then null
             when orders.status = 'canceled' then null
             when shipped_by_supplier_at > promised_shipping_at_by_supplier_adjusted then false
             when shipped_by_supplier_at <= promised_shipping_at_by_supplier_adjusted then true
             when
-                shipped_by_supplier_at is null
+                shipped_by_supplier_at = null
                 and dateadd(day, 1, promised_shipping_at_by_supplier_adjusted) < getdate() then false
-        end                                                                                                             as is_shipped_on_time_by_supplier, -- Switched to as main calculation in July 2023
+        end                                                                                                             as is_shipped_on_time_by_supplier, -- Switched to as main calculation in July 2023 --todo-migration-test = from is
 
         case
             when dateadd(day, 1, promised_shipping_at_to_customer) > getdate() then null
-            when promised_shipping_at_to_customer is null then null
+            when promised_shipping_at_to_customer = null then null
             when
                 orders.status in ('completed', 'delivered', 'disputed', 'shipped')
-                and shipped_to_customer_at is null then null
+                and shipped_to_customer_at = null then null
             when orders.status = 'canceled' then null
             when hs.delay_reason = 'customer_requested_hold' and shipped_to_customer_at > promised_shipping_at_to_customer then null
             when shipped_to_customer_at > promised_shipping_at_to_customer then false
             when shipped_to_customer_at <= promised_shipping_at_to_customer then true
-            when shipped_to_customer_at is null and dateadd(day, 1, promised_shipping_at_to_customer) < getdate()
+            when shipped_to_customer_at = null and dateadd(day, 1, promised_shipping_at_to_customer) < getdate()
                 then false
-        end                                                                                                             as is_shipped_on_time_to_customer,
+        end                                                                                                             as is_shipped_on_time_to_customer, --todo-migration-test = from is
 
         round(
             date_diff('minutes', promised_shipping_at_to_customer, shipped_to_customer_at) * 1.0 / 1440, 1

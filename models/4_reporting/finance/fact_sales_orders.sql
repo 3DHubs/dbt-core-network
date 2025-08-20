@@ -35,7 +35,7 @@ from {{ source('ext_netsuite', 'transaction') }} as nt_so
 left outer join {{ ref('netsuite_currency_rates') }} as rates
     on rates.transactioncurrency__internalid = nt_so.currency__internalid
     and basecurrency__name = 'USD' and
-    trunc(nt_so.createddate) = dateadd(day,1,trunc(rates.effectivedate))
+    date_trunc('day', nt_so.createddate) = dateadd(day,1,date_trunc('day', rates.effectivedate)) --todo-migration-test
 left outer join {{ ref('prep_supply_documents') }} as quote
     on quote.document_number = nt_so.custbodyquotenumber
 left outer join {{ ref('stg_fact_orders') }} as fo on fo.order_uuid = quote.order_uuid

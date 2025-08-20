@@ -34,14 +34,14 @@ select orders.created,
 from {{ ref('orders') }} as orders
         left join {{ ref('prep_supply_integration') }} as pse on orders.uuid = pse.order_uuid 
         left join {{ ref('prep_users') }} as users on orders.user_id = users.user_id 
-        left join {{ ref('anonymous_user_carts') }} auc on orders.uuid = auc.order_uuid and ( auc.anonymous_user_email = 'test@hubs.com' or  auc.anonymous_user_email ~ '@pthubs.com')
+        left join {{ ref('anonymous_user_carts') }} auc on orders.uuid = auc.order_uuid and (auc.anonymous_user_email = 'test@hubs.com' or regexp_like(auc.anonymous_user_email, '@pthubs.com')) --todo-migration-test: replaced ~ for regexp_like
 -- Filter: only orders with line items on the main quote, this removes empty carts.
 where exists (
     select 1 from {{ ref('gold_line_items') }} as li
     where orders.quote_uuid = li.quote_uuid
 )
 -- Filters: external orders created through the PAPI integration
-and pse.is_test is not true
+and not pse.is_test --todo-migration-test: replaced not true for not {field}
 
 -- Filters: to exclude internal test traffic
 -- and (users.is_test is not true or sfr.order_uuid is not null)

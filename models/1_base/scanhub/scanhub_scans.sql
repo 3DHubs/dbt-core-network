@@ -7,31 +7,31 @@ select
     package_scans.archived_at                                                               as archived_at,
 
     -- Amsterdam time (CET/CEST)
-        package_scans.created_at at time zone 'utc' at time zone 'europe/amsterdam'         as created_at_ams,
-        package_scans.updated_at at time zone 'utc' at time zone 'europe/amsterdam'         as updated_at_ams,
-        package_scans.archived_at at time zone 'utc' at time zone 'europe/amsterdam'        as archived_at_ams,
+    convert_timezone('Etc/UTC', 'Europe/Amsterdam', package_scans.created_at::timestamp_ntz)   as created_at_ams, --todo-migration-test convert_timezone
+    convert_timezone('Etc/UTC', 'Europe/Amsterdam', package_scans.updated_at::timestamp_ntz)   as updated_at_ams, --todo-migration-test convert_timezone
+    convert_timezone('Etc/UTC', 'Europe/Amsterdam', package_scans.archived_at::timestamp_ntz)  as archived_at_ams, --todo-migration-test convert_timezone
 
     -- localized timestamps based on city
-        case 
-            when package_scans.location = 'Chicago' then package_scans.created_at at time zone 'utc' at time zone 'america/chicago'
-            when package_scans.location = 'Amsterdam' then package_scans.created_at at time zone 'utc' at time zone 'europe/amsterdam'
-            when package_scans.location = 'Telford' then package_scans.created_at at time zone 'utc' at time zone 'europe/london'
-            else package_scans.created_at -- Default to UTC if no match
-        end as created_at_localized,
+    case 
+        when package_scans.location = 'Chicago'   then convert_timezone('Etc/UTC', 'America/Chicago', package_scans.created_at::timestamp_ntz)
+        when package_scans.location = 'Amsterdam' then convert_timezone('Etc/UTC', 'Europe/Amsterdam', package_scans.created_at::timestamp_ntz)
+        when package_scans.location = 'Telford'   then convert_timezone('Etc/UTC', 'Europe/London', package_scans.created_at::timestamp_ntz)
+        else package_scans.created_at
+    end                                                                                     as created_at_localized, --todo-migration-test convert_timezone
 
-        case 
-            when package_scans.location = 'Chicago' then package_scans.updated_at at time zone 'utc' at time zone 'america/chicago'
-            when package_scans.location = 'Amsterdam' then package_scans.updated_at at time zone 'utc' at time zone 'europe/amsterdam'
-            when package_scans.location = 'Telford' then package_scans.updated_at at time zone 'utc' at time zone 'europe/london'
-            else package_scans.updated_at
-        end as updated_at_localized,
+    case 
+        when package_scans.location = 'Chicago'   then convert_timezone('Etc/UTC', 'America/Chicago', package_scans.updated_at::timestamp_ntz)
+        when package_scans.location = 'Amsterdam' then convert_timezone('Etc/UTC', 'Europe/Amsterdam', package_scans.updated_at::timestamp_ntz)
+        when package_scans.location = 'Telford'   then convert_timezone('Etc/UTC', 'Europe/London', package_scans.updated_at::timestamp_ntz)
+        else package_scans.updated_at
+    end                                                                                     as updated_at_localized, --todo-migration-test convert_timezone
 
-        case 
-            when package_scans.location = 'Chicago' then package_scans.archived_at at time zone 'utc' at time zone 'america/chicago'
-            when package_scans.location = 'Amsterdam' then package_scans.archived_at at time zone 'utc' at time zone 'europe/amsterdam'
-            when package_scans.location = 'Telford' then package_scans.archived_at at time zone 'utc' at time zone 'europe/london'
-            else package_scans.archived_at 
-        end as archived_at_localized,
+    case 
+        when package_scans.location = 'Chicago'   then convert_timezone('Etc/UTC', 'America/Chicago', package_scans.archived_at::timestamp_ntz)
+        when package_scans.location = 'Amsterdam' then convert_timezone('Etc/UTC', 'Europe/Amsterdam', package_scans.archived_at::timestamp_ntz)
+        when package_scans.location = 'Telford'   then convert_timezone('Etc/UTC', 'Europe/London', package_scans.archived_at::timestamp_ntz)
+        else package_scans.archived_at 
+    end                                                                                     as archived_at_localized, --todo-migration-test convert_timezone
 
     package_scans.order_number                                                              as document_number,
     package_scans.tracking_number,

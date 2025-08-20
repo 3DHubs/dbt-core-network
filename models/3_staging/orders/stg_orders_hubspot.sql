@@ -20,8 +20,8 @@ with stg as (
 
         -- Foreign Fields
         hcon.hs_company_id                                                                as hubspot_company_id, --JG: Decided on 26-11-21 to use active company id of contact instead of original_hubspot_company_id
-        case
-           when hcon.email ~ '@(3d)?hubs.com' or hcon.email ~ 'protolabs' then true else false end   as hubspot_contact_email_from_internal,
+        case when regexp_like(hcon.email, '@(3d)?hubs.com') or regexp_like(hcon.email, 'protolabs') then true 
+             else false end                                                               as hubspot_contact_email_from_internal, --todo-migration-test: replaced ~
         hs.hs_latest_associated_company_id                                                as original_hubspot_company_id, --JG: Kept for reference
         hcom.name                                                                         as hubspot_company_name,
         hs.pl_cross_sell_company_name,
@@ -29,8 +29,8 @@ with stg as (
         hs.bdr_company_source                                                             as hubspot_company_source,
         htm.technology_id                                                                 as hubspot_technology_id,
         technologies.name                                                                 as hubspot_technology_name,
-        case when hcon.hutk_analytics_first_url ~ 'utm_campaign=protolabssales' then 'Sales Referral' 
-             else hs.pl_cross_sell_channel  end                                           as hubspot_pl_cross_sell_channel,
+        case when regexp_like(hcon.hutk_analytics_first_url, 'utm_campaign=protolabssales') then 'Sales Referral'
+             else hs.pl_cross_sell_channel  end                                           as hubspot_pl_cross_sell_channel, --todo-migration-test: replaced ~
 
         -- Dates
         hs.createdate                                                                     as hubspot_created_at,
@@ -56,14 +56,15 @@ with stg as (
             when hs.closedate > '2020-01-01'
                 then nullif(regexp_replace(hs.delay_reason, 'delay_reason_', ''), '') end as delay_reason,    
         hs.delay_status                                                                   as delay_status,
-        case when hcon.hutk_analytics_first_url ~ 'utm_source=protolabs'  or hcon.hutk_analytics_first_url ~ 'utm_campaign=protolabssales' then true else false end as is_integration_mql_contact,
+        case when regexp_like(hcon.hutk_analytics_first_url, 'utm_source=protolabs') or regexp_like(hcon.hutk_analytics_first_url, 'utm_campaign=protolabssales') then true else false end as is_integration_mql_contact, --todo-migration-test: replaced ~
+
 
         -- Owners       
         hs.hubspot_owner_id,
         own.name                                                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
         own.office_location,
-        trunc(hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp
+        date_trunc('day', hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp --todo-migration-test
         fst.sales_lead_id                                                                 as sales_lead_id,
         fst.sales_lead                                                                    as sales_lead_name,
         hs.bdr_assigned                                                                   as bdr_owner_id,
@@ -202,7 +203,8 @@ with stg as (
         
 select stg.*, coalesce(ac.name, bc.name) as utm_campaign_name
 from stg
- left join {{ ref('google_ads_campaigns') }} as ac on ac.id = case when stg.utm_campaign ~ '^[0-9]+$' then stg.utm_campaign::bigint else null end
- left join {{ ref('bing_ads_campaigns') }} as bc on bc.id = case when stg.utm_campaign ~ '^[0-9]+$' then stg.utm_campaign::bigint else null end
+ left join {{ ref('google_ads_campaigns') }} as ac on ac.id = case when regexp_like(stg.utm_campaign, '^[0-9]+$') then cast(stg.utm_campaign as bigint) else null end --todo-migration-test: replaced ~
+ left join {{ ref('bing_ads_campaigns') }} as bc on bc.id = case when regexp_like(stg.utm_campaign, '^[0-9]+$') then cast(stg.utm_campaign as bigint) else null end --todo-migration-test: replaced ~
 where rn = 1
 
+--todo-migration-test: can't run becauuse of stg_hs_contacts_union_legacy ask diego

@@ -126,7 +126,7 @@ select
     falm.tracking_message as tracking_last_message,
 
     -- Platform label indicates if the shipment label was created through the platform
-    s.provider_label_id is not null as is_platform_label,
+    s.provider_label_id <> null as is_platform_label, --todo-migration-test <> from is not
 
     -- Shipping Leg, Origin, Cross-Docking and Destination
     case
@@ -169,8 +169,8 @@ select
     case
         when
             s.status != 'delivered'
-            and s.delivered_at is null
-            and faam.third_message_received is null
+            and s.delivered_at = null --todo-migration-test = from is 
+            and faam.third_message_received = null --todo-migration-test = from is
         then
             round(
                 datediff(
@@ -191,7 +191,7 @@ select
     faam.tracking_estimated_delivery,
     faam.tracking_delivered_at,
     case
-        when s.delivered_at is null and faam.tracking_delivered_at is null
+        when s.delivered_at = null and faam.tracking_delivered_at = null --todo-migration-test = from is 
         then date_diff('day', tracking_last_message_received_at, current_date)
         else null
     end as days_since_last_message_update,
@@ -218,14 +218,14 @@ left join
     hubspot_tracking_info
     on s.order_uuid = hubspot_tracking_info.uuid
 
-where integration.is_test is not true
+where integration.is_test <> true --todo-migration-test <> from is not
 ),
 
 not_matched_hubspot as (
     select hti.*
     from hubspot_tracking_info hti
     left join fact_shipments fs on hti.uuid = fs.order_uuid
-    where fs.order_uuid is null
+    where fs.order_uuid = null --todo-migration-test = from is 
 ),
 
 complete_fact_shipments as (

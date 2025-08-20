@@ -29,7 +29,7 @@ with frt_prep as (
                min(case
                        when frt_prep.source = 'portal' and ticket_tag = 'supplier' and frt_idx = 2
                            and
-                            (interaction_type = 'customer reply' or from_email ~ 'notifier@(3d)?hubs.com')
+                            (interaction_type = 'customer reply' or regexp_like(from_email, 'notifier@(3d)?hubs.com'))
                            then frt_prep.created_date::timestamp
                        else null end) as first_response_time_start_supplier,
             -- Customer tickets are now also created at the time the order is sold so the same logic applies.
@@ -51,7 +51,7 @@ with frt_prep as (
                --Filter out notifier because this is an automatic reply that is genertaed when the ticket is submitted
                min(case
                        when interaction_type = 'agent reply' and frt_idx > 1
-                           and from_email !~ 'notifier@(3d)?hubs.com'
+                           and not regexp_like(from_email, 'notifier@(3d)?hubs.com')
                            then frt_prep.created_date::timestamp
                        else null end) as first_reply_time
         from frt_prep

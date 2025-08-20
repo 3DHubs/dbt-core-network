@@ -1,11 +1,11 @@
 with agg as ( select
     sa_supplier_id,
-    trunc(
+    date_trunc('day', 
          min(sa_last_seen_at)
-    ) as first_seen_at,
-    trunc(
+    ) as first_seen_at, --todo-migration-test
+    date_trunc('day', 
          max(sa_last_seen_at)
-    ) as last_seen_at,
+    ) as last_seen_at, --todo-migration-test
     current_date - last_seen_at as last_seen_days_ago,
     sum(
          case
@@ -32,23 +32,23 @@ with agg as ( select
     )::decimal(15, 2),
     0
     ) as pct_accepted_of_seen_l7d,
-    trunc(
+    date_trunc('day', 
          min(sa_assigned_at)
-    ) as first_assigned_at,
-    trunc(
+    ) as first_assigned_at, --todo-migration-test
+    date_trunc('day', 
          min(
              case
                 when response_type = 'accepted' then sa_assigned_at
             end
     )
-    ) as first_accepted_at,
-    trunc(
+    ) as first_accepted_at, --todo-migration-test
+    date_trunc('day', 
          max(
              case
                 when response_type = 'accepted' then sa_assigned_at
             end
     )
-    ) as last_accepted_at
+    ) as last_accepted_at --todo-migration-test
     from {{ ref('fact_auction_behaviour') }}
     where sa_supplier_id is not null and not is_rfq
     group by 1),

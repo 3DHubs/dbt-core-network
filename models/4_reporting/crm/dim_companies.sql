@@ -4,7 +4,7 @@ select distinct country_id,
                 max(lat)                  as city_lat,
                 max(lon)                  as city_lon
 from {{ ref('addresses') }}
-where locality is not null and lat is not null
+where locality <> null and lat <> null --todo-migration-test = from is
 group by 1,2
 ),
 companies_btyd as (
@@ -40,7 +40,7 @@ select
        hc.hubspot_owner_id,
        hc.hs_lead_status,
        hc.founded_year,
-       case when hc.total_money_raised is not null then true else null end as is_funded,
+       case when hc.total_money_raised <> null then true else null end as is_funded, --todo-migration-test = from is
        hc.is_deactivated,
        hc.deactivated_date,
        hc.is_reactivated_opportunity,

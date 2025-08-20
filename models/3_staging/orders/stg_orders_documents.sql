@@ -73,7 +73,7 @@ with first_quote as (
              left join {{ ref('exchange_rate_daily') }} as rates 
                 on rates.currency_code_to = quotes.currency_code
                 -- From '2022-04-01' we started using the more appropriate closing date as exchange rate date for closing values instead of quote finalized_at, this has been changed but not retroactively.
-                and trunc(coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, quotes.finalized_at, quotes.created)) = trunc(rates.date)
+                and date_trunc('day', coalesce(case when order_deals.closed_at >= '2022-04-01' then order_deals.closed_at else null end, quotes.finalized_at, quotes.created)) = date_trunc('day', rates.date) --todo-migration-test
          where true
            and quotes.type = 'quote'
      ),
@@ -117,7 +117,7 @@ with first_quote as (
                      from {{ ref('prep_supply_documents') }} as soq
                      left join {{ ref('exchange_rate_daily') }} as rates
                         on rates.currency_code_to = soq.currency_code 
-                        and rates.date = trunc(soq.finalized_at)
+                        and rates.date = date_trunc('day', soq.finalized_at) --todo-migration-test
                      left join {{ ref('prep_purchase_orders') }} as spocl on soq.uuid = spocl.uuid
                      where true
                        and soq.type like 'purchase_order'
@@ -159,7 +159,7 @@ with first_quote as (
          on quotes.uuid = purchase_orders.uuid
              left join {{ ref('exchange_rate_daily') }} as rates
                 on rates.currency_code_to = quotes.currency_code 
-                and rates.date = trunc(quotes.finalized_at)
+                and rates.date = date_trunc('day', quotes.finalized_at) --todo-migration-test
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
          where quotes.type = 'purchase_order'
            and purchase_orders.status = 'active'
@@ -196,7 +196,7 @@ with first_quote as (
          on quotes.uuid = purchase_orders.uuid
              left join  {{ ref('exchange_rate_daily') }} as rates
                 on rates.currency_code_to = quotes.currency_code 
-                and rates.date = trunc(quotes.finalized_at)
+                and rates.date = date_trunc('day', quotes.finalized_at) --todo-migration-test
              left join {{ ref('suppliers') }} as suppliers on purchase_orders.supplier_id = suppliers.id
              inner join first_po on first_po.order_uuid = quotes.order_uuid
          where quotes.type = 'purchase_order'

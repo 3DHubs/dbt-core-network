@@ -25,17 +25,13 @@ select
     decode(p.is_partial, 'true', True, 'false', False)                    as is_batch_partial,
     sog.is_cross_docking_ind                                              as is_cross_docking_bool,
     case when not is_batch_partial then p.delivered_at end                as full_delivered_at,
-    listagg(case
-        when fs.shipping_leg = 'cross_docking:warehouse' then fs.carrier_name_mapped
-    end)                                                                  as carrier_to_crossdock_at,
-    listagg(case
-        when is_cross_docking_bool
-            then (case
-                when fs.shipping_leg = 'cross_docking:customer'
-                    then fs.carrier_name_mapped
-            end)
-        else (fs.carrier_name_mapped)
-    end)                                                                  as carrier_to_customer_at,
+    listagg(case when fs.shipping_leg = 'cross_docking:warehouse' then fs.carrier_name_mapped
+    end, ' ')                                                             as carrier_to_crossdock_at,    --todo-migration-test listagg
+    listagg(case when is_cross_docking_bool
+                 then (case when fs.shipping_leg = 'cross_docking:customer'
+                           then fs.carrier_name_mapped end)
+            else (fs.carrier_name_mapped)
+            end, ' ')                                                     as carrier_to_customer_at,    --todo-migration-test listagg
     sum(case when fs.is_valid_shipment then 1 else 0 end)                 as number_of_shipments,
     min(case
         when fs.shipping_leg = 'cross_docking:warehouse' then fs.shipment_created_at

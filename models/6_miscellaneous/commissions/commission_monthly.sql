@@ -156,7 +156,7 @@ with deal_monthly as (
       shipping_amount_usd
       from dbt_prod_reporting.fact_orders
       where true
-      and cancelled_deal_closed_three_months_prior is true
+      and cancelled_deal_closed_three_months_prior = true --todo-migration-test replaced is with =
       and cancelled_at is not null
       )
       select commission_date,
@@ -219,7 +219,7 @@ with deal_monthly as (
       shipping_amount_usd
       from dbt_prod_reporting.fact_orders
       where true
-      and cancelled_deal_closed_three_months_prior is true
+      and cancelled_deal_closed_three_months_prior = true --todo-migration-test replaced is with =
       and cancelled_at is not null
       and bdr_owner_id = hubspot_owner_id
       )

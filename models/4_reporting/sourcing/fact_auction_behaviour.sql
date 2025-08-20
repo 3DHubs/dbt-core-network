@@ -38,7 +38,7 @@ with bids as (
         row_number() over (partition by b.auction_uuid, b.supplier_id order by b.is_active desc, b.placed_at desc, b.updated desc) as supplier_bid_idx
     from {{ ref('bids') }} as b
     inner join {{ ref("prep_auctions") }} as a on a.auction_uuid = b.auction_uuid
-    left join {{ ref('exchange_rate_daily') }} as e on e.currency_code_to = b.currency_code and trunc(e.date) = trunc(b.created)
+    left join {{ ref('exchange_rate_daily') }} as e on e.currency_code_to = b.currency_code and date_trunc('day', e.date) = date_trunc('day', b.created) --todo-migration-test
 )
 
 select

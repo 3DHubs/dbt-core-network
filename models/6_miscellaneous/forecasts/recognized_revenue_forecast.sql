@@ -5,15 +5,15 @@ with
     prep_run_rate as (
         select
             getdate()::date as start_date,
-            date_trunc('month', date_add('month', 12, getdate())) as end_date,
+            date_trunc('month', dateadd(month, 12, current_date)) as end_date, --todo-migration-test dateadd current_date
             lead_time,
             technology_name,
             destination_region,
             sum(subtotal_sourced_amount_usd) * 1.0 / 30 as subtotal_sourced_amount_usd,
             sum(is_sourced::int) * 1.0 / 30 as orders
         from {{ ref("fact_orders") }}
-        where
-            sourced_at >= date_add('days', -42, getdate())
+        where            
+            sourced_at >= dateadd(day, -42, current_date) --todo-migration-test dateadd current_date
             and sourced_at::date < getdate()::date
             and date_part(dow, sourced_at) not in (0, 6)
             and subtotal_sourced_amount_usd < 50000
@@ -24,10 +24,10 @@ with
         select p.*, d.date as sourced_at
         from prep_run_rate p
         inner join
-            {{ source("int_analytics", "dim_dates") }} d
+            {{ source("int_analytics", "dim_dates") }} d 
             on p.start_date <= d.date
             and p.end_date > d.date
-        where d.weekend_flag is false and d.holiday_flag is false
+        where d.weekend_flag = false and d.holiday_flag = false 
     ),
     -- Get the historic time to recognize values per leadtime and technology
     recognized_prep as (
@@ -45,8 +45,8 @@ with
         from {{ ref("fact_orders") }}
         where
             true
-            and sourced_at >= date_add('months', -15, getdate())
-            and sourced_at < date_add('months', -3, getdate())
+            and sourced_at >= dateadd(month, -15, current_date) --todo-migration-test dateadd current_date
+            and sourced_at < dateadd(month, -3, current_date) --todo-migration-test dateadd current_date
             and subtotal_sourced_amount_usd < 50000
         group by 1, 2, 3,4
     ),
@@ -55,7 +55,7 @@ with
 forecast_recognized as (
         select
             date_trunc(
-                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+7)), sourced_at)
+                'day', dateadd(day, coalesce(time_to_recognize, (fo.lead_time + 7)), sourced_at) --todo-migration-test dateadd
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
@@ -67,15 +67,15 @@ forecast_recognized as (
             on rp.lead_time = fo.lead_time
             and fo.technology_name = rp.technology_name
         where
-            date_trunc('month', date_add('days', time_to_recognize, sourced_at))
-            >= date_trunc('month', getdate())
+            date_trunc('month', dateadd(day, time_to_recognize, sourced_at)) 
+            >= date_trunc('month', current_date) --todo-migration-test dateadd current_date
         group by 1,2,3,4
     ),
     -- For the orders that were already sourced, get the expected recognized amounts for this month.
     recognized_actual as (
         select
             date_trunc(
-                'day', date_add('days', coalesce(time_to_recognize,(fo.lead_time+7)), sourced_at)
+                'day', dateadd(day, coalesce(time_to_recognize, (fo.lead_time + 7)), sourced_at) --todo-migration-test dateadd
             ) estimated_recognized_at,
             fo.lead_time,
             fo.technology_name,
@@ -87,8 +87,8 @@ forecast_recognized as (
             on rp.lead_time = fo.lead_time
             and fo.technology_name = rp.technology_name
         where
-            date_trunc('month', date_add('days', time_to_recognize, sourced_at))
-            >= date_trunc('month', getdate())
+            date_trunc('month', dateadd(day, time_to_recognize, sourced_at)) 
+            >= date_trunc('month', current_date) --todo-migration-test dateadd current_date
             and subtotal_sourced_amount_usd < 50000
             and percent_of_total > 0
         group by 1,2,3,4
@@ -104,7 +104,7 @@ forecast_recognized as (
 
         from {{ ref("fact_orders") }}  fo
     left join {{ ref("fact_contribution_margin") }} fcm ON fo.order_uuid = fcm.order_uuid
-    where date_trunc('month',recognized_date) >=  date_trunc('month', getdate())
+    where date_trunc('month', recognized_date) >= date_trunc('month', current_date) --todo-migration-test current_date
     and subtotal_sourced_amount_usd >= 50000
     group by 1,2,3,4)
         select *

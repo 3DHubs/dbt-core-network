@@ -5,11 +5,8 @@ select
     ow.email as email,
     initcap(ow.first_name) as "first_name",
     replace(initcap(ow.last_name), ' Pl', '')
-    + case when lower(t.name::varchar) ~ 'protolabs' then ' (PL)' else '' end as last_name,
-    initcap(first_name)
-    + ' '
-    + replace(initcap(ow.last_name), ' Pl', '')
-    + case when lower(t.name::varchar) ~ 'protolabs' then ' (PL)' else '' end as name,
+    + case when t.name::varchar ilike '%protolabs%' then ' (PL)' else '' end as last_name, --todo-migration-test: replaced ~ for ilike
+    initcap(first_name) + ' ' + replace(initcap(ow.last_name), ' Pl', '') + case when t.name::varchar ilike '%protolabs%' then ' (PL)' else '' end as name, --todo-migration-test: replaced ~ for ilike
     ow.user_id as user_id,
     ow.created_at as created_at,
     ow.updated_at as updated_at,

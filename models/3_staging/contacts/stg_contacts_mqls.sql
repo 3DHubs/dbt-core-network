@@ -42,8 +42,8 @@ with legacy as (
                became_cart_date) as mql_date,
                technology_name as mql_technology,
                case when mql_date >= '2022-01-01' then 
-               case when lower(hc.hutk_analytics_first_url) ~ 'shallow' then 'shallowlink'
-                    when lower(hc.hutk_analytics_first_url) ~ 'quicklink' then 'quicklink'
+               case when regexp_like(lower(hc.hutk_analytics_first_url), 'shallow') then 'shallowlink' --todo-migration-test replaced ~ 
+                    when regexp_like(lower(hc.hutk_analytics_first_url), 'quicklink') then 'quicklink' --todo-migration-test replaced ~
                     when integration_platform_type is not null then integration_platform_type 
                     when cart.hubspot_contact_id is not null  then 'cart'  
                     when deleted_cart.contact_id is not null then 'deleted_cart'

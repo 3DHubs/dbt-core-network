@@ -19,7 +19,7 @@ with disputes as (
                min(created)                  as dispute_created_at,
                'supply_order_history_events' as _data_source
         from {{ ref('fact_order_events') }}
-        where description ~ 'dispute' and created < '2022-01-01' --JG 270622, decided with Alison to have only disputes before 2022 measured this way. Since the description field caused issues and official process should be followed.
+        where regexp_like(description, 'dispute') and created < '2022-01-01' --JG 270622, decided with Alison to have only disputes before 2022 measured this way. Since the description field caused issues and official process should be followed. --todo-migration-test removed ~
         group by 1
     ),
          line_item_disputes as (
@@ -118,3 +118,5 @@ with disputes as (
      left join disputes on orders.uuid = disputes.order_uuid
      left join dispute_resolution as disr on orders.uuid = disr.order_uuid
      where dispute_created_at is not null
+
+     --todo-migration-test -- rename of disputes cte. 

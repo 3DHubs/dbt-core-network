@@ -33,9 +33,9 @@ select
 -- CONTACT FIELDS
 
     -- Lifecycle
-    case when hubspot_contact_id is not null then min(created_at) over (partition by hubspot_contact_id) end                                           as became_created_at_contact,
-    case when hubspot_contact_id is not null then min(submitted_at) over (partition by hubspot_contact_id) end                                         as became_opportunity_at_contact,
-    case when hubspot_contact_id is not null then min(closed_at) over (partition by hubspot_contact_id) end                                            as became_customer_at_contact,
+    case when hubspot_contact_id <> null then min(created_at) over (partition by hubspot_contact_id) end                                           as became_created_at_contact, --todo-migration-test <> instead of is not
+    case when hubspot_contact_id <> null then min(submitted_at) over (partition by hubspot_contact_id) end                                         as became_opportunity_at_contact, --todo-migration-test <> instead of is not
+    case when hubspot_contact_id <> null then min(closed_at) over (partition by hubspot_contact_id) end                                            as became_customer_at_contact, --todo-migration-test <> instead of is not
     max(created_at) over (partition by hubspot_contact_id)                                                                                             as recent_order_created_at_contact,
     nth_value(case when is_closed then closed_at else null end, 2)
        over (partition by hubspot_contact_id order by is_closed desc, closed_at asc rows between unbounded preceding and unbounded following)          as second_order_closed_at_contact,
@@ -70,7 +70,7 @@ select
       
 
     -- Rank Values
-    case when is_closed is true and hubspot_contact_id is not null then rank() over (partition by hubspot_contact_id order by closed_at asc) end       as closed_order_number_contact,
+    case when is_closed = true and hubspot_contact_id is not null then rank() over (partition by hubspot_contact_id order by closed_at asc) end       as closed_order_number_contact, --todo-migration-test = instead of is 
 
     -- Other Date Fields
     lag(closed_at) over (partition by hubspot_contact_id order by closed_at)                                                                           as previous_closed_order_at_contact,
@@ -109,16 +109,15 @@ select
         over (partition by hubspot_company_id order by closed_at asc rows between unbounded preceding and unbounded following)                         as first_is_integration_mql_company,
 
     -- Rank Values
-    case when is_closed is true and hubspot_company_id is not null then rank() 
-        over (partition by hubspot_company_id order by closed_at asc) end                                                                              as closed_order_number_company,
+    case when is_closed = true and hubspot_company_id is not null then rank() 
+        over (partition by hubspot_company_id order by closed_at asc) end                                                                              as closed_order_number_company, --todo-migration-test = instead of is 
     case when is_closed then dense_rank() over (partition by hubspot_company_id order by cast(closed_at as date) asc) else null end                    as closed_project_number_company,    
         
     -- Other Date Fields
-    round( date_diff('minutes',  case when hubspot_company_id is not null then lag(closed_at)
-        over (partition by hubspot_company_id order by closed_at asc) end ,closed_at) *1.0/1440,1)                                                     as days_from_previous_closed_order_company,
+    round( datediff('minute',  case when hubspot_company_id is not null then lag(closed_at) 
+        over (partition by hubspot_company_id order by closed_at asc) end ,closed_at) *1.0/1440,1)                                                     as days_from_previous_closed_order_company, --todo-migration-test datediff
     case when hubspot_company_id is not null then min(case when bdr_owner_name is not null then closed_at end) 
-        over (partition by hubspot_company_id) end                                                                                                     as first_bdr_owner_at_company
-,
+        over (partition by hubspot_company_id) end                                                                                                     as first_bdr_owner_at_company, --todo-migration-test datediff
 -- CLIENT FIELDS
 
     -- Lifecycle
@@ -130,7 +129,7 @@ select
     coalesce(datediff('month', became_customer_at_client, closed_at) = 0, false)                                                                       as closed_order_is_from_new_customer_client,
 
         -- Rank Values
-    case when is_closed is true and hubspot_contact_id is not null then rank() over (partition by coalesce(hubspot_company_id,hubspot_contact_id) order by closed_at asc) end       as closed_order_number_client,
+    case when is_closed = true and hubspot_contact_id is not null then rank() over (partition by coalesce(hubspot_company_id,hubspot_contact_id) order by closed_at asc) end       as closed_order_number_client, --todo-migration-test = instead of is 
 
 
 -- PROJECT FIELDS
@@ -234,10 +233,10 @@ select orders.order_uuid,
             over ( partition by orders.hubspot_contact_id)                                                                                              as closed_sales_usd_new_customer_contact,
        sum(case when is_closed and closed_order_is_from_new_customer_contact then (subtotal_sourced_amount_usd - subtotal_sourced_cost_usd) end)
             over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_new_customer_contact,
-       sum(case when orders.closed_at < date_add('days',90, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - po_first_sourced_cost_usd) end)
-        over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_contact_90d,
-       sum(case when orders.closed_at < date_add('months',24, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - po_first_sourced_cost_usd) end)
-        over (partition by orders.hubspot_contact_id)                                                                                               as total_precalc_margin_usd_contact_24m,
+       sum(case when orders.closed_at < dateadd('day', 90, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - po_first_sourced_cost_usd) end) 
+       over (partition by orders.hubspot_contact_id)                                                                                                    as total_precalc_margin_usd_contact_90d, --todo-migration-test dateadd
+       sum(case when orders.closed_at < dateadd('month', 24, prep.became_customer_at_contact) then (subtotal_sourced_amount_usd - po_first_sourced_cost_usd) end)
+        over (partition by orders.hubspot_contact_id)                                                                                                   as total_precalc_margin_usd_contact_24m, --todo-migration-test dateadd
        -- First Values
        prep.first_submitted_order_technology_contact,
        prep.first_closed_order_technology_contact,
