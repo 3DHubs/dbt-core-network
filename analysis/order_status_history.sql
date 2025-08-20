@@ -1,3 +1,4 @@
+-- JG 202508 legacy model , could be reviewed again in the future or deprecate if not touched in 6 months
 with status as (SELECT order_uuid,
                        is_cross_docking,
                        status,
@@ -25,6 +26,9 @@ with status as (SELECT order_uuid,
                     ))
 select s.order_uuid,
        status as date_point,
+       start_status_date,
+       end_status_date,
+       status_period_in_days,
        case
            when s.status = 'created_at' then 'created'
            when s.status = 'submitted_at' then 'submitted'
@@ -35,10 +39,8 @@ select s.order_uuid,
            when s.status = 'delivered_to_cross_dock_at' then 'parts_inspected'
            when s.status = 'shipped_from_cross_dock_at' then 'shipped to customer'
            when s.status = 'delivered_at' then 'delivered to customer'
-           when s.status = 'dispute_created_at' then 'disputed' end as status,
-           d.date
+           when s.status = 'dispute_created_at' then 'disputed' end as status
 from status s
-inner join int_analytics.dim_dates d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
-                                                          s.start_status_date <= d.date AND end_status_date > d.date order by 1, date
+
 
 --todo-migration-adhoc: hardcoded reference to Redshift schemas
