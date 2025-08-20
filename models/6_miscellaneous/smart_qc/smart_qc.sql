@@ -17,7 +17,7 @@ with date_year_week as (
 
           from {{ ref('fact_orders') }} as fact_ord
           left join {{ ref('fact_line_items') }} as line on fact_ord.order_uuid = line.order_uuid
-          where fact_ord.supplier_id is not null
+          where fact_ord.supplier_id <> null --todo-migration-test = from is
           and fact_ord.technology_name = 'CNC'
       ), cross_year_week_supplier_options as (
           select *
@@ -39,7 +39,7 @@ with date_year_week as (
                      end)                                                               as number_disputes_within_14_window
           from {{ ref('fact_orders') }} as fact_ord
                    left join {{ ref('fact_line_items') }} as line on fact_ord.order_uuid = line.order_uuid
-          where fact_ord.derived_delivered_at is not null
+          where fact_ord.derived_delivered_at <> null --todo-migration-test = from is
           and fact_ord.technology_name = 'CNC'
           group by 1, 2, 3, 4, 5, 6
       ), supplier_destination_history as (
@@ -141,7 +141,7 @@ smart_qc as
               fih.freshdesk_count >= 36 or -- freshdesk interaction related to the order
               sodh.running_line_item_count < 10 or  -- supplier number of similar orders produced
               fact_line.line_item_price_amount_usd > 600 or -- supplier line item price amount
-              (fact_line.custom_tolerance is not null or fact_line.tiered_tolerance is not null) or -- has_exceeded_standard_tolerances
+              (fact_line.custom_tolerance <> null or fact_line.tiered_tolerance <> null) or -- has_exceeded_standard_tolerances --todo-migration-test = from is
               isnull(fact_line.is_cosmetic, False) = True or -- is_cosmetic
               isnull(fact_line.has_customer_note, False) = True or -- has_customer_note
               fact_ord.technology_name != 'CNC' -- non cnc is always QCed regardless of conditions
@@ -151,7 +151,7 @@ smart_qc as
 
             (
             CASE WHEN fact_line.line_item_price_amount_usd > 600 THEN '1' ELSE '0' END + -- rank 1
-            CASE WHEN fact_line.custom_tolerance IS NOT NULL OR fact_line.tiered_tolerance IS NOT NULL THEN '1' ELSE '0' END + -- rank 2
+            CASE WHEN fact_line.custom_tolerance <> NULL OR fact_line.tiered_tolerance <> NULL THEN '1' ELSE '0' END + -- rank 2 --todo-migration-test = from is
             CASE WHEN  sodh.running_line_item_count < 10 THEN '1' ELSE '0' END + -- rank 3
             CASE WHEN  sodh.dispute_percentage_running >= 0.03 THEN '1' ELSE '0' END + -- rank 4
             CASE WHEN  fih.freshdesk_count >= 36 THEN '1' ELSE '0' END + -- rank 5
@@ -183,8 +183,8 @@ smart_qc as
                  and fact_ord.destination_country = codh.destination_country
       left join freshdesk_interactions_history as fih on fact_ord.order_uuid = fih.order_uuid
       where cast(fact_ord.order_shipped_at as date) > '2020-01-01'
-      and fact_ord.supplier_id is not null
-      and (TO_CHAR(DATE_TRUNC('week', fact_ord.order_shipped_at), 'YYYYWW')) is not null
+      and fact_ord.supplier_id <> null --todo-migration-test = from is
+      and (TO_CHAR(DATE_TRUNC('week', fact_ord.order_shipped_at), 'YYYYWW')) <> null --todo-migration-test = from is
       order by (TO_CHAR(DATE_TRUNC('week', fact_ord.order_shipped_at), 'YYYYWW')) desc
 ),
 

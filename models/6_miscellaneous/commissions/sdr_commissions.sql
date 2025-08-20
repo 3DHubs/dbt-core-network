@@ -55,8 +55,8 @@ with seed_file_data as (
             sum(fo.subtotal_sourced_amount_usd)  as quarterly_sourced_revenue -- Sourced amount per supplier per quarter eligible for commission
         from {{ ref('fact_orders') }} as fo
             left join determine_commission_dates as dcd on fo.supplier_id = dcd.supplier_id
-        where fo.sourced_at is not null
-        and dcd.supplier_id is not null
+        where fo.sourced_at <> null --todo-migration-test = from is
+        and dcd.supplier_id <> null --todo-migration-test = from is
         and fo.sourced_at >= dcd.commission_start_at  -- Only the amount sourced during the commission period is calculated
         and fo.sourced_at <= dcd.commission_end_at    -- Only the amount sourced during the commission period is calculated
         group by 1, 2
@@ -107,8 +107,8 @@ select row_number() over (ORDER BY ssa.sourced_quarter asc)                     
 
         -- Set payout to 0 for the quarter the SDR leaves the job and afterwards
         case when eligible_for_bonus then
-            case when dcd.sdr_end_at is null then 1
-                when dcd.sdr_end_at is not null then
+            case when dcd.sdr_end_at = null then 1 --todo-migration-test = from is
+                when dcd.sdr_end_at <> null then --todo-migration-test = from is
                     case when date_trunc('quarter', dcd.sdr_end_at) > date_trunc('quarter', ssa.sourced_quarter) then 1
                         when date_trunc('quarter', dcd.sdr_end_at) <= date_trunc('quarter', ssa.sourced_quarter) then 0
                     end

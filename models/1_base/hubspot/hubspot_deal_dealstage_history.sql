@@ -29,5 +29,5 @@ select primary_key,
        lead(changed_at) ignore nulls over (partition by deal_id order by changed_at)       as next_changed_at,
        datediff(minutes, changed_at,next_changed_at) as time_in_stage_minutes
 from hubspot_dealstage_union
-where dealstage_mapped is not null
+where dealstage_mapped <> null --todo-migration-test = from is
 order by deal_id, changed_at asc

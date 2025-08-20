@@ -40,11 +40,11 @@ select     li.order_uuid,
            li.shipping_option_id,
            li.type                                                                    as line_item_type,
            li.custom_material_subset_name                                             as custom_material_subset_name,
-           (nullif(li.custom_material_subset_name, '') is not null)                   as has_custom_material_subset,
+           (nullif(li.custom_material_subset_name, '') <> null)                       as has_custom_material_subset, --todo-migration-test = from is
            li.custom_finish_name                                                      as custom_surface_finish_name,
-           (nullif(li.custom_finish_name, '') is not null)                            as has_custom_finish,
+           (nullif(li.custom_finish_name, '') <> null)                                as has_custom_finish, --todo-migration-test = from is
            li.description                                                             as line_item_description, -- comment from customer 
-           (nullif(li.description, '') is not null)                                   as has_customer_note,
+           (nullif(li.description, '') <> null)                                       as has_customer_note, --todo-migration-test = from is
            li.admin_description,
            li.title                                                                   as line_item_title,       -- by default set to model file name; custom line_items: set by admin
            li.has_technical_drawings,
@@ -85,7 +85,7 @@ select     li.order_uuid,
 
            -- Dispute Fields
            d.dispute_created_at,
-           d.dispute_created_at is not null                                             as is_dispute,
+           d.dispute_created_at <> null                                                 as is_dispute, --todo-migration-test = from is
            d.dispute_description,
            d.dispute_affected_parts_quantity,
            d.has_tolerance_issue,
@@ -98,7 +98,7 @@ select     li.order_uuid,
 
            -- Complaints data
            c.created_at as complaint_created_at,
-           c.created_at is not null as is_complaint,
+           c.created_at <> null as is_complaint, --todo-migration-test = from is
            c.is_valid as complaint_is_valid,
            c.is_conformity_issue as complaint_is_conformity_issue,
            c.outcome_customer as complaint_outcome_customer,
@@ -130,16 +130,16 @@ select     li.order_uuid,
            li.auto_price_amount,
            case
            --          If price amount is given always use this as it is the manually set amount
-           when li.price_amount is not null then
+           when li.price_amount <> null then 
                 li.price_amount
 
            --          Some non part line items have no unit price, thus we use auto_price amount (e.g. such as surcharge)
-            when li.type != 'part' and li.auto_price_amount is not null then
+            when li.type != 'part' and li.auto_price_amount <> null then
                     coalesce(li.auto_price_amount, 0)
 
            --          When unit price amount is given a simple multiplication with the quantity (if 0 then 1) will do (both parts and non parts), if the
            --          order is of technology injection molding then we also add in tooling
-           when li.unit_price_amount is not null then
+           when li.unit_price_amount <> null then
                 coalesce(li.unit_price_amount::double precision * coalesce(nullif(li.quantity, 0), 1) +
                 coalesce(li.tooling_price_amount, li.auto_tooling_price_amount, 0),0)
 
@@ -155,13 +155,13 @@ select     li.order_uuid,
                 else round((li.auto_price_amount * docs.price_multiplier)/coalesce(nullif(li.quantity, 0),1),0)
                 end * coalesce(nullif(li.quantity, 0), 1)
 
-           end  / 100.00                                                               as line_item_price_amount,
+           end  / 100.00                                                               as line_item_price_amount, --todo-migration-test = from is
            line_item_price_amount / rates.rate                                         as line_item_price_amount_usd,
            
            docs.currency_code                                                          as line_item_price_amount_source_currency,
            -- These amount fields are only manually inserted, nowadays only unit_price_amount is populated and the price_amount is calculated from the quantity
-           coalesce(li.unit_price_amount, li.price_amount) is not null                 as line_item_price_amount_manually_edited,
-           (line_item_price_amount_usd -  case when li.unit_price_amount is not null then  (coalesce(li.tooling_price_amount, li.auto_tooling_price_amount, 0) / 100.00 / rates.rate) else 0 end)  * lic.estimated_l1_customs_rate  as line_item_estimated_l1_customs_amount_usd_no_winning_bid, 
+           coalesce(li.unit_price_amount, li.price_amount) <> null                 as line_item_price_amount_manually_edited, --todo-migration-test = from is
+           (line_item_price_amount_usd -  case when li.unit_price_amount <> null then  (coalesce(li.tooling_price_amount, li.auto_tooling_price_amount, 0) / 100.00 / rates.rate) else 0 end)  * lic.estimated_l1_customs_rate  as line_item_estimated_l1_customs_amount_usd_no_winning_bid, --todo-migration-test = from is
            pv.quoting_package_version
 
     from {{ ref('prep_line_items') }} as li
