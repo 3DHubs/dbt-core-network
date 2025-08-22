@@ -71,7 +71,7 @@ is_papi_integration,
 case when is_integration_contact then true else is_integration_tmp end as is_integration, -- including indirect integration revenue
 case when is_integration_tmp then 'direct'
      when is_integration then 'indirect'  end as integration_order_type,
-case when integration_platform_type is null and integration_order_type = 'indirect' then 'indirect' else integration_platform_type end as integration_platform_type,
+case when integration_platform_type = null and integration_order_type = 'indirect' then 'indirect' else integration_platform_type end as integration_platform_type,--todo-migration-test replaced is with =
 integration_order_id, 
 integration_quote_id,
 integration_order_number, 

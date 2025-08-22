@@ -10,5 +10,5 @@ select
     archived_by
                
 
-from {{ source('int_retool', 'xdock_holdrack_status') }} as hold_rack_status
+from {{ source('int_stitch_retool', 'xdock_holdrack_status') }} as hold_rack_status
 

@@ -47,4 +47,4 @@ and not pse.is_test --todo-migration-test: replaced not true for not {field}
 -- and (users.is_test is not true or sfr.order_uuid is not null)
 
 -- Filters: to exclude internal anonymous tests with the email test@hubs.com
-and auc.anonymous_user_email is null
+and auc.anonymous_user_email = null --todo-migration-test replaced is with =

@@ -1,6 +1,5 @@
 {{
     config(
-        post_hook = "analyze {{ this }}",
         tags=["multirefresh"]
     )
 }}

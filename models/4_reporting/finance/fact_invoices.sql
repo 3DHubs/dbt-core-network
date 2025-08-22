@@ -33,7 +33,7 @@ with stg_cube_invoices_supply as (
                 on rates.currency_code_to = invoices.currency_code and date_trunc('day', invoices.finalized_at) = date_trunc('day', rates.date) --todo-migration-test
         where true
            and invoices.type in ('invoice')
-           and invoices.finalized_at is not null -- Locked quotes only
+           and invoices.finalized_at <> null -- Locked quotes only --todo-migration-test replaced is with =
            and date_trunc('day', invoices.created)< '2021-03-01'
            ),
 
@@ -63,7 +63,7 @@ with stg_cube_invoices_supply as (
                 left outer join {{ ref('prep_supply_integration') }} as test_orders on test_orders.document_number = netsuite_trn.custbodyquotenumber
          where true
            and date_trunc('day', netsuite_trn.createddate) >= '2021-03-01'
-           and test_orders.is_test is not true 
+           and test_orders.is_test <> true --todo-migration-test replaced is with =
      ),
 
      stg_invoices_unionized as (
@@ -100,7 +100,7 @@ with stg_cube_invoices_supply as (
             else null 
             end
         ))                                                                                                       as revenue_recognized_at,
-        case when revenue_recognized_at is not null then True else False end                                     as revenue_is_recognized,
+        case when revenue_recognized_at <> null then True else False end                                     as revenue_is_recognized, --todo-migration-test replaced is with =
         orders.exchange_rate_at_closing
      from stg_invoices_unionized as invoices
      left outer join {{ ref('stg_fact_orders') }} as orders on orders.order_uuid = invoices.order_uuid

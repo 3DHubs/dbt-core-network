@@ -19,8 +19,8 @@ sales_target as (
         from seed_sales_targets s
             inner join {{ source('int_analytics', 'dim_dates') }} d on --case when s.start_date = '2022-01-01' then '2021-01-01' else s.start_date end -- for testing purpose
                                                       s.start_date <= d.date AND coalesce(s.end_date, '2026-01-01') > d.date
-            left join {{ ref('hubspot_owners') }} own on own.owner_id = s.hubspot_id
-            left join {{ ref('hubspot_owners') }}lead on lead.owner_id = s.reports_to_lead 
+            left join {{ ref('hubspot_owners') }} as own on own.owner_id = s.hubspot_id
+            left join {{ ref('hubspot_owners') }} as lead on lead.owner_id = s.reports_to_lead 
         where day = 1
         order by date
     ),
