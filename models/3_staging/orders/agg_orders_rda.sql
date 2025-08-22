@@ -29,7 +29,7 @@ with rda_interactions as (
            count(distinct sai.auction_uuid)                                                          as number_of_rda_auctions,
            count(*)                                                                                  as number_of_supplier_auctions_assigned,
            -- Auctions Seen
-           count(distinct (case when sa_first_seen_at is not null then sa_uuid end))                 as number_of_supplier_auctions_seen,
+           count(distinct (case when sa_first_seen_at <> null then sa_uuid end))                 as number_of_supplier_auctions_seen, --todo-migration-test
            --General Bid Aggregates 
            count(distinct sai.bid_uuid)                                                              as number_of_responses,
            count(distinct (case when sai.response_type in ('accepted','countered')  
@@ -44,7 +44,7 @@ with rda_interactions as (
            count(distinct
                  (case when sai.bid_has_changed_prices then sai.bid_uuid end))                       as number_of_price_counterbids,
            count(distinct
-                 (case when sai.plan_to_bid_at is not null then sai.bid_uuid end))                   as number_of_planned_bids,
+                 (case when sai.plan_to_bid_at <> null then sai.bid_uuid end))                   as number_of_planned_bids, --todo-migration-test
            --Winning Bid Results
            bool_or(sai.is_winning_bid)                                                               as has_winning_bid,
            bool_or(sai.is_winning_bid and sai.response_type = 'accepted')                            as has_accepted_winning_bid,

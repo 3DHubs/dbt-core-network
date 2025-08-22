@@ -14,13 +14,13 @@ select
     count(distinct sa_supplier_id) as number_of_suppliers_rfq_requests,
     count(
         distinct case
-            when response_placed_at is not null then sa_supplier_id else null
+            when response_placed_at <> null then sa_supplier_id else null --todo-migration-test
         end
     ) as number_of_suppliers_rfq_responded,
     count(distinct auction_uuid) as number_of_rfqs,
     count(*) as number_of_rfq_requests,
     sum(
-        case when response_placed_at is not null then 1 else 0 end
+        case when response_placed_at <> null then 1 else 0 end --todo-migration-test
     ) as number_of_rfq_responded,
     max(
         case when is_winning_bid then bid_estimated_first_leg_customs_amount_usd end
