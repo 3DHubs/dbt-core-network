@@ -30,7 +30,7 @@ select
     {{ varchar_to_boolean('is_conforming') }}                                                                
 
 from
-    {{ source('int_retool', 'dhl_api_documents') }} as eu_logistics_operation
+    {{ source('int_airbyte_retool', 'dhl_api_documents') }} as eu_logistics_operation
     left join {{ ref('exchange_rate_daily') }} as ex on eu_logistics_operation.expected_shipping_costs_currency = ex.currency_code_to and date_trunc('day', eu_logistics_operation.created_at) = date_trunc('day', ex.date) --todo-migration-test
 
 union all
@@ -69,7 +69,7 @@ select
     {{ varchar_to_boolean('is_conforming') }}                                                                                            
     
 from
-    {{ source('int_retool', 'ups_api_documents') }} as us_logistics_operation
+    {{ source('int_airbyte_retool', 'ups_api_documents') }} as us_logistics_operation
 
 union all 
 
@@ -105,5 +105,5 @@ select
     {{ varchar_to_boolean('is_conforming') }}
 
 from 
-    {{ source('int_retool', 'uk_ups_api_documents') }} as uk_logistics_operation
+    {{ source('int_stitch_retool', 'uk_ups_api_documents') }} as uk_logistics_operation
     left join {{ ref('exchange_rate_daily') }} as ex on uk_logistics_operation.expected_shipping_cost_currency = ex.currency_code_to and date_trunc('day', uk_logistics_operation.created_at) = date_trunc('day', ex.date) --todo-migration-test
