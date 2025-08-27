@@ -76,7 +76,7 @@ select distinct ft.ticket_id,
         ft.order_uuid,
         ft.subject,
         ft.created_date,
-        ft."group",
+        ft.ticket_group, --todo-migration-research: had to rename this because it was a reserved word
         ft.tickets_team,
         ft.ticket_agent_name,
         ft.customer_contact,

@@ -3,8 +3,7 @@
 
 {{
        config(
-              sort = ["ticket_id", "order_uuid"],
-              post_hook = "analyze {{ this }}"
+              sort = ["ticket_id", "order_uuid"]
        )
 }}
 
@@ -70,7 +69,7 @@ select t.id                                                                  as 
        fdmapping.order_uuid,
        t.subject,
        t.first_created_at                                                    as created_date,
-       g.name                                                                as group,
+       g.name                                                                as ticket_group,
        case 
             when g.name like '%Partner%' or g.name like '%Suppliers%' or g.name = 'Legacy Order Fulfilment'  then 'Partner Support'
             when g.name like '%Customer%' or g.name like 'Project Manager%' or g.name in ('TrustPilot', 'Inbox', 'Legal') then 'Customer Team'
