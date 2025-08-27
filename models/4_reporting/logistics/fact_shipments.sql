@@ -190,9 +190,10 @@ select
     faam.tracking_available_for_pick_up_at,
     faam.tracking_estimated_delivery,
     faam.tracking_delivered_at,
+    --todo-migration-test datediff
     case
         when s.delivered_at = null and faam.tracking_delivered_at = null --todo-migration-test = from is 
-        then date_diff('day', tracking_last_message_received_at, current_date)
+        then datediff('day', tracking_last_message_received_at, current_date)
         else null
     end as days_since_last_message_update,
 

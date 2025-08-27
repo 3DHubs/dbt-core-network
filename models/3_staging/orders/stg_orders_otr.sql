@@ -108,8 +108,9 @@ select distinct orders.uuid                              as order_uuid,
                     else null
                     end                                  as is_shipped_on_time_expected_by_customer,
 
-                    round(date_diff('minutes',orders.promised_shipping_date,logistics.shipped_to_customer_at )*1.0/1440,1) as shipping_to_customer_delay_days,
-                    round(date_diff('minutes',promised_shipping_at_by_supplier_pick_up_adjusted,logistics.shipped_at )*1.0/1440,1) as shipping_by_supplier_delay_days,
+                    --todo-migration-test datediff
+                    round(datediff('minutes',orders.promised_shipping_date,logistics.shipped_to_customer_at )*1.0/1440,1) as shipping_to_customer_delay_days,
+                    round(datediff('minutes',promised_shipping_at_by_supplier_pick_up_adjusted,logistics.shipped_at )*1.0/1440,1) as shipping_by_supplier_delay_days,
 
 
 

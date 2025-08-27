@@ -37,8 +37,8 @@ with stg_purcahse_orders as (
                 current_promised_by_date
             ) as previous_promised_by_date,
             sod.po_first_supplier_id as original_supplier_id,
-
-            date_diff(
+            --todo-migration-test datediff
+            datediff(
                 'minute', previous_promised_by_date, current_promised_by_date
             )/60.0 as hours_in_type,
             case
@@ -83,7 +83,7 @@ select
     '' as related_record,
     sod.po_active_promised_shipping_at_by_supplier as start_date,
     sol.shipped_at as end_date,
-    date_diff('minute', start_date, end_date)/60.0 as hours_in_type,
+    datediff('minute', start_date, end_date)/60.0 as hours_in_type,
     hours_in_type as hours_late,
     case
         when hours_in_type < 0 then 'Supplier created label on time' 
@@ -105,7 +105,7 @@ select
     '' as related_record,
     sol.shipment_label_created_at as start_date,
     sol.shipped_at as end_date,
-    date_diff(
+    datediff(
         'minute', sol.shipment_label_created_at, sol.shipped_at
     )/60.0 as hours_in_type,
     hours_in_type as hours_late,

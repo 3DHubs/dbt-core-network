@@ -610,7 +610,8 @@ select
 
     -- Financial:
     coalesce(docs.order_quote_amount_usd, hs_deals.hubspot_amount_usd)                           as subtotal_amount_usd,
-    case when date_diff('hours',docs.sourced_at, dealstage.cancelled_at) < 48 and   coalesce(
+    --todo-migration-test datediff
+    case when datediff('hours',docs.sourced_at, dealstage.cancelled_at) < 48 and   coalesce(
         nullif(hs_deals.hubspot_cancellation_reason_mapped, ''), pcr.cancellation_reason_mapped, cancellation_reason
     )  = 'New order created' then true else false end as exclude_cancelled_new_orders,
     case

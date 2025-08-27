@@ -12,8 +12,9 @@
 select
     fo.order_uuid,
     fo.is_shipped_on_time_to_customer,
-    date_diff('minute', fo.promised_shipping_at_to_customer,  fo.shipped_to_customer_at)/60.0 as actual_hours_late,
-    date_diff('minute', fo.sourced_at,  fo.shipped_to_customer_at)/60.0 as actual_total_lead_time,
+    --todo-migration-test datediff
+    datediff('minute', fo.promised_shipping_at_to_customer,  fo.shipped_to_customer_at)/60.0 as actual_hours_late,
+    datediff('minute', fo.sourced_at,  fo.shipped_to_customer_at)/60.0 as actual_total_lead_time,
     sum(case when not fo.is_shipped_on_time_to_customer then foa.hours_late else 0 end) as total_calculated_hours_late,
     sum(case when not fo.is_shipped_on_time_to_customer and foa.otr_source = 'Sourcing' then foa.hours_late else 0 end) sourcing_late_impact,
     sum(case when not fo.is_shipped_on_time_to_customer and foa.otr_source = 'Production' then foa.hours_late else 0 end) production_late_impact,
