@@ -84,10 +84,10 @@ with first_quote as (
          select order_uuid                                        as                      order_uuid,
                 min(submitted_at)                                 as                      order_first_submitted_at,
                 max(revision)                                     as                      number_of_quote_versions,
-                bool_or(is_admin)                                 as                      has_admin_created_quote,
+                boolor_agg(is_admin)                                 as                      has_admin_created_quote, --todo-migration-test changed boolor
                 sum(case
-                        when submitted_at - finalized_at <> interval '0 seconds' then 1
-                        else 0 end)                               as                      has_non_locked_quote_review,
+                    when datediff('second', finalized_at, submitted_at) <> 0 then 1 
+                    else 0 end) as has_non_locked_quote_review, --todo-migration-test changed date differences with datediff
                 case
                     when has_admin_created_quote = true or has_non_locked_quote_review > 0 then true
                     else false end                                                        has_manual_quote_review,
@@ -184,7 +184,7 @@ with first_quote as (
                 case
                     when quotes.shipping_date >= '2019-10-01'
                         then quotes.shipping_date end                                        as po_production_promised_shipping_at_by_supplier,
-                date_diff('days', sourced_at, quotes.finalized_at)                           as days_after_sourcing,
+                datediff('days', sourced_at, quotes.finalized_at)                           as days_after_sourcing, --todo-migration-test: datediff
                 case when quotes.technology_id = 2 and days_after_sourcing <= 2 then true
                      when days_after_sourcing <= 7 then true
                      when po_first_uuid = quotes.uuid then true

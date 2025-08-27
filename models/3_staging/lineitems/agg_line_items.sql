@@ -105,15 +105,15 @@ agg_part_line_items as (
         sum(line_item_price_amount_usd)                                          as parts_amount_usd,
         sum(line_item_estimated_l1_customs_amount_usd_no_winning_bid)            as estimated_l1_customs_amount_usd_no_winning_bid,
 
-        -- Boolean Aggregates
-        bool_or(coalesce(has_customer_note, false))                                               as has_customer_note,
-        bool_or(coalesce(has_technical_drawings, false))                                          as has_technical_drawings,
-        bool_or(coalesce(has_custom_material_subset, false))                                      as has_custom_material_subset,
-        bool_or(coalesce(has_custom_finish, false))                                               as has_custom_finish,
-        bool_or(coalesce(is_cosmetic, false))                                                     as has_cosmetic_surface_finish,
-        bool_or(coalesce(is_vqced, false))                                                        as has_vqc_line_item,
-        bool_or(coalesce(auto_price_amount is null, false))                                       as is_supply_or_smart_rfq,
-        bool_or(coalesce(lower(line_item_title) like ('%svp required%'), false)) as has_svp_line_item
+        -- Boolean Aggregates --todo-migration-test: all fields below changed boolor
+        boolor_agg(coalesce(has_customer_note, false))                                               as has_customer_note,
+        boolor_agg(coalesce(has_technical_drawings, false))                                          as has_technical_drawings,
+        boolor_agg(coalesce(has_custom_material_subset, false))                                      as has_custom_material_subset,
+        boolor_agg(coalesce(has_custom_finish, false))                                               as has_custom_finish,
+        boolor_agg(coalesce(is_cosmetic, false))                                                     as has_cosmetic_surface_finish,
+        boolor_agg(coalesce(is_vqced, false))                                                        as has_vqc_line_item,
+        boolor_agg(coalesce(auto_price_amount is null, false))                                       as is_supply_or_smart_rfq,
+        boolor_agg(coalesce(lower(line_item_title) like ('%svp required%'), false)) as has_svp_line_item
 
     from part_line_items
 
@@ -144,8 +144,9 @@ agg_other_line_items as (
             case when oli.line_item_type in ('custom', 'surcharge', 'machining-certification') then oli.line_item_price_amount_usd else 0 end
         )                        as other_line_items_amount_usd,
 
-        bool_or(oli.line_item_title in ('Certificate of Conformance (CoC)', 'Certificate of Conformance'))                     as has_coc_certification,
-        bool_or(oli.is_expedited) as is_expedited_shipping -- Applicable only for type shipping, case when not valid in bool_or
+        --todo-migration-test: fields below changed from boolor
+        boolor_agg(oli.line_item_title in ('Certificate of Conformance (CoC)', 'Certificate of Conformance'))                     as has_coc_certification,
+        boolor_agg(oli.is_expedited) as is_expedited_shipping -- Applicable only for type shipping, case when not valid in bool_or
     from other_line_items as oli
     group by 1
 ),
@@ -167,7 +168,10 @@ lists as (
     select
         quote_uuid,
         listagg(distinct line_item_title, ', ') within group (order by line_item_title) as parts_titles,
-        listagg(distinct quoting_package_version, ', ') within group (order by line_item_title) as quoting_package_versions
+
+        --todo-migration-research: Snowflake doesn't let listagg by a different column, check if this was a mistake or this is intended, would require a different solution
+        -- listagg(distinct quoting_package_version, ', ') within group (order by line_item_title) as quoting_package_versions
+        null as quoting_package_versions
     from part_line_items
     group by 1
 )

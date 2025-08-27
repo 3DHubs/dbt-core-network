@@ -18,11 +18,11 @@ with stripe_transactions as (
            min(case
                    when (t.status = 'successful' or t.status = 'refunded')
                        and t.type = 'payment'
-                       then 1 end)::bool                                                      as stripe_is_successful_payment,
+                       then 1 end)::boolean                                                      as stripe_is_successful_payment, --todo-migration-test: bool to boolean
            -- Secondary Fields (Not leveraged but might be useful later)
            sum((fee_amount::float / 100)::decimal(15, 2))                                     as fee_amount,
-           min(case when t.status = 'successful' and t.type = 'refund' then 1 end)::bool      as is_successful_refund,
-           min(case when t.status = 'failed' and t.type = 'payment' then 1 end)::bool         as is_failed_payment,
+           min(case when t.status = 'successful' and t.type = 'refund' then 1 end)::boolean      as is_successful_refund, --todo-migration-test: bool to boolean
+           min(case when t.status = 'failed' and t.type = 'payment' then 1 end)::boolean         as is_failed_payment, --todo-migration-test: bool to boolean
            sum(case when t.status = 'failed' and t.type = 'payment' then 1 end)               as num_failed_payments
     from {{ ref( 'transactions') }} as t
     where status != 'new' -- 'Pending' transactions discarded
@@ -106,12 +106,12 @@ select o.uuid                         as order_uuid,
        case
            when q.signed_quote_uuid is not null then true
            when q.customer_purchase_order_uuid is not null then true
-           when t.stripe_is_successful_payment is true then true
-           else false end                is_auto_payment,
+           when t.stripe_is_successful_payment then true
+           else false end as                is_auto_payment, -- todo-migration-test: added alias due to parser error, replaced is true with just boolean field
        case
            when t.stripe_transaction_created_at::date = dealstage.closed_at::date
                and t.stripe_payment_method not in ('stripe_source_sofort', 'sofort')
-               and t.stripe_is_successful_payment is true then true
+               and t.stripe_is_successful_payment then true
            else false end             as is_instant_payment,
        case
            when d.envelope_id is not null then '2. Docusign'
