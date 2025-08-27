@@ -17,7 +17,8 @@ with delay_aggregates as (
     select order_uuid,
            count(*) as number_of_delays,
            true as has_delay_notifications,
-           bool_or(delay_liability='supplier') as has_delay_liability_supplier,
+           --todo-migration-test boolor_agg
+           boolor_agg(delay_liability='supplier') as has_delay_liability_supplier,
            min(delay_created_at) as first_delay_created_at,
            max(new_shipping_at) as latest_new_shipping_at
     from {{ ref('fact_delays') }}

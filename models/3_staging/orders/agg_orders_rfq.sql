@@ -9,8 +9,9 @@ select
     order_uuid,
     true as has_rfq,
     -- An quote can be duplicated manually and not show as a winning bid
-    bool_or(is_automatically_allocated_rfq) as has_automatically_allocated_rfq,
-    bool_or(is_winning_bid) as is_rfq_automatically_sourced,
+    --todo-migration-test boolor_agg
+    boolor_agg(is_automatically_allocated_rfq) as has_automatically_allocated_rfq,
+    boolor_agg(is_winning_bid) as is_rfq_automatically_sourced,
     count(distinct sa_supplier_id) as number_of_suppliers_rfq_requests,
     count(
         distinct case
