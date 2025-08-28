@@ -33,40 +33,35 @@ select
        li.*,
 
     -- Part Dimensional Fields
-    -- case when li.upload_properties <> null then
-    -- round(nullif(json_extract_path_text(li.upload_properties, 'volume', 'value', true), '')::float / 1000, 6)                                                 
-    --                                                             end as upload_part_volume_cm3, -- prefix to make origin explicit
-    -- case when li.upload_properties <> null then                                                         
-    -- round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'depth', true),'')::float / 10, 6)   
-    --                                                             end as part_depth_cm,
-    -- case when li.upload_properties <> null then
-    -- round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'width', true),'')::float / 10, 6)
-    --                                                             end as part_width_cm,
-    -- case when li.upload_properties <> null then
-    -- round(nullif(json_extract_path_text(li.upload_properties, 'natural_bounding_box', 'value', 'height', true),'')::float / 10, 6)
-    --                                                             end as part_height_cm,
-    -- case when li.upload_properties <> null then
-    -- round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'depth', true),'')::float / 10, 6)
-    --                                                             end as smallest_bounding_box_depth_cm,
-    -- case when li.upload_properties <> null then
-    -- round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'width', true),'')::float / 10, 6)
-    --                                                             end as smallest_bounding_box_width_cm,
-    -- case when li.upload_properties <> null then
-    -- round(nullif(json_extract_path_text(li.upload_properties, 'smallest_bounding_box', 'value', 'height', true),'')::float / 10, 6)
-    --                                                             end as smallest_bounding_box_height_cm,            --todo-migration-test = from is             
-    -- round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_bounding_box_volume_cm3,
-    -- round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_smallest_bounding_box_volume_cm3
+    --todo-migration-test: updated json_extract_path_text and null handling
+    round(json_extract_path_text(li.upload_properties, 'natural_bounding_box.value.volume')::float / 1000, 6)                                                 
+        as upload_part_volume_cm3, -- prefix to make origin explicit
 
-    --todo-migration-research to be replaced with actual content once json_extract_path_text error is addressed
-    null as upload_part_volume_cm3,
-    null as part_depth_cm,
-    null as part_width_cm,
-    null as part_height_cm,
-    null as smallest_bounding_box_depth_cm,
-    null as smallest_bounding_box_width_cm,
-    null as smallest_bounding_box_height_cm,
-    null as part_bounding_box_volume_cm3,
-    null as part_smallest_bounding_box_volume_cm3
+    -- depth (mm → cm)
+    round(json_extract_path_text(li.upload_properties, 'natural_bounding_box.value.depth')::float / 10, 6)
+        as part_depth_cm,
+
+    -- width (mm → cm)
+    round(json_extract_path_text(li.upload_properties, 'natural_bounding_box.value.width')::float / 10, 6)
+        as part_width_cm,
+
+    -- height (mm → cm)
+    round(json_extract_path_text(li.upload_properties, 'natural_bounding_box.value.height')::float / 10, 6)
+        as part_height_cm,
+
+    -- smallest bounding box depth (mm → cm)
+    round(json_extract_path_text(li.upload_properties, 'smallest_bounding_box.value.depth')::float / 10, 6)
+        as smallest_bounding_box_depth_cm,
+
+    -- smallest bounding box width (mm → cm)
+    round(json_extract_path_text(li.upload_properties, 'smallest_bounding_box.value.width')::float / 10, 6)
+        as smallest_bounding_box_width_cm,
+
+    -- smallest bounding box height (mm → cm)
+    round(json_extract_path_text(li.upload_properties, 'smallest_bounding_box.value.height')::float / 10, 6)
+        as smallest_bounding_box_height_cm,            
+    round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_bounding_box_volume_cm3,
+    round(part_depth_cm * part_width_cm * part_height_cm, 6) as part_smallest_bounding_box_volume_cm3
 
 from {{ ref('line_items') }} as li
  
