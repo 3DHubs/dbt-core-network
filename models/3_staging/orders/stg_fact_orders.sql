@@ -622,7 +622,7 @@ select
     end                                                                                          as subtotal_sourced_amount_usd,
     case
         when is_logistics_shipping_quote_used = false and qli.line_item_technology_name = '3DP' then subtotal_amount_usd * 1.0 * 0.03
-        when rda.is_first_auction_rda_sourced is not true and is_cross_docking = false then 0
+        when not rda.is_first_auction_rda_sourced and is_cross_docking = false then 0
         else qli.shipping_amount_usd
     end                                                                                          as prep_shipping_cost_usd,
     case
@@ -653,12 +653,13 @@ select
 
 
     -- Commission Related:
+    --todo-migration-test changed is true
     case
         when
             hs_deals.hubspot_amount_usd - docs.order_quote_amount_usd - qli.shipping_amount_usd > 50 -- Threshold
-            and is_closed is true and rfq.has_rfq = false then true
+            and is_closed and rfq.has_rfq = false then true 
         when hs_deals.hubspot_amount_usd = 0 then true -- discussed with finance to have $0 amount deals not commissioned. 
-        when is_closed is not true then null else false
+        when not is_closed then null else false
     end                                                                                          as has_significant_amount_gap,
     coalesce(interactions.has_svp_interaction or qli.has_svp_line_item, false)                   as is_svp
 

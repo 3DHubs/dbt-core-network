@@ -1,7 +1,6 @@
 {{
     config(
-        materialized='incremental',
-        post_hook = "analyze {{ this }}"
+        materialized='incremental'
     )
 }}
 
@@ -69,7 +68,7 @@ with list_of_emails as (
              {% if is_incremental() %}
 
          where he.created_at
-             > (select max (created_at) from {{ this }} where "source" = 'Hubspot')
+             > (select max (created_at) from {{ this }} where source = 'Hubspot')
 
              {% endif %}
      ),
@@ -88,21 +87,21 @@ with list_of_emails as (
                     when fdi.interaction_type = 'note' then 'Note' end as interaction_type_mapped,
                 fdi.agent_id::varchar                                  as agent_id,
                 a.agent_name                                           as agent_name,
-                fdt."group"                                            as subteam,
+                fdt.ticket_group                                            as subteam,
                 case
-                    when fdt."group" like '%Partner%' or
-                         fdt."group" like '%Suppliers%' or
-                         fdt."group" = 'Legacy Order Fulfilment' then 'Partner Support'
-                    when fdt."group" like '%Customer%' or
-                         fdt."group" like 'Project Manager%' or
-                         fdt."group" in ('TrustPilot', 'Inbox', 'Legal') then 'Customer Team'
-                    when fdt."group" like '%Supply%' then 'Supply'
-                    when fdt."group" in ('Sales') then 'Sales'
-                    when fdt."group" in ('In Review - Supply RFQ', 'Technical Review')
+                    when fdt.ticket_group like '%Partner%' or
+                         fdt.ticket_group like '%Suppliers%' or
+                         fdt.ticket_group = 'Legacy Order Fulfilment' then 'Partner Support'
+                    when fdt.ticket_group like '%Customer%' or
+                         fdt.ticket_group like 'Project Manager%' or
+                         fdt.ticket_group in ('TrustPilot', 'Inbox', 'Legal') then 'Customer Team'
+                    when fdt.ticket_group like '%Supply%' then 'Supply'
+                    when fdt.ticket_group in ('Sales') then 'Sales'
+                    when fdt.ticket_group in ('In Review - Supply RFQ', 'Technical Review')
                         then 'Mechanical Engineering'
-                    when fdt."group" in ('Broken tracking links', 'Logistics') then 'Logistics'
-                    when fdt."group" in ('Finance') then 'Finance'
-                    else null end                                      as team_mapped,
+                    when fdt.ticket_group in ('Broken tracking links', 'Logistics') then 'Logistics'
+                    when fdt.ticket_group in ('Finance') then 'Finance'
+                    else null end                                      as team_mapped, --todo-migration-test replaced "group" with "ticket_group" upstream due to reserved keyword
                 orders.hubspot_deal_id                                 as hubspot_deal_id,
                 hd.hs_latest_associated_contact_id                     as contact_id,
                 hd.hs_latest_associated_company_id                     as company_id,
@@ -117,7 +116,7 @@ with list_of_emails as (
              {% if is_incremental() %}
 
          where fdi.created_date
-             > (select max (created_at) from {{ this }} where "source" = 'Freshdesk')
+             > (select max (created_at) from {{ this }} where source = 'Freshdesk')
 
              {% endif %}
      )

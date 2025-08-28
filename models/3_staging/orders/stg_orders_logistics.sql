@@ -105,15 +105,16 @@ select distinct soq.order_uuid                                                  
                 ---------------------------------------------
 
                 -- Check consecutive delivery dates in shipments
+                --todo-migration-test all following three fields, changed is false = false
                 case
-                    when is_cross_docking_ind is false then null
+                    when is_cross_docking_ind = false then null
                     when is_cross_docking_ind and
                          ab.carrier_received_shipment_to_crossdock_at > ab.shipment_delivered_to_crossdock_at then false
                     else true end                                                                                           as has_shipment_delivered_to_crossdock_date_consecutive,
 
                 -- Delivery dates always depend on courier data so it doesn't make sense to compare them, only compare to when the shipment is created
                 case
-                    when is_cross_docking_ind is false and
+                    when is_cross_docking_ind = false and
                          ab.carrier_received_shipment_to_customer_at > ab.shipment_delivered_to_customer_at then false
                     when is_cross_docking_ind and
                          ab.carrier_received_shipment_to_crossdock_at > ab.shipment_delivered_to_customer_at
@@ -123,7 +124,7 @@ select distinct soq.order_uuid                                                  
 
                 -- Main Consistency Field
                 case
-                    when is_cross_docking_ind is false and
+                    when is_cross_docking_ind = false and
                          carrier_received_shipment_to_customer_at > shipment_delivered_to_customer_at then false
                     when is_cross_docking_ind and
                          ab.carrier_received_shipment_to_crossdock_at > ab.shipment_delivered_to_customer_at

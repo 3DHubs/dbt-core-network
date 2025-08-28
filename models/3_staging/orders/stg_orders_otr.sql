@@ -29,7 +29,7 @@ with delay_aggregates as (
                 order_uuid,
                 round(predicted_proba,4) as delay_probability,
                 predicted_class as delay_days_predicted,
-                row_number() over (partition by order_uuid order by model_executed_at asc) as row
+                row_number() over (partition by order_uuid order by model_executed_at asc) as rn
             from {{ source('int_analytics', 'delay_probability_v2') }}  pred
         )
 
@@ -136,4 +136,4 @@ from {{ ref('prep_supply_orders') }} as orders
     left join {{ ref ('prep_supply_buffers')}}  as buffers on docs.sourced_at::date = buffers.date and 
     case when logistics.origin_country not in ('United States', 'China', 'India', 'Mexico') then 'Row' else logistics.origin_country end = buffers.supplier_country and logistics.cross_dock_country = buffers.crossdock_country
     left join delay_aggregates as dagg on orders.uuid = dagg.order_uuid
-    left join delay_pred dp on dp.order_uuid = orders.uuid and dp.row=1
+    left join delay_pred dp on dp.order_uuid = orders.uuid and dp.rn=1
