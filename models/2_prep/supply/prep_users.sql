@@ -1,8 +1,10 @@
 {{
     config(
-        materialized='table'
+        materialized='table',
+        access = 'public'
     )
 }}
+
 
 with 
 -- prep company name of address to be added to users for Protolabs
