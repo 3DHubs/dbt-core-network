@@ -22,27 +22,22 @@ sales_hubspot_ids as(
     from {{ ref('seed_hs_id_sales_team') }} 
 )
 select
-	   owner_id,
+	   ho.owner_id,
        ho.email as email,
        ho.first_name,
        ho.last_name,
-       name,
+       ho.owner_name as name,
        user_id,
        created_at,
        updated_at,
        archived,
        loaded_at,
-       primary_team_name,
+       ho.team_name as primary_team_name,
       is_current,
 	   coalesce(location,'Amsterdam') as location,
       case when location <> 'Chicago' then 'Amsterdam' else 'Chicago' end as office_location 
-	from {{ ref('hubspot_owners_base') }} ho 
-	left join employees hr on (ho.first_name = hr.first_name and ho.last_name = hr.last_name) or hr.email = ho.email
---     WHERE (ho.first_name, ho.last_name) NOT IN (
---     SELECT firstname, lastname
---     FROM sales_hubspot_ids
--- )
-  
+	from {{ ref('hubspot_owners_base') }} as ho 
+	left join employees as hr on (ho.first_name = hr.first_name and ho.last_name = hr.last_name) or hr.email = ho.email
 
  union all
 select 
