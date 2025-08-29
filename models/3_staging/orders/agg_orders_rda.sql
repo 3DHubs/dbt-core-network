@@ -24,12 +24,13 @@
 
 with rda_interactions as ( 
     select sai.order_uuid,
-           bool_or(case when pa.auction_type = 'RDA' then true else false end)                       as is_first_auction_rda_sourced,
-           bool_or(pa.is_rda_sourced)                                                                as is_rda_sourced,
+           --todo-migration-test boolor_agg
+           boolor_agg(case when pa.auction_type = 'RDA' then true else false end)                       as is_first_auction_rda_sourced,
+           boolor_agg(pa.is_rda_sourced)                                                                as is_rda_sourced,
            count(distinct sai.auction_uuid)                                                          as number_of_rda_auctions,
            count(*)                                                                                  as number_of_supplier_auctions_assigned,
            -- Auctions Seen
-           count(distinct (case when sa_first_seen_at is not null then sa_uuid end))                 as number_of_supplier_auctions_seen,
+           count(distinct (case when sa_first_seen_at <> null then sa_uuid end))                 as number_of_supplier_auctions_seen, --todo-migration-test
            --General Bid Aggregates 
            count(distinct sai.bid_uuid)                                                              as number_of_responses,
            count(distinct (case when sai.response_type in ('accepted','countered')  
@@ -44,12 +45,12 @@ with rda_interactions as (
            count(distinct
                  (case when sai.bid_has_changed_prices then sai.bid_uuid end))                       as number_of_price_counterbids,
            count(distinct
-                 (case when sai.plan_to_bid_at is not null then sai.bid_uuid end))                   as number_of_planned_bids,
+                 (case when sai.plan_to_bid_at <> null then sai.bid_uuid end))                   as number_of_planned_bids, --todo-migration-test
            --Winning Bid Results
-           bool_or(sai.is_winning_bid)                                                               as has_winning_bid,
-           bool_or(sai.is_winning_bid and sai.response_type = 'accepted')                            as has_accepted_winning_bid,
-           bool_or(sai.sa_is_restricted)                                                             as has_restricted_suppliers,
-           bool_or(sai.is_winning_bid and sai.sa_is_restricted)                                      as has_restricted_winning_bid,
+           boolor_agg(sai.is_winning_bid)                                                               as has_winning_bid,
+           boolor_agg(sai.is_winning_bid and sai.response_type = 'accepted')                            as has_accepted_winning_bid,
+           boolor_agg(sai.sa_is_restricted)                                                             as has_restricted_suppliers,
+           boolor_agg(sai.is_winning_bid and sai.sa_is_restricted)                                      as has_restricted_winning_bid,
            max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then sa_supplier_id end) as supplier_id,
            max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then sai.bid_margin end)                                 as winning_bid_margin,
            max(case when sai.is_winning_bid and sai.last_auction_winning_bid = 1 then sai.bid_margin_usd end)                             as winning_bid_margin_usd,
@@ -69,9 +70,9 @@ with rda_interactions as (
            max(case when sai.is_winning_bid and sai.first_auction_winning_bid = 1 then sai.bid_estimated_first_leg_customs_amount_usd end)     as first_winning_bid_estimated_first_leg_customs_amount_usd,
            max(case when sai.is_winning_bid and sai.first_auction_winning_bid = 1 then sai.bid_estimated_second_leg_customs_amount_usd end)     as first_winning_bid_estimated_second_leg_customs_amount_usd,
            max(case when sai.is_winning_bid and sai.first_auction_winning_bid = 1 then sai.original_ship_by_date end)                      as first_winning_bid_original_ship_by_date,
-           bool_or(sai.bid_has_changed_prices and sai.is_winning_bid)                                as has_winning_bid_countered_on_price,
-           bool_or(sai.bid_has_changed_shipping_date and sai.is_winning_bid)                         as has_winning_bid_countered_on_lead_time,
-           bool_or(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
+           boolor_agg(sai.bid_has_changed_prices and sai.is_winning_bid)                                as has_winning_bid_countered_on_price,
+           boolor_agg(sai.bid_has_changed_shipping_date and sai.is_winning_bid)                         as has_winning_bid_countered_on_lead_time,
+           boolor_agg(sai.bid_has_design_modifications and sai.is_winning_bid)                          as has_winning_bid_countered_on_design
 
     from {{ ref('fact_auction_behaviour') }} as sai
     left join {{ ref('prep_auctions')}} as pa on sai.auction_uuid = pa.auction_uuid and pa.first_successful_auction

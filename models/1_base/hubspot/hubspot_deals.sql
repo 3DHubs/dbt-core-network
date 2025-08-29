@@ -31,7 +31,7 @@ select
     nullif(property_sales_support_specialist__value, '')::int as sales_support_id,
     nullif(property_delay_liability__value, '')::varchar(124) as delay_liability,
     nullif(property_delay_reason__value, '')::varchar(124) as delay_reason,
-    nullif(property_in_review_reason__value, '')::varchar(124) as in_review_reason,
+    nullif(property_in_review_reason__value, '') as in_review_reason, --todo-migration-test: removed the casting to solve error
     nullif(property_cancellation_reason__value, '')::varchar(124) as cancellation_reason,
     nullif(property_mp_concerning_actions__value, '')::varchar(124) as mp_concerning_actions,
     case when property_manually_resourced_deal__value = 'true' then true else false end as is_manually_resourced,

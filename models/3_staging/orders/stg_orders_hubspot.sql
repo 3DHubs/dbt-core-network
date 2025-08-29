@@ -64,7 +64,7 @@ with stg as (
         own.name                                                                          as hubspot_owner_name,
         own.primary_team_name                                                             as hubspot_owner_primary_team,
         own.office_location,
-        date_trunc('day', hs.hubspot_owner_assigneddate)                                              as hubspot_owner_assigned_date, -- Not a timestamp --todo-migration-test
+        date_trunc('day', hs.hubspot_owner_assigneddate)                                  as hubspot_owner_assigned_date, -- Not a timestamp --todo-migration-test
         fst.sales_lead_id                                                                 as sales_lead_id,
         fst.sales_lead                                                                    as sales_lead_name,
         hs.bdr_assigned                                                                   as bdr_owner_id,
@@ -206,5 +206,3 @@ from stg
  left join {{ ref('google_ads_campaigns') }} as ac on ac.id = case when regexp_like(stg.utm_campaign, '^[0-9]+$') then cast(stg.utm_campaign as bigint) else null end --todo-migration-test: replaced ~
  left join {{ ref('bing_ads_campaigns') }} as bc on bc.id = case when regexp_like(stg.utm_campaign, '^[0-9]+$') then cast(stg.utm_campaign as bigint) else null end --todo-migration-test: replaced ~
 where rn = 1
-
---todo-migration-test: can't run becauuse of stg_hs_contacts_union_legacy ask diego

@@ -1,7 +1,8 @@
 
 with freshdesk_interactions as (
 
-select distinct {{ redshift.try_cast('con.id', 'bigint') }}                         as interaction_id,
+select distinct 
+                con.id::bigint as interaction_id, --todo-migration-test: removed Redshift package function to try cast
                 con.ticket_id,
                 null::bigint                                                        as source_ticket_id,
                 con.created_at                                                      as created_date,
@@ -32,7 +33,8 @@ where not (con.source = 2 and con.category = 3) -- this is put in place to filte
   and exists(select 1 from {{ ref('stg_fact_freshdesk_tickets') }} as tix where tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
 union all
 -- Non-primary tickets
-select distinct {{ redshift.try_cast('con.id', 'bigint') }}                         as interaction_id,
+select distinct 
+                con.id::bigint as interaction_id, --todo-migration-test, removed redshift function to trycast
                 t.ticket_id                                                         as ticket_id,
                 t.linked_ticket_id::bigint                                          as source_ticket_id, -- Conversations that were imported from this ticket id
                 con.created_at                                                      as created_date,
@@ -62,7 +64,7 @@ where not (con.source = 2 and con.category = 3) -- this is put in place to filte
   and t.source <> 'phone'
   and exists(select 1 from {{ ref('stg_fact_freshdesk_tickets') }} as tix where not tix.is_primary_ticket and tix.ticket_id = con.ticket_id)
 union all
-select {{ redshift.try_cast('t.ticket_id', 'bigint') }}                               as interaction_id, -- TODO: better to populate w/ NULL?
+select t.ticket_id::bigint                               as interaction_id, -- TODO: better to populate w/ NULL? --todo-redshift-migration, replaced redshift try cast function
        t.ticket_id,
        null::bigint                                                                   as source_ticket_id,
        t.created_date,
@@ -70,11 +72,16 @@ select {{ redshift.try_cast('t.ticket_id', 'bigint') }}                         
        a.contact_name                                                                 as agent_name,
        null                                                                           as support_email,
        null                                                                           as from_email,
-       case
-           when t.source = 'portal' then 'portal'
-           when (t.source = 'email' and requester_email ~ '@(3d)?hubs.com') or t.source = 'outbound_email' then 'agent initiation'
-           when t.source = 'email' then 'customer initiation'
-           when t.source = 'feedback_widget' then 'customer initiation' end           as interaction_type,
+        case
+        when t.source = 'portal' then 'portal'
+        when (
+                t.source = 'email'
+                and regexp_like(lower(t.requester_email), '@(3d)?hubs\\.com$')
+            )
+            or t.source = 'outbound_email' then 'agent initiation'
+        when t.source = 'email' then 'customer initiation'
+        else null
+        end as interaction_type, --todo-migration-test: changed regexp expression
        case when interaction_type = 'agent initiation' then 1 else 0 end              as agent_interaction_count,
        0                                                                              as internal_interaction_count,
        case when interaction_type = 'customer initiation' then 1 else 0 end           as customer_interaction_count,

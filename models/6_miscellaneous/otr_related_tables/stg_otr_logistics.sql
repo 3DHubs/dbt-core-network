@@ -15,7 +15,8 @@ select
     '' as related_record,
     sfo.order_shipped_at as start_date,
     sfo.delivered_to_cross_dock_at as end_date,
-    date_diff(
+    --todo-migration-test datediff
+    datediff(
         'minute', sfo.order_shipped_at, sfo.delivered_to_cross_dock_at
     )
     / 60.0 as hours_in_type,

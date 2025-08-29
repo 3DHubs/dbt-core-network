@@ -15,7 +15,8 @@ select
     '' related_record,
     fo.delivered_to_cross_dock_at as start_date,
     fo.shipped_from_cross_dock_at as end_date,
-    date_diff('minute', fo.delivered_to_cross_dock_at, fo.shipped_from_cross_dock_at)
+    --todo-migration-test datediff
+    datediff('minute', fo.delivered_to_cross_dock_at, fo.shipped_from_cross_dock_at)
     / 60.0 as hours_in_type,
     hours_in_type - 24 as hours_late,
     'Time allocated for cross dock to process the order' as notes

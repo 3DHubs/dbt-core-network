@@ -91,11 +91,12 @@ prep_batch_otr as (
                 then false
         end                                                                                                             as is_shipped_on_time_to_customer, --todo-migration-test = from is
 
+        --todo-migration-test datediff
         round(
-            date_diff('minutes', promised_shipping_at_to_customer, shipped_to_customer_at) * 1.0 / 1440, 1
+            datediff('minutes', promised_shipping_at_to_customer, shipped_to_customer_at) * 1.0 / 1440, 1
         )                                                                                                               as shipping_to_customer_delay_days,
         round(
-            date_diff('minutes', promised_shipping_at_by_supplier_adjusted, shipped_by_supplier_at) * 1.0 / 1440, 1
+            datediff('minutes', promised_shipping_at_by_supplier_adjusted, shipped_by_supplier_at) * 1.0 / 1440, 1
         )                                                                                                               as shipping_by_supplier_delay_days,
         first_value(bs.batch_number) over (
             partition by docs.order_uuid order by bs.batch_number desc rows between unbounded preceding and unbounded following

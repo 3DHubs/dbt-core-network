@@ -80,7 +80,7 @@ select
        is_expedited,
        is_vqced
 
-from {{ ref('gold_line_items') }} as li
+from {{ ref('sources_network', 'gold_line_items') }} as li
 where true
     and legacy_id is null
     

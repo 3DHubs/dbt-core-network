@@ -6,7 +6,7 @@ with status as (SELECT order_uuid,
                        coalesce(lag(start_status_date, 1)
                                 over (partition by order_uuid order by start_status_date desc),
                            case when status not in ('completed_at', 'cancelled_at') then getdate()::date end) as end_status_date,
-                       date_diff('day', start_status_date, end_status_date) as  status_period_in_days
+                       datediff('day', start_status_date, end_status_date) as  status_period_in_days --todo-migration-test datediff
                 FROM (SELECT order_uuid,
                              is_cross_docking,
                              created_at,

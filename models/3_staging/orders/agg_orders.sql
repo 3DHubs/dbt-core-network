@@ -74,7 +74,7 @@ select
 
     -- Other Date Fields
     lag(closed_at) over (partition by hubspot_contact_id order by closed_at)                                                                           as previous_closed_order_at_contact,
-    round( date_diff('minutes',  case when hubspot_contact_id is not null then lag(closed_at)
+    round( datediff('minutes',  case when hubspot_contact_id is not null then lag(closed_at) --todo-migration-test datediff
         over (partition by hubspot_contact_id order by closed_at asc) end ,closed_at) *1.0/1440,1)                                                     as days_from_previous_closed_order_contact,
 
 -- COMPANY FIELDS

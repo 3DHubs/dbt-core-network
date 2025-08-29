@@ -35,7 +35,8 @@ with
             lead_time,
             technology_name,
             destination_region,
-            date_diff('days', sourced_at, recognized_at) as time_to_recognize,
+            --todo-migration-test datediff
+            datediff('days', sourced_at, recognized_at) as time_to_recognize,
             sum(subtotal_sourced_amount_usd) as sourced_sales,
             sum(recognized_revenue_amount_usd) as recognized_amount,
             recognized_amount *1.0 / nullif(sourced_sales,0) as margin_leakage,

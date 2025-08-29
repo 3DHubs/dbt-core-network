@@ -11,7 +11,7 @@
                 user_id,
                 anonymous_id,
                 description,
-                extra
+                null as extra
             FROM {{ ref('sources_network', 'gold_order_history_events') }} as ns_ohe
             WHERE NOT EXISTS (
                 SELECT
@@ -22,14 +22,17 @@
                     line_item_uuid,
                     user_id,
                     anonymous_id,
-                    description,
-                    extra
+                    description
             FROM {{ source('int_analytics', 'full_order_history_events') }} as dl_fohe
             where ns_ohe.id = dl_fohe.id)
                 "],
         tags=["multirefresh"]
     )
 }}
+
+--todo-migration-research: full_order_history events needs to be placed in a proper schema
+-- I removed the "extra" column that was semi-structured and was showing some issues
+-- Verify if it is needed or how to process it properly
 
 select id,
        created,
@@ -38,8 +41,7 @@ select id,
        line_item_uuid,
        user_id,
        anonymous_id,
-       description,
-       extra
+       description
 
 from {{ source('int_analytics', 'full_order_history_events') }}
 

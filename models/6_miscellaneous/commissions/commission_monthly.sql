@@ -59,7 +59,7 @@ with deal_monthly as (
       and hubspot_dealstage_mapped not in ('Closed - Canceled')
       and subtotal_closed_amount_usd - shipping_amount_usd > 50000
       -- Only deals that have not yet been sourced should be excluded
-      and ((date_trunc('month', sourced_at) > commission_date) or (sourced_at is null))
+      and ((date_trunc('month', sourced_at) > commission_date) or (sourced_at = null)) --todo-migration-test
       group by commission_date, employee,order_hubspot_deal_id
       ),
       significant_amount_gap_deals_excluded as (
@@ -90,7 +90,7 @@ with deal_monthly as (
       and bdr_owner_id = hubspot_owner_id
       and subtotal_closed_amount_usd - shipping_amount_usd > 50000
       -- Only deals that have not yet been sourced should be excluded
-      and ((date_trunc('month', sourced_at) > commission_date) or (sourced_at is null))
+      and ((date_trunc('month', sourced_at) > commission_date) or (sourced_at = null)) --todo-migration-test
       and role = 'outside'
       group by commission_date, employee,order_hubspot_deal_id
       ),
@@ -121,7 +121,7 @@ with deal_monthly as (
       from dbt_prod_reporting.fact_orders
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.hubspot_owner_id
       where true
-      and closed_at is not null
+      and closed_at <> null --todo-migration-test
       and subtotal_closed_amount_usd - shipping_amount_usd > 50000
       and closed_at < commission_date
       group by commission_date, employee, order_hubspot_deal_id
@@ -136,7 +136,7 @@ with deal_monthly as (
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.hubspot_owner_id
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled', 'Closed - Lost')
-      and closed_at is not null
+      and closed_at <> null --todo-migration-test
       and has_significant_amount_gap
       group by commission_date, employee, order_hubspot_deal_id
       ),
@@ -157,7 +157,7 @@ with deal_monthly as (
       from dbt_prod_reporting.fact_orders
       where true
       and cancelled_deal_closed_three_months_prior = true --todo-migration-test replaced is with =
-      and cancelled_at is not null
+      and cancelled_at <> null --todo-migration-test replaced is with =
       )
       select commission_date,
       order_hubspot_deal_id,
@@ -180,7 +180,7 @@ with deal_monthly as (
       from dbt_prod_reporting.fact_orders
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', closed_at) and c.hubspot_id = fact_orders.bdr_owner_id
       where true
-      and closed_at is not null
+      and closed_at <> null --todo-migration-test
       and bdr_owner_id = hubspot_owner_id
       and subtotal_closed_amount_usd - shipping_amount_usd > 50000
       and closed_at < commission_date
@@ -198,7 +198,7 @@ with deal_monthly as (
       where true
       and hubspot_dealstage_mapped not in ('Closed - Canceled', 'Closed - Lost')
       and bdr_owner_id = hubspot_owner_id
-      and closed_at is not null
+      and closed_at <> null --todo-migration-test
       and has_significant_amount_gap
       and role = 'outside'
       group by commission_date, employee, order_hubspot_deal_id
@@ -220,7 +220,7 @@ with deal_monthly as (
       from dbt_prod_reporting.fact_orders
       where true
       and cancelled_deal_closed_three_months_prior = true --todo-migration-test replaced is with =
-      and cancelled_at is not null
+      and cancelled_at <> null --todo-migration-test replaced is with =
       and bdr_owner_id = hubspot_owner_id
       )
       select commission_date,
@@ -260,7 +260,7 @@ with deal_monthly as (
       from dbt_prod_reporting.dim_companies
       inner join {{ ref('commission_rules') }}  c on c.date = date_trunc('month', outbound_handover_date) and c.name = dim_companies.hubspot_handover_owner_name
       where true
-      and role = 'outside' and hubspot_owner_name is not null
+      and role = 'outside' and hubspot_owner_name <> null --todo-migration-test
       group by commission_date, employee, order_hubspot_deal_id
       ),
 
@@ -315,8 +315,8 @@ with deal_monthly as (
       sum(commission_usd)  as commission_usd
       from deal_monthly_union
       where true
-      and commission_date is not null
-      and commission_usd is not null
+      and commission_date <> null --todo-migration-test
+      and commission_usd <> null --todo-migration-test
       group by commission_date, employee, order_hubspot_deal_id
       union all
       select *

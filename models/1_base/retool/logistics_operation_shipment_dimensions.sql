@@ -15,7 +15,7 @@ select
     dhl_api_id                                                                                               as logistics_operation_id
 
 from
-    {{ source('int_retool', 'dhl_api_shipment_dimensions') }} as eu_logistics_operation_shipping_dimensions
+    {{ source('int_airbyte_retool', 'dhl_api_shipment_dimensions') }} as eu_logistics_operation_shipping_dimensions
 
 union all
 
@@ -36,4 +36,4 @@ select
     ups_api_id                                                                                               as logistics_operation_id
 
 from
-    {{ source('int_retool', 'ups_api_shipment_dimensions') }} as us_logistics_operation_shipping_dimensions
+    {{ source('int_airbyte_retool', 'ups_api_shipment_dimensions') }} as us_logistics_operation_shipping_dimensions

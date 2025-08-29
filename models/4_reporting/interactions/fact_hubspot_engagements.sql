@@ -1,9 +1,3 @@
-{{
-    config(
-        post_hook="analyze {{ this }}"
-    )
-}}
-
 with hubspot_engagements as (
     select * from {{ source('ext_hubspot', 'hubspot_engagements') }}
 ),
@@ -65,8 +59,9 @@ select he.id::bigint                                                            
        hedm.label,
        he.duration_milliseconds / 1000 as call_duration_seconds,
        case when he.type = 'MEETING' then he.title end as meeting_title,
-       date_diff('minutes', timestamp 'epoch' + he.start_time / 1000 * interval '1 second',
-                    timestamp 'epoch' + he.end_time / 1000 * interval '1 second') as meeting_duration_mins
+       datediff('minutes', 
+         to_timestamp(he.start_time / 1000),
+         to_timestamp(he.end_time / 1000)) as meeting_duration_mins --todo-migration-test datediff and to_timestamp
 
 from hubspot_engagements as he
          inner join engagements_gather3 as he_gather on he.id = he_gather.id

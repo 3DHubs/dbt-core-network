@@ -12,7 +12,7 @@ reviews as (
     from  {{ ref ('hubspot_deal_dealstage_history') }}  hh
     left join {{ ref('hubspot_deals') }} as hs on hs.deal_id = hh.deal_id
     left join {{ ref ('hubspot_owners') }} as me on me.owner_id = hs.sales_engineer
-    where next_changed_at is not null
+    where next_changed_at <> null --todo-migration-test replaced is with =
       
 
 

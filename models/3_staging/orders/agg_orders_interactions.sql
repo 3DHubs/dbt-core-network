@@ -50,7 +50,8 @@ select distinct
         end
     ) as number_of_notes_fd,
 
-    bool_or(
+--todo-migration-test boolor_agg
+    boolor_agg(
         coalesce(lower(
              engagements.task_subject
         ) like ('%svp%'), false)
